@@ -1,0 +1,16 @@
+{
+  "name": "abdesigner",
+  "version": "0.0.0",
+  "description": "(AppBuilder) A UI for designing AB resources.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "node_modules/.bin/webpack-cli --watch --progress"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.51.2",
+    "webpack-cli": "^4.8.0"
+  }
+}
