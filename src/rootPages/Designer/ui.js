@@ -8,11 +8,15 @@
  */
 
 import AppChooserFactory from "./ui_choose.js";
-// import AppWorkspaceFactory from "./ui_work.js";
+import AppWorkspaceFactory from "./ui_work.js";
 
 export default function (AB) {
    const AppChooser = AppChooserFactory(AB);
-   // const AppWorkspace = AppWorkspaceFactory(AB);
+   const AppWorkspace = AppWorkspaceFactory(AB);
+
+   var L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
 
    class UI extends AB.ClassUI {
       constructor() {
@@ -21,7 +25,7 @@ export default function (AB) {
       }
 
       label() {
-         return AB.Multilingual.labelPlugin("ABDesigner", "AB Designer");
+         return L("AB Designer");
       }
 
       // return "popup" or "page"
@@ -55,30 +59,38 @@ export default function (AB) {
             borderless: true,
             animate: false,
             // height : 800,
-            rows: [AppChooser.ui() /*, AppWorkspace.ui*/],
+            rows: [AppChooser.ui(), AppWorkspace.ui()],
          };
       }
 
       async init(AB) {
          this.AB = AB;
 
-         return Promise.all([
-            AppChooser.init(AB) /*, AppWorkspace.init(AB)*/,
-         ]).then(() => {
-            // Register for ABDefinition Updates
-            return this.AB.Network.post({
-               url: `/definition/register`,
-            }).catch((err) => {
-               if (err?.code == "E_NOPERM") {
-                  // ?? What do we do here ??
-                  this.AB.notify.developer(err, {
-                     plugin: "ABDesigner",
-                     context: "ui::init():/definition/register",
-                     msg: "User is not able to access /definition/register",
-                  });
-               }
-            });
+         AppChooser.on("view.workplace", (App) => {
+            AppWorkspace.transitionWorkspace(App);
          });
+
+         AppWorkspace.on("view.chooser", () => {
+            AppChooser.show();
+         });
+
+         return Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]).then(
+            () => {
+               // Register for ABDefinition Updates
+               return this.AB.Network.post({
+                  url: `/definition/register`,
+               }).catch((err) => {
+                  if (err?.code == "E_NOPERM") {
+                     // ?? What do we do here ??
+                     this.AB.notify.developer(err, {
+                        plugin: "ABDesigner",
+                        context: "ui::init():/definition/register",
+                        msg: "User is not able to access /definition/register",
+                     });
+                  }
+               });
+            }
+         );
       }
 
       /**

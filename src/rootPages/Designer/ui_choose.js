@@ -34,7 +34,7 @@ export default function (AB) {
          this.AB = AB;
 
          AppList.on("view.workplace", (App) => {
-            console.error("TODO: switch to workplace", App);
+            this.emit("view.workplace", App);
          });
 
          AppList.on("view.form", () => {

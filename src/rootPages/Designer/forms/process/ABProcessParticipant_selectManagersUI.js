@@ -93,11 +93,11 @@ export default function (AB) {
                                        currentItems.splice(indOf, 1);
                                     }
                                     $roleCombo.setValue(currentItems);
-                                    var item = this.getItem(id);
-                                    AB.ClassUI.CYPRESS_REF(
-                                       this.getItemNode(item.id),
-                                       `${ids.role}_${item.id}`
-                                    );
+                                    // var item = this.getItem(id);
+                                    // AB.ClassUI.CYPRESS_REF(
+                                    //    this.getItemNode(item.id),
+                                    //    `${ids.role}_${item.id}`
+                                    // );
                                  },
                               },
                            },
@@ -105,6 +105,16 @@ export default function (AB) {
                         placeholder: L("Click or type to add role..."),
                         labelAlign: "left",
                         stringResult: false /* returns data as an array of [id] */,
+                        on: {
+                           onAfterRender: function () {
+                              // set data-cy for original field to track clicks to open option list
+                              AB.ClassUI.CYPRESS_REF(this.getNode(), ids.role);
+                           },
+                           onChange: function (/* newVal, oldVal */) {
+                              // trigger the onAfterRender function from the list so we can add data-cy to dom
+                              $$("combo1").getList().callEvent("onAfterRender");
+                           },
+                        },
                      },
                   ],
                },
@@ -161,11 +171,11 @@ export default function (AB) {
                                        currentItems.splice(indOf, 1);
                                     }
                                     $accountCombo.setValue(currentItems);
-                                    var item = this.getItem(id);
-                                    AB.ClassUI.CYPRESS_REF(
-                                       this.getItemNode(item.id),
-                                       `${ids.account}_${item.id}`
-                                    );
+                                    // var item = this.getItem(id);
+                                    // AB.ClassUI.CYPRESS_REF(
+                                    //    this.getItemNode(item.id),
+                                    //    `${ids.account}_${item.id}`
+                                    // );
                                  },
                               },
                            },
@@ -173,6 +183,19 @@ export default function (AB) {
                         labelAlign: "left",
                         placeholder: L("Click or type to add user..."),
                         stringResult: false /* returns data as an array of [id] */,
+                        on: {
+                           onAfterRender: function () {
+                              // set data-cy for original field to track clicks to open option list
+                              AB.ClassUI.CYPRESS_REF(
+                                 this.getNode(),
+                                 ids.account
+                              );
+                           },
+                           onChange: function (/* newVal, oldVal */) {
+                              // trigger the onAfterRender function from the list so we can add data-cy to dom
+                              $$("combo1").getList().callEvent("onAfterRender");
+                           },
+                        },
                      },
                   ],
                },

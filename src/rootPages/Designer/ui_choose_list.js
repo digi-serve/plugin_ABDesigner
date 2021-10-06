@@ -487,7 +487,7 @@ export default function (AB) {
             selectedApp.App = this.AB.App;
 
             // We've selected an Application to work with
-            this.emit("transition.workplace", selectedApp);
+            this.emit("view.workplace", selectedApp);
          }
          return false; // block default behavior
       }

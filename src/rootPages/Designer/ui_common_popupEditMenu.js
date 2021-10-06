@@ -17,6 +17,13 @@ export default function (AB) {
          var idBase = "abd_common_popupEditMenu";
          super(idBase);
 
+         this.labels = {
+            copy: L("Copy"),
+            exclude: L("Exclude"),
+            rename: L("Rename"),
+            delete: L("Delete"),
+         };
+
          // var labels = {
          //    common: App.labels,
 
@@ -117,7 +124,7 @@ export default function (AB) {
          // hide "copy" item
          if (options.hideCopy) {
             let itemCopy = this.$list.data.find(
-               (item) => item.label == labels.component.copy
+               (item) => item.label == this.labels.copy
             )[0];
             if (itemCopy) {
                this.$list.remove(itemCopy.id);
@@ -128,7 +135,7 @@ export default function (AB) {
          // hide "exclude" item
          if (options.hideExclude) {
             let hideExclude = this.$list.data.find(
-               (item) => item.label == labels.component.exclude
+               (item) => item.label == this.labels.exclude
             )[0];
             if (hideExclude) {
                this.$list.remove(hideExclude.id);
