@@ -350,6 +350,16 @@ export default function (AB) {
             }
          );
 
+         this._handler_reload = (def) => {
+            if (def.type == "application") {
+               this.loaded = false;
+               this.loadData();
+            }
+         };
+         // {fn}
+         // The handler that triggers a reload of our Application List
+         // when we are alerted of changes to our applications.
+
          // return Promise.all([AppList.init(AB) /*, AppForm.init(AB)*/]);
          return this.loadAllApps().then(() => {
             // NOTE: .loadAllApps() will generate a TON of "definition.updated"
@@ -357,20 +367,7 @@ export default function (AB) {
 
             // Refresh our Application List each time we are notified of a change
             // in our Application definitions:
-            var handler = async (def) => {
-               if (def.type == "application") {
-                  this.loaded = false;
-                  await this.loadData();
-                  this.refreshList();
-               }
-            };
-            [
-               "definition.created",
-               "definition.updated",
-               "definition.deleted",
-            ].forEach((e) => {
-               this.AB.on(e, handler);
-            });
+            this.AB.on("definition.created", this._handler_reload);
          });
       }
 
@@ -390,6 +387,8 @@ export default function (AB) {
        * @return {Promise}
        */
       async loadAllApps() {
+         // NOTE: we only actually perform this 1x.
+         // so track the _loadInProgress as our indicator of having done that.
          if (!this._loadInProgress) {
             this.busy();
             this._loadInProgress = new Promise((resolve, reject) => {
@@ -438,6 +437,16 @@ export default function (AB) {
          });
          // {webix.DataCollection} dcEditableApplications
          // a list of all our applications we are able to edit.
+
+         // Now for each of our Apps, be sure to listen for either
+         // .updated or .deleted and then reload our list.
+         ["definition.updated", "definition.deleted"].forEach((e) => {
+            allApps.forEach((a) => {
+               // make sure we only have 1 listener registered.
+               a.removeListener(e, this._handler_reload);
+               a.on(e, this._handler_reload);
+            });
+         });
 
          this.dcEditableApplications.attachEvent(
             "onAfterAdd",

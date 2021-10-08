@@ -2148,6 +2148,16 @@ __webpack_require__.r(__webpack_exports__);
             }
          );
 
+         this._handler_reload = (def) => {
+            if (def.type == "application") {
+               this.loaded = false;
+               this.loadData();
+            }
+         };
+         // {fn}
+         // The handler that triggers a reload of our Application List
+         // when we are alerted of changes to our applications.
+
          // return Promise.all([AppList.init(AB) /*, AppForm.init(AB)*/]);
          return this.loadAllApps().then(() => {
             // NOTE: .loadAllApps() will generate a TON of "definition.updated"
@@ -2155,20 +2165,7 @@ __webpack_require__.r(__webpack_exports__);
 
             // Refresh our Application List each time we are notified of a change
             // in our Application definitions:
-            var handler = async (def) => {
-               if (def.type == "application") {
-                  this.loaded = false;
-                  await this.loadData();
-                  this.refreshList();
-               }
-            };
-            [
-               "definition.created",
-               "definition.updated",
-               "definition.deleted",
-            ].forEach((e) => {
-               this.AB.on(e, handler);
-            });
+            this.AB.on("definition.created", this._handler_reload);
          });
       }
 
@@ -2188,6 +2185,8 @@ __webpack_require__.r(__webpack_exports__);
        * @return {Promise}
        */
       async loadAllApps() {
+         // NOTE: we only actually perform this 1x.
+         // so track the _loadInProgress as our indicator of having done that.
          if (!this._loadInProgress) {
             this.busy();
             this._loadInProgress = new Promise((resolve, reject) => {
@@ -2236,6 +2235,16 @@ __webpack_require__.r(__webpack_exports__);
          });
          // {webix.DataCollection} dcEditableApplications
          // a list of all our applications we are able to edit.
+
+         // Now for each of our Apps, be sure to listen for either
+         // .updated or .deleted and then reload our list.
+         ["definition.updated", "definition.deleted"].forEach((e) => {
+            allApps.forEach((a) => {
+               // make sure we only have 1 listener registered.
+               a.removeListener(e, this._handler_reload);
+               a.on(e, this._handler_reload);
+            });
+         });
 
          this.dcEditableApplications.attachEvent(
             "onAfterAdd",
@@ -2476,6 +2485,9 @@ __webpack_require__.r(__webpack_exports__);
          //PopupListEditMenuComponent
          // console.log("look here------------------>", App.custom.editunitlist.view);
 
+         var ids = this.ids;
+         // for our onAfterRender() handler
+
          // Our webix UI definition:
          return {
             id: this.ids.component,
@@ -2501,8 +2513,9 @@ __webpack_require__.r(__webpack_exports__);
                   type: {
                      height: 35,
                      headerHeight: 35,
-                     iconGear:
-                        "<div class='ab-object-list-edit'><span class='webix_icon fa fa-cog'></span></div>",
+                     iconGear: (obj) => {
+                        return `<div class="ab-object-list-edit"><span class="webix_icon fa fa-cog" data-cy="${this.ids.list}_edit_${obj.id}"></span></div>`;
+                     },
                   },
                   on: {
                      onAfterSelect: (id) => {
@@ -2513,6 +2526,14 @@ __webpack_require__.r(__webpack_exports__);
                      },
                      onAfterEditStop: (state, editor, ignoreUpdate) => {
                         this.onAfterEditStop(state, editor, ignoreUpdate);
+                     },
+                     onAfterRender() {
+                        this.data.each((a) => {
+                           AB.ClassUI.CYPRESS_REF(
+                              this.getItemNode(a.id),
+                              `${ids.list}_${a.id}`
+                           );
+                        });
                      },
                   },
                   onClick: {
@@ -2544,6 +2565,9 @@ __webpack_require__.r(__webpack_exports__);
                                  height: 35,
                                  keyPressTimeout: 100,
                                  on: {
+                                    onAfterRender() {
+                                       AB.ClassUI.CYPRESS_REF(this);
+                                    },
                                     onTimedKeyPress: () => {
                                        this.listSearch();
                                        this.save();
@@ -2567,6 +2591,19 @@ __webpack_require__.r(__webpack_exports__);
                                     },
                                  ],
                                  on: {
+                                    onAfterRender() {
+                                       this.$view
+                                          .querySelectorAll("button")
+                                          .forEach((b) => {
+                                             var bid = b.getAttribute(
+                                                "button_id"
+                                             );
+                                             AB.ClassUI.CYPRESS_REF(
+                                                b,
+                                                `${ids.sort}_${bid}`
+                                             );
+                                          });
+                                    },
                                     onChange: (newVal /*, oldVal */) => {
                                        this.listSort(newVal);
                                        this.save();
@@ -2579,6 +2616,9 @@ __webpack_require__.r(__webpack_exports__);
                                  label: L(this.labels.listGroup),
                                  labelWidth: 80,
                                  on: {
+                                    onAfterRender() {
+                                       AB.ClassUI.CYPRESS_REF(this);
+                                    },
                                     onChange: (newVal /*, oldVal */) => {
                                        this.listGroup(newVal);
                                        this.save();
@@ -2608,6 +2648,11 @@ __webpack_require__.r(__webpack_exports__);
                   type: "form",
                   click: () => {
                      this.clickAddNew(true); // pass true so it will select the new object after you created it
+                  },
+                  on: {
+                     onAfterRender() {
+                        AB.ClassUI.CYPRESS_REF(this);
+                     },
                   },
                },
             ],
@@ -2946,14 +2991,13 @@ __webpack_require__.r(__webpack_exports__);
        */
       templateListItem(obj, common) {
          var warnings = obj.warningsAll();
-         var numWarnings = warnings.length;
          var warnText = "";
-         if (numWarnings > 0) {
-            warnText = `(${numWarnings})`;
+         if (warnings.length > 0) {
+            warnText = `(${warnings.length})`;
          }
          return this._templateListItem
             .replace("#label#", obj.label || "??label??")
-            .replace("{common.iconGear}", common.iconGear)
+            .replace("{common.iconGear}", common.iconGear(obj))
             .replace("#warnings#", warnText);
       }
 
@@ -3898,6 +3942,11 @@ __webpack_require__.r(__webpack_exports__);
             this.ListComponent.select(obj.id);
             // }
          });
+
+         this._handler_refreshApp = (def) => {
+            this.CurrentApplication = this.CurrentApplication.refreshInstance();
+            this.applicationLoad(this.CurrentApplication);
+         };
       }
 
       addNew() {
@@ -3907,16 +3956,28 @@ __webpack_require__.r(__webpack_exports__);
 
       /**
        * @function applicationLoad
-       *
-       * Initialize the Process List from the provided ABApplication
-       *
+       * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
-       *
-       * @param {ABApplication} application  	[optional] The current ABApplication
-       *										we are working with.
+       * @param {ABApplication} application
+       *        [optional] The current ABApplication we are working with.
        */
       applicationLoad(application) {
+         var events = ["definition.updated", "definition.deleted"];
+         if (this.CurrentApplication) {
+            // remove current handler
+            events.forEach((e) => {
+               this.CurrentApplication.removeListener(
+                  e,
+                  this._handler_refreshApp
+               );
+            });
+         }
          this.CurrentApplication = application;
+         if (this.CurrentApplication) {
+            events.forEach((e) => {
+               this.CurrentApplication.on(e, this._handler_refreshApp);
+            });
+         }
 
          // NOTE: only include System Objects if the user has permission
          var f = (obj) => !obj.isSystemObject;
@@ -4113,6 +4174,14 @@ __webpack_require__.r(__webpack_exports__);
                   on: {
                      onAfterTabClick: (id) => {
                         this.switchTab(id);
+                     },
+                     onAfterRender() {
+                        this.$view
+                           .querySelectorAll(".webix_item_tab")
+                           .forEach((t) => {
+                              var tid = t.getAttribute("button_id");
+                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                           });
                      },
                   },
                },
@@ -4342,6 +4411,14 @@ __webpack_require__.r(__webpack_exports__);
                      required: true,
                      placeholder: L("Object name"),
                      labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_object_list_newObject_blank_name"
+                           );
+                        },
+                     },
                   },
                   {
                      name: "isSystemObject",
@@ -4352,7 +4429,7 @@ __webpack_require__.r(__webpack_exports__);
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(
                               this,
-                              "abd_work_object_list_newObject_blank_isSystemObj"
+                              "ui_work_object_list_newObject_blank_isSystemObj"
                            );
                         },
                      },
@@ -4370,6 +4447,11 @@ __webpack_require__.r(__webpack_exports__);
                            click: () => {
                               this.cancel();
                            },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {
                            view: "button",
@@ -4380,6 +4462,11 @@ __webpack_require__.r(__webpack_exports__);
                            type: "form",
                            click: () => {
                               return this.save();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
                            },
                         },
                      ],

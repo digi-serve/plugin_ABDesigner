@@ -42,6 +42,14 @@ export default function (AB) {
                      required: true,
                      placeholder: L("Object name"),
                      labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_object_list_newObject_blank_name"
+                           );
+                        },
+                     },
                   },
                   {
                      name: "isSystemObject",
@@ -52,7 +60,7 @@ export default function (AB) {
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(
                               this,
-                              "abd_work_object_list_newObject_blank_isSystemObj"
+                              "ui_work_object_list_newObject_blank_isSystemObj"
                            );
                         },
                      },
@@ -70,6 +78,11 @@ export default function (AB) {
                            click: () => {
                               this.cancel();
                            },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {
                            view: "button",
@@ -80,6 +93,11 @@ export default function (AB) {
                            type: "form",
                            click: () => {
                               return this.save();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
                            },
                         },
                      ],

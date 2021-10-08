@@ -74,6 +74,14 @@ export default function (AB) {
                      onAfterTabClick: (id) => {
                         this.switchTab(id);
                      },
+                     onAfterRender() {
+                        this.$view
+                           .querySelectorAll(".webix_item_tab")
+                           .forEach((t) => {
+                              var tid = t.getAttribute("button_id");
+                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                           });
+                     },
                   },
                },
             },

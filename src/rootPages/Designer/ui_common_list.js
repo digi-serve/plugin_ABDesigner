@@ -97,6 +97,9 @@ export default function (AB) {
          //PopupListEditMenuComponent
          // console.log("look here------------------>", App.custom.editunitlist.view);
 
+         var ids = this.ids;
+         // for our onAfterRender() handler
+
          // Our webix UI definition:
          return {
             id: this.ids.component,
@@ -122,8 +125,9 @@ export default function (AB) {
                   type: {
                      height: 35,
                      headerHeight: 35,
-                     iconGear:
-                        "<div class='ab-object-list-edit'><span class='webix_icon fa fa-cog'></span></div>",
+                     iconGear: (obj) => {
+                        return `<div class="ab-object-list-edit"><span class="webix_icon fa fa-cog" data-cy="${this.ids.list}_edit_${obj.id}"></span></div>`;
+                     },
                   },
                   on: {
                      onAfterSelect: (id) => {
@@ -134,6 +138,14 @@ export default function (AB) {
                      },
                      onAfterEditStop: (state, editor, ignoreUpdate) => {
                         this.onAfterEditStop(state, editor, ignoreUpdate);
+                     },
+                     onAfterRender() {
+                        this.data.each((a) => {
+                           AB.ClassUI.CYPRESS_REF(
+                              this.getItemNode(a.id),
+                              `${ids.list}_${a.id}`
+                           );
+                        });
                      },
                   },
                   onClick: {
@@ -165,6 +177,9 @@ export default function (AB) {
                                  height: 35,
                                  keyPressTimeout: 100,
                                  on: {
+                                    onAfterRender() {
+                                       AB.ClassUI.CYPRESS_REF(this);
+                                    },
                                     onTimedKeyPress: () => {
                                        this.listSearch();
                                        this.save();
@@ -188,6 +203,19 @@ export default function (AB) {
                                     },
                                  ],
                                  on: {
+                                    onAfterRender() {
+                                       this.$view
+                                          .querySelectorAll("button")
+                                          .forEach((b) => {
+                                             var bid = b.getAttribute(
+                                                "button_id"
+                                             );
+                                             AB.ClassUI.CYPRESS_REF(
+                                                b,
+                                                `${ids.sort}_${bid}`
+                                             );
+                                          });
+                                    },
                                     onChange: (newVal /*, oldVal */) => {
                                        this.listSort(newVal);
                                        this.save();
@@ -200,6 +228,9 @@ export default function (AB) {
                                  label: L(this.labels.listGroup),
                                  labelWidth: 80,
                                  on: {
+                                    onAfterRender() {
+                                       AB.ClassUI.CYPRESS_REF(this);
+                                    },
                                     onChange: (newVal /*, oldVal */) => {
                                        this.listGroup(newVal);
                                        this.save();
@@ -229,6 +260,11 @@ export default function (AB) {
                   type: "form",
                   click: () => {
                      this.clickAddNew(true); // pass true so it will select the new object after you created it
+                  },
+                  on: {
+                     onAfterRender() {
+                        AB.ClassUI.CYPRESS_REF(this);
+                     },
                   },
                },
             ],
@@ -567,14 +603,13 @@ export default function (AB) {
        */
       templateListItem(obj, common) {
          var warnings = obj.warningsAll();
-         var numWarnings = warnings.length;
          var warnText = "";
-         if (numWarnings > 0) {
-            warnText = `(${numWarnings})`;
+         if (warnings.length > 0) {
+            warnText = `(${warnings.length})`;
          }
          return this._templateListItem
             .replace("#label#", obj.label || "??label??")
-            .replace("{common.iconGear}", common.iconGear)
+            .replace("{common.iconGear}", common.iconGear(obj))
             .replace("#warnings#", warnText);
       }
 

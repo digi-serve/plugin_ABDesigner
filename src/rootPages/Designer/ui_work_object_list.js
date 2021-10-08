@@ -117,6 +117,11 @@ export default function (AB) {
             this.ListComponent.select(obj.id);
             // }
          });
+
+         this._handler_refreshApp = (def) => {
+            this.CurrentApplication = this.CurrentApplication.refreshInstance();
+            this.applicationLoad(this.CurrentApplication);
+         };
       }
 
       addNew() {
@@ -126,16 +131,28 @@ export default function (AB) {
 
       /**
        * @function applicationLoad
-       *
-       * Initialize the Process List from the provided ABApplication
-       *
+       * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
-       *
-       * @param {ABApplication} application  	[optional] The current ABApplication
-       *										we are working with.
+       * @param {ABApplication} application
+       *        [optional] The current ABApplication we are working with.
        */
       applicationLoad(application) {
+         var events = ["definition.updated", "definition.deleted"];
+         if (this.CurrentApplication) {
+            // remove current handler
+            events.forEach((e) => {
+               this.CurrentApplication.removeListener(
+                  e,
+                  this._handler_refreshApp
+               );
+            });
+         }
          this.CurrentApplication = application;
+         if (this.CurrentApplication) {
+            events.forEach((e) => {
+               this.CurrentApplication.on(e, this._handler_refreshApp);
+            });
+         }
 
          // NOTE: only include System Objects if the user has permission
          var f = (obj) => !obj.isSystemObject;
