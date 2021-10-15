@@ -1,0 +1,9 @@
+[submodule "AppBuilder"]
+	path = AppBuilder
+	url = https://github.com/appdevdesigns/appbuilder_platform_service
+[submodule "core"]
+	path = core
+	url = https://github.com/appdevdesigns/appbuilder_class_core.git
+[submodule "AppBuilder/core"]
+	path = AppBuilder/core
+	url = https://github.com/appdevdesigns/appbuilder_class_core.git

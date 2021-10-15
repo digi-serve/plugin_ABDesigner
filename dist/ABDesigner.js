@@ -1,6 +1,2508 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./AppBuilder/core/ABMLClassCore.js":
+/*!******************************************!*\
+  !*** ./AppBuilder/core/ABMLClassCore.js ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * ABMLClassCore
+ * manage the multilingual information of an instance of a AB Defined Class.
+ *
+ * these classes have certain fields ("label", "description"), that can be
+ * represented in different language options as defined by our platform.
+ *
+ * This core ABMLClass will internally track the multilingual fields
+ * (this.mlFields) and auto
+ */
+var ABDefinition = __webpack_require__(/*! ../platform/ABDefinition */ "./AppBuilder/platform/ABDefinition.js");
+var ABEmitter = __webpack_require__(/*! ../platform/ABEmitter */ "./AppBuilder/platform/ABEmitter.js");
+module.exports = class ABMLClassCore extends ABEmitter {
+   constructor(fieldList) {
+      super();
+      this.mlFields = fieldList || ["label"];
+   }
+
+   ///
+   /// Static Methods
+   ///
+   /// Available to the Class level object.  These methods are not dependent
+   /// on the instance values of the Application.
+   ///
+
+   /**
+    * @method fromValues
+    * called during the .fromValues() work chain.  Should be called
+    * AFTER all the current data is already populated.
+    */
+   fromValues(attributes) {
+      this.translations = attributes.translations;
+
+      // if translations were provided
+      if (this.translations) {
+         // multilingual fields: label, description
+         this.translate();
+      } else {
+         // maybe this came from a form that has ML values in the attributes, but
+         // no .translations[] yet:
+         // check for mlFields in attributes and record them here:
+         (this.mlFields || []).forEach((field) => {
+            if (attributes[field]) {
+               this[field] = attributes[field];
+            }
+         });
+      }
+   }
+
+   /**
+    * @method languageDefault
+    * return a default language code.
+    * @return {string}
+    */
+   languageDefault() {
+      return "en";
+   }
+
+   /**
+    * @method toObj()
+    *
+    * called during the .toObj() work chain.  Should be called
+    * BEFORE the current data is populated.
+    */
+   toObj() {
+      this.unTranslate();
+
+      return {
+         translations: this.translations
+      };
+   }
+
+   /**
+    * @method toDefinition()
+    *
+    * convert this instance into an ABDefinition object.
+    *
+    * @return {ABDefinition}
+    */
+   toDefinition() {
+      return new ABDefinition({
+         id: this.id,
+         name: this.name,
+         type: this.type,
+         json: this.toObj()
+      });
+   }
+
+   /**
+    * @method translate
+    *
+    * Given a set of json data, pull out any multilingual translations
+    * and flatten those values to the base object.
+    *
+    * @param {obj} obj  The instance of the object being translated
+    * @param {json} json The json data being used for translation.
+    *                      There should be json.translations = [ {transEntry}, ...]
+    *                      where transEntry = {
+    *                          language_code:'en',
+    *                          field1:'value',
+    *                          ...
+    *                      }
+    * @param {array} fields an Array of multilingual fields to pull to
+    *                       the obj[field] value.
+    *
+    */
+   translate(obj, json, fields, languageCode = null) {
+      if (!obj) obj = this;
+      if (!json) json = this;
+      if (!fields) fields = this.mlFields || [];
+
+      if (!json.translations) {
+         json.translations = [];
+      }
+
+      if (typeof json.translations == "string") {
+         json.translations = JSON.parse(json.translations);
+      }
+
+      var currLanguage = languageCode || this.languageDefault();
+
+      if (fields && fields.length > 0) {
+         // [fix] if no matching translation is in our json.translations
+         //       object, then just use the 1st one.
+         var first = null; // the first translation entry encountered
+         var found = false; // did we find a matching translation?
+
+         json.translations.forEach(function(t) {
+            if (!first) first = t;
+
+            // find the translation for the current language code
+            if (t.language_code == currLanguage) {
+               found = true;
+
+               // copy each field to the root object
+               fields.forEach(function(f) {
+                  if (t[f] != null) obj[f] = t[f];
+
+                  obj[f] = t[f] || ""; // default to '' if not found.
+               });
+            }
+         });
+
+         // if !found, then use the 1st entry we did find.  prepend desired
+         // [language_code] to each of the fields.
+         if (!found && first) {
+            // copy each field to the root object
+            fields.forEach(function(f) {
+               if (first[f] != null && first[f] != "")
+                  obj[f] = `[${currLanguage}]${first[f]}`;
+               else obj[f] = ""; // default to '' if not found.
+            });
+         }
+      }
+   }
+
+   /**
+    * @method unTranslate
+    *
+    * Take the multilingual information in the base obj, and push that
+    * down into the json.translations data.
+    *
+    * @param {obj} obj  The instance of the object with the translation
+    * @param {json} json The json data being used for translation.
+    *                      There should be json.translations = [ {transEntry}, ...]
+    *                      where transEntry = {
+    *                          language_code:'en',
+    *                          field1:'value',
+    *                          ...
+    *                      }
+    * @param {array} fields an Array of multilingual fields to pull from
+    *                       the obj[field] value.
+    *
+    */
+   unTranslate(obj, json, fields) {
+      if (!obj) obj = this;
+      if (!json) json = this;
+      if (!fields) fields = this.mlFields || [];
+
+      if (!json.translations) {
+         json.translations = [];
+      }
+
+      var currLanguage = this.languageDefault();
+
+      if (fields && fields.length > 0) {
+         var foundOne = false;
+
+         json.translations.forEach(function(t) {
+            // find the translation for the current language code
+            if (t.language_code == currLanguage) {
+               // copy each field to the root object
+               fields.forEach(function(f) {
+                  // verify obj[f] is defined
+                  // --> DONT erase the existing translation
+                  if (obj[f] != null) {
+                     t[f] = obj[f];
+                  }
+               });
+
+               foundOne = true;
+            }
+         });
+
+         // if we didn't update an existing translation
+         if (!foundOne) {
+            // create a translation entry:
+            var trans = {};
+
+            // assume current languageCode:
+            trans.language_code = currLanguage;
+
+            fields.forEach(function(field) {
+               if (obj[field] != null) {
+                  trans[field] = obj[field];
+               }
+            });
+
+            json.translations.push(trans);
+         }
+      }
+   }
+};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/core/dataFields/ABFieldBooleanCore.js":
+/*!**********************************************************!*\
+  !*** ./AppBuilder/core/dataFields/ABFieldBooleanCore.js ***!
+  \**********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/*
+ * ABFieldBoolean
+ *
+ * An ABFieldBoolean defines a boolean field type.
+ *
+ */
+
+var ABField = __webpack_require__(/*! ../../platform/dataFields/ABField */ "./AppBuilder/platform/dataFields/ABField.js");
+
+function L(key, altText) {
+   // TODO:
+   return altText; // AD.lang.label.getLabel(key) || altText;
+}
+
+var ABFieldBooleanDefaults = {
+   key: "boolean", // unique key to reference this specific DataField
+
+   icon: "check-square-o", // font-awesome icon reference.  (without the 'fa-').  so 'user'  to reference 'fa-user'
+
+   // menuName: what gets displayed in the Editor drop list
+   menuName: L("ab.dataField.boolean.menuName", "*Checkbox"),
+
+   // description: what gets displayed in the Editor description.
+   description: L(
+      "ab.dataField.boolean.description",
+      "*A single checkbox that can be checked or unchecked."
+   ),
+
+   supportRequire: true,
+
+   // what types of Sails ORM attributes can be imported into this data type?
+   // http://sailsjs.org/documentation/concepts/models-and-orm/attributes#?attribute-options
+   compatibleOrmTypes: ["boolean"],
+
+   // what types of MySql column types can be imported into this data type?
+   // https://www.techonthenet.com/mysql/datatypes.php
+   compatibleMysqlTypes: ["bool", "boolean"]
+};
+
+var defaultValues = {
+   default: 0
+};
+
+module.exports = class ABFieldBooleanCore extends ABField {
+   constructor(values, object) {
+      super(values, object, ABFieldBooleanDefaults);
+   }
+
+   // return the default values for this DataField
+   static defaults() {
+      return ABFieldBooleanDefaults;
+   }
+
+   static defaultValues() {
+      return defaultValues;
+   }
+
+   ///
+   /// Instance Methods
+   ///
+
+   /**
+    * @method fromValues()
+    *
+    * initialze this object with the given set of values.
+    * @param {obj} values
+    */
+   fromValues(values) {
+      super.fromValues(values);
+
+      if (this.settings.default != null)
+         this.settings.default = parseInt(this.settings.default);
+   }
+
+   /**
+    * @method defaultValue
+    * insert a key=>value pair that represent the default value
+    * for this field.
+    * @param {obj} values a key=>value hash of the current values.
+    */
+   defaultValue(values) {
+      if (values[this.columnName] == null && this.settings.default != null) {
+         values[this.columnName] = this.settings.default;
+      }
+   }
+};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/core/dataFields/ABFieldCore.js":
+/*!***************************************************!*\
+  !*** ./AppBuilder/core/dataFields/ABFieldCore.js ***!
+  \***************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/*
+ * ABFieldCore
+ *
+ * ABFieldBase defines the common ABField structure that is shared between
+ * the client and the server.  Mostly how it manages it's internal data, and
+ * how it is related to the ABObject classes.
+ *
+ */
+// const ABEmitter = require("../../platform/ABEmitter");
+const ABMLClass = __webpack_require__(/*! ../../platform/ABMLClass */ "./AppBuilder/platform/ABMLClass.js");
+
+module.exports = class ABFieldCore extends ABMLClass {
+   constructor(values, object, fieldDefaults) {
+      super(["label"]);
+
+      // NOTE: setup this first so later we can use .fieldType(), .fieldIcon()
+      this.defaults = fieldDefaults || {};
+
+      /*
+  		{
+  			id:'uuid',					// uuid value for this obj
+  			key:'fieldKey',				// unique key for this Field
+  			icon:'font',				// fa-[icon] reference for an icon for this Field Type
+  			label:'',					// pulled from translation
+			columnName:'column_name',	// a valid mysql table.column name
+			isImported: 1/0,			// flag to mark is import from other object
+			settings: {					// unique settings for the type of field
+				showIcon:true/false,	// only useful in Object Workspace DataTable
+				isImported: 1/0,		// flag to mark is import from other object
+				required: 1/0,			// field allows does not allow NULL or it does allow NULL
+				width: {int}			// width of display column
+
+				// specific for dataField
+			},
+			translations:[]
+  		}
+  		*/
+
+      this.object = object;
+
+      this.fromValues(values);
+   }
+
+   ///
+   /// Static Methods
+   ///
+   /// Available to the Class level object.  These methods are not dependent
+   /// on the instance values of the Application.
+   ///
+   static get reservedNames() {
+      return [
+         "id",
+         "created_at",
+         "updated_at",
+         "properties",
+         "createdAt",
+         "updatedAt"
+      ];
+   }
+
+   static defaultValues() {
+      return {};
+   }
+
+   // unique key to reference this specific DataField
+   fieldKey() {
+      return this.defaults.key;
+   }
+
+   /**
+    * Sails ORM data types that can be imported to this DataField
+    * @return {Array}
+    */
+   fieldOrmTypes() {
+      if (this.defaults.compatibleOrmTypes) {
+         if (Array.isArray(this.defaults.compatibleOrmTypes)) {
+            return this.defaults.compatibleOrmTypes;
+         } else {
+            return [this.defaults.compatibleOrmTypes];
+         }
+      } else {
+         return [];
+      }
+   }
+
+   /**
+    * Mysql data types that can be imported to this DataField
+    * @return {Array}
+    */
+   fieldMysqlTypes() {
+      if (this.defaults.compatibleMysqlTypes) {
+         if (Array.isArray(this.defaults.compatibleMysqlTypes)) {
+            return this.defaults.compatibleMysqlTypes;
+         } else {
+            return [this.defaults.compatibleMysqlTypes];
+         }
+      } else {
+         return [];
+      }
+   }
+
+   // font-awesome icon reference.  (without the 'fa-').  so 'user'  to reference 'fa-user'
+   fieldIcon() {
+      return this.defaults.icon;
+   }
+
+   // the multilingual text for the name of this data field.
+   fieldMenuName() {
+      return this.defaults.menuName;
+   }
+
+   // the multilingual text for the name of this data field.
+   fieldDescription() {
+      return this.defaults.description;
+   }
+
+   // the flag to set when checking if field should be filterable
+   fieldIsFilterable() {
+      if (this.defaults.isFilterable != null) {
+         if (typeof this.defaults.isFilterable === "function") {
+            return this.defaults.isFilterable(this);
+         } else {
+            return this.defaults.isFilterable;
+         }
+      }
+
+      return 1;
+   }
+
+   // the flag to set when checking if field should be sortable
+   fieldIsSortable() {
+      if (this.defaults.isSortable != null) {
+         if (typeof this.defaults.isSortable === "function") {
+            return this.defaults.isSortable(this);
+         } else {
+            return this.defaults.isSortable;
+         }
+      }
+
+      return 1;
+   }
+
+   // the flag to set when checking if the field should be used as a label
+   fieldUseAsLabel() {
+      if (this.defaults.useAsLabel != null) {
+         if (typeof this.defaults.useAsLabel === "function") {
+            return this.defaults.useAsLabel(this);
+         } else {
+            return this.defaults.useAsLabel;
+         }
+      }
+
+      return 1;
+   }
+
+   fieldSupportRequire() {
+      if (this.defaults.supportRequire) return this.defaults.supportRequire;
+      // default
+      else return true;
+   }
+
+   fieldSupportQuery() {
+      if (this.defaults.supportQuery != null) {
+         if (typeof this.defaults.supportQuery === "function") {
+            return this.defaults.supportQuery(this);
+         } else {
+            return this.defaults.supportQuery;
+         }
+      }
+
+      return true;
+   }
+
+   ///
+   /// Instance Methods
+   ///
+
+   /// ABApplication data methods
+
+   /**
+    * @method toObj()
+    *
+    * properly compile the current state of this ABField instance
+    * into the values needed for saving to the DB.
+    *
+    * @return {json}
+    */
+   toObj() {
+      var obj = super.toObj();
+
+      return {
+         id: this.id,
+         type: this.type || "field",
+         key: this.key,
+         icon: this.icon,
+         isImported: this.isImported,
+         columnName: this.columnName,
+         settings: this.settings,
+         translations: obj.translations
+      };
+   }
+
+   defaultCheck(val, defaultVal) {
+      var returnVal = defaultVal;
+      if (typeof val != "undefined") {
+         returnVal = val;
+      }
+      return returnVal;
+   }
+
+   /**
+    * @method fromValues()
+    *
+    * initialze this object with the given set of values.
+    * @param {obj} values
+    */
+   fromValues(values) {
+      if (!this.id) this.id = values.id; // NOTE: only exists after .save()
+      this.type == values.type || "field";
+      this.key = values.key || this.fieldKey();
+      this.icon = values.icon || this.fieldIcon();
+
+      // if this is being instantiated on a read from the Property UI,
+      // .label is coming in under .settings.label
+      this.label = values.label || values.settings.label || "?label?";
+
+      this.columnName = values.columnName || "";
+
+      this.isImported = values.isImported || 0;
+
+      values.settings = values.settings || {};
+      this.settings = values.settings;
+      this.settings.showIcon = this.defaultCheck(values.settings.showIcon, "1");
+      this.settings.required = this.defaultCheck(values.settings.required, "0");
+      this.settings.width = this.defaultCheck(values.settings.width, "0");
+
+      // convert from "0" => 0
+      this.isImported = parseInt(this.isImported);
+      this.settings.showIcon = parseInt(this.settings.showIcon);
+      this.settings.required = parseInt(this.settings.required);
+      this.settings.unique = parseInt(this.settings.unique || 0);
+      this.settings.width = parseInt(this.settings.width);
+
+      // we're responsible for setting up our specific settings:
+      let defaultValues = this.constructor.defaultValues() || {};
+      for (let dv in defaultValues) {
+         this.settings[dv] = this.defaultCheck(
+            values.settings[dv],
+            defaultValues[dv]
+         );
+      }
+
+      // let the MLClass now process the Translations
+      super.fromValues(values);
+
+      // final validity check: columnName really should have a value:
+      this.columnName = this.columnName || this.label;
+
+      // knex does not like .(dot) in table and column names
+      // https://github.com/knex/knex/issues/2762
+      this.columnName = this.columnName.replace(/[^a-zA-Z0-9_ ]/gi, "");
+   }
+
+   /**
+    * @method urlPointer()
+    * return a string pointer to decode this object from the root application
+    * object.
+    * @return {string} pointer reference
+    */
+   urlPointer() {
+      return this.object.urlField() + this.id;
+   }
+
+   /**
+    * @method defaultValue
+    * insert a key=>value pair that represent the default value
+    * for this field.
+    * @param {obj} values a key=>value hash of the current values.
+    */
+   defaultValue(values) {
+      values[this.columnName] = "";
+   }
+
+   /**
+    * @method isValidData
+    * Parse through the given data and return an error if this field's
+    * data seems invalid.
+    * @param {obj} data  a key=>value hash of the inputs to parse.
+    */
+   isValidData(data, validator) {
+      // console.error('!!! Field ['+this.fieldKey()+'] has not implemented .isValidData()!!!');
+      if (
+         this.settings.required &&
+         (data[this.columnName] == null || data[this.columnName] == "") &&
+         data[this.columnName] != 0
+      ) {
+         validator.addError(this.columnName, "This is a required field.");
+      }
+   }
+
+   /*
+    * @property isMultilingual
+    * does this field represent multilingual data?
+    * @return {bool}
+    */
+   get isMultilingual() {
+      return false;
+   }
+
+   dataValue(rowData) {
+      let propName = "{objectName}.{columnName}"
+         .replace("{objectName}", this.alias || this.object.name)
+         .replace("{columnName}", this.columnName);
+
+      let result = "";
+      if (rowData[this.columnName] != null) {
+         result = rowData[this.columnName];
+      } else if (rowData[propName] != null) {
+         result = rowData[propName];
+      }
+
+      return result;
+   }
+
+   /**
+    * @method format
+    * return display text to detail comonent and define label of object
+    *
+    * @param {Object} rowData - data
+    */
+   format(rowData) {
+      if (rowData) {
+         return this.dataValue(rowData);
+      } else return "";
+   }
+
+   /**
+    * @method toDefinition()
+    *
+    * convert this instance into an ABDefinition object.
+    *
+    * @return {ABDefinition}
+    */
+   toDefinition() {
+      var myDef = super.toDefinition();
+
+      // attempt to provide a more descriptive name:
+      // [obj]->[fieldName]
+      if (myDef.name == "") {
+         myDef.name =
+            myDef.json.name || myDef.json.label || myDef.json.columnName;
+      }
+      if (this.object && this.object.name) {
+         myDef.name = `${this.object.name}->${myDef.name}`;
+      }
+      return myDef;
+   }
+};
+
+
+
+/***/ }),
+
+/***/ "./AppBuilder/core/dataFields/ABFieldDateCore.js":
+/*!*******************************************************!*\
+  !*** ./AppBuilder/core/dataFields/ABFieldDateCore.js ***!
+  \*******************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/*
+ * ABFieldDate
+ *
+ * An ABFieldDate defines a date field type.
+ *
+ */
+
+var ABField = __webpack_require__(/*! ../../platform/dataFields/ABField */ "./AppBuilder/platform/dataFields/ABField.js");
+
+function L(key, altText) {
+   // TODO:
+   return altText; // AD.lang.label.getLabel(key) || altText;
+}
+
+var ABFieldDateDefaults = {
+   key: "date", // unique key to reference this specific DataField
+
+   icon: "calendar", // font-awesome icon reference.  (without the 'fa-').  so 'user'  to reference 'fa-user'
+
+   // menuName: what gets displayed in the Editor drop list
+   menuName: L("ab.dataField.date.menuName", "*Date"),
+
+   // description: what gets displayed in the Editor description.
+   description: L(
+      "ab.dataField.date.description",
+      "*Pick one from a calendar."
+   ),
+
+   supportRequire: true,
+
+   // what types of Sails ORM attributes can be imported into this data type?
+   // http://sailsjs.org/documentation/concepts/models-and-orm/attributes#?attribute-options
+   compatibleOrmTypes: ["date"],
+
+   // what types of MySql column types can be imported into this data type?
+   // https://www.techonthenet.com/mysql/datatypes.php
+   compatibleMysqlTypes: ["date"]
+};
+
+const defaultValues = {
+   dateFormat: 2, // 1 (Ignore date), 2, 3, 4, 5
+   defaultDate: 1, // 1 (None), 2 (Current Date), 3 (Specific Date)
+   defaultDateValue: null, // {Date}
+   validateCondition: "none",
+   validateRangeUnit: "days",
+   validateRangeBefore: 0,
+   validateRangeAfter: 0,
+   validateStartDate: null,
+   validateEndDate: null
+};
+
+module.exports = class ABFieldDateCore extends ABField {
+   constructor(values, object, defaultValues = ABFieldDateDefaults) {
+      super(values, object, defaultValues);
+   }
+
+   // return the default values for this DataField
+   static defaults() {
+      return ABFieldDateDefaults;
+   }
+
+   static defaultValues() {
+      return defaultValues;
+   }
+
+   ///
+   /// Instance Methods
+   ///
+
+   /**
+    * @method fromValues()
+    *
+    * initialze this object with the given set of values.
+    * @param {obj} values
+    */
+   fromValues(values) {
+      super.fromValues(values);
+
+      // text to Int:
+      this.settings.dateFormat = parseInt(this.settings.dateFormat);
+      this.settings.defaultDate = parseInt(this.settings.defaultDate);
+   }
+
+   ///
+   /// Working with Actual Object Values:
+   ///
+
+   /**
+    * @method defaultValue
+    * insert a key=>value pair that represent the default value
+    * for this field.
+    * @param {obj} values a key=>value hash of the current values.
+    */
+   defaultValue(values) {
+      if (values[this.columnName] != null) return;
+
+      let dateResult;
+
+      // Set current date as default
+      if (this.settings.defaultDate == 2) {
+         dateResult = new Date();
+      }
+      // Set specific date as default
+      else if (
+         this.settings.defaultDate == 3 &&
+         this.settings.defaultDateValue
+      ) {
+         dateResult = new Date(this.settings.defaultDateValue);
+      }
+
+      // if no default value is set, then don't insert a value.
+      if (dateResult != null) {
+         values[this.columnName] = this.object.application.toDateFormat(
+            dateResult,
+            {
+               format: "YYYY-MM-DD"
+            }
+         );
+         // values[this.columnName] = moment(dateResult).format("YYYY-MM-DD");
+      }
+   }
+
+   /**
+    * @method isValidData
+    * Parse through the given data and return an error if this field's
+    * data seems invalid.
+    * @param {obj} data  a key=>value hash of the inputs to parse.
+    * @param {OPValidator} validator  provided Validator fn
+    */
+   isValidData(data, validator) {
+      super.isValidData(data, validator);
+
+      if (data[this.columnName]) {
+         var value = data[this.columnName];
+
+         if (!(value instanceof Date)) {
+            value = this.object.application.toDate(value);
+            // value = new Date(this.convertToMoment(value));
+         }
+
+         // verify we didn't end up with an InValid Date result.
+         if (
+            Object.prototype.toString.call(value) === "[object Date]" &&
+            isFinite(value)
+         ) {
+            var isValid = true;
+
+            // Custom vaildate is here
+            if (this.settings && this.settings.validateCondition) {
+               var startDate = this.settings.validateStartDate
+                     ? new Date(this.settings.validateStartDate)
+                     : null,
+                  endDate = this.settings.validateEndDate
+                     ? new Date(this.settings.validateEndDate)
+                     : null,
+                  startDateDisplay = this.getDateDisplay(startDate),
+                  endDateDisplay = this.getDateDisplay(endDate);
+
+               switch (this.settings.validateCondition) {
+                  case "dateRange":
+                     var minDate = this.object.application.subtractDate(
+                        new Date(),
+                        this.settings.validateRangeBefore,
+                        this.settings.validateRangeUnit
+                     );
+                     var maxDate = this.object.application.addDate(
+                        new Date(),
+                        this.settings.validateRangeAfter,
+                        this.settings.validateRangeUnit
+                     );
+                     if (minDate < value && value < maxDate) isValid = true;
+                     else {
+                        isValid = false;
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.dateRange",
+                              "*Should be in between {startdate} and {enddate}"
+                           )
+                              .replace(
+                                 "{startdate}",
+                                 this.getDateDisplay(minDate)
+                              )
+                              .replace(
+                                 "{enddate}",
+                                 this.getDateDisplay(maxDate)
+                              )
+                        );
+                     }
+
+                     break;
+                  case "between":
+                     if (startDate < value && value < endDate) isValid = true;
+                     else {
+                        isValid = false;
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.between",
+                              "*Should be in between {startdate} and {enddate}"
+                           )
+                              .replace("{startdate}", startDateDisplay)
+                              .replace("{enddate}", endDateDisplay)
+                        );
+                     }
+                     break;
+                  case "notBetween":
+                     if (value < startDate && endDate < value) isValid = true;
+                     else {
+                        isValid = false;
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.notBetween",
+                              "*Should not be in between {startdate} and {enddate}"
+                           )
+                              .replace("{startdate}", startDateDisplay)
+                              .replace("{enddate}", endDateDisplay)
+                        );
+                     }
+                     break;
+                  case "=":
+                     isValid =
+                        value.getTime &&
+                        startDate.getTime &&
+                        value.getTime() == startDate.getTime();
+                     if (!isValid)
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.equal",
+                              "*Should equal {startdate}"
+                           ).replace("{startdate}", startDateDisplay)
+                        );
+                     break;
+                  case "<>":
+                     isValid =
+                        value.getTime &&
+                        startDate.getTime &&
+                        value.getTime() != startDate.getTime();
+                     if (!isValid)
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.notEqual",
+                              "*Should not equal {startdate}"
+                           ).replace("{startdate}", startDateDisplay)
+                        );
+                     break;
+                  case ">":
+                     isValid =
+                        value.getTime &&
+                        startDate.getTime &&
+                        value.getTime() > startDate.getTime();
+                     if (!isValid)
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.after",
+                              "*Should after {startdate}"
+                           ).replace("{startdate}", startDateDisplay)
+                        );
+                     break;
+                  case "<":
+                     isValid =
+                        value.getTime &&
+                        startDate.getTime &&
+                        value.getTime() < startDate.getTime();
+                     if (!isValid)
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.before",
+                              "*Should before {startdate}"
+                           ).replace("{startdate}", startDateDisplay)
+                        );
+                     break;
+                  case ">=":
+                     isValid =
+                        value.getTime &&
+                        startDate.getTime &&
+                        value.getTime() >= startDate.getTime();
+                     if (!isValid)
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.afterOrEqual",
+                              "*Should after or equal {startdate}"
+                           ).replace("{startdate}", startDateDisplay)
+                        );
+                     break;
+                  case "<=":
+                     isValid =
+                        value.getTime &&
+                        startDate.getTime &&
+                        value.getTime() <= startDate.getTime();
+                     if (!isValid)
+                        validator.addError(
+                           this.columnName,
+                           L(
+                              "ab.dataField.date.error.beforeOrEqual",
+                              "*Should before or equal {startdate}"
+                           ).replace("{startdate}", startDateDisplay)
+                        );
+                     break;
+               }
+            }
+
+            if (isValid) {
+               // Reformat value to DB
+               // NOTE: should we update here?
+               data[this.columnName] = this.exportValue(value);
+            }
+         } else {
+            // return a validation error
+            validator.addError(this.columnName, "Should be a Date!");
+         }
+      }
+   }
+
+   format(rowData) {
+      var d = this.dataValue(rowData);
+
+      if (d == "" || d == null) {
+         return "";
+      }
+
+      // pull format from settings.
+      let dateObj = this.object.application.toDate(d);
+      return this.getDateDisplay(dateObj);
+
+      // let momentObj = this.convertToMoment(d);
+      // return this.getDateDisplay(new Date(momentObj));
+   }
+
+   getFormat() {
+      let dateFormatString = "";
+
+      let dateFormat =
+         this.settings && this.settings.dateFormat
+            ? this.settings.dateFormat
+            : "";
+
+      switch (dateFormat) {
+         //Ignore Date
+         case (1, 2):
+            {
+               dateFormatString = "%d/%m/%Y";
+            }
+            break;
+         //mm/dd/yyyy
+         case 3:
+            {
+               dateFormatString = "%m/%d/%Y";
+            }
+            break;
+         //M D, yyyy
+         case 4:
+            {
+               dateFormatString = "%M %d, %Y";
+            }
+            break;
+         //D M, yyyy
+         case 5:
+            {
+               dateFormatString = "%d %M, %Y";
+            }
+            break;
+         default:
+            {
+               dateFormatString = "%d/%m/%Y";
+            }
+            break;
+      }
+
+      return dateFormatString;
+   }
+
+   getDateDisplay(dateData) {
+      let dateFormat = this.getFormat();
+
+      return this.dateToString(dateFormat, dateData);
+   }
+
+   // convertToMoment(string) {
+   //    let result = moment(string);
+
+   //    let supportFormats = [
+   //       "DD/MM/YYYY",
+   //       "MM/DD/YYYY",
+   //       "DD-MM-YYYY",
+   //       "MM-DD-YYYY"
+   //    ];
+
+   //    supportFormats.forEach((format) => {
+   //       if (!result || !result.isValid()) result = moment(string, format);
+   //    });
+
+   //    return result;
+   // }
+
+   exportValue(value) {
+      return this.object.application.toDateFormat(value, {
+         format: "YYYY-MM-DD"
+      });
+      // return this.convertToMoment(value).format("YYYY-MM-DD");
+   }
+
+   dateToString(dateFormat, dateData) {
+      if (dateData && dateData.toString) return dateData.toString();
+      else return "";
+   }
+};
+
+
+
+/***/ }),
+
+/***/ "./AppBuilder/core/dataFields/ABFieldLongTextCore.js":
+/*!***********************************************************!*\
+  !*** ./AppBuilder/core/dataFields/ABFieldLongTextCore.js ***!
+  \***********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/*
+ * ABFieldLongText
+ *
+ * An ABFieldLongText defines a LongText field type.
+ *
+ */
+
+var ABField = __webpack_require__(/*! ../../platform/dataFields/ABField */ "./AppBuilder/platform/dataFields/ABField.js");
+
+function L(key, altText) {
+   // TODO:
+   return altText; // AD.lang.label.getLabel(key) || altText;
+}
+
+const MAX_CHAR_LENGTH = 5000;
+
+var ABFieldLongTextDefaults = {
+   key: "LongText", // unique key to reference this specific DataField
+   type: "longtext",
+   icon: "align-right", // font-awesome icon reference.  (without the 'fa-').  so 'user'  to reference 'fa-user'
+
+   // menuName: what gets displayed in the Editor drop list
+   menuName: L("ab.dataField.LongText.menuName", "*Long text"),
+
+   // description: what gets displayed in the Editor description.
+   description: L(
+      "ab.dataField.LongText.description",
+      "*Multiple lines of text"
+   ),
+
+   supportRequire: true,
+
+   // what types of Sails ORM attributes can be imported into this data type?
+   // http://sailsjs.org/documentation/concepts/models-and-orm/attributes#?attribute-options
+   compatibleOrmTypes: ["longtext", "mediumtext", "text"],
+
+   // what types of MySql column types can be imported into this data type?
+   // https://www.techonthenet.com/mysql/datatypes.php
+   compatibleMysqlTypes: ["text", "mediumtext", "longtext"]
+};
+
+// defaultValues: the keys must match a .name of your elements to set it's default value.
+var defaultValues = {
+   default: "",
+   supportMultilingual: 0
+};
+
+module.exports = class ABFieldLongText extends ABField {
+   constructor(values, object) {
+      super(values, object, ABFieldLongTextDefaults);
+
+      /*
+    	{
+			settings: {
+				default: 'string',
+				supportMultilingual: 1/0
+			}
+    	}
+    	*/
+   }
+
+   // return the default values for this DataField
+   static defaults() {
+      return ABFieldLongTextDefaults;
+   }
+
+   static defaultValues() {
+      return defaultValues;
+   }
+
+   ///
+   /// Instance Methods
+   ///
+
+   /**
+    * @method fromValues()
+    *
+    * initialze this object with the given set of values.
+    * @param {obj} values
+    */
+   fromValues(values) {
+      super.fromValues(values);
+
+      this.settings.default = values.settings.default || "";
+
+      // we're responsible for setting up our specific settings:
+      this.settings.supportMultilingual =
+         values.settings.supportMultilingual + "" ||
+         defaultValues.supportMultilingual;
+
+      // text to Int:
+      this.settings.supportMultilingual = parseInt(
+         this.settings.supportMultilingual
+      );
+
+      if (this.settings.supportMultilingual) {
+         if (this.object)
+            this.object.translate(this.settings, this.settings, ["default"]);
+      } else this.settings.default = values.settings.default || "";
+   }
+
+   /**
+    * @method toObj()
+    *
+    * properly compile the current state of this ABApplication instance
+    * into the values needed for saving to the DB.
+    *
+    * Most of the instance data is stored in .json field, so be sure to
+    * update that from all the current values of our child fields.
+    *
+    * @return {json}
+    */
+   toObj() {
+      var obj = super.toObj();
+
+      if (this.settings.supportMultilingual)
+         if (this.object)
+            this.object.unTranslate(obj.settings, obj.settings, ["default"]);
+         else obj.settings.default = this.settings.default;
+
+      return obj;
+   }
+
+   /*
+    * @property isMultilingual
+    * does this field represent multilingual data?
+    * @return {bool}
+    */
+   get isMultilingual() {
+      return this.settings.supportMultilingual == 1;
+   }
+
+   /**
+    * @method defaultValue
+    * insert a key=>value pair that represent the default value
+    * for this field.
+    * @param {obj} values a key=>value hash of the current values.
+    */
+   defaultValue(values) {
+      if (values[this.columnName] == null) {
+         if (typeof this.settings.default == "string") {
+            values[this.columnName] = this.settings.default;
+         } else {
+            values[this.columnName] = "";
+         }
+      }
+   }
+
+   /**
+    * @method isValidData
+    * Parse through the given data and return an error if this field's
+    * data seems invalid.
+    * @param {obj} data  a key=>value hash of the inputs to parse.
+    * @param {OPValidator} validator  provided Validator fn
+    * @return {array}
+    */
+   isValidData(data, validator) {
+      super.isValidData(data, validator);
+
+      if (
+         data &&
+         data[this.columnName] &&
+         data[this.columnName].length > MAX_CHAR_LENGTH
+      ) {
+         validator.addError(
+            this.columnName,
+            `should NOT be longer than ${MAX_CHAR_LENGTH} characters`
+         );
+      }
+   }
+};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/core/dataFields/ABFieldNumberCore.js":
+/*!*********************************************************!*\
+  !*** ./AppBuilder/core/dataFields/ABFieldNumberCore.js ***!
+  \*********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/*
+ * ABFieldNumber
+ *
+ * An ABFieldNumber defines a Number field type.
+ *
+ */
+
+var ABField = __webpack_require__(/*! ../../platform/dataFields/ABField */ "./AppBuilder/platform/dataFields/ABField.js");
+
+function L(key, altText) {
+   // TODO:
+   return altText; // AD.lang.label.getLabel(key) || altText;
+}
+
+var ABFieldNumberDefaults = {
+   key: "number", // unique key to reference this specific DataField
+
+   icon: "hashtag", // font-awesome icon reference.  (without the 'fa-').  so 'user'  to reference 'fa-user'
+
+   // menuName: what gets displayed in the Editor drop list
+   menuName: L("ab.dataField.number.menuName", "*Number"),
+
+   // description: what gets displayed in the Editor description.
+   description: L(
+      "ab.dataField.number.description",
+      "*A Float or Integer Value"
+   ),
+
+   supportRequire: true,
+   supportUnique: true,
+
+   // what types of Sails ORM attributes can be imported into this data type?
+   // http://sailsjs.org/documentation/concepts/models-and-orm/attributes#?attribute-options
+   compatibleOrmTypes: ["integer", "float"],
+
+   // what types of MySql column types can be imported into this data type?
+   // https://www.techonthenet.com/mysql/datatypes.php
+   compatibleMysqlTypes: [
+      "tinyint",
+      "smallint",
+      "mediumint",
+      "int",
+      "integer",
+      "bigint",
+      "decimal",
+      "dec",
+      "numeric",
+      "fixed",
+      "float",
+      "real"
+   ]
+};
+
+var defaultValues = {
+   // 'allowRequired': 0,
+   default: "",
+   typeFormat: "none",
+   typeDecimals: "none",
+   typeDecimalPlaces: "none",
+   typeRounding: "none",
+   typeThousands: "none",
+   validation: 0,
+   validateMinimum: "",
+   validateMaximum: ""
+};
+
+module.exports = class ABFieldNumberCore extends ABField {
+   constructor(values, object) {
+      super(values, object, ABFieldNumberDefaults);
+
+      /*
+    	{
+			settings: {
+				'allowRequired':0,
+				'default':null,
+				'typeFormat': 'none',
+				'typeDecimals': 'none',
+				'typeDecimalPlaces': 'none',
+				'typeRounding' : 'none',
+				'typeThousands': 'none',
+				'validation':0,
+				'validateMinimum':null,
+				'validateMaximum':null
+			}
+    	}
+    	*/
+   }
+
+   // return the default values for this DataField
+   static defaults() {
+      return ABFieldNumberDefaults;
+   }
+
+   static defaultValues() {
+      return defaultValues;
+   }
+
+   static formatList() {
+      return [
+         { id: "none", value: L("ab.dataField.number.none", "*None") },
+         {
+            id: "dollar",
+            value: L("ab.dataField.number.format.dollar", "$"),
+            sign: "$",
+            position: "prefix"
+         },
+         {
+            id: "yen",
+            value: L("ab.dataField.number.format.yen", "¥"),
+            sign: "¥",
+            position: "prefix"
+         },
+         {
+            id: "pound",
+            value: L("ab.dataField.number.format.pound", "£"),
+            sign: "£",
+            position: "prefix"
+         },
+         {
+            id: "euroBefore",
+            value: L("ab.dataField.number.format.euroBefore", "€ (before)"),
+            sign: "€",
+            position: "prefix"
+         },
+         {
+            id: "euroAfter",
+            value: L("ab.dataField.number.format.euroAfter", "€ (after)"),
+            sign: "€",
+            position: "postfix"
+         },
+         {
+            id: "percent",
+            value: L("ab.dataField.number.format.percent", "%"),
+            sign: "%",
+            position: "postfix"
+         }
+      ];
+   }
+
+   static delimiterList() {
+      return [
+         { id: "none", value: L("ab.dataField.number.none", "*None") },
+         {
+            id: "comma",
+            value: L("ab.dataField.number.comma", "*Comma"),
+            sign: ","
+         },
+         {
+            id: "period",
+            value: L("ab.dataField.number.period", "*Period"),
+            sign: "."
+         },
+         {
+            id: "space",
+            value: L("ab.dataField.number.space", "*Space"),
+            sign: " "
+         }
+      ];
+   }
+
+   ///
+   /// Instance Methods
+   ///
+
+   fromValues(values) {
+      super.fromValues(values);
+
+      // text to Int:
+      // this.settings.allowRequired = parseInt(this.settings.allowRequired);
+      this.settings.validation = parseInt(this.settings.validation);
+   }
+
+   ///
+   /// Working with Actual Object Values:
+   ///
+
+   /**
+    * @method defaultValue
+    * insert a key=>value pair that represent the default value
+    * for this field.
+    * @param {obj} values a key=>value hash of the current values.
+    */
+   defaultValue(values) {
+      // if no default value is set, then don't insert a value.
+      if (this.settings.default != "") {
+         values[this.columnName] = this.settings.default;
+      }
+   }
+
+   /**
+    * @method isValidData
+    * Parse through the given data and return an error if this field's
+    * data seems invalid.
+    * @param {obj} data  a key=>value hash of the inputs to parse.
+    * @param {OPValidator} validator  provided Validator fn
+    * @return {array}
+    */
+   isValidData(data, validator) {
+      super.isValidData(data, validator);
+
+      if (data[this.columnName] != null && data[this.columnName] != "") {
+         var value = data[this.columnName];
+
+         // if this is an integer:
+         if (this.settings.typeDecimals == "none") {
+            value = parseInt(value);
+         } else {
+            var places = parseInt(this.settings.typeDecimalPlaces) || 2;
+            value = parseFloat(parseFloat(value).toFixed(places));
+         }
+
+         var isNumeric = (n) => {
+            return !Number.isNaN(parseFloat(n)) && Number.isFinite(n);
+         };
+         if (!isNumeric(value)) {
+            validator.addError(this.columnName, "invalid number");
+         }
+
+         // validate Minimum
+         if (
+            this.settings.validation == true &&
+            this.settings.validateMinimum != null &&
+            this.settings.validateMinimum > value
+         ) {
+            var errMessage = "should be greater than {min}".replace(
+               "{min}",
+               this.settings.validateMinimum
+            );
+
+            validator.addError(this.columnName, errMessage);
+         }
+
+         // validate Maximum
+         if (
+            this.settings.validation == true &&
+            this.settings.validateMaximum != null &&
+            this.settings.validateMaximum < value
+         ) {
+            var errMessage = "should be less than {max}".replace(
+               "{max}",
+               this.settings.validateMaximum
+            );
+
+            validator.addError(this.columnName, errMessage);
+         }
+      }
+   }
+
+   format(rowData) {
+      if (
+         rowData[this.columnName] == null ||
+         (rowData[this.columnName] != 0 && rowData[this.columnName] == "")
+      )
+         return "";
+
+      let data = rowData[this.columnName] || 0;
+
+      if (typeof data == "string") {
+         data = data.replace(/,/g, "");
+      }
+
+      // Validate number
+      if (isNaN(parseFloat(data))) data = 0;
+
+      var formatSign = this.constructor
+            .formatList()
+            .filter((item) => item.id == this.settings.typeFormat)[0],
+         thousandsSign = this.constructor
+            .delimiterList()
+            .filter((item) => item.id == this.settings.typeThousands)[0],
+         decimalSign = this.constructor
+            .delimiterList()
+            .filter((item) => item.id == this.settings.typeDecimals)[0],
+         decimalPlaces =
+            this.settings.typeDecimalPlaces != "none"
+               ? parseInt(this.settings.typeDecimalPlaces)
+               : 0;
+
+      var prefix = "",
+         postfix = "";
+
+      if (formatSign && formatSign.sign) {
+         switch (formatSign.position) {
+            case "prefix":
+               prefix = formatSign.sign;
+               break;
+            case "postfix":
+               postfix = formatSign.sign;
+               break;
+         }
+      }
+
+      decimalSign = decimalSign.sign || "";
+      thousandsSign = thousandsSign.sign || "";
+
+      // round number
+      if (this.settings.typeRounding == "roundDown") {
+         var digit = Math.pow(10, decimalPlaces);
+         data = Math.floor(data * digit) / digit;
+      }
+
+      return "{prefix} {number} {postfix}"
+         .replace("{prefix}", prefix)
+         .replace("{postfix}", postfix)
+         .replace(
+            "{number}",
+            this.formatNumber(data, {
+               groupDelimiter: thousandsSign,
+               groupSize: 3,
+               decimalDelimiter: decimalSign,
+               decimalSize: decimalPlaces
+            })
+         );
+   }
+
+   formatNumber(data, options = {}) {
+      if (data === "" || data == null) return data;
+
+      data = parseFloat(data);
+      let negativeSign = data < 0 ? "-" : "";
+      data = Math.abs(data);
+
+      let dataStr = data.toString();
+      let integerStr = dataStr.split(".")[0];
+      let decimalStr = dataStr.split(".")[1];
+
+      let integerValue = "";
+
+      // Thousands digit sign
+      if (options.groupDelimiter) {
+         let step = 3;
+         let i = integerStr.length;
+
+         do {
+            i -= step;
+            let chunk =
+               i > 0
+                  ? integerStr.substr(i, step)
+                  : integerStr.substr(0, step + i);
+            integerValue = `${chunk}${
+               integerValue ? options.groupDelimiter + integerValue : ""
+            }`;
+         } while (i > 0);
+      } else {
+         integerValue = integerStr;
+      }
+
+      let result = "";
+
+      // Decimal
+      if (options.decimalDelimiter && options.decimalSize) {
+         result = `${negativeSign}${integerValue}${
+            decimalStr
+               ? options.decimalDelimiter +
+                 decimalStr.toString().substr(0, options.decimalSize)
+               : ""
+         }`;
+      }
+      // Integer
+      else {
+         result = `${negativeSign}${integerValue}`;
+      }
+
+      return result;
+   }
+
+   getDecimalSize() {
+      if (this.settings.typeDecimalPlaces != "none") {
+         return parseInt(this.settings.typeDecimalPlaces);
+      } else {
+         return 0;
+      }
+   }
+};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/core/dataFields/ABFieldStringCore.js":
+/*!*********************************************************!*\
+  !*** ./AppBuilder/core/dataFields/ABFieldStringCore.js ***!
+  \*********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/*
+ * ABFieldString
+ *
+ * An ABFieldString defines a string field type.
+ *
+ */
+
+var ABField = __webpack_require__(/*! ../../platform/dataFields/ABField */ "./AppBuilder/platform/dataFields/ABField.js");
+
+function L(key, altText) {
+   // TODO:
+   return altText; // AD.lang.label.getLabel(key) || altText;
+}
+
+const MAX_CHAR_LENGTH = 255;
+
+var ABFieldStringDefaults = {
+   key: "string", // unique key to reference this specific DataField
+   // type : 'string', // http://sailsjs.org/documentation/concepts/models-and-orm/attributes#?attribute-options
+   icon: "font", // font-awesome icon reference.  (without the 'fa-').  so 'user'  to reference 'fa-user'
+
+   // menuName: what gets displayed in the Editor drop list
+   menuName: L("ab.dataField.string.menuName", "*Single line text"),
+
+   // description: what gets displayed in the Editor description.
+   description: L("ab.dataField.string.description", "*short string value"),
+
+   supportRequire: true,
+
+   // what types of Sails ORM attributes can be imported into this data type?
+   // http://sailsjs.org/documentation/concepts/models-and-orm/attributes#?attribute-options
+   compatibleOrmTypes: ["string"],
+
+   // what types of MySql column types can be imported into this data type?
+   // https://www.techonthenet.com/mysql/datatypes.php
+   compatibleMysqlTypes: ["char", "varchar", "tinytext"]
+};
+
+var defaultValues = {
+   default: "",
+   supportMultilingual: 0
+};
+
+module.exports = class ABFieldStringCore extends ABField {
+   constructor(values, object) {
+      super(values, object, ABFieldStringDefaults);
+
+      /*
+    	{
+			settings: {
+				default: 'string',
+				supportMultilingual: 1/0
+			}
+    	}
+        */
+   }
+
+   // return the default values for this DataField
+   static defaults() {
+      return ABFieldStringDefaults;
+   }
+
+   static defaultValues() {
+      return defaultValues;
+   }
+
+   ///
+   /// Instance Methods
+   ///
+
+   /**
+    * @method fromValues()
+    *
+    * initialze this object with the given set of values.
+    * @param {obj} values
+    */
+   fromValues(values) {
+      super.fromValues(values);
+
+      // we're responsible for setting up our specific settings:
+      this.settings.default = values.settings.default || defaultValues.default;
+      this.settings.supportMultilingual =
+         values.settings.supportMultilingual + "" ||
+         defaultValues.supportMultilingual;
+
+      // text to Int:
+      this.settings.supportMultilingual = parseInt(
+         this.settings.supportMultilingual
+      );
+
+      if (this.settings.supportMultilingual) {
+         this.translate(this.settings, this.settings, ["default"]);
+      } else this.settings.default = values.settings.default || "";
+   }
+
+   /**
+    * @method toObj()
+    *
+    * properly compile the current state of this ABApplication instance
+    * into the values needed for saving to the DB.
+    *
+    * Most of the instance data is stored in .json field, so be sure to
+    * update that from all the current values of our child fields.
+    *
+    * @return {json}
+    */
+   toObj() {
+      var obj = super.toObj();
+
+      if (this.settings.supportMultilingual) {
+         this.unTranslate(obj.settings, obj.settings, ["default"]);
+      } else obj.settings.default = this.settings.default;
+
+      return obj;
+   }
+
+   ///
+   /// Working with Actual Object Values:
+   ///
+
+   /**
+    * @method defaultValue
+    * insert a key=>value pair that represent the default value
+    * for this field.
+    * @param {obj} values a key=>value hash of the current values.
+    */
+   defaultValue(values) {
+      // if no default value is set, then don't insert a value.
+      if (!values[this.columnName]) {
+         // Set default string
+         if (this.settings.default) {
+            if (this.settings.default.indexOf("{uuid}") >= 0) {
+               values[this.columnName] = OP.Util.uuid();
+            } else {
+               values[this.columnName] = this.settings.default;
+            }
+         }
+      }
+   }
+
+   /**
+    * @method isValidData
+    * Parse through the given data and return an error if this field's
+    * data seems invalid.
+    * @param {obj} data  a key=>value hash of the inputs to parse.
+    * @param {OPValidator} validator  provided Validator fn
+    * @return {array}
+    */
+   isValidData(data, validator) {
+      super.isValidData(data, validator);
+
+      if (
+         data &&
+         data[this.columnName] &&
+         data[this.columnName].length > MAX_CHAR_LENGTH
+      ) {
+         validator.addError(
+            this.columnName,
+            `should NOT be longer than ${MAX_CHAR_LENGTH} characters`
+         );
+      }
+   }
+
+   /*
+    * @property isMultilingual
+    * does this field represent multilingual data?
+    * @return {bool}
+    */
+   get isMultilingual() {
+      return this.settings.supportMultilingual == 1;
+   }
+};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/ABDefinition.js":
+/*!*********************************************!*\
+  !*** ./AppBuilder/platform/ABDefinition.js ***!
+  \*********************************************/
+/***/ (() => {
+
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/ABEmitter.js":
+/*!******************************************!*\
+  !*** ./AppBuilder/platform/ABEmitter.js ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * ABEmitter
+ *
+ * This is the platform dependent implementation of an Emitter object.
+ *
+ */
+
+var EventEmitter = __webpack_require__(/*! events */ "./node_modules/events/events.js").EventEmitter;
+
+module.exports = class ABEmitter extends EventEmitter {
+   constructor() {
+      super(/*{ maxListeners: 0 }*/);
+   }
+};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/ABMLClass.js":
+/*!******************************************!*\
+  !*** ./AppBuilder/platform/ABMLClass.js ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const ABMLClassCore = __webpack_require__(/*! ../core/ABMLClassCore */ "./AppBuilder/core/ABMLClassCore.js");
+
+module.exports = class ABMLClass extends ABMLClassCore {};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/dataFields/ABField.js":
+/*!***************************************************!*\
+  !*** ./AppBuilder/platform/dataFields/ABField.js ***!
+  \***************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const ABFieldCore = __webpack_require__(/*! ../../core/dataFields/ABFieldCore */ "./AppBuilder/core/dataFields/ABFieldCore.js");
+
+module.exports = class ABField extends ABFieldCore {};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/dataFields/ABFieldBoolean.js":
+/*!**********************************************************!*\
+  !*** ./AppBuilder/platform/dataFields/ABFieldBoolean.js ***!
+  \**********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const ABFieldBooleanCore = __webpack_require__(/*! ../../core/dataFields/ABFieldBooleanCore */ "./AppBuilder/core/dataFields/ABFieldBooleanCore.js");
+
+module.exports = class ABFieldBoolean extends ABFieldBooleanCore {};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/dataFields/ABFieldDate.js":
+/*!*******************************************************!*\
+  !*** ./AppBuilder/platform/dataFields/ABFieldDate.js ***!
+  \*******************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const ABFieldDateCore = __webpack_require__(/*! ../../core/dataFields/ABFieldDateCore */ "./AppBuilder/core/dataFields/ABFieldDateCore.js");
+
+module.exports = class ABFieldDate extends ABFieldDateCore {};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/dataFields/ABFieldLongText.js":
+/*!***********************************************************!*\
+  !*** ./AppBuilder/platform/dataFields/ABFieldLongText.js ***!
+  \***********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const ABFieldLongTextCore = __webpack_require__(/*! ../../core/dataFields/ABFieldLongTextCore */ "./AppBuilder/core/dataFields/ABFieldLongTextCore.js");
+
+module.exports = class ABFieldLongText extends ABFieldLongTextCore {};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/dataFields/ABFieldNumber.js":
+/*!*********************************************************!*\
+  !*** ./AppBuilder/platform/dataFields/ABFieldNumber.js ***!
+  \*********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const ABFieldNumberCore = __webpack_require__(/*! ../../core/dataFields/ABFieldNumberCore */ "./AppBuilder/core/dataFields/ABFieldNumberCore.js");
+
+module.exports = class ABFieldNumber extends ABFieldNumberCore {};
+
+
+/***/ }),
+
+/***/ "./AppBuilder/platform/dataFields/ABFieldString.js":
+/*!*********************************************************!*\
+  !*** ./AppBuilder/platform/dataFields/ABFieldString.js ***!
+  \*********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const ABFieldStringCore = __webpack_require__(/*! ../../core/dataFields/ABFieldStringCore */ "./AppBuilder/core/dataFields/ABFieldStringCore.js");
+
+module.exports = class ABFieldString extends ABFieldStringCore {};
+
+
+/***/ }),
+
+/***/ "./node_modules/events/events.js":
+/*!***************************************!*\
+  !*** ./node_modules/events/events.js ***!
+  \***************************************/
+/***/ ((module) => {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var R = typeof Reflect === 'object' ? Reflect : null
+var ReflectApply = R && typeof R.apply === 'function'
+  ? R.apply
+  : function ReflectApply(target, receiver, args) {
+    return Function.prototype.apply.call(target, receiver, args);
+  }
+
+var ReflectOwnKeys
+if (R && typeof R.ownKeys === 'function') {
+  ReflectOwnKeys = R.ownKeys
+} else if (Object.getOwnPropertySymbols) {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target)
+      .concat(Object.getOwnPropertySymbols(target));
+  };
+} else {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target);
+  };
+}
+
+function ProcessEmitWarning(warning) {
+  if (console && console.warn) console.warn(warning);
+}
+
+var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
+  return value !== value;
+}
+
+function EventEmitter() {
+  EventEmitter.init.call(this);
+}
+module.exports = EventEmitter;
+module.exports.once = once;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._eventsCount = 0;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+var defaultMaxListeners = 10;
+
+function checkListener(listener) {
+  if (typeof listener !== 'function') {
+    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
+  }
+}
+
+Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
+  enumerable: true,
+  get: function() {
+    return defaultMaxListeners;
+  },
+  set: function(arg) {
+    if (typeof arg !== 'number' || arg < 0 || NumberIsNaN(arg)) {
+      throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + arg + '.');
+    }
+    defaultMaxListeners = arg;
+  }
+});
+
+EventEmitter.init = function() {
+
+  if (this._events === undefined ||
+      this._events === Object.getPrototypeOf(this)._events) {
+    this._events = Object.create(null);
+    this._eventsCount = 0;
+  }
+
+  this._maxListeners = this._maxListeners || undefined;
+};
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || NumberIsNaN(n)) {
+    throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + n + '.');
+  }
+  this._maxListeners = n;
+  return this;
+};
+
+function _getMaxListeners(that) {
+  if (that._maxListeners === undefined)
+    return EventEmitter.defaultMaxListeners;
+  return that._maxListeners;
+}
+
+EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
+  return _getMaxListeners(this);
+};
+
+EventEmitter.prototype.emit = function emit(type) {
+  var args = [];
+  for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
+  var doError = (type === 'error');
+
+  var events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    var er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+    // At least give some kind of context to the user
+    var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  var handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    ReflectApply(handler, this, args);
+  } else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      ReflectApply(listeners[i], this, args);
+  }
+
+  return true;
+};
+
+function _addListener(target, type, listener, prepend) {
+  var m;
+  var events;
+  var existing;
+
+  checkListener(listener);
+
+  events = target._events;
+  if (events === undefined) {
+    events = target._events = Object.create(null);
+    target._eventsCount = 0;
+  } else {
+    // To avoid recursion in the case that type === "newListener"! Before
+    // adding it to the listeners, first emit "newListener".
+    if (events.newListener !== undefined) {
+      target.emit('newListener', type,
+                  listener.listener ? listener.listener : listener);
+
+      // Re-assign `events` because a newListener handler could have caused the
+      // this._events to be assigned to a new object
+      events = target._events;
+    }
+    existing = events[type];
+  }
+
+  if (existing === undefined) {
+    // Optimize the case of one listener. Don't need the extra array object.
+    existing = events[type] = listener;
+    ++target._eventsCount;
+  } else {
+    if (typeof existing === 'function') {
+      // Adding the second element, need to change to array.
+      existing = events[type] =
+        prepend ? [listener, existing] : [existing, listener];
+      // If we've already got an array, just append.
+    } else if (prepend) {
+      existing.unshift(listener);
+    } else {
+      existing.push(listener);
+    }
+
+    // Check for listener leak
+    m = _getMaxListeners(target);
+    if (m > 0 && existing.length > m && !existing.warned) {
+      existing.warned = true;
+      // No error code for this since it is a Warning
+      // eslint-disable-next-line no-restricted-syntax
+      var w = new Error('Possible EventEmitter memory leak detected. ' +
+                          existing.length + ' ' + String(type) + ' listeners ' +
+                          'added. Use emitter.setMaxListeners() to ' +
+                          'increase limit');
+      w.name = 'MaxListenersExceededWarning';
+      w.emitter = target;
+      w.type = type;
+      w.count = existing.length;
+      ProcessEmitWarning(w);
+    }
+  }
+
+  return target;
+}
+
+EventEmitter.prototype.addListener = function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.prependListener =
+    function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    };
+
+function onceWrapper() {
+  if (!this.fired) {
+    this.target.removeListener(this.type, this.wrapFn);
+    this.fired = true;
+    if (arguments.length === 0)
+      return this.listener.call(this.target);
+    return this.listener.apply(this.target, arguments);
+  }
+}
+
+function _onceWrap(target, type, listener) {
+  var state = { fired: false, wrapFn: undefined, target: target, type: type, listener: listener };
+  var wrapped = onceWrapper.bind(state);
+  wrapped.listener = listener;
+  state.wrapFn = wrapped;
+  return wrapped;
+}
+
+EventEmitter.prototype.once = function once(type, listener) {
+  checkListener(listener);
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+};
+
+EventEmitter.prototype.prependOnceListener =
+    function prependOnceListener(type, listener) {
+      checkListener(listener);
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    };
+
+// Emits a 'removeListener' event if and only if the listener was removed.
+EventEmitter.prototype.removeListener =
+    function removeListener(type, listener) {
+      var list, events, position, i, originalListener;
+
+      checkListener(listener);
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        position = -1;
+
+        for (i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    };
+
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+
+EventEmitter.prototype.removeAllListeners =
+    function removeAllListeners(type) {
+      var listeners, events, i;
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      // not listening for removeListener, no need to emit
+      if (events.removeListener === undefined) {
+        if (arguments.length === 0) {
+          this._events = Object.create(null);
+          this._eventsCount = 0;
+        } else if (events[type] !== undefined) {
+          if (--this._eventsCount === 0)
+            this._events = Object.create(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        var keys = Object.keys(events);
+        var key;
+        for (i = 0; i < keys.length; ++i) {
+          key = keys[i];
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = Object.create(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners !== undefined) {
+        // LIFO order
+        for (i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    };
+
+function _listeners(target, type, unwrap) {
+  var events = target._events;
+
+  if (events === undefined)
+    return [];
+
+  var evlistener = events[type];
+  if (evlistener === undefined)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ?
+    unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  if (typeof emitter.listenerCount === 'function') {
+    return emitter.listenerCount(type);
+  } else {
+    return listenerCount.call(emitter, type);
+  }
+};
+
+EventEmitter.prototype.listenerCount = listenerCount;
+function listenerCount(type) {
+  var events = this._events;
+
+  if (events !== undefined) {
+    var evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+
+EventEmitter.prototype.eventNames = function eventNames() {
+  return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
+};
+
+function arrayClone(arr, n) {
+  var copy = new Array(n);
+  for (var i = 0; i < n; ++i)
+    copy[i] = arr[i];
+  return copy;
+}
+
+function spliceOne(list, index) {
+  for (; index + 1 < list.length; index++)
+    list[index] = list[index + 1];
+  list.pop();
+}
+
+function unwrapListeners(arr) {
+  var ret = new Array(arr.length);
+  for (var i = 0; i < ret.length; ++i) {
+    ret[i] = arr[i].listener || arr[i];
+  }
+  return ret;
+}
+
+function once(emitter, name) {
+  return new Promise(function (resolve, reject) {
+    function errorListener(err) {
+      emitter.removeListener(name, resolver);
+      reject(err);
+    }
+
+    function resolver() {
+      if (typeof emitter.removeListener === 'function') {
+        emitter.removeListener('error', errorListener);
+      }
+      resolve([].slice.call(arguments));
+    };
+
+    eventTargetAgnosticAddListener(emitter, name, resolver, { once: true });
+    if (name !== 'error') {
+      addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
+    }
+  });
+}
+
+function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
+  if (typeof emitter.on === 'function') {
+    eventTargetAgnosticAddListener(emitter, 'error', handler, flags);
+  }
+}
+
+function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+  if (typeof emitter.on === 'function') {
+    if (flags.once) {
+      emitter.once(name, listener);
+    } else {
+      emitter.on(name, listener);
+    }
+  } else if (typeof emitter.addEventListener === 'function') {
+    // EventTarget does not have `error` event semantics like Node
+    // EventEmitters, we do not listen for `error` events here.
+    emitter.addEventListener(name, function wrapListener(arg) {
+      // IE does not have builtin `{ once: true }` support so we
+      // have to do it manually.
+      if (flags.once) {
+        emitter.removeEventListener(name, wrapListener);
+      }
+      listener(arg);
+    });
+  } else {
+    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+  }
+}
+
+
+/***/ }),
+
 /***/ "./src/application.js":
 /*!****************************!*\
   !*** ./src/application.js ***!
@@ -4099,6 +6601,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object_list_newObject_blank */ "./src/rootPages/Designer/ui_work_object_list_newObject_blank.js");
+/* harmony import */ var _ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_list_newObject_csv */ "./src/rootPages/Designer/ui_work_object_list_newObject_csv.js");
+/* harmony import */ var _ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_list_newObject_import */ "./src/rootPages/Designer/ui_work_object_list_newObject_import.js");
 /*
  * ui_work_object_list_newObject
  *
@@ -4120,8 +6624,8 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-// const ABCsvObject = require("./ab_work_object_list_newObject_csv");
-// const ABImportObject = require("./ab_work_object_list_newObject_import");
+
+
 // const ABImportExternal = require("./ab_work_object_list_newObject_external");
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    var L = function (...params) {
@@ -4147,9 +6651,9 @@ __webpack_require__.r(__webpack_exports__);
          // var callback = null;
 
          this.BlankTab = (0,_ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+         this.CsvTab = (0,_ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.ImportTab = (0,_ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
          /*
-         this.CsvTab = new ABCsvObject(AB);
-         this.ImportTab = new ABImportObject(AB);
          this.ExternalTab = new ABImportExternal(AB);
          */
       }
@@ -4168,7 +6672,9 @@ __webpack_require__.r(__webpack_exports__);
                view: "tabview",
                id: this.ids.tab,
                cells: [
-                  this.BlankTab.ui() /*, this.CsvTab.ui(), this.ImportTab.ui(), this.ExternalTab.ui() */,
+                  this.BlankTab.ui() /*, this.ImportTab.ui(), this.ExternalTab.ui() */,
+                  this.CsvTab.ui(),
+                  this.ImportTab.ui(),
                ],
                tabbar: {
                   on: {
@@ -4204,7 +6710,7 @@ __webpack_require__.r(__webpack_exports__);
          this.$component = $$(this.ids.component);
 
          var allInits = [];
-         ["BlankTab" /*, "CsvTab", "ImportTab", "ExternalTab"*/].forEach(
+         ["BlankTab", "CsvTab", "ImportTab" /*, "ExternalTab"*/].forEach(
             (k) => {
                allInits.push(this[k].init(AB));
                this[k].on("cancel", () => {
@@ -4342,7 +6848,7 @@ __webpack_require__.r(__webpack_exports__);
             this.BlankTab?.onShow?.(this.currentApplication);
          } else if (tabId == this.CsvTab?.ui?.body?.id) {
             this.CsvTab?.onShow?.(this.currentApplication);
-         } else if (tabId == this.ImportTab?.ui?.body?.id) {
+         } else if (tabId == this.ImportTab?.ui()?.body?.id) {
             this.ImportTab?.onShow?.(this.currentApplication);
          } else if (tabId == this.ExternalTab?.ui?.body?.id) {
             this.ExternalTab?.onShow?.(this.currentApplication);
@@ -4595,6 +7101,830 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
    return new UI_Work_Object_List_NewObject_Blank();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_object_list_newObject_csv.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_object_list_newObject_csv.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _AppBuilder_platform_dataFields_ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../AppBuilder/platform/dataFields/ABField */ "./AppBuilder/platform/dataFields/ABField.js");
+/* harmony import */ var _AppBuilder_platform_dataFields_ABField__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_AppBuilder_platform_dataFields_ABField__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldString__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../AppBuilder/platform/dataFields/ABFieldString */ "./AppBuilder/platform/dataFields/ABFieldString.js");
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldString__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_AppBuilder_platform_dataFields_ABFieldString__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldLongText__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../AppBuilder/platform/dataFields/ABFieldLongText */ "./AppBuilder/platform/dataFields/ABFieldLongText.js");
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldLongText__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_AppBuilder_platform_dataFields_ABFieldLongText__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldNumber__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../AppBuilder/platform/dataFields/ABFieldNumber */ "./AppBuilder/platform/dataFields/ABFieldNumber.js");
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldNumber__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_AppBuilder_platform_dataFields_ABFieldNumber__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldDate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../AppBuilder/platform/dataFields/ABFieldDate */ "./AppBuilder/platform/dataFields/ABFieldDate.js");
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldDate__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_AppBuilder_platform_dataFields_ABFieldDate__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldBoolean__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../AppBuilder/platform/dataFields/ABFieldBoolean */ "./AppBuilder/platform/dataFields/ABFieldBoolean.js");
+/* harmony import */ var _AppBuilder_platform_dataFields_ABFieldBoolean__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_AppBuilder_platform_dataFields_ABFieldBoolean__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _utils_CSVImporter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/CSVImporter */ "./src/utils/CSVImporter.js");
+/* harmony import */ var _utils_CSVImporter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_utils_CSVImporter__WEBPACK_IMPORTED_MODULE_6__);
+/*
+ * ab_work_object_list_newObject_csv
+ *
+ * Display the form for import CSV file to a object.
+ *
+ */
+
+
+
+
+
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Object_List_NewObject_Csv extends AB.ClassUI {
+      constructor() {
+         var base = "ui_work_object_list_newObject_csv";
+         super({
+            component: base,
+
+            form: `${base}_csvForm`,
+            uploadFileList: `${base}_uploadFileList`,
+            separatedBy: `${base}_separatedBy`,
+            headerOnFirstLine: `${base}_headerOnFirstLine`,
+            columnList: `${base}_columnList`,
+            importButton: `${base}_importButton`,
+         });
+
+         this._csvImporter = new (_utils_CSVImporter__WEBPACK_IMPORTED_MODULE_6___default())(AB);
+      }
+
+      ui() {
+         let ids = this.ids;
+
+         // Our webix UI definition:
+         return {
+            id: ids.component,
+            header: L("Import CSV"),
+            body: {
+               view: "form",
+               id: ids.form,
+               width: 400,
+               rules: {},
+               elements: [
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: L("Object name"),
+                     labelWidth: 70,
+                  },
+                  {
+                     view: "uploader",
+                     name: "csvFile",
+                     value: L("Choose a CSV file"),
+                     accept: "text/csv",
+                     multiple: false,
+                     autosend: false,
+                     link: ids.uploadFileList,
+                     on: {
+                        onBeforeFileAdd: (fileInfo) => {
+                           return this.loadCsvFile(fileInfo);
+                        },
+                     },
+                  },
+                  {
+                     id: ids.uploadFileList,
+                     name: "uploadedFile",
+                     view: "list",
+                     type: "uploader",
+                     autoheight: true,
+                     borderless: true,
+                     onClick: {
+                        webix_remove_upload: (e, id, trg) => {
+                           this.removeCsvFile(id);
+                        },
+                     },
+                  },
+                  {
+                     id: ids.separatedBy,
+                     view: "richselect",
+                     name: "separatedBy",
+                     label: L("Separated by"),
+                     labelWidth: 140,
+                     options: this._csvImporter.getSeparateItems(),
+                     value: ",",
+                     on: {
+                        onChange: () => {
+                           this.populateColumnList();
+                        },
+                     },
+                  },
+                  {
+                     id: ids.headerOnFirstLine,
+                     view: "checkbox",
+                     name: "headerOnFirstLine",
+                     labelRight: L("Header on first line"),
+                     labelWidth: 0,
+                     disabled: true,
+                     value: true,
+                     on: {
+                        onChange: (newVal, oldVal) => {
+                           this.populateColumnList();
+                        },
+                     },
+                  },
+                  {
+                     type: "space",
+                     rows: [
+                        {
+                           view: "scrollview",
+                           height: 260,
+                           minHeight: 260,
+                           maxHeight: 260,
+                           body: {
+                              id: ids.columnList,
+                              disabled: true,
+                              rows: [],
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           name: "cancel",
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.cancel();
+                           },
+                        },
+                        {
+                           view: "button",
+                           name: "import",
+                           id: ids.importButton,
+                           value: L("Import"),
+                           css: "webix_primary",
+                           disabled: true,
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              this.import();
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this._dataRows = [];
+
+         this.$form = $$(this.ids.form);
+         this.$uploadFileList = $$(this.ids.uploadFileList);
+         this.$separatedBy = $$(this.ids.separatedBy);
+         this.$headerOnFirstLine = $$(this.ids.headerOnFirstLine);
+         this.$columnList = $$(this.ids.columnList);
+         this.$importButton = $$(this.ids.importButton);
+
+         // "save.error" is triggered by the ui_work_object_list_newObject
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_object_list_newObject
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      async loadCsvFile(fileInfo) {
+         if (!this._csvImporter.validateFile(fileInfo)) {
+            webix.alert({
+               title: L("This file extension is disallow"),
+               text: L("Please only upload CSV file"),
+               ok: L("OK"),
+            });
+
+            return false;
+         }
+
+         // show loading cursor
+         if (this.$form.showProgress) this.$form.showProgress({ type: "icon" });
+
+         // read CSV file
+         let separatedBy = this.$separatedBy.getValue();
+         let data = await this._csvImporter.getDataRows(fileInfo, separatedBy);
+
+         this._dataRows = data;
+
+         this.$headerOnFirstLine.enable();
+         this.$columnList.enable();
+         this.$importButton.enable();
+
+         this.populateColumnList();
+
+         if (this.$form.hideProgress) this.$form.hideProgress();
+
+         return true;
+      }
+
+      removeCsvFile(fileId) {
+         this.$uploadFileList.remove(fileId);
+         this.formClear();
+         return true;
+      }
+
+      populateColumnList() {
+         webix.ui([], this.$columnList);
+
+         var firstLine = this._dataRows[0];
+         if (firstLine == null) return;
+
+         var columnList = [];
+
+         if (this.$headerOnFirstLine.getValue()) {
+            columnList = firstLine.map((colName, index) => {
+               return {
+                  include: true,
+                  columnName: colName,
+                  dataType: this._csvImporter.getGuessDataType(
+                     this._dataRows,
+                     index
+                  ),
+               };
+            });
+         } else {
+            for (var i = 0; i < firstLine.length; i++) {
+               columnList.push({
+                  include: true,
+                  columnName: "Field " + (i + 1),
+                  dataType: this._csvImporter.getGuessDataType(
+                     this._dataRows,
+                     i
+                  ),
+               });
+            }
+         }
+
+         // Add dynamic columns UI
+         let uiColumns = [];
+         columnList.forEach((col) => {
+            uiColumns.push({
+               height: 40,
+               cols: [
+                  {
+                     view: "checkbox",
+                     value: col.include,
+                     width: 30,
+                  },
+                  {
+                     view: "text",
+                     value: col.columnName,
+                     width: 170,
+                  },
+                  {
+                     view: "select",
+                     value: col.dataType,
+                     options: [
+                        {
+                           id: "string",
+                           value: _AppBuilder_platform_dataFields_ABFieldString__WEBPACK_IMPORTED_MODULE_1___default().defaults().menuName,
+                        },
+                        {
+                           id: "LongText",
+                           value: _AppBuilder_platform_dataFields_ABFieldLongText__WEBPACK_IMPORTED_MODULE_2___default().defaults().menuName,
+                        },
+                        {
+                           id: "number",
+                           value: _AppBuilder_platform_dataFields_ABFieldNumber__WEBPACK_IMPORTED_MODULE_3___default().defaults().menuName,
+                        },
+                        {
+                           id: "date",
+                           value: _AppBuilder_platform_dataFields_ABFieldDate__WEBPACK_IMPORTED_MODULE_4___default().defaults().menuName,
+                        },
+                        {
+                           id: "boolean",
+                           value: _AppBuilder_platform_dataFields_ABFieldBoolean__WEBPACK_IMPORTED_MODULE_5___default().defaults().menuName,
+                        },
+                     ],
+                     width: 120,
+                  },
+               ],
+            });
+         });
+
+         webix.ui(uiColumns, $$(this.$columnList));
+      }
+
+      import() {
+         this.$importButton.disable();
+
+         if (!this.$form.validate()) {
+            this.$importButton.enable();
+            return false;
+         }
+
+         // Validate required column names
+         let columnViews = $$(this.$columnList).getChildViews();
+         var emptyColNames = columnViews.filter((cView) => {
+            return (
+               cView.queryView({ view: "checkbox" }).getValue() &&
+               cView.queryView({ view: "text" }).getValue().trim().length == 0
+            );
+         });
+         if (emptyColNames.length > 0) {
+            webix.alert({
+               title: L("Column name is required"),
+               text: L("Please enter column name"),
+               ok: L("OK"),
+            });
+
+            this.$importButton.enable();
+            return false;
+         }
+
+         // Validate reserve column names
+         var reservedColNames = columnViews.filter((cView) => {
+            return (
+               cView.queryView({ view: "checkbox" }).getValue() &&
+               _AppBuilder_platform_dataFields_ABField__WEBPACK_IMPORTED_MODULE_0___default().reservedNames.indexOf(
+                  cView
+                     .queryView({ view: "text" })
+                     .getValue()
+                     .trim()
+                     .toLowerCase()
+               ) > -1
+            );
+         });
+         if (reservedColNames.length > 0) {
+            webix.alert({
+               title: L("Column name is invalid"),
+               text: L(
+                  "Please enter column name does not match [{0}]",
+                  _AppBuilder_platform_dataFields_ABField__WEBPACK_IMPORTED_MODULE_0___default().reservedNames.join(", ")
+               ),
+               ok: L("OK"),
+            });
+
+            this.$importButton.enable();
+            return false;
+         }
+
+         // create new object
+         let newObjAttr = {
+            primaryColumnName: "uuid", // set uuid to be primary column
+            name: this.$form.getValues()["name"],
+            fields: [],
+         };
+
+         // now send data back to be added:
+         this.emit("save", newObjAttr);
+      }
+
+      onSuccess(newObj) {
+         let subTasks = Promise.resolve();
+
+         // add new columns to object
+         let columnViews = $$(this.$columnList).getChildViews();
+         columnViews.forEach((cView, index) => {
+            let include = cView.queryView({ view: "checkbox" }).getValue();
+            if (!include) return;
+
+            let columnName = cView.queryView({ view: "text" }).getValue();
+            let dataType = cView.queryView({ view: "select" }).getValue();
+
+            let newField = {
+               id: AB.uuid(),
+               columnName: columnName,
+               label: columnName,
+               key: dataType,
+               settings: {
+                  showIcon: 1,
+                  weight: index,
+               },
+            };
+
+            switch (dataType) {
+               case "string":
+               case "LongText":
+                  newField.settings.supportMultilingual = 0;
+                  break;
+            }
+
+            let field = newObj.fieldNew(newField);
+            subTasks = subTasks
+               .then(() => field.save())
+               .then(() => field.migrateCreate());
+         });
+
+         // add rows to Server
+         var objModel = newObj.model();
+
+         // Add each records sequentially
+         this._dataRows.forEach((data, index) => {
+            subTasks = subTasks.then(() => {
+               if (this.$headerOnFirstLine.getValue() && index == 0)
+                  return Promise.resolve();
+
+               var rowData = {};
+               var colValues = data;
+
+               newObj.fields().forEach((col) => {
+                  if (colValues[col.settings.weight] != null)
+                     rowData[col.columnName] = colValues[col.settings.weight];
+               });
+
+               // Add row data
+               return objModel.create(rowData);
+            });
+         });
+
+         // if there was no error, clear the form for the next
+         // entry:
+         return subTasks.then(() => {
+            this.formClear();
+            this.$importButton.enable();
+
+            return Promise.resolve();
+         });
+      }
+
+      onError(err) {
+         // if this was our Validation() object:
+         if (err) {
+            if (err.updateForm) err.updateForm(this.$form);
+
+            // get notified if there was an error saving.
+            this.$importButton.enable();
+         }
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         this._dataRows = [];
+
+         this.$form.clearValidation();
+         this.$form.clear();
+         this.$separatedBy.setValue(",");
+
+         webix.ui([], $$(this.$columnList));
+         this.$uploadFileList.clearAll();
+
+         this.$headerOnFirstLine.disable();
+         this.$columnList.disable();
+         this.$importButton.disable();
+      }
+   }
+   return new UI_Work_Object_List_NewObject_Csv();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_object_list_newObject_import.js":
+/*!************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_object_list_newObject_import.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ab_work_object_list_newObject_import
+ *
+ * Display the form for importing an existing object into the application.
+ *
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Object_List_NewObject_Import extends AB.ClassUI {
+      constructor() {
+         var base = "ui_work_object_list_newObject_import";
+         super({
+            component: base,
+
+            form: `${base}_import`,
+            filter: `${base}_filter`,
+            objectList: `${base}_objectList`,
+            columnList: `${base}_columnList`,
+            buttonSave: `${base}_save`,
+            buttonCancel: `${base}_cancel`,
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Existing"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               elements: [
+                  // Filter
+                  {
+                     cols: [
+                        {
+                           view: "icon",
+                           icon: "fa fa-filter",
+                           align: "left",
+                        },
+                        {
+                           view: "text",
+                           id: this.ids.filter,
+                           on: {
+                              onTimedKeyPress: () => this.filter(),
+                           },
+                        },
+                     ],
+                  },
+
+                  // Model list
+                  {
+                     view: "list",
+                     id: this.ids.objectList,
+                     select: true,
+                     height: 200,
+                     minHeight: 250,
+                     maxHeight: 250,
+                     data: [],
+                     template: "<div>#label#</div>",
+                     on: {
+                        onSelectChange: () => this.objectSelect(),
+                     },
+                  },
+
+                  // Columns list
+                  {
+                     view: "label",
+                     label: `<b>${L("Columns")}</b>`,
+                     height: 20,
+                  },
+                  {
+                     view: "list",
+                     id: this.ids.columnList,
+                     datatype: "json",
+                     multiselect: false,
+                     select: false,
+                     height: 200,
+                     minHeight: 200,
+                     maxHeight: 200,
+                     type: {
+                        height: 40,
+                        isvisible: {
+                           view: "checkbox",
+                           width: 30,
+                        },
+                     },
+                     template: (obj, common) => {
+                        // return `
+                        //     <span style="float: left;">${common.isvisible(obj, common)}</span>
+                        //     <span style="float: left;">${obj.label}</span>
+                        // `;
+                        return `
+                               <span style="float: left;"><i class="fa fa-${obj.icon}"></i></span>
+                               <span style="float: left;">&nbsp;${obj.label}</span>
+                           `;
+                     },
+                  },
+
+                  // Import & Cancel buttons
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => this.cancel(),
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Import"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => this.save(),
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+         this.$filter = $$(this.ids.filter);
+         this.$objectList = $$(this.ids.objectList);
+         this.$columnList = $$(this.ids.columnList);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$buttonCancel = $$(this.ids.buttonCancel);
+
+         // "save.error" is triggered by the ui_work_object_list_newObject
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_object_list_newObject
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      onShow(app) {
+         this.currentApp = app;
+         this.formClear();
+
+         // now all objects are *global* but an application might only
+         // reference a sub set of them.  Here we just need to show
+         // the objects our current application isn't referencing:
+
+         let availableObjs = this.currentApp.objectsExcluded(
+            (o) => !o.isSystemObject
+         );
+         this.$objectList.parse(availableObjs, "json");
+      }
+
+      filter() {
+         let filterText = this.$filter.getValue();
+         this.$objectList.filter("#label#", filterText);
+      }
+
+      objectSelect() {
+         this.$columnList.clearAll();
+
+         let selectedObj = this.$objectList.getSelectedItem(false);
+         if (selectedObj) {
+            let colNames = [];
+
+            // Now that ABObjects are ABDefinitions, we no longer
+            // have to lookup the data from the server:
+
+            selectedObj.fields().forEach((f) => {
+               // Skip these columns
+               // TODO : skip connect field
+               // if (col.model) continue;
+               // if (col.collection) continue;
+
+               //    let fieldClass = ABFieldManager.allFields().filter(
+               //       (field) => field.defaults().key == f.key
+               //    )[0];
+               //    if (fieldClass == null) return;
+
+               //    // If connect field does not link to objects in app, then skip
+               //    if (
+               //       f.key == "connectObject" &&
+               //       !currentApp.objectsIncluded(
+               //          (obj) => obj.id == f.settings.linkObject
+               //       )[0]
+               //    ) {
+               //       return;
+               //    }
+
+               colNames.push({
+                  id: f.id,
+                  label: f.label,
+                  isvisible: true,
+                  icon: f.icon,
+                  // disabled: !supported
+               });
+            });
+
+            if (colNames.length == 0) {
+               colNames.push({
+                  id: "none",
+                  label: L("No Fields Defined"),
+                  isvisible: true,
+               });
+            }
+
+            this.$columnList.parse(colNames);
+         }
+      }
+
+      save() {
+         var selectedObj = this.$objectList.getSelectedItem();
+         if (!selectedObj) return false;
+
+         this.$buttonSave.disable();
+
+         this.emit("save", selectedObj);
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         // Filter section
+         this.$form.clearValidation();
+         this.$form.clear();
+         // Lists
+         this.$objectList.clearAll();
+         this.$columnList.clearAll();
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_object_list_newObject object had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of objects:
+       *        - A javascript Error() object
+       *        - An ABValidation object returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            console.error(err);
+            var message = L("the entered data is invalid");
+            // if this was our Validation() object:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            var values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating Object: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_object_list_newObject successfully saved the values.
+       */
+      onSuccess() {
+         this.$buttonSave.enable();
+      }
+   }
+
+   return new UI_Work_Object_List_NewObject_Import();
 }
 
 
@@ -6071,6 +9401,165 @@ __webpack_require__.r(__webpack_exports__);
    // NOTE: since this is configurable, we return the CLASS only.
    return new UIWorkObjectWorkspace(init_settings);
 }
+
+
+/***/ }),
+
+/***/ "./src/utils/CSVImporter.js":
+/*!**********************************!*\
+  !*** ./src/utils/CSVImporter.js ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = class CSVImporter {
+   constructor(AB) {
+      this.AB = AB;
+   }
+
+   L(...params) {
+      return this.AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   }
+
+   getSeparateItems() {
+      return [
+         { id: ",", value: this.L("Comma (,)") },
+         {
+            id: "\t",
+            value: this.L("Tab (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)"),
+         },
+         { id: ";", value: this.L("Semicolon (;)") },
+         { id: "s", value: this.L("Space ( )") },
+      ];
+   }
+
+   /**
+    * @method validateFile
+    * Validate file extension
+    *
+    * @param {*} fileInfo - https://docs.webix.com/api__ui.uploader_onbeforefileadd_event.html
+    *
+    * @return {boolean}
+    */
+   validateFile(fileInfo) {
+      if (!fileInfo || !fileInfo.file || !fileInfo.file.type) return false;
+
+      // validate file type
+      let extensionType = fileInfo.file.type.toLowerCase();
+      if (
+         extensionType == "text/csv" ||
+         extensionType == "application/vnd.ms-excel"
+      ) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+
+   /**
+    * @method getDataRows
+    * Pull data rows from the CSV file
+    *
+    * @param {Object} fileInfo - https://docs.webix.com/api__ui.uploader_onbeforefileadd_event.html
+    * @param {string} separatedBy
+    *
+    * @return {Promise} -[
+    * 						["Value 1.1", "Value 1.2", "Value 1.3"],
+    * 						["Value 2.1", "Value 2.2", "Value 2.3"],
+    * 					]
+    */
+   async getDataRows(fileInfo, separatedBy) {
+      if (!this.validateFile(fileInfo)) return Promise.reject();
+
+      return new Promise((resolve, reject) => {
+         // read CSV file
+         let reader = new FileReader();
+         reader.onload = (e) => {
+            let result = [];
+
+            // split lines
+            let dataRows = reader.result
+               .split(/\r\n|\n|\r/) // CRLF = \r\n; LF = \n; CR = \r;
+               .filter((row) => row && row.length > 0);
+
+            // split columns
+            (dataRows || []).forEach((row) => {
+               let dataCols = [];
+               if (separatedBy == ",") {
+                  // NOTE: if the file contains ,, .match() can not reconize this empty string
+                  row = row.replace(/,,/g, ", ,");
+
+                  // https://stackoverflow.com/questions/11456850/split-a-string-by-commas-but-ignore-commas-within-double-quotes-using-javascript#answer-11457952
+                  dataCols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+               } else {
+                  dataCols = row.split(separatedBy);
+               }
+
+               result.push(dataCols.map((dCol) => this.reformat(dCol)));
+            });
+
+            resolve(result);
+         };
+         reader.readAsText(fileInfo.file);
+      });
+   }
+
+   /**
+    * @method getGuessDataType
+    *
+    * @param dataRows {Array} - [
+    * 								["Value 1.1", "Value 1.2", "Value 1.3"],
+    * 								["Value 2.1", "Value 2.2", "Value 2.3"],
+    * 							]
+    * @param colIndex {Number}
+    *
+    * @return {string}
+    */
+   getGuessDataType(dataRows, colIndex) {
+      var data,
+         repeatNum = 10;
+
+      // Loop to find a value
+      for (var i = 1; i <= repeatNum; i++) {
+         var line = dataRows[i];
+         if (!line) break;
+
+         data = line[colIndex];
+
+         if (data != null && data.length > 0) break;
+      }
+
+      if (data == null || data == "") {
+         return "string";
+      } else if (
+         data == 0 ||
+         data == 1 ||
+         data == true ||
+         data == false ||
+         data == "checked" ||
+         data == "unchecked"
+      ) {
+         return "boolean";
+      } else if (!isNaN(data)) {
+         return "number";
+      } else if (Date.parse(data)) {
+         return "date";
+      } else {
+         if (data.length > 100) return "LongText";
+         else return "string";
+      }
+   }
+
+   /**
+    * @method reformat
+    *
+    * @param {string} str
+    */
+   reformat(str) {
+      if (!str) return "";
+
+      return str.trim().replace(/"/g, "").replace(/'/g, "");
+   }
+};
 
 
 /***/ })

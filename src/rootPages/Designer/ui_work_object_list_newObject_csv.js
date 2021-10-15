@@ -4,6 +4,14 @@
  * Display the form for import CSV file to a object.
  *
  */
+import ABField from "../../../AppBuilder/platform/dataFields/ABField";
+import ABFieldString from "../../../AppBuilder/platform/dataFields/ABFieldString";
+import ABFieldLongText from "../../../AppBuilder/platform/dataFields/ABFieldLongText";
+import ABFieldNumber from "../../../AppBuilder/platform/dataFields/ABFieldNumber";
+import ABFieldDate from "../../../AppBuilder/platform/dataFields/ABFieldDate";
+import ABFieldBoolean from "../../../AppBuilder/platform/dataFields/ABFieldBoolean";
+
+import CSVImporter from "../../utils/CSVImporter.js";
 
 export default function (AB) {
    var L = function (...params) {
@@ -23,6 +31,8 @@ export default function (AB) {
             columnList: `${base}_columnList`,
             importButton: `${base}_importButton`,
          });
+
+         this._csvImporter = new CSVImporter(AB);
       }
 
       ui() {
@@ -79,7 +89,7 @@ export default function (AB) {
                      name: "separatedBy",
                      label: L("Separated by"),
                      labelWidth: 140,
-                     options: csvImporter.getSeparateItems(),
+                     options: this._csvImporter.getSeparateItems(),
                      value: ",",
                      on: {
                         onChange: () => {
@@ -102,62 +112,20 @@ export default function (AB) {
                      },
                   },
                   {
-                     id: ids.columnList,
-                     view: "list",
-                     datatype: "json",
-                     multiselect: false,
-                     select: false,
-                     disabled: true,
-                     height: 260,
-                     minHeight: 260,
-                     maxHeight: 260,
-                     type: {
-                        height: 40,
-                        include: function (obj, common) {
-                           return {
-                              view: "checkbox",
-                              width: 30,
-                           };
+                     type: "space",
+                     rows: [
+                        {
+                           view: "scrollview",
+                           height: 260,
+                           minHeight: 260,
+                           maxHeight: 260,
+                           body: {
+                              id: ids.columnList,
+                              disabled: true,
+                              rows: [],
+                           },
                         },
-                        columnName: function (obj, common) {
-                           return {
-                              view: "text",
-                              width: 170,
-                           };
-                        },
-                        dataType: function (obj, common) {
-                           return {
-                              view: "select",
-                              options: [
-                                 {
-                                    id: "string",
-                                    value: ABFieldString.defaults().menuName,
-                                 },
-                                 {
-                                    id: "LongText",
-                                    value: ABFieldLongText.defaults().menuName,
-                                 },
-                                 {
-                                    id: "number",
-                                    value: ABFieldNumber.defaults().menuName,
-                                 },
-                                 {
-                                    id: "date",
-                                    value: ABFieldDate.defaults().menuName,
-                                 },
-                                 {
-                                    id: "boolean",
-                                    value: ABFieldBoolean.defaults().menuName,
-                                 },
-                              ],
-                              width: 120,
-                           };
-                        },
-                     },
-                     template:
-                        '<span style="float: left;">{common.include()}</span>' +
-                        '<span style="float: left;">{common.columnName()}</span>' +
-                        '<span style="float: left;">{common.dataType()}</span>',
+                     ],
                   },
                   {
                      margin: 5,
@@ -222,7 +190,7 @@ export default function (AB) {
       }
 
       async loadCsvFile(fileInfo) {
-         if (!csvImporter.validateFile(fileInfo)) {
+         if (!this._csvImporter.validateFile(fileInfo)) {
             webix.alert({
                title: L("This file extension is disallow"),
                text: L("Please only upload CSV file"),
@@ -237,7 +205,7 @@ export default function (AB) {
 
          // read CSV file
          let separatedBy = this.$separatedBy.getValue();
-         let data = await csvImporter.getDataRows(fileInfo, separatedBy);
+         let data = await this._csvImporter.getDataRows(fileInfo, separatedBy);
 
          this._dataRows = data;
 
@@ -253,13 +221,13 @@ export default function (AB) {
       }
 
       removeCsvFile(fileId) {
-         this.uploadFileList.remove(fileId);
+         this.$uploadFileList.remove(fileId);
          this.formClear();
          return true;
       }
 
       populateColumnList() {
-         this.$columnList.clearAll();
+         webix.ui([], this.$columnList);
 
          var firstLine = this._dataRows[0];
          if (firstLine == null) return;
@@ -267,11 +235,14 @@ export default function (AB) {
          var columnList = [];
 
          if (this.$headerOnFirstLine.getValue()) {
-            columnList = firstLine.map(function (colName, index) {
+            columnList = firstLine.map((colName, index) => {
                return {
                   include: true,
                   columnName: colName,
-                  dataType: csvImporter.getGuessDataType(this._dataRows, index),
+                  dataType: this._csvImporter.getGuessDataType(
+                     this._dataRows,
+                     index
+                  ),
                };
             });
          } else {
@@ -279,12 +250,62 @@ export default function (AB) {
                columnList.push({
                   include: true,
                   columnName: "Field " + (i + 1),
-                  dataType: csvImporter.getGuessDataType(this._dataRows, i),
+                  dataType: this._csvImporter.getGuessDataType(
+                     this._dataRows,
+                     i
+                  ),
                });
             }
          }
 
-         this.$columnList.parse(columnList);
+         // Add dynamic columns UI
+         let uiColumns = [];
+         columnList.forEach((col) => {
+            uiColumns.push({
+               height: 40,
+               cols: [
+                  {
+                     view: "checkbox",
+                     value: col.include,
+                     width: 30,
+                  },
+                  {
+                     view: "text",
+                     value: col.columnName,
+                     width: 170,
+                  },
+                  {
+                     view: "select",
+                     value: col.dataType,
+                     options: [
+                        {
+                           id: "string",
+                           value: ABFieldString.defaults().menuName,
+                        },
+                        {
+                           id: "LongText",
+                           value: ABFieldLongText.defaults().menuName,
+                        },
+                        {
+                           id: "number",
+                           value: ABFieldNumber.defaults().menuName,
+                        },
+                        {
+                           id: "date",
+                           value: ABFieldDate.defaults().menuName,
+                        },
+                        {
+                           id: "boolean",
+                           value: ABFieldBoolean.defaults().menuName,
+                        },
+                     ],
+                     width: 120,
+                  },
+               ],
+            });
+         });
+
+         webix.ui(uiColumns, $$(this.$columnList));
       }
 
       import() {
@@ -296,9 +317,13 @@ export default function (AB) {
          }
 
          // Validate required column names
-         let emptyColNames = this.$columnList.data.find(
-            (col) => col.include && col.columnName.trim().length == 0
-         );
+         let columnViews = $$(this.$columnList).getChildViews();
+         var emptyColNames = columnViews.filter((cView) => {
+            return (
+               cView.queryView({ view: "checkbox" }).getValue() &&
+               cView.queryView({ view: "text" }).getValue().trim().length == 0
+            );
+         });
          if (emptyColNames.length > 0) {
             webix.alert({
                title: L("Column name is required"),
@@ -311,11 +336,15 @@ export default function (AB) {
          }
 
          // Validate reserve column names
-         var reservedColNames = this.$columnList.data.find((col) => {
+         var reservedColNames = columnViews.filter((cView) => {
             return (
-               col.include &&
+               cView.queryView({ view: "checkbox" }).getValue() &&
                ABField.reservedNames.indexOf(
-                  col.columnName.trim().toLowerCase()
+                  cView
+                     .queryView({ view: "text" })
+                     .getValue()
+                     .trim()
+                     .toLowerCase()
                ) > -1
             );
          });
@@ -334,47 +363,56 @@ export default function (AB) {
          }
 
          // create new object
-         var newObjAttr = {
+         let newObjAttr = {
             primaryColumnName: "uuid", // set uuid to be primary column
             name: this.$form.getValues()["name"],
             fields: [],
          };
 
-         // add new columns to object
-         this.$columnList.data.find({}).forEach((item, index) => {
-            if (item.include) {
-               var newField = {
-                  id: OP.Util.uuid(),
-                  columnName: item.columnName,
-                  label: item.columnName,
-                  key: item.dataType,
-                  settings: {
-                     showIcon: 1,
-                     weight: index,
-                  },
-               };
-
-               switch (item.dataType) {
-                  case "string":
-                  case "LongText":
-                     newField.settings.supportMultilingual = 0;
-                     break;
-               }
-
-               newObjAttr.fields.push(newField);
-            }
-         });
-
          // now send data back to be added:
-         this.emit("save");
+         this.emit("save", newObjAttr);
       }
 
       onSuccess(newObj) {
+         let subTasks = Promise.resolve();
+
+         // add new columns to object
+         let columnViews = $$(this.$columnList).getChildViews();
+         columnViews.forEach((cView, index) => {
+            let include = cView.queryView({ view: "checkbox" }).getValue();
+            if (!include) return;
+
+            let columnName = cView.queryView({ view: "text" }).getValue();
+            let dataType = cView.queryView({ view: "select" }).getValue();
+
+            let newField = {
+               id: AB.uuid(),
+               columnName: columnName,
+               label: columnName,
+               key: dataType,
+               settings: {
+                  showIcon: 1,
+                  weight: index,
+               },
+            };
+
+            switch (dataType) {
+               case "string":
+               case "LongText":
+                  newField.settings.supportMultilingual = 0;
+                  break;
+            }
+
+            let field = newObj.fieldNew(newField);
+            subTasks = subTasks
+               .then(() => field.save())
+               .then(() => field.migrateCreate());
+         });
+
          // add rows to Server
          var objModel = newObj.model();
 
          // Add each records sequentially
-         var subTasks = Promise.resolve();
          this._dataRows.forEach((data, index) => {
             subTasks = subTasks.then(() => {
                if (this.$headerOnFirstLine.getValue() && index == 0)
@@ -425,7 +463,7 @@ export default function (AB) {
          this.$form.clear();
          this.$separatedBy.setValue(",");
 
-         this.$columnList.clearAll();
+         webix.ui([], $$(this.$columnList));
          this.$uploadFileList.clearAll();
 
          this.$headerOnFirstLine.disable();

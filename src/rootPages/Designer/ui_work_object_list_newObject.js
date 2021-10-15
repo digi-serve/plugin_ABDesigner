@@ -20,7 +20,7 @@
 
 import UIBlankObject from "./ui_work_object_list_newObject_blank";
 import UICsvObject from "./ui_work_object_list_newObject_csv";
-// const ABImportObject = require("./ab_work_object_list_newObject_import");
+import UIImportObject from "./ui_work_object_list_newObject_import";
 // const ABImportExternal = require("./ab_work_object_list_newObject_external");
 export default function (AB) {
    var L = function (...params) {
@@ -47,8 +47,8 @@ export default function (AB) {
 
          this.BlankTab = UIBlankObject(AB);
          this.CsvTab = UICsvObject(AB);
+         this.ImportTab = UIImportObject(AB);
          /*
-         this.ImportTab = new ABImportObject(AB);
          this.ExternalTab = new ABImportExternal(AB);
          */
       }
@@ -69,6 +69,7 @@ export default function (AB) {
                cells: [
                   this.BlankTab.ui() /*, this.ImportTab.ui(), this.ExternalTab.ui() */,
                   this.CsvTab.ui(),
+                  this.ImportTab.ui(),
                ],
                tabbar: {
                   on: {
@@ -104,7 +105,7 @@ export default function (AB) {
          this.$component = $$(this.ids.component);
 
          var allInits = [];
-         ["BlankTab", "CsvTab" /*, "ImportTab", "ExternalTab"*/].forEach(
+         ["BlankTab", "CsvTab", "ImportTab" /*, "ExternalTab"*/].forEach(
             (k) => {
                allInits.push(this[k].init(AB));
                this[k].on("cancel", () => {
@@ -242,7 +243,7 @@ export default function (AB) {
             this.BlankTab?.onShow?.(this.currentApplication);
          } else if (tabId == this.CsvTab?.ui?.body?.id) {
             this.CsvTab?.onShow?.(this.currentApplication);
-         } else if (tabId == this.ImportTab?.ui?.body?.id) {
+         } else if (tabId == this.ImportTab?.ui()?.body?.id) {
             this.ImportTab?.onShow?.(this.currentApplication);
          } else if (tabId == this.ExternalTab?.ui?.body?.id) {
             this.ExternalTab?.onShow?.(this.currentApplication);
