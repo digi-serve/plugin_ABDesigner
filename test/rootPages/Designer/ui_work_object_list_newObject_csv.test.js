@@ -35,7 +35,7 @@ describe("ui_work_object_list_newObject_csv", function () {
       assert.equal(IDS.columnList, target.ids.columnList);
       assert.equal(IDS.importButton, target.ids.importButton);
 
-      assert.equal(ab, target._csvImporter.AB);
+      assert.equal(ab, target._csvImporter._AB);
    });
 
    it(".ui - should pass valid id to webix elements", function () {

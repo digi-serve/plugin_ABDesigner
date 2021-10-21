@@ -1,10 +1,11 @@
 module.exports = class CSVImporter {
-   constructor(AB) {
-      this.AB = AB;
+   constructor(AB, fileReader = FileReader) {
+      this._AB = AB;
+      this._FileReader = fileReader;
    }
 
    L(...params) {
-      return this.AB.Multilingual.labelPlugin("ABDesigner", ...params);
+      return this._AB.Multilingual.labelPlugin("ABDesigner", ...params);
    }
 
    getSeparateItems() {
@@ -55,39 +56,58 @@ module.exports = class CSVImporter {
     * 					]
     */
    async getDataRows(fileInfo, separatedBy) {
-      if (!this.validateFile(fileInfo)) return Promise.reject();
+      if (!this.validateFile(fileInfo))
+         return Promise.reject(".fileInfo parameter is invalid");
 
       return new Promise((resolve, reject) => {
          // read CSV file
-         let reader = new FileReader();
+         let reader = new this._FileReader();
          reader.onload = (e) => {
-            let result = [];
-
-            // split lines
-            let dataRows = reader.result
-               .split(/\r\n|\n|\r/) // CRLF = \r\n; LF = \n; CR = \r;
-               .filter((row) => row && row.length > 0);
-
-            // split columns
-            (dataRows || []).forEach((row) => {
-               let dataCols = [];
-               if (separatedBy == ",") {
-                  // NOTE: if the file contains ,, .match() can not reconize this empty string
-                  row = row.replace(/,,/g, ", ,");
-
-                  // https://stackoverflow.com/questions/11456850/split-a-string-by-commas-but-ignore-commas-within-double-quotes-using-javascript#answer-11457952
-                  dataCols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-               } else {
-                  dataCols = row.split(separatedBy);
-               }
-
-               result.push(dataCols.map((dCol) => this.reformat(dCol)));
-            });
+            const result = this.convertToArray(reader.result, separatedBy);
 
             resolve(result);
          };
          reader.readAsText(fileInfo.file);
       });
+   }
+
+   /**
+    * @method convertToArray
+    * Pull data rows from the CSV file
+    *
+    * @param {string} text
+    * @param {string} separatedBy
+    *
+    * @return {Promise} -[
+    * 						["Value 1.1", "Value 1.2", "Value 1.3"],
+    * 						["Value 2.1", "Value 2.2", "Value 2.3"],
+    * 					]
+    */
+   convertToArray(text = "", separatedBy = ",") {
+      let result = [];
+
+      // split lines
+      let dataRows = text
+         .split(/\r\n|\n|\r/) // CRLF = \r\n; LF = \n; CR = \r;
+         .filter((row) => row && row.length > 0);
+
+      // split columns
+      (dataRows || []).forEach((row) => {
+         let dataCols = [];
+         if (separatedBy == ",") {
+            // NOTE: if the file contains ,, .match(), then can not recognize this empty string
+            row = row.replace(/,,/g, ", ,");
+
+            // https://stackoverflow.com/questions/11456850/split-a-string-by-commas-but-ignore-commas-within-double-quotes-using-javascript#answer-11457952
+            dataCols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+         } else {
+            dataCols = row.split(separatedBy);
+         }
+
+         result.push(dataCols.map((dCol) => this.reformat(dCol)));
+      });
+
+      return result;
    }
 
    /**
@@ -115,7 +135,7 @@ module.exports = class CSVImporter {
          if (data != null && data.length > 0) break;
       }
 
-      if (data == null || data == "") {
+      if (data === null || data === undefined || data === "") {
          return "string";
       } else if (
          data == 0 ||
