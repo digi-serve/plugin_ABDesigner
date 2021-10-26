@@ -4,12 +4,12 @@
  * Display the form for import CSV file to a object.
  *
  */
-import ABField from "../../../AppBuilder/platform/dataFields/ABField";
-import ABFieldString from "../../../AppBuilder/platform/dataFields/ABFieldString";
-import ABFieldLongText from "../../../AppBuilder/platform/dataFields/ABFieldLongText";
-import ABFieldNumber from "../../../AppBuilder/platform/dataFields/ABFieldNumber";
-import ABFieldDate from "../../../AppBuilder/platform/dataFields/ABFieldDate";
-import ABFieldBoolean from "../../../AppBuilder/platform/dataFields/ABFieldBoolean";
+import ABField from "./forms/platform/dataFields/ABField";
+import ABFieldString from "./forms/platform/dataFields/ABFieldString";
+import ABFieldLongText from "./forms/platform/dataFields/ABFieldLongText";
+import ABFieldNumber from "./forms/platform/dataFields/ABFieldNumber";
+import ABFieldDate from "./forms/platform/dataFields/ABFieldDate";
+import ABFieldBoolean from "./forms/platform/dataFields/ABFieldBoolean";
 
 import CSVImporter from "../../utils/CSVImporter.js";
 
