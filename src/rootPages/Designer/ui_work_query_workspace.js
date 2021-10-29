@@ -1,5 +1,11 @@
 export default function (AB, init_settings) {
    class UIWorkQueryWorkspace extends AB.ClassUI {
+      constructor(settings = init_settings || {}) {
+         super();
+
+         this.settings = settings;
+      }
+
       ui() {
          return {};
       }
@@ -15,7 +21,15 @@ export default function (AB, init_settings) {
       clearWorkspace() {
          // TODO
       }
+
+      resetTabs() {
+         // TODO
+      }
+
+      populateQueryWorkspace() {
+         // TODO
+      }
    }
 
-   return new UIWorkQueryWorkspace(init_settings);
+   return UIWorkQueryWorkspace;
 }

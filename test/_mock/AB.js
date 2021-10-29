@@ -4,19 +4,37 @@ export default class AB {
    constructor(definitions) {
       this._definitions = definitions || {};
 
+      this.custom = {
+         editunitlist: {
+            view: "editunitlist",
+         },
+      };
+
       this.ClassUI = ClassUI;
+      this.Config = new Config();
       this.Multilingual = Multilingual;
    }
 }
 
-export class ClassUI extends EventEmitter {
+class ClassUI extends EventEmitter {
    constructor(definitions) {
       super();
-      this.ids = definitions || {};
+      this.ids = {};
+      if (typeof definitions == "string") {
+         this.ids.component = definitions;
+      } else if (definitions) {
+         this.ids = definitions;
+      }
    }
 }
 
-export class Multilingual {
+class Config {
+   uiSettings() {
+      return {};
+   }
+}
+
+class Multilingual {
    static labelPlugin(...params) {
       this._params = params;
    }

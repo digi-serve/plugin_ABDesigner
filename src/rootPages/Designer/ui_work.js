@@ -17,7 +17,7 @@ export default function (AB) {
    };
 
    var AppObjectWorkspace = UI_Work_Object(AB);
-   const AppQueryWorkspace = UI_Work_Query(AB);
+   const AppQueryWorkspace = new (UI_Work_Query(AB))();
    // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
    // var AppProcessWorkspace = new AB_Work_Process(App);
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);

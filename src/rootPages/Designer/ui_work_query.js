@@ -9,14 +9,16 @@ import UI_Work_Query_List from "./ui_work_query_list";
 import UI_Work_Query_Workspace from "./ui_work_query_workspace";
 
 export default function (AB) {
-   const QueryList = UI_Work_Query_List(AB);
-   const QueryWorkspace = UI_Work_Query_Workspace(AB);
+   const Query_List = UI_Work_Query_List(AB);
+   const Query_Workspace = UI_Work_Query_Workspace(AB);
 
    class UI_Work_Query extends AB.ClassUI {
       constructor() {
          super("ab_work_query");
 
          this.CurrentApplication = null;
+         this.QueryList = new Query_List();
+         this.QueryWorkspace = new Query_Workspace(/** default settings */);
       }
 
       ui() {
@@ -24,7 +26,11 @@ export default function (AB) {
          return {
             id: this.ids.component,
             type: "space",
-            cols: [QueryList.ui(), { view: "resizer" }, QueryWorkspace.ui()],
+            cols: [
+               this.QueryList.ui(),
+               { view: "resizer" },
+               this.QueryWorkspace.ui(),
+            ],
          };
       }
 
@@ -32,12 +38,12 @@ export default function (AB) {
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         QueryList.on("selected", (q) => {
-            QueryWorkspace.resetTabs();
-            QueryWorkspace.populateQueryWorkspace(q);
-         });
+         this.QueryList.on("selected", this.select);
 
-         return Promise.all([QueryWorkspace.init(AB), QueryList.init(AB)]);
+         return Promise.all([
+            this.QueryWorkspace.init(AB),
+            this.QueryList.init(AB),
+         ]);
       }
 
       /**
@@ -50,9 +56,9 @@ export default function (AB) {
       applicationLoad(application) {
          this.CurrentApplication = application;
 
-         QueryWorkspace.clearWorkspace();
-         QueryList.applicationLoad(application);
-         QueryWorkspace.applicationLoad(application);
+         this.QueryWorkspace.clearWorkspace();
+         this.QueryList.applicationLoad(application);
+         this.QueryWorkspace.applicationLoad(application);
       }
 
       /**
@@ -64,11 +70,16 @@ export default function (AB) {
          $$(this.ids.component).show();
 
          if (this.CurrentApplication) {
-            QueryList?.applicationLoad(this.CurrentApplication);
+            this.QueryList?.applicationLoad(this.CurrentApplication);
          }
-         QueryList?.ready();
+         this.QueryList?.ready();
+      }
+
+      select(q) {
+         this.QueryWorkspace.resetTabs();
+         this.QueryWorkspace.populateQueryWorkspace(q);
       }
    }
 
-   return new UI_Work_Query();
+   return UI_Work_Query;
 }

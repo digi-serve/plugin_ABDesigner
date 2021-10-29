@@ -1,5 +1,6 @@
 import { JSDOM } from "jsdom";
 import webix from "./_mock/webix";
+import webixElement from "./_mock/webix_element";
 
 // Set web browser environment
 const dom = new JSDOM("<!DOCTYPE html><html><head></head><body></body></html>");
@@ -9,4 +10,5 @@ global.FileReader = global.window.FileReader;
 global.Blob = global.window.Blob;
 
 // Set webix globally
-global.$$ = webix;
+global.$$ = webixElement;
+global.webix = webix;

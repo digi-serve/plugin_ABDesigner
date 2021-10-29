@@ -1,5 +1,4 @@
-export default function webix(id) {
-   return {
-      id: id,
-   };
+export default class webix {
+   static ui() {}
+   static extend() {}
 }

@@ -9,6 +9,7 @@ import UIListNewProcess from "./ui_work_query_list_newQuery";
 
 export default function (AB) {
    const UI_COMMON_LIST = UICommonListFactory(AB);
+   const UI_ADD_FORM = UIListNewProcess(AB);
 
    class UI_Work_Query_List extends AB.ClassUI {
       constructor() {
@@ -32,7 +33,7 @@ export default function (AB) {
                exclude: true,
             },
          });
-         this.AddForm = UIListNewProcess(AB);
+         this.AddForm = new UI_ADD_FORM();
          // {ui_common_list} instance to display a list of our objects.
 
          this._handler_refreshApp = (def) => {
@@ -149,5 +150,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Query_List();
+   return UI_Work_Query_List;
 }

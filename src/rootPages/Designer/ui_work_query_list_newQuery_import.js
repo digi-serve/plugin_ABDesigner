@@ -207,5 +207,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Query_List_NewQuery_Import();
+   return UI_Work_Query_List_NewQuery_Import;
 }

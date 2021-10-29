@@ -25,6 +25,9 @@ export default function (AB) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
    };
 
+   const UI_Blank_Query = UIBlankQuery(AB);
+   const UI_Import_Query = UIImportQuery(AB);
+
    class UI_Work_Query_List_NewQuery extends AB.ClassUI {
       constructor() {
          const base = "ab_work_query_list_newQuery";
@@ -41,8 +44,8 @@ export default function (AB) {
 
          // var callback = null;
 
-         this.BlankTab = UIBlankQuery(AB);
-         this.ImportTab = UIImportQuery(AB);
+         this.BlankTab = new UI_Blank_Query(AB);
+         this.ImportTab = new UI_Import_Query(AB);
       }
 
       ui() {
@@ -218,5 +221,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Query_List_NewQuery();
+   return UI_Work_Query_List_NewQuery;
 }

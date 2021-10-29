@@ -5861,6 +5861,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_work_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object */ "./src/rootPages/Designer/ui_work_object.js");
+/* harmony import */ var _ui_work_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query */ "./src/rootPages/Designer/ui_work_query.js");
 /*
  * ab_work
  *
@@ -5869,7 +5870,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-// const AB_Work_Query = require("./ab_work_query");
+
 // const AB_Work_Datacollection = require("./ab_work_dataview");
 // const AB_Work_Process = require("./ab_work_process");
 // const AB_Work_Interface = require("./ab_work_interface");
@@ -5880,7 +5881,7 @@ __webpack_require__.r(__webpack_exports__);
    };
 
    var AppObjectWorkspace = (0,_ui_work_object__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // var AppQueryWorkspace = new AB_Work_Query(App);
+   const AppQueryWorkspace = (0,_ui_work_query__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
    // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
    // var AppProcessWorkspace = new AB_Work_Process(App);
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);
@@ -6064,7 +6065,7 @@ __webpack_require__.r(__webpack_exports__);
                         id: this.ids.workspace,
                         cells: [
                            AppObjectWorkspace.ui(),
-                           // AppQueryWorkspace.ui,
+                           AppQueryWorkspace.ui(),
                            // AppDatacollectionWorkspace.ui,
                            // AppProcessWorkspace.ui,
                            // AppInterfaceWorkspace.ui,
@@ -6086,7 +6087,7 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
 
          AppObjectWorkspace.init(AB);
-         // AppQueryWorkspace.init(AB);
+         AppQueryWorkspace.init(AB);
          // AppDatacollectionWorkspace.init(AB);
          // AppProcessWorkspace.init(AB);
          // AppInterfaceWorkspace.init(AB);
@@ -6148,7 +6149,7 @@ __webpack_require__.r(__webpack_exports__);
       transitionWorkspace(application) {
          this.applicationInit(application);
          AppObjectWorkspace.applicationLoad(application);
-         // AppQueryWorkspace.applicationLoad(application);
+         AppQueryWorkspace.applicationLoad(application);
          // AppDatacollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
@@ -9400,6 +9401,1054 @@ __webpack_require__.r(__webpack_exports__);
 
    // NOTE: since this is configurable, we return the CLASS only.
    return new UIWorkObjectWorkspace(init_settings);
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query.js":
+/*!*************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_work_query_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_query_list */ "./src/rootPages/Designer/ui_work_query_list.js");
+/* harmony import */ var _ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_workspace */ "./src/rootPages/Designer/ui_work_query_workspace.js");
+/*
+ * ui_work_query
+ *
+ * Display the Query Tab UI:
+ *
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const QueryList = (0,_ui_work_query_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const QueryWorkspace = (0,_ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+
+   class UI_Work_Query extends AB.ClassUI {
+      constructor() {
+         super("ab_work_query");
+
+         this.CurrentApplication = null;
+         this.QueryList = QueryList;
+         this.QueryWorkspace = QueryWorkspace;
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            type: "space",
+            cols: [QueryList.ui(), { view: "resizer" }, QueryWorkspace.ui()],
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         // Our init() function for setting up our UI
+         QueryList.on("selected", (q) => {
+            QueryWorkspace.resetTabs();
+            QueryWorkspace.populateQueryWorkspace(q);
+         });
+
+         return Promise.all([QueryWorkspace.init(AB), QueryList.init(AB)]);
+      }
+
+      /**
+       * @function applicationLoad
+       *
+       * Initialize the Query Workspace with the given ABApplication.
+       *
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         this.CurrentApplication = application;
+
+         QueryWorkspace.clearWorkspace();
+         QueryList.applicationLoad(application);
+         QueryWorkspace.applicationLoad(application);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         $$(this.ids.component).show();
+
+         if (this.CurrentApplication) {
+            QueryList?.applicationLoad(this.CurrentApplication);
+         }
+         QueryList?.ready();
+      }
+   }
+
+   return new UI_Work_Query();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list.js":
+/*!******************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
+/* harmony import */ var _ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list_newQuery */ "./src/rootPages/Designer/ui_work_query_list_newQuery.js");
+/*
+ * ui_work_query_list
+ *
+ * Manage the ABObjectQuery List
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UI_COMMON_LIST = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+
+   class UI_Work_Query_List extends AB.ClassUI {
+      constructor() {
+         super("ui_work_query_list");
+
+         this.CurrentApplication = null;
+
+         this.ListComponent = new UI_COMMON_LIST({
+            idBase: this.ids.component,
+            labels: {
+               addNew: "Add new query",
+               confirmDeleteTitle: "Delete Query",
+               title: "Queries",
+               searchPlaceholder: "Query name",
+            },
+            // we can overrid the default template like this:
+            // templateListItem:
+            //    "<div class='ab-object-list-item'>#label##warnings#{common.iconGear}</div>",
+            menu: {
+               copy: false,
+               exclude: true,
+            },
+         });
+         this.AddForm = (0,_ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         // {ui_common_list} instance to display a list of our objects.
+
+         this._handler_refreshApp = (def) => {
+            if (!this.CurrentApplication) return;
+            this.CurrentApplication = this.CurrentApplication.refreshInstance();
+            this.applicationLoad(this.CurrentApplication);
+         };
+      }
+
+      // Our webix UI definition:
+      ui() {
+         return this.ListComponent.ui();
+      }
+
+      // Our init() function for setting up our UI
+      async init(AB, options) {
+         this.AB = AB;
+
+         this.on("addNew", (selectNew) => {
+            // if we receive a signal to add a new Object from another source
+            // like the blank object workspace offering an Add New button:
+            this.clickNewProcess(selectNew);
+         });
+
+         //
+         // List of Processes
+         //
+         await this.ListComponent.init(AB);
+
+         this.ListComponent.on("selected", (item) => {
+            this.emit("selected", item);
+         });
+
+         this.ListComponent.on("addNew", (selectNew) => {
+            this.clickNewProcess(selectNew);
+         });
+
+         this.ListComponent.on("deleted", (item) => {
+            this.emit("deleted", item);
+         });
+
+         this.ListComponent.on("exclude", (item) => {
+            this.exclude(item);
+         });
+
+         this.ListComponent.on("copied", (data) => {
+            this.copy(data);
+         });
+
+         //
+         // Add Form
+         //
+         await this.AddForm.init(AB);
+
+         this.AddForm.on("cancel", () => {
+            this.AddForm.hide();
+         });
+
+         this.AddForm.on("save", (q, select) => {
+            // the AddForm already takes care of updating the
+            // CurrentApplication.
+
+            // we just need to update our list of objects
+            this.applicationLoad(this.CurrentApplication);
+
+            // if (select) {
+            this.ListComponent.select(q.id);
+            // }
+         });
+      }
+
+      /**
+       * @function applicationLoad
+       * Initialize the List from the provided ABApplication
+       * If no ABApplication is provided, then show an empty form. (create operation)
+       * @param {ABApplication} application
+       *        [optional] The current ABApplication we are working with.
+       */
+      applicationLoad(application) {
+         var events = ["definition.updated", "definition.deleted"];
+         if (this.CurrentApplication) {
+            // remove current handler
+            events.forEach((e) => {
+               this.CurrentApplication.removeListener(
+                  e,
+                  this._handler_refreshApp
+               );
+            });
+         }
+         this.CurrentApplication = application;
+         if (this.CurrentApplication) {
+            events.forEach((e) => {
+               this.CurrentApplication.on(e, this._handler_refreshApp);
+            });
+         }
+
+         this.ListComponent.dataLoad(application?.queriesIncluded());
+
+         this.AddForm.applicationLoad(application);
+      }
+
+      ready() {
+         this.ListComponent.ready();
+      }
+
+      /**
+       * @function clickNewProcess
+       *
+       * Manages initiating the transition to the new Process Popup window
+       */
+      clickNewProcess(selectNew) {
+         // show the new popup
+         this.AddForm.show();
+      }
+   }
+
+   return new UI_Work_Query_List();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list_newQuery.js":
+/*!***************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list_newQuery.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_blank */ "./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js");
+/* harmony import */ var _ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_import */ "./src/rootPages/Designer/ui_work_query_list_newQuery_import.js");
+/*
+ * ui_work_query_list_newQuery
+ *
+ * Display the form for creating a new Query.  This Popup will manage several
+ * different sub components for gathering Query data for saving.
+ *
+ * The sub components will gather the data for the query and do basic form
+ * validations on their interface.
+ *
+ * when ready, the sub component will emit "save" with the values gathered by
+ * the form.  This component will manage the actual final query validation,
+ * and saving to this application.
+ *
+ * On success, "save.success" will be emitted on the sub-component, and this
+ * component.
+ *
+ * On Error, "save.error" will be emitted on the sub-component.
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Query_List_NewQuery extends AB.ClassUI {
+      constructor() {
+         const base = "ab_work_query_list_newQuery";
+         super({
+            component: base,
+            tab: `${base}_tab`,
+         });
+
+         this.currentApplication = null;
+         // {ABApplication} the ABApplication we are currently working on.
+
+         this.selectNew = true;
+         // {bool} do we select a new object after it is created.
+
+         // var callback = null;
+
+         this.BlankTab = (0,_ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+         this.ImportTab = (0,_ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            view: "window",
+            id: this.ids.component,
+            position: "center",
+            modal: true,
+            head: L("Add new query"),
+            selectNewQuery: true,
+            body: {
+               view: "tabview",
+               id: this.ids.tab,
+               cells: [this.BlankTab.ui(), this.ImportTab.ui()],
+               tabbar: {
+                  on: {
+                     onAfterTabClick: (id) => {
+                        this.switchTab(id);
+                     },
+                     onAfterRender() {
+                        this.$view
+                           .querySelectorAll(".webix_item_tab")
+                           .forEach((t) => {
+                              var tid = t.getAttribute("button_id");
+                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                           });
+                     },
+                  },
+               },
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         webix.ui(this.ui());
+         webix.extend($$(this.ids.component), webix.ProgressBar);
+
+         this.$component = $$(this.ids.component);
+
+         let allInits = [];
+         ["BlankTab", "ImportTab"].forEach((k) => {
+            allInits.push(this[k].init(AB));
+            this[k].on("cancel", () => {
+               this.emit("cancel");
+            });
+            this[k].on("save", (values) => {
+               this.save(values, k);
+            });
+         });
+
+         return Promise.all(allInits);
+      }
+
+      /**
+       * @method applicationLoad()
+       * prepare ourself with the current application
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         this.currentApplication = application; // remember our current Application.
+      }
+
+      /**
+       * @method save
+       * take the data gathered by our child creation tabs, and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @param {string}  tabKey
+       *        the "key" of the tab initiating the save.
+       * @return {Promise}
+       */
+      async save(values, tabKey) {
+         // must have an application set.
+         if (!this.currentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            this[tabKey].emit("save.error", true);
+            return false;
+         }
+
+         // create a new (unsaved) instance of our object:
+         let newQuery = this.AB.queryNew(values);
+
+         // have newObject validate it's values.
+         let validator = newQuery.isValid();
+         if (validator.fail()) {
+            this[tabKey].emit("save.error", validator);
+            // cb(validator); // tell current Tab component the errors
+            return false; // stop here.
+         }
+
+         if (!newQuery.createdInAppID) {
+            newQuery.createdInAppID = this.currentApplication.id;
+         }
+
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            let query = await newQuery.save();
+            await this.currentApplication.queryInsert(query);
+            this[tabKey].emit("save.successful", query);
+            this.done(query);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this object from the current object list of
+            // the currentApplication.
+            // NOTE: It has error "queryRemove" is not a function
+            // await this.currentApplication.queryRemove(newQuery);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show(shouldSelectNew) {
+         if (shouldSelectNew != null) {
+            this.selectNew = shouldSelectNew;
+         }
+         if (this.$component) this.$component.show();
+
+         const id = $$(this.ids.tab).getValue();
+         this.switchTab(id);
+      }
+
+      /**
+       * @function hide()
+       *
+       * remove the busy indicator from the form.
+       */
+      hide() {
+         if (this.$component) this.$component.hide();
+      }
+
+      /**
+       * Show the busy indicator
+       */
+      busy() {
+         if (this.$component) {
+            this.$component.showProgress();
+         }
+      }
+
+      /**
+       * Hide the busy indicator
+       */
+      ready() {
+         if (this.$component) {
+            this.$component.hideProgress();
+         }
+      }
+
+      switchTab(tabId) {
+         if (tabId == this.BlankTab?.ui()?.body?.id || !tabId) {
+            this.BlankTab?.onShow?.(this.currentApplication);
+         } else if (tabId == this.ImportTab?.ui()?.body?.id) {
+            this.ImportTab?.onShow?.(this.currentApplication);
+         }
+      }
+   }
+
+   return new UI_Work_Query_List_NewQuery();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ui_work_query_list_newQuery_blank
+ *
+ * Display the form for creating a new ABQuery.
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Query_List_NewQuery_Blank extends AB.ClassUI {
+      constructor() {
+         const base = "ui_work_query_list_newQuery_blank";
+         super({
+            component: base,
+
+            form: `${base}_blank`,
+            buttonSave: `${base}_save`,
+            buttonCancel: `${base}_cancel`,
+            object: `${base}_object`,
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Create"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               rules: {
+                  // TODO:
+                  // name: inputValidator.rules.validateQueryName
+               },
+               elements: [
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: L("Query name"),
+                     labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_query_list_newQuery_blank_name"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     id: this.ids.object,
+                     view: "richselect",
+                     label: L("Object"),
+                     name: "object",
+                     required: true,
+                     placeholder: L("Select an object"),
+                     labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_query_list_newQuery_blank_object"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.cancel();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Add Query"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              return this.save();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+
+         // "save.error" is triggered by the ui_work_query_list_newQuery
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_query_list_newQuery
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         this.$form.clearValidation();
+         this.$form.clear();
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_query_list_newQuery query had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of queries:
+       *        - A javascript Error() query
+       *        - An ABValidation query returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            console.error(err);
+            var message = L("the entered data is invalid");
+            // if this was our Validation() query:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            var values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating Query: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         $$(this.ids.buttonSave).enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_query_list_newQuery successfully saved the values.
+       */
+      onSuccess() {
+         this.formClear();
+         $$(this.ids.buttonSave).enable();
+      }
+
+      /**
+       * @function save
+       *
+       * verify the current info is ok, package it, and return it to be
+       * added to the application.createModel() method.
+       */
+      save() {
+         var saveButton = $$(this.ids.buttonSave);
+         saveButton.disable();
+
+         var Form = this.$form;
+
+         Form.clearValidation();
+
+         // if it doesn't pass the basic form validation, return:
+         if (!Form.validate()) {
+            saveButton.enable();
+            return false;
+         }
+
+         let formVals = Form.getValues();
+         let values = {
+            name: formVals.name,
+            label: formVals.name,
+            joins: {
+               alias: "BASE_OBJECT",
+               objectID: formVals.object,
+               links: [],
+            },
+         };
+
+         this.emit("save", values);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         if ($$(this.ids.component)) $$(this.ids.component).show();
+      }
+
+      onShow(currentApplication) {
+         // populate object list
+         let $objectList = $$(this.ids.object);
+         if ($objectList && currentApplication) {
+            let objectOpts = currentApplication.objectsIncluded().map((obj) => {
+               return {
+                  id: obj.id,
+                  value: obj.label,
+               };
+            });
+
+            $objectList.define("options", objectOpts);
+            $objectList.refresh();
+
+            // Set width of item list
+            let $suggestView = $objectList.getPopup();
+            $suggestView.attachEvent("onShow", () => {
+               $suggestView.define("width", 300);
+               $suggestView.resize();
+            });
+         }
+
+         // clear form
+         $$(this.ids.form).setValues({
+            name: "",
+            object: "",
+         });
+      }
+   }
+
+   return new UI_Work_Query_List_NewQuery_Blank();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list_newQuery_import.js":
+/*!**********************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list_newQuery_import.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ab_work_query_list_newQuery_import
+ *
+ * Display the form for importing an existing query into the application.
+ *
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Query_List_NewQuery_Import extends AB.ClassUI {
+      constructor() {
+         let base = "ui_work_query_list_newQuery_import";
+         super({
+            component: base,
+
+            form: `${base}_import`,
+            filter: `${base}_filter`,
+            queryList: `${base}_queryList`,
+            buttonSave: `${base}_save`,
+            buttonCancel: `${base}_cancel`,
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Existing"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               elements: [
+                  // Filter
+                  {
+                     cols: [
+                        {
+                           view: "icon",
+                           icon: "fa fa-filter",
+                           align: "left",
+                        },
+                        {
+                           view: "text",
+                           id: this.ids.filter,
+                           on: {
+                              onTimedKeyPress: () => this.filter(),
+                           },
+                        },
+                     ],
+                  },
+
+                  // Model list
+                  {
+                     view: "list",
+                     id: this.ids.queryList,
+                     select: true,
+                     height: 200,
+                     minHeight: 250,
+                     maxHeight: 250,
+                     data: [],
+                     template: "<div>#label#</div>",
+                  },
+
+                  // Import & Cancel buttons
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => this.cancel(),
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Import"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => this.save(),
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+         this.$filter = $$(this.ids.filter);
+         this.$queryList = $$(this.ids.queryList);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$buttonCancel = $$(this.ids.buttonCancel);
+
+         // "save.error" is triggered by the ui_work_query_list_newQuery
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_query_list_newQuery
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      onShow(app) {
+         this.currentApp = app;
+         this.formClear();
+
+         // now all objects are *global* but an application might only
+         // reference a sub set of them.  Here we just need to show
+         // the objects our current application isn't referencing:
+
+         const availableQueries = this.currentApp.queriesExcluded();
+         this.$queryList.parse(availableQueries, "json");
+      }
+
+      filter() {
+         let filterText = this.$filter.getValue();
+         this.$queryList.filter("#label#", filterText);
+      }
+
+      save() {
+         let selectedQuery = this.$queryList.getSelectedItem();
+         if (!selectedQuery) return false;
+
+         this.$buttonSave.disable();
+
+         this.emit("save", selectedQuery);
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         // Filter section
+         this.$form.clearValidation();
+         this.$form.clear();
+         // Lists
+         this.$queryList.clearAll();
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_object_list_newObject object had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of objects:
+       *        - A javascript Error() object
+       *        - An ABValidation object returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            console.error(err);
+            let message = L("the entered data is invalid");
+            // if this was our Validation() object:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            let values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating Query: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_object_list_newObject successfully saved the values.
+       */
+      onSuccess() {
+         this.$buttonSave.enable();
+      }
+   }
+
+   return new UI_Work_Query_List_NewQuery_Import();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_workspace.js":
+/*!***********************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_workspace.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
+   class UIWorkQueryWorkspace extends AB.ClassUI {
+      ui() {
+         return {};
+      }
+
+      init() {
+         // TODO
+      }
+
+      applicationLoad() {
+         // TODO
+      }
+
+      clearWorkspace() {
+         // TODO
+      }
+   }
+
+   return new UIWorkQueryWorkspace(init_settings);
 }
 
 

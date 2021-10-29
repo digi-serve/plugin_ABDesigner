@@ -138,8 +138,10 @@ export default function (AB) {
       }
 
       formClear() {
-         this.$form.clearValidation();
-         this.$form.clear();
+         if (this.$form) {
+            this.$form.clearValidation();
+            this.$form.clear();
+         }
       }
 
       /**
@@ -265,5 +267,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Query_List_NewQuery_Blank();
+   return UI_Work_Query_List_NewQuery_Blank;
 }
