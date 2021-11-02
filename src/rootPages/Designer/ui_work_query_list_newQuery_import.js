@@ -151,10 +151,14 @@ export default function (AB) {
 
       formClear() {
          // Filter section
-         this.$form.clearValidation();
-         this.$form.clear();
+         if (this.$form) {
+            this.$form.clearValidation();
+            this.$form.clear();
+         }
          // Lists
-         this.$queryList.clearAll();
+         if (this.$queryList) {
+            this.$queryList.clearAll();
+         }
       }
 
       /**

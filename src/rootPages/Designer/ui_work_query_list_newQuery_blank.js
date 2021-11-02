@@ -115,6 +115,8 @@ export default function (AB) {
          this.AB = AB;
 
          this.$form = $$(this.ids.form);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$objectList = $$(this.ids.object);
 
          // "save.error" is triggered by the ui_work_query_list_newQuery
          // if there was an error saving the values from our form.
@@ -181,7 +183,7 @@ export default function (AB) {
             });
          }
          // get notified if there was an error saving.
-         $$(this.ids.buttonSave).enable();
+         this.$buttonSave.enable();
       }
 
       /**
@@ -191,7 +193,7 @@ export default function (AB) {
        */
       onSuccess() {
          this.formClear();
-         $$(this.ids.buttonSave).enable();
+         this.$buttonSave.enable();
       }
 
       /**
@@ -201,8 +203,7 @@ export default function (AB) {
        * added to the application.createModel() method.
        */
       save() {
-         var saveButton = $$(this.ids.buttonSave);
-         saveButton.disable();
+         this.$buttonSave.disable();
 
          var Form = this.$form;
 
@@ -210,7 +211,7 @@ export default function (AB) {
 
          // if it doesn't pass the basic form validation, return:
          if (!Form.validate()) {
-            saveButton.enable();
+            this.$buttonSave.enable();
             return false;
          }
 
@@ -239,8 +240,7 @@ export default function (AB) {
 
       onShow(currentApplication) {
          // populate object list
-         let $objectList = $$(this.ids.object);
-         if ($objectList && currentApplication) {
+         if (this.$objectList && currentApplication) {
             let objectOpts = currentApplication.objectsIncluded().map((obj) => {
                return {
                   id: obj.id,
@@ -248,11 +248,11 @@ export default function (AB) {
                };
             });
 
-            $objectList.define("options", objectOpts);
-            $objectList.refresh();
+            this.$objectList.define("options", objectOpts);
+            this.$objectList.refresh();
 
             // Set width of item list
-            let $suggestView = $objectList.getPopup();
+            let $suggestView = this.$objectList.getPopup();
             $suggestView.attachEvent("onShow", () => {
                $suggestView.define("width", 300);
                $suggestView.resize();
@@ -260,10 +260,12 @@ export default function (AB) {
          }
 
          // clear form
-         $$(this.ids.form).setValues({
-            name: "",
-            object: "",
-         });
+         if (this.$form) {
+            this.$form.setValues({
+               name: "",
+               object: "",
+            });
+         }
       }
    }
 
