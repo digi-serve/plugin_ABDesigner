@@ -166,7 +166,7 @@ export default function (AB) {
          // the objects our current application isn't referencing:
 
          let availableObjs = this.currentApp.objectsExcluded(
-            (o) => !o.isSystemObject
+            (o) => !o.isSystemObject || AB.Account.isSystemDesigner()
          );
          this.$objectList.parse(availableObjs, "json");
       }
