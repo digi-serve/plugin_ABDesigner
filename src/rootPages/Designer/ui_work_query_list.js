@@ -53,9 +53,8 @@ export default function (AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
-            // if we receive a signal to add a new Object from another source
-            // like the blank object workspace offering an Add New button:
-            this.clickNewProcess(selectNew);
+            // if we receive a signal to add a new Query from another source
+            this.clickNewQuery(selectNew);
          });
 
          //
@@ -68,7 +67,7 @@ export default function (AB) {
          });
 
          this.ListComponent.on("addNew", (selectNew) => {
-            this.clickNewProcess(selectNew);
+            this.clickNewQuery(selectNew);
          });
 
          this.ListComponent.on("deleted", (item) => {
@@ -140,11 +139,11 @@ export default function (AB) {
       }
 
       /**
-       * @function clickNewProcess
+       * @function clickNewQuery
        *
        * Manages initiating the transition to the new Process Popup window
        */
-      clickNewProcess(selectNew) {
+      clickNewQuery(selectNew) {
          // show the new popup
          this.AddForm.show();
       }
