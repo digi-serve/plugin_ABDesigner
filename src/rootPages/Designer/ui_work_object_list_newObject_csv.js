@@ -205,9 +205,10 @@ export default function (AB) {
 
          // read CSV file
          let separatedBy = this.$separatedBy.getValue();
-         let data = await this._csvImporter.getDataRows(fileInfo, separatedBy);
-
-         this._dataRows = data;
+         this._dataRows = await this._csvImporter.getDataRows(
+            fileInfo,
+            separatedBy
+         );
 
          this.$headerOnFirstLine.enable();
          this.$columnList.enable();
