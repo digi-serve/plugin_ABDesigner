@@ -367,7 +367,6 @@ export default function (AB) {
          let newObjAttr = {
             primaryColumnName: "uuid", // set uuid to be primary column
             name: this.$form.getValues()["name"],
-            fields: [],
          };
 
          // now send data back to be added:
