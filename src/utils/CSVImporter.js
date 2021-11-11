@@ -57,7 +57,7 @@ module.exports = class CSVImporter {
     */
    async getDataRows(fileInfo, separatedBy) {
       if (!this.validateFile(fileInfo))
-         return Promise.reject(".fileInfo parameter is invalid");
+         return Promise.reject(this.L(".fileInfo parameter is invalid"));
 
       return new Promise((resolve, reject) => {
          // read CSV file
