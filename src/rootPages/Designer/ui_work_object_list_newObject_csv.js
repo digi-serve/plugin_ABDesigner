@@ -404,9 +404,8 @@ export default function (AB) {
             }
 
             let field = newObj.fieldNew(newField);
-            subTasks = subTasks
-               .then(() => field.save())
-               .then(() => field.migrateCreate());
+            subTasks = subTasks.then(() => field.save());
+            // .then(() => field.migrateCreate());
          });
 
          // add rows to Server
