@@ -17,6 +17,7 @@ export default function (AB) {
 
          this.CurrentApplication = null;
 
+         // {ui_common_list} instance to display a list of our objects.
          this.ListComponent = new UI_COMMON_LIST({
             idBase: this.ids.component,
             labels: {
@@ -34,7 +35,6 @@ export default function (AB) {
             },
          });
          this.AddForm = new UI_ADD_FORM();
-         // {ui_common_list} instance to display a list of our objects.
 
          this._handler_refreshApp = (def) => {
             if (!this.CurrentApplication) return;
