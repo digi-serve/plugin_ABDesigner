@@ -7,7 +7,7 @@
 
 import UI_Work_Object from "./ui_work_object";
 import UI_Work_Query from "./ui_work_query";
-// const AB_Work_Datacollection = require("./ab_work_dataview");
+import UI_Work_Datacollection from "./ui_work_datacollection";
 // const AB_Work_Process = require("./ab_work_process");
 // const AB_Work_Interface = require("./ab_work_interface");
 
@@ -18,6 +18,7 @@ export default function (AB) {
 
    var AppObjectWorkspace = UI_Work_Object(AB);
    const AppQueryWorkspace = new (UI_Work_Query(AB))();
+   const AppDataCollectionWorkspace = new (UI_Work_Datacollection(AB))();
    // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
    // var AppProcessWorkspace = new AB_Work_Process(App);
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);
@@ -32,7 +33,7 @@ export default function (AB) {
             tabbar: `${base}_tabbar`,
             tab_object: `${base}_tab_object`,
             tab_query: `${base}_tab_query`,
-            tab_dataview: `${base}_tab_dataview`,
+            tab_datacollection: `${base}_tab_datacollection`,
             tab_processview: `${base}_tab_processview`,
             tab_interface: `${base}_tab_interface`,
             workspace: `${base}_workspace`,
@@ -65,7 +66,7 @@ export default function (AB) {
                icon: "fa fa-fw fa-filter",
             },
             {
-               id: this.ids.tab_dataview,
+               id: this.ids.tab_datacollection,
                value: L("Data Collections"),
                icon: "fa fa-fw fa-table",
             },
@@ -202,7 +203,7 @@ export default function (AB) {
                         cells: [
                            AppObjectWorkspace.ui(),
                            AppQueryWorkspace.ui(),
-                           // AppDatacollectionWorkspace.ui,
+                           AppDataCollectionWorkspace.ui(),
                            // AppProcessWorkspace.ui,
                            // AppInterfaceWorkspace.ui,
                         ],
@@ -224,7 +225,7 @@ export default function (AB) {
 
          AppObjectWorkspace.init(AB);
          AppQueryWorkspace.init(AB);
-         // AppDatacollectionWorkspace.init(AB);
+         AppDataCollectionWorkspace.init(AB);
          // AppProcessWorkspace.init(AB);
          // AppInterfaceWorkspace.init(AB);
 
@@ -286,7 +287,7 @@ export default function (AB) {
          this.applicationInit(application);
          AppObjectWorkspace.applicationLoad(application);
          AppQueryWorkspace.applicationLoad(application);
-         // AppDatacollectionWorkspace.applicationLoad(application);
+         AppDataCollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
 
@@ -312,8 +313,8 @@ export default function (AB) {
                break;
 
             // Datacollection Workspace Tab
-            case this.ids.tab_dataview:
-               AppDatacollectionWorkspace.show();
+            case this.ids.tab_datacollection:
+               AppDataCollectionWorkspace.show();
                break;
 
             // Process Workspace Tab

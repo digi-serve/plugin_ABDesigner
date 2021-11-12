@@ -1,37 +1,54 @@
 /*
- * ui_work_query_list
+ * ui_work_datacollection_list
  *
- * Manage the ABObjectQuery List
+ * Manage the ABDataCollection List
  *
  */
 import UICommonListFactory from "./ui_common_list";
-import UIListNewProcess from "./ui_work_query_list_newQuery";
+import UIListNewProcess from "./ui_work_datacollection_list_newDatacollection";
 
 export default function (AB) {
    const UI_COMMON_LIST = UICommonListFactory(AB);
    const UI_ADD_FORM = UIListNewProcess(AB);
 
-   class UI_Work_Query_List extends AB.ClassUI {
+   class UI_Work_Datacollection_List extends AB.ClassUI {
       constructor() {
-         super("ui_work_query_list");
+         super("ui_work_datacollection_list");
 
          this.CurrentApplication = null;
 
-         // {ui_common_list} instance to display a list of our objects.
+         // {ui_common_list} instance to display a list of our data collections.
          this.ListComponent = new UI_COMMON_LIST({
             idBase: this.ids.component,
             labels: {
-               addNew: "Add new query",
-               confirmDeleteTitle: "Delete Query",
-               title: "Queries",
-               searchPlaceholder: "Query name",
+               addNew: "Add new data collection",
+               confirmDeleteTitle: "Delete Data Collection",
+               title: "Data Collections",
+               searchPlaceholder: "Data Collection name",
             },
-            // we can overrid the default template like this:
-            // templateListItem:
-            //    "<div class='ab-object-list-item'>#label##warnings#{common.iconGear}</div>",
             menu: {
                copy: false,
                exclude: true,
+            },
+            /**
+             * @function templateListItem
+             *
+             * Defines the template for each row of our Data view list.
+             *
+             * @param {ABDatacollection} obj the current instance of ABDatacollection for the row.
+             * @param {?} common the webix.common icon data structure
+             * @return {string}
+             */
+            templateListItem: function (datacollection, common) {
+               return `<div class='ab-datacollection-list-item'>
+                        <i class="fa ${
+                           datacollection.settings.isQuery
+                              ? "fa-filter"
+                              : "fa-database"
+                        }"></i>
+                        ${datacollection.label || "??label??"}
+                        ${common.iconGear}
+                        </div>`;
             },
          });
          this.AddForm = new UI_ADD_FORM();
@@ -53,8 +70,8 @@ export default function (AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
-            // if we receive a signal to add a new Query from another source
-            this.clickNewQuery(selectNew);
+            // if we receive a signal to add a new Data Collection from another source
+            this.clickNewDataCollection(selectNew);
          });
 
          //
@@ -67,7 +84,7 @@ export default function (AB) {
          });
 
          this.ListComponent.on("addNew", (selectNew) => {
-            this.clickNewQuery(selectNew);
+            this.clickNewDataCollection(selectNew);
          });
 
          this.ListComponent.on("deleted", (item) => {
@@ -91,7 +108,7 @@ export default function (AB) {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
-            // we just need to update our list of objects
+            // we just need to update our list of data collections
             this.applicationLoad(this.CurrentApplication);
 
             // if (select) {
@@ -102,13 +119,16 @@ export default function (AB) {
 
       /**
        * @function applicationLoad
-       * Initialize the List from the provided ABApplication
+       *
+       * Initialize the Data Collection List from the provided ABApplication
+       *
        * If no ABApplication is provided, then show an empty form. (create operation)
-       * @param {ABApplication} application
-       *        [optional] The current ABApplication we are working with.
+       *
+       * @param {ABApplication} application  	[optional] The current ABApplication
+       *										we are working with.
        */
       applicationLoad(application) {
-         var events = ["definition.updated", "definition.deleted"];
+         let events = ["definition.updated", "definition.deleted"];
          if (this.CurrentApplication) {
             // remove current handler
             events.forEach((e) => {
@@ -125,23 +145,11 @@ export default function (AB) {
             });
          }
 
-         this.ListComponent.dataLoad(application?.queriesIncluded());
+         // clear our list and display our data collections:
+         this.ListComponent.dataLoad(application?.datacollectionsIncluded());
 
+         // prepare our Popup with the current Application
          this.AddForm.applicationLoad(application);
-      }
-
-      ready() {
-         this.ListComponent.ready();
-      }
-
-      /**
-       * @function clickNewQuery
-       *
-       * Manages initiating the transition to the new Process Popup window
-       */
-      clickNewQuery(selectNew) {
-         // show the new popup
-         this.AddForm.show();
       }
 
       /**
@@ -153,13 +161,29 @@ export default function (AB) {
        */
       async exclude(item) {
          this.ListComponent.busy();
-         await this.CurrentApplication.queryRemove(item);
-         this.ListComponent.dataLoad(this.CurrentApplication.queriesIncluded());
+         await this.CurrentApplication.datacollectionRemove(item);
+         this.ListComponent.dataLoad(
+            this.CurrentApplication?.datacollectionsIncluded()
+         );
 
-         // this will clear the object workspace
+         // this will clear the data collection workspace
          this.emit("selected", null);
+      }
+
+      ready() {
+         this.ListComponent.ready();
+      }
+
+      /**
+       * @function clickNewDataCollection
+       *
+       * Manages initiating the transition to the new Process Popup window
+       */
+      clickNewDataCollection(selectNew) {
+         // show the new popup
+         this.AddForm.show();
       }
    }
 
-   return UI_Work_Query_List;
+   return UI_Work_Datacollection_List;
 }
