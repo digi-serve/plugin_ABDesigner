@@ -94,11 +94,11 @@ describe("ui_work_query_list", function () {
       assert.equal(true, target.ListComponent.ready.calledOnce);
    });
 
-   it(".clickNewProcess - should call .show of .AddForm", function () {
+   it(".clickNewQuery - should call .show of .AddForm", function () {
       const target = getTarget();
       const spyAddFormShow = sinon.spy(target.AddForm, "show");
 
-      target.clickNewProcess();
+      target.clickNewQuery();
 
       assert.equal(true, spyAddFormShow.calledOnce);
    });
