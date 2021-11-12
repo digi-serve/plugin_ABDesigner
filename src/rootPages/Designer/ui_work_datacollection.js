@@ -70,10 +70,14 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
 
-         this.DataCollectionList.busy();
+         // this.DataCollectionList.busy();
 
-         this.DataCollectionWorkspace.applicationLoad(this.CurrentApplication);
-         this.DataCollectionList.applicationLoad(this.CurrentApplication);
+         if (this.CurrentApplication) {
+            this.DataCollectionWorkspace.applicationLoad(
+               this.CurrentApplication
+            );
+            this.DataCollectionList.applicationLoad(this.CurrentApplication);
+         }
          this.DataCollectionList.ready();
       }
 

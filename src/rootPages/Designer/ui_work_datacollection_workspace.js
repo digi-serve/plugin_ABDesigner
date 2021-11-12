@@ -22,6 +22,10 @@ export default function (AB, init_settings) {
       clearWorkspace() {
          // TODO
       }
+
+      populateWorkspace() {
+         // TODO
+      }
    }
 
    return UIWorkDatacollectionWorkspace;
