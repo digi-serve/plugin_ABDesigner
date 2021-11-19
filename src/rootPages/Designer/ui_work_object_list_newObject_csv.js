@@ -4,13 +4,6 @@
  * Display the form for import CSV file to a object.
  *
  */
-import ABField from "./forms/platform/dataFields/ABField";
-import ABFieldString from "./forms/platform/dataFields/ABFieldString";
-import ABFieldLongText from "./forms/platform/dataFields/ABFieldLongText";
-import ABFieldNumber from "./forms/platform/dataFields/ABFieldNumber";
-import ABFieldDate from "./forms/platform/dataFields/ABFieldDate";
-import ABFieldBoolean from "./forms/platform/dataFields/ABFieldBoolean";
-
 import CSVImporter from "../../utils/CSVImporter.js";
 
 export default function (AB) {
@@ -164,6 +157,8 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
+         this.allFields = this.AB.Class.ABFieldManager.allFields();
+
          this._dataRows = [];
 
          this.$form = $$(this.ids.form);
@@ -281,23 +276,23 @@ export default function (AB) {
                      options: [
                         {
                            id: "string",
-                           value: ABFieldString.defaults().menuName,
+                           value: this.allFields.filter((f) => f.key == "string")[0].defaults().menuName,
                         },
                         {
                            id: "LongText",
-                           value: ABFieldLongText.defaults().menuName,
+                           value: this.allFields.filter((f) => f.key == "LongText")[0].defaults().menuName,
                         },
                         {
                            id: "number",
-                           value: ABFieldNumber.defaults().menuName,
+                           value: this.allFields.filter((f) => f.key == "number")[0].defaults().menuName,
                         },
                         {
                            id: "date",
-                           value: ABFieldDate.defaults().menuName,
+                           value: this.allFields.filter((f) => f.key == "date")[0].defaults().menuName,
                         },
                         {
                            id: "boolean",
-                           value: ABFieldBoolean.defaults().menuName,
+                           value: this.allFields.filter((f) => f.key == "boolean")[0].defaults().menuName,
                         },
                      ],
                      width: 120,
@@ -340,7 +335,7 @@ export default function (AB) {
          var reservedColNames = columnViews.filter((cView) => {
             return (
                cView.queryView({ view: "checkbox" }).getValue() &&
-               ABField.reservedNames.indexOf(
+               this.allFields[0].reservedNames.indexOf(
                   cView
                      .queryView({ view: "text" })
                      .getValue()
@@ -354,7 +349,7 @@ export default function (AB) {
                title: L("Column name is invalid"),
                text: L(
                   "Please enter column name does not match [{0}]",
-                  ABField.reservedNames.join(", ")
+                  this.allFields[0].reservedNames.join(", ")
                ),
                ok: L("OK"),
             });
