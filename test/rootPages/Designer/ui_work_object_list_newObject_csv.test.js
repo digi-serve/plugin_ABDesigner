@@ -1,5 +1,6 @@
 import "@babel/polyfill";
 import assert from "assert";
+import sinon from "sinon";
 
 import AB from "../../_mock/AB.js";
 import UICsvObject from "../../../src/rootPages/Designer/ui_work_object_list_newObject_csv.js";
@@ -57,12 +58,15 @@ describe("ui_work_object_list_newObject_csv", function () {
    });
 
    it(".init - should init and store webix elements to variables", async function() {
-      let ab = new AB();
-      let target = UICsvObject(ab);
+      const ab = new AB();
+      const target = UICsvObject(ab);
+      const spyAllFields = sinon
+         .stub(ab.Class.ABFieldManager, "allFields")
+         .callsFake(() => []);
 
       const IDS = getStaticIds();
 
-      await target.init();
+      await target.init(ab);
 
       assert.notEqual(null, target._dataRows);
       assert.equal(IDS.form, target.$form.id);
@@ -70,6 +74,7 @@ describe("ui_work_object_list_newObject_csv", function () {
       assert.equal(IDS.separatedBy, target.$separatedBy.id);
       assert.equal(IDS.headerOnFirstLine, target.$headerOnFirstLine.id);
       assert.equal(IDS.columnList, target.$columnList.id);
-      assert.equal(IDS.importButton, target.$importButton.id);
+      assert.equal(IDS.importButton, target.$importButton.id)
+      assert.equal(true, spyAllFields.calledOnce);
    });
 });

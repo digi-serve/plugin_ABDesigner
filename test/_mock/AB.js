@@ -10,6 +10,11 @@ export default class AB {
          },
       };
 
+      this.Class = {
+         ABFieldManager: {
+            allFields: () => {}
+         }
+      };
       this.ClassUI = ClassUI;
       this.Config = new Config();
       this.Multilingual = Multilingual;
