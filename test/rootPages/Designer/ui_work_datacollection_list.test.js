@@ -5,24 +5,24 @@ import { EventEmitter } from "events";
 
 import AB from "../../_mock/AB.js";
 import UICommonList from "../../../src/rootPages/Designer/ui_common_list";
-import UIQueryList from "../../../src/rootPages/Designer/ui_work_query_list";
+import UIDataCollectionList from "../../../src/rootPages/Designer/ui_work_datacollection_list";
 
-const base = "ui_work_query_list";
+const base = "ui_work_datacollection_list";
 
 function getTarget(ab = null) {
    if (!ab) ab = new AB();
-   const UI_Query_List = UIQueryList(ab);
-   const target = new UI_Query_List();
+   const UI_DataCollection_List = UIDataCollectionList(ab);
+   const target = new UI_DataCollection_List();
    target.ListComponent = sinon.createStubInstance(UICommonList(ab));
 
    return target;
 }
 
-describe("ui_work_query_list", function () {
+describe("ui_work_datacollection_list", function () {
    it(".constructor - should set valid properties", function () {
       const ab = new AB();
-      const UI_Query_List = UIQueryList(ab);
-      const target = new UI_Query_List();
+      const UI_DataCollection_List = UIDataCollectionList(ab);
+      const target = new UI_DataCollection_List();
 
       assert.equal(base, target.ids.component);
       assert.equal(true, target.ListComponent != null);
@@ -62,7 +62,10 @@ describe("ui_work_query_list", function () {
    it(".applicationLoad - should listen events of application and load query data", function () {
       const target = getTarget();
       const application = sinon.createStubInstance(EventEmitter);
-      application.queriesIncluded = () => ["Query1", "Query2"];
+      application.datacollectionsIncluded = () => [
+         "DataCollection1",
+         "DataCollection2",
+      ];
       const spyAddFormApplicationLoad = sinon.spy(
          target.AddForm,
          "applicationLoad"
@@ -75,7 +78,7 @@ describe("ui_work_query_list", function () {
       assert.equal(
          true,
          target.ListComponent.dataLoad.calledOnceWith(
-            application.queriesIncluded()
+            application.datacollectionsIncluded()
          )
       );
       assert.equal(true, spyAddFormApplicationLoad.calledOnceWith(application));
@@ -89,11 +92,11 @@ describe("ui_work_query_list", function () {
       assert.equal(true, target.ListComponent.ready.calledOnce);
    });
 
-   it(".clickNewQuery - should call .show of .AddForm", function () {
+   it(".clickNewDataCollection - should call .show of .AddForm", function () {
       const target = getTarget();
       const spyAddFormShow = sinon.spy(target.AddForm, "show");
 
-      target.clickNewQuery();
+      target.clickNewDataCollection();
 
       assert.equal(true, spyAddFormShow.calledOnce);
    });
