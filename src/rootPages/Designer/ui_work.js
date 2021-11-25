@@ -8,7 +8,7 @@
 import UI_Work_Object from "./ui_work_object";
 import UI_Work_Query from "./ui_work_query";
 import UI_Work_Datacollection from "./ui_work_datacollection";
-// const AB_Work_Process = require("./ab_work_process");
+import UI_Work_Process from "./ui_work_process";
 // const AB_Work_Interface = require("./ab_work_interface");
 
 export default function (AB) {
@@ -19,8 +19,7 @@ export default function (AB) {
    var AppObjectWorkspace = UI_Work_Object(AB);
    const AppQueryWorkspace = new (UI_Work_Query(AB))();
    const AppDataCollectionWorkspace = new (UI_Work_Datacollection(AB))();
-   // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
-   // var AppProcessWorkspace = new AB_Work_Process(App);
+   const AppProcessWorkspace = new (UI_Work_Process(AB))();
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);
 
    class UI_Work extends AB.ClassUI {
@@ -204,7 +203,7 @@ export default function (AB) {
                            AppObjectWorkspace.ui(),
                            AppQueryWorkspace.ui(),
                            AppDataCollectionWorkspace.ui(),
-                           // AppProcessWorkspace.ui,
+                           AppProcessWorkspace.ui(),
                            // AppInterfaceWorkspace.ui,
                         ],
                      },
@@ -226,7 +225,7 @@ export default function (AB) {
          AppObjectWorkspace.init(AB);
          AppQueryWorkspace.init(AB);
          AppDataCollectionWorkspace.init(AB);
-         // AppProcessWorkspace.init(AB);
+         AppProcessWorkspace.init(AB);
          // AppInterfaceWorkspace.init(AB);
 
          this.$tabbar = $$(this.ids.tabbar);
@@ -288,7 +287,7 @@ export default function (AB) {
          AppObjectWorkspace.applicationLoad(application);
          AppQueryWorkspace.applicationLoad(application);
          AppDataCollectionWorkspace.applicationLoad(application);
-         // AppProcessWorkspace.applicationLoad(application);
+         AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
 
          this.show();
