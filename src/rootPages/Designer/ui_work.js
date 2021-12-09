@@ -7,6 +7,7 @@
 
 import UI_Work_Object from "./ui_work_object";
 import UI_Work_Query from "./ui_work_query";
+import UI_Work_Interface from "./ui_work_interface";
 // const AB_Work_Datacollection = require("./ab_work_dataview");
 // const AB_Work_Process = require("./ab_work_process");
 // const AB_Work_Interface = require("./ab_work_interface");
@@ -20,7 +21,7 @@ export default function (AB) {
    const AppQueryWorkspace = new (UI_Work_Query(AB))();
    // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
    // var AppProcessWorkspace = new AB_Work_Process(App);
-   // var AppInterfaceWorkspace = new AB_Work_Interface(App);
+   var AppInterfaceWorkspace = new UI_Work_Interface(AB);
 
    class UI_Work extends AB.ClassUI {
       constructor(options = {}) {
@@ -204,7 +205,7 @@ export default function (AB) {
                            AppQueryWorkspace.ui(),
                            // AppDatacollectionWorkspace.ui,
                            // AppProcessWorkspace.ui,
-                           // AppInterfaceWorkspace.ui,
+                           AppInterfaceWorkspace.ui(),
                         ],
                      },
                   ],
@@ -226,7 +227,7 @@ export default function (AB) {
          AppQueryWorkspace.init(AB);
          // AppDatacollectionWorkspace.init(AB);
          // AppProcessWorkspace.init(AB);
-         // AppInterfaceWorkspace.init(AB);
+         AppInterfaceWorkspace.init(AB);
 
          this.$tabbar = $$(this.ids.tabbar);
 
@@ -288,7 +289,7 @@ export default function (AB) {
          AppQueryWorkspace.applicationLoad(application);
          // AppDatacollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);
-         // AppInterfaceWorkspace.applicationLoad(application);
+         AppInterfaceWorkspace.applicationLoad(application);
 
          this.show();
       }
