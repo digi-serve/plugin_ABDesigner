@@ -7,7 +7,7 @@
 
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
-import ABProcessParticipant_selectManagersUI from "./forms/process/ABProcessParticipant_selectManagersUI.js";
+import ABProcessParticipant_selectManagersUI from "./properties/process/ABProcessParticipant_selectManagersUI.js";
 
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();

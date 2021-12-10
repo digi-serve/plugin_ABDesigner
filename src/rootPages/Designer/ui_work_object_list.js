@@ -81,9 +81,9 @@ export default function (AB) {
             this.exclude(item);
          });
 
-         this.ListComponent.on("copied", (data) => {
-            this.copy(data);
-         });
+         // this.ListComponent.on("copied", (data) => {
+         //    this.copy(data);
+         // });
 
          // ListComponent.on("menu", (data)=>{
          // 	console.log(data);
@@ -138,7 +138,7 @@ export default function (AB) {
        */
       applicationLoad(application) {
          var events = ["definition.updated", "definition.deleted"];
-         if (this.CurrentApplication) {
+         if (this.CurrentApplication && this._handler_refreshApp) {
             // remove current handler
             events.forEach((e) => {
                this.CurrentApplication.removeListener(
@@ -148,6 +148,7 @@ export default function (AB) {
             });
          }
          this.CurrentApplication = application;
+
          if (this.CurrentApplication) {
             events.forEach((e) => {
                this.CurrentApplication.on(e, this._handler_refreshApp);
@@ -209,16 +210,17 @@ export default function (AB) {
        * now our job is to create a new instance of that Item and
        * tell the list to display it
        */
-      copy(data) {
-         debugger;
-         this.ListComponent.busy();
+      // copy(data) {
+      //    debugger;
+      //    // TODO:
+      //    this.ListComponent.busy();
 
-         this.CurrentApplication.processCreate(data.item).then((newProcess) => {
-            this.ListComponent.ready();
-            this.ListComponent.dataLoad(this.CurrentApplication.processes());
-            this.ListComponent.select(newProcess.id);
-         });
-      }
+      //    this.CurrentApplication.processCreate(data.item).then((newProcess) => {
+      //       this.ListComponent.ready();
+      //       this.ListComponent.dataLoad(this.CurrentApplication.processes());
+      //       this.ListComponent.select(newProcess.id);
+      //    });
+      // }
 
       /*
        * @function exclude
@@ -239,22 +241,6 @@ export default function (AB) {
       ready() {
          this.ListComponent.ready();
       }
-      // Expose any globally accessible Actions:
-      // this.actions({
-      //    /**
-      //     * @function getSelectedProcess
-      //     *
-      //     * returns which ABProcess is currently selected.
-      //     * @return {ABProcess}  or {null} if nothing selected.
-      //     */
-      //    getSelectedProcess: function () {
-      //       return $$(ids.list).getSelectedItem();
-      //    },
-
-      //    addNewProcess: function (selectNew, callback) {
-      //       _logic.clickNewProcess(selectNew, callback);
-      //    },
-      // });
    }
    return new UI_Work_Object_List();
 }
