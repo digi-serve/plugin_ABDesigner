@@ -22,6 +22,7 @@ import ABWorkspaceDatatable from "./ui_work_object_workspace_view_grid";
 // const ABPopupExport = require("./ab_work_object_workspace_popupExport");
 // const ABPopupImport = require("./ab_work_object_workspace_popupImport");
 // const ABPopupNewDataField = require("./ab_work_object_workspace_popupNewDataField");
+import FPopupHeaderEditMenu from "./ui_work_object_workspace_popupHeaderEditMenu";
 import ABPopupNewDataField from "./ui_work_object_workspace_popupNewDataField";
 import ABPopupViewSettings from "./ui_work_object_workspace_popupViewSettings";
 import WorkspaceViews from "./ui_work_object_workspace_workspaceviews";
@@ -103,6 +104,9 @@ export default function (AB, init_settings) {
 
          // The Grid that displays our object:
          this.hashViews["grid"] = Datatable;
+         Datatable.on("column.header.clicked", (node, EditField) => {
+            this.PopupHeaderEditMenu.show(node, EditField);
+         });
 
          // var KanBan = new ABWorkspaceKanBan(base);
          // this.hashViews["kanban"] = KanBan;
@@ -114,6 +118,11 @@ export default function (AB, init_settings) {
          // let Track = new ABWorkspaceTrack(App, idBase);
 
          // // Various Popups on our page:
+         this.PopupHeaderEditMenu = FPopupHeaderEditMenu(AB);
+         this.PopupHeaderEditMenu.on("click", (action, field, node) => {
+            this.callbackHeaderEditorMenu(action, field, node);
+         });
+
          // var PopupDefineLabelComponent = new ABPopupDefineLabel(App, idBase);
 
          // var PopupFilterDataTableComponent = new ABPopupFilterDataTable(
@@ -146,8 +155,11 @@ export default function (AB, init_settings) {
          // An instance of an ABDataCollection to manage the data we are displaying
          // in our workspace.
 
-         this.CurrentApplication = null;
-         this.CurrentObject = null;
+         this.CurrentApplicationID = null;
+         // {string} the ABApplication.id of the current application
+
+         this.CurrentObjectID = null;
+         // {string} the ABObject.id of the current Object we are editing.
       } // constructor
 
       ui() {
@@ -571,6 +583,8 @@ export default function (AB, init_settings) {
          // KanBan.datacollectionLoad(this.CurrentDatacollection);
          // Gantt.datacollectionLoad(this.CurrentDatacollection);
 
+         allInits.push(this.PopupHeaderEditMenu.init(AB));
+
          // PopupDefineLabelComponent.init({
          //    onChange: _logic.callbackDefineLabel, // be notified when there is a change in the label
          // });
@@ -635,11 +649,11 @@ export default function (AB, init_settings) {
        *
        * Initialize the Object Workspace with the given ABApplication.
        *
-       * @param {ABApplication} application
+       * @param {string} appID
        */
-      applicationLoad(application) {
-         this.CurrentApplication = application;
-         this.PopupNewDataFieldComponent.applicationLoad(application);
+      applicationLoad(appID) {
+         this.CurrentApplicationID = appID;
+         this.PopupNewDataFieldComponent.applicationLoad(appID);
 
          // this.CurrentDatacollection.application = CurrentApplication;
       }
@@ -650,7 +664,8 @@ export default function (AB, init_settings) {
        * @param {ABField} field
        */
       callbackAddFields(/* field */) {
-         var fields = this.CurrentObject.fields();
+
+         var fields = this.CurrentObject?.fields() || [];
          var hiddenFields = [];
          var filters = [];
          var sorts = [];
@@ -855,10 +870,11 @@ export default function (AB, init_settings) {
                                     });
                                  }
                               }
-                              checkPages(
-                                 CurrentApplication.pages(),
-                                 (err) => {}
+
+                              var application = this.AB.applicationByID(
+                                 this.CurrentApplicationID
                               );
+                              checkPages(application.pages(), (err) => {});
                            })
                            .catch((err) => {
                               if (err && err.message) {
@@ -1037,9 +1053,12 @@ export default function (AB, init_settings) {
 
          // create the new data entry
 
-         var emptyObj = this.CurrentObject.defaultValues();
+         var object = this.CurrentObject;
+         if (!object) return;
+
+         var emptyObj = object.defaultValues();
          try {
-            var newObj = await this.CurrentObject.model().create(emptyObj);
+            var newObj = await object.model().create(emptyObj);
             if (newObj == null) return;
 
             // Now stick this into the DataCollection so the displayed widget
@@ -1203,14 +1222,14 @@ export default function (AB, init_settings) {
        *
        * @param {ABObject} object  	current ABObject instance we are working with.
        */
-      populateObjectWorkspace(object) {
+      populateObjectWorkspace(objectID) {
          $$(this.ids.toolbar).show();
          $$(this.ids.selectedObject).show();
 
-         this.CurrentObject = object;
+         this.CurrentObjectID = objectID;
 
          // get current view from object
-         this.workspaceViews.objectLoad(object);
+         this.workspaceViews.objectLoad(objectID);
          var currentView = this.workspaceViews.getCurrentView();
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
@@ -1237,13 +1256,14 @@ export default function (AB, init_settings) {
          //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).enable();
          // }
 
-         this.CurrentDatacollection.datasource = this.CurrentObject;
+         var object = this.AB.objectByID(objectID);
+         this.CurrentDatacollection.datasource = object;
 
-         Datatable.objectLoad(object);
-         // KanBan.objectLoad(object);
-         // Gantt.objectLoad(object);
+         Datatable.objectLoad(objectID);
+         // KanBan.objectLoad(objectID);
+         // Gantt.objectLoad(objectID);
 
-         this.PopupNewDataFieldComponent.objectLoad(object);
+         this.PopupNewDataFieldComponent.objectLoad(objectID);
          // PopupDefineLabelComponent.objectLoad(object);
          // PopupFilterDataTableComponent.objectLoad(object);
          // PopupFrozenColumnsComponent.objectLoad(object);
@@ -1269,7 +1289,7 @@ export default function (AB, init_settings) {
          //    object.workspaceHiddenFields
          // );
          // PopupExportObjectComponent.setFilename(object.label);
-         this.PopupViewSettingsComponent.objectLoad(object);
+         this.PopupViewSettingsComponent.objectLoad(objectID);
 
          // Datatable.refreshHeader();
          // _logic.refreshToolBarView();
@@ -1312,6 +1332,10 @@ export default function (AB, init_settings) {
          $$(this.ids.noSelection).show(false, false);
       }
 
+      get CurrentObject() {
+         return this.AB.objectByID(this.CurrentObjectID);
+      }
+
       /**
        * @function loadAll
        * Load all records
@@ -1340,7 +1364,7 @@ export default function (AB, init_settings) {
 
          this.CurrentDatacollection.fromValues({
             settings: {
-               datasourceID: this.CurrentObject.id,
+               datasourceID: this.CurrentObjectID,
                objectWorkspace: {
                   filterConditions: wheres,
                   sortFields: sorts,
@@ -1420,6 +1444,7 @@ export default function (AB, init_settings) {
          // $$(ids.component).setValue(ids.selectedObject);
          $$(ids.selectedObject).show(true, false);
 
+         var object = this.AB.objectByID();
          // disable add fields into the object
          if (
             this.CurrentObject.isExternal ||
@@ -1475,7 +1500,7 @@ export default function (AB, init_settings) {
       }
 
       refreshIndexes() {
-         let indexes = this.CurrentObject.indexes() || [];
+         let indexes = this.CurrentObject?.indexes() || [];
 
          // clear indexes list
          webix.ui([], $$(ids.listIndex));

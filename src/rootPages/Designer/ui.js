@@ -66,8 +66,8 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
-         AppChooser.on("view.workplace", (App) => {
-            AppWorkspace.transitionWorkspace(App);
+         AppChooser.on("view.workplace", (AppID) => {
+            AppWorkspace.transitionWorkspace(AppID);
          });
 
          AppWorkspace.on("view.chooser", () => {

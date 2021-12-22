@@ -1,0 +1,85 @@
+/*
+ * ab_work_object_workspace_popupHeaderEditMenu
+ *
+ * Manage the Add New Data Field popup.
+ *
+ */
+
+import UIListEditMenuFactory from "./ui_common_popupEditMenu";
+
+export default function (AB) {
+   var ListClass = UIListEditMenuFactory(AB);
+   var L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UIWorkObjectWorkspacePopupHeaderEditMenu extends ListClass {
+      constructor() {
+         var idBase = "ui_work_object_workspace_popupHeaderEditMenu";
+
+         super("ui_work_object_workspace_popupHeaderEditMenu");
+
+         // overwrite the default common menu with our column Header
+         // options.
+         this._menuOptions = [
+            {
+               label: L("Hide field"),
+               // {string} label displayed
+
+               icon: "fa fa-eye-slash",
+               // {string} the fontawesome icon reference
+
+               command: "hide",
+               // {string} the returned command key
+
+               imported: true,
+               // {bool} include this option on an Imported Field?
+            },
+            {
+               label: L("Filter field"),
+               icon: "fa fa-filter",
+               command: "filter",
+               imported: true,
+            },
+            {
+               label: L("Sort field"),
+               icon: "fa fa-sort",
+               command: "sort",
+               imported: true,
+            },
+            {
+               label: L("Freeze field"),
+               icon: "fa fa-thumb-tack",
+               command: "freeze",
+               imported: true,
+            },
+            {
+               label: L("Edit field"),
+               icon: "fa fa-pencil-square-o",
+               command: "edit",
+               imported: false,
+            },
+            {
+               label: L("Delete field"),
+               icon: "fa fa-trash",
+               command: "delete",
+               imported: false,
+            },
+         ];
+
+         this.$node = null;
+         this.field = null;
+      }
+
+      show(node, field) {
+         this.$node = node;
+         this.field = field;
+         super.show(node);
+      }
+
+      trigger(command) {
+         this.emit("click", command, this.field, this.$node);
+      }
+   }
+   return new UIWorkObjectWorkspacePopupHeaderEditMenu();
+}

@@ -209,13 +209,13 @@ var myClass = null;
             this.base = base;
             this.AB = AB;
 
-            this.currentApplication = null;
-            // {ABApplication}
-            // The current ABApplication being edited in our ABDesigner.
+            this.currentApplicationID = null;
+            // {string}
+            // The current ABApplication.id being edited in our ABDesigner.
 
-            this.currentObject = null;
-            // {ABObject}
-            // The current ABObject being edited in our object workspace.
+            this.currentObjectID = null;
+            // {string}
+            // The current ABObject.id being edited in our object workspace.
          }
 
          ui(elements = []) {
@@ -455,8 +455,8 @@ var myClass = null;
             if (settings && settings.rules) Filter.setValue(settings.rules);
          }
 
-         applicationLoad(app) {
-            this.currentApplication = app;
+         applicationLoad(appID) {
+            this.currentApplicationID = appID;
          }
 
          clearEditor() {
@@ -493,6 +493,10 @@ var myClass = null;
 
             // hide warning message of null data
             $$(ids.numberOfNull).hide();
+         }
+
+         get currentObject() {
+            return this.AB.objectByID(this.currentObjectID);
          }
 
          /**
@@ -670,10 +674,18 @@ var myClass = null;
             }
 
             // columnName should not be in use by other fields on this object
-            var fieldColName = this.currentObject
-               ?.fields()
-               .find((f) => f.columnName == colName);
-            if (fieldColName) {
+            // get All fields with matching colName
+            var fieldColName = this.currentObject?.fields(
+               (f) => f.columnName == colName
+            );
+            // ignore current edit field
+            if (this._CurrentField) {
+               fieldColName = fieldColName.filter(
+                  (f) => f.id != this._CurrentField.id
+               );
+            }
+            // if any more matches, this is a problem
+            if (fieldColName.length > 0) {
                this.markInvalid(
                   "columnName",
                   L("This column name is in use by another field ({0})", [
@@ -690,8 +702,8 @@ var myClass = null;
             $$(this.ids.component).markInvalid(name, message);
          }
 
-         objectLoad(object) {
-            this.currentObject = object;
+         objectLoad(objectID) {
+            this.currentObjectID = objectID;
          }
 
          /**
@@ -706,15 +718,14 @@ var myClass = null;
 
             // these columns are located on the base ABField object
             ["label", "columnName"].forEach((c) => {
-               if ($$(ids[c]?.setValue)) {
-                  $$(ids[c].setValue(field[c]));
-               }
+               $$(ids[c]).setValue?.(field[c]);
             });
+            $$(ids.fieldDescription).setValue(field.fieldDescription());
 
             // the remaining columns are located in .settings
             Object.keys(ids).forEach((c) => {
-               if ($$(ids[c])?.setValue) {
-                  $$(ids[c].setValue(field[c]));
+               if (typeof field.settings[c] != "undefined") {
+                  $$(ids[c])?.setValue?.(field.settings[c]);
                }
             });
             $$(ids.label).setValue(field.label);
@@ -1080,6 +1091,8 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       show() {
+         super.show();
+
          this.populateSelect(false);
          var ids = this.ids;
 
@@ -1166,8 +1179,9 @@ __webpack_require__.r(__webpack_exports__);
       populateSelect(/* populate, callback */) {
          var options = [];
          // if an ABApplication is set then load in the related objects
-         if (this.currentApplication) {
-            this.currentApplication.objectsIncluded().forEach((o) => {
+         var application = this.AB.applicationByID(this.currentApplicationID);
+         if (application) {
+            application.objectsIncluded().forEach((o) => {
                options.push({ id: o.id, value: o.label });
             });
          } else {
@@ -3204,8 +3218,8 @@ __webpack_require__.r(__webpack_exports__);
       async init(AB) {
          this.AB = AB;
 
-         AppChooser.on("view.workplace", (App) => {
-            AppWorkspace.transitionWorkspace(App);
+         AppChooser.on("view.workplace", (AppID) => {
+            AppWorkspace.transitionWorkspace(AppID);
          });
 
          AppWorkspace.on("view.chooser", () => {
@@ -3299,8 +3313,8 @@ __webpack_require__.r(__webpack_exports__);
       async init(AB) {
          this.AB = AB;
 
-         AppList.on("view.workplace", (App) => {
-            this.emit("view.workplace", App);
+         AppList.on("view.workplace", (AppID) => {
+            this.emit("view.workplace", AppID);
          });
 
          AppList.on("view.form", () => {
@@ -5054,7 +5068,7 @@ __webpack_require__.r(__webpack_exports__);
             selectedApp.App = this.AB.App;
 
             // We've selected an Application to work with
-            this.emit("view.workplace", selectedApp);
+            this.emit("view.workplace", selectedApp.id);
          }
          return false; // block default behavior
       }
@@ -5279,7 +5293,7 @@ __webpack_require__.r(__webpack_exports__);
                   },
                   on: {
                      onAfterSelect: (id) => {
-                        this.selectItem(id);
+                        this.onSelectItem(id);
                      },
                      onBeforeEditStop: (state, editor) => {
                         this.onBeforeEditStop(state, editor);
@@ -5355,9 +5369,8 @@ __webpack_require__.r(__webpack_exports__);
                                        this.$view
                                           .querySelectorAll("button")
                                           .forEach((b) => {
-                                             var bid = b.getAttribute(
-                                                "button_id"
-                                             );
+                                             var bid =
+                                                b.getAttribute("button_id");
                                              AB.ClassUI.CYPRESS_REF(
                                                 b,
                                                 `${ids.sort}_${bid}`
@@ -5548,8 +5561,8 @@ __webpack_require__.r(__webpack_exports__);
          return false;
       }
 
-      /*
-       * @function copy
+      /**
+       * @method copy
        * make a copy of the current selected item.
        *
        * copies should have all the same .toObj() data,
@@ -5634,6 +5647,10 @@ __webpack_require__.r(__webpack_exports__);
          if (this.$list) return this.$list.count();
       }
 
+      selectedItem() {
+         return this.$list.getSelectedItem(false);
+      }
+
       onAfterEditStop(state, editor /*, ignoreUpdate */) {
          this.showGear(editor.id);
 
@@ -5704,6 +5721,20 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
+       * @function onSelectItem()
+       *
+       * Perform these actions when an Process is selected in the List.
+       */
+      onSelectItem(id) {
+         var process = this.$list.getItem(id);
+
+         // _logic.callbacks.onChange(object);
+         this.emit("selected", process);
+
+         this.showGear(id);
+      }
+
+      /**
        * @function save()
        *
        */
@@ -5715,18 +5746,10 @@ __webpack_require__.r(__webpack_exports__);
          this.AB.Storage.set(this.idBase, this._settings);
       }
 
-      /**
-       * @function selectItem()
-       *
-       * Perform these actions when an Process is selected in the List.
-       */
       selectItem(id) {
-         var process = this.$list.getItem(id);
-
-         // _logic.callbacks.onChange(object);
-         this.emit("selected", process);
-
-         this.showGear(id);
+         this.$list.blockEvent();
+         this.select(id);
+         this.$list.unblockEvent();
       }
 
       showGear(id) {
@@ -5912,196 +5935,213 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   if (!myClass) {
+      var L = function (...params) {
+         return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+      };
 
-   class ABCommonPopupEditMenu extends AB.ClassUI {
-      constructor(contextID) {
-         var idBase = "abd_common_popupEditMenu";
-         super(idBase);
+      myClass = class ABCommonPopupEditMenu extends AB.ClassUI {
+         constructor(contextID) {
+            var idBase = "abd_common_popupEditMenu";
+            super(idBase);
 
-         this.labels = {
-            copy: L("Copy"),
-            exclude: L("Exclude"),
-            rename: L("Rename"),
-            delete: L("Delete"),
-         };
+            this.labels = {
+               copy: L("Copy"),
+               exclude: L("Exclude"),
+               rename: L("Rename"),
+               delete: L("Delete"),
+            };
 
-         // var labels = {
-         //    common: App.labels,
+            // var labels = {
+            //    common: App.labels,
 
-         //    component: {
-         //       copy: L("ab.page.copy", "*Copy"),
-         //       exclude: L("ab.object.exclude", "*Exclude"),
+            //    component: {
+            //       copy: L("ab.page.copy", "*Copy"),
+            //       exclude: L("ab.object.exclude", "*Exclude"),
 
-         //       menu: L("ab.application.menu", "*Application Menu"),
-         //       confirmDeleteTitle: L(
-         //          "ab.application.delete.title",
-         //          "*Delete application"
-         //       ),
-         //       confirmDeleteMessage: L(
-         //          "ab.application.delete.message",
-         //          "*Do you want to delete <b>{0}</b>?"
-         //       )
-         //    }
-         // };
+            //       menu: L("ab.application.menu", "*Application Menu"),
+            //       confirmDeleteTitle: L(
+            //          "ab.application.delete.title",
+            //          "*Delete application"
+            //       ),
+            //       confirmDeleteMessage: L(
+            //          "ab.application.delete.message",
+            //          "*Do you want to delete <b>{0}</b>?"
+            //       )
+            //    }
+            // };
 
-         // since multiple instances of this component can exists, we need to
-         // make each instance have unique ids => so add webix.uid() to them:
-         // var uid = webix.uid();
-         // var ids = {
-         //    menu: this.unique("menu") + uid,
-         //    list: this.unique("list") + uid
-         // };
+            // since multiple instances of this component can exists, we need to
+            // make each instance have unique ids => so add webix.uid() to them:
+            // var uid = webix.uid();
+            // var ids = {
+            //    menu: this.unique("menu") + uid,
+            //    list: this.unique("list") + uid
+            // };
 
-         this.ids.menu = `${idBase}_menu_${contextID}`;
-         this.ids.list = `${idBase}_list_${contextID}`;
+            this.ids.menu = `${idBase}_menu_${contextID}`;
+            this.ids.list = `${idBase}_list_${contextID}`;
 
-         this.Popup = null;
-         this._menuOptions = [
-            {
-               label: L("Rename"),
-               icon: "fa fa-pencil-square-o",
-               command: "rename",
-            },
-            {
-               label: L("Copy"),
-               icon: "fa fa-files-o",
-               command: "copy",
-            },
-            {
-               label: L("Exclude"),
-               icon: "fa fa-reply",
-               command: "exclude",
-            },
-            {
-               label: L("Delete"),
-               icon: "fa fa-trash",
-               command: "delete",
-            },
-         ];
-      }
+            this.Popup = null;
+            this._menuOptions = [
+               {
+                  label: L("Rename"),
+                  icon: "fa fa-pencil-square-o",
+                  command: "rename",
+               },
+               {
+                  label: L("Copy"),
+                  icon: "fa fa-files-o",
+                  command: "copy",
+               },
+               {
+                  label: L("Exclude"),
+                  icon: "fa fa-reply",
+                  command: "exclude",
+               },
+               {
+                  label: L("Delete"),
+                  icon: "fa fa-trash",
+                  command: "delete",
+               },
+            ];
+         }
 
-      ui() {
-         return {
-            view: "popup",
-            id: this.ids.menu,
-            head: L("Application Menu"), // labels.component.menu,
-            width: 120,
-            body: {
-               view: "list",
-               id: this.ids.list,
-               borderless: true,
-               data: [],
-               datatype: "json",
-               template: "<i class='fa #icon#' aria-hidden='true'></i> #label#",
-               autoheight: true,
-               select: false,
-               on: {
-                  onItemClick: (timestamp, e, trg) => {
-                     return this.onItemClick(trg);
+         ui() {
+            return {
+               view: "popup",
+               id: this.ids.menu,
+               head: L("Application Menu"), // labels.component.menu,
+               width: 120,
+               body: {
+                  view: "list",
+                  id: this.ids.list,
+                  borderless: true,
+                  data: [],
+                  datatype: "json",
+                  template:
+                     "<i class='fa #icon#' aria-hidden='true'></i> #label#",
+                  autoheight: true,
+                  select: false,
+                  on: {
+                     onItemClick: (timestamp, e, trg) => {
+                        return this.onItemClick(trg);
+                     },
                   },
                },
-            },
-         };
-      }
+            };
+         }
 
-      async init(AB, options) {
-         options = options || {};
+         async init(AB, options) {
+            options = options || {};
 
-         if (this.Popup == null) this.Popup = webix.ui(this.ui()); // the current instance of this editor.
+            if (this.Popup == null) this.Popup = webix.ui(this.ui()); // the current instance of this editor.
 
-         // we reference $$(this.ids.list) alot:
-         this.$list = $$(this.ids.list);
+            // we reference $$(this.ids.list) alot:
+            this.$list = $$(this.ids.list);
 
-         this.hide();
-         this.menuOptions(this._menuOptions);
+            this.hide();
+            this.menuOptions(this._menuOptions);
 
-         // register our callbacks:
-         // for (var c in _logic.callbacks) {
-         //    if (options && options[c]) {
-         //       _logic.callbacks[c] = options[c] || _logic.callbacks[c];
-         //    }
-         // }
+            // register our callbacks:
+            // for (var c in _logic.callbacks) {
+            //    if (options && options[c]) {
+            //       _logic.callbacks[c] = options[c] || _logic.callbacks[c];
+            //    }
+            // }
 
-         // hide "copy" item
-         if (options.hideCopy) {
-            let itemCopy = this.$list.data.find(
-               (item) => item.label == this.labels.copy
-            )[0];
-            if (itemCopy) {
-               this.$list.remove(itemCopy.id);
-               this.$list.refresh();
+            // hide "copy" item
+            if (options.hideCopy) {
+               let itemCopy = this.$list.data.find(
+                  (item) => item.label == this.labels.copy
+               )[0];
+               if (itemCopy) {
+                  this.$list.remove(itemCopy.id);
+                  this.$list.refresh();
+               }
+            }
+
+            // hide "exclude" item
+            if (options.hideExclude) {
+               let hideExclude = this.$list.data.find(
+                  (item) => item.label == this.labels.exclude
+               )[0];
+               if (hideExclude) {
+                  this.$list.remove(hideExclude.id);
+                  this.$list.refresh();
+               }
             }
          }
 
-         // hide "exclude" item
-         if (options.hideExclude) {
-            let hideExclude = this.$list.data.find(
-               (item) => item.label == this.labels.exclude
-            )[0];
-            if (hideExclude) {
-               this.$list.remove(hideExclude.id);
-               this.$list.refresh();
+         /**
+          * @function menuOptions
+          * override the set of menu options.
+          * @param {array} menuOptions an array of option entries:
+          *				  .label {string} multilingual label of the option
+          *				  .icon  {string} the font awesome icon reference
+          *				  .command {string} the command passed back when selected.
+          */
+         menuOptions(menuOptions) {
+            this.$list.clearAll();
+
+            this._menuOptions = menuOptions;
+            var data = [];
+            menuOptions.forEach((mo) => {
+               data.push({ label: mo.label, icon: mo.icon });
+            });
+            this.$list.parse(data);
+            this.$list.refresh();
+         }
+
+         /**
+          * @function onItemClick
+          * process which item in our popup was selected.
+          */
+         onItemClick(itemNode) {
+            // hide our popup before we trigger any other possible UI animation: (like .edit)
+            // NOTE: if the UI is animating another component, and we do .hide()
+            // while it is in progress, the UI will glitch and give the user whiplash.
+
+            var label = itemNode.textContent.trim();
+            var option = this._menuOptions.filter((mo) => {
+               return mo.label == label;
+            })[0];
+            if (option) {
+               // this._logic.callbacks.onClick(option.command);
+               this.trigger(option.command);
             }
-         }
-      }
 
-      /**
-       * @function menuOptions
-       * override the set of menu options.
-       * @param {array} menuOptions an array of option entries:
-       *				  .label {string} multilingual label of the option
-       *				  .icon  {string} the font awesome icon reference
-       *				  .command {string} the command passed back when selected.
-       */
-      menuOptions(menuOptions) {
-         this.$list.clearAll();
-
-         this._menuOptions = menuOptions;
-         var data = [];
-         menuOptions.forEach((mo) => {
-            data.push({ label: mo.label, icon: mo.icon });
-         });
-         this.$list.parse(data);
-         this.$list.refresh();
-      }
-
-      /**
-       * @function onItemClick
-       * process which item in our popup was selected.
-       */
-      onItemClick(itemNode) {
-         // hide our popup before we trigger any other possible UI animation: (like .edit)
-         // NOTE: if the UI is animating another component, and we do .hide()
-         // while it is in progress, the UI will glitch and give the user whiplash.
-
-         var label = itemNode.textContent.trim();
-         var option = this._menuOptions.filter((mo) => {
-            return mo.label == label;
-         })[0];
-         if (option) {
-            // this._logic.callbacks.onClick(option.command);
-            this.emit("click", option.command);
+            this.hide();
+            return false;
          }
 
-         this.hide();
-         return false;
-      }
+         show(itemNode) {
+            if (this.Popup && itemNode) this.Popup.show(itemNode);
+         }
 
-      show(itemNode) {
-         if (this.Popup && itemNode) this.Popup.show(itemNode);
-      }
+         /**
+          * @method trigger()
+          * emit the selected command.
+          * NOTE: this can be overridden by child objects
+          */
+         trigger(command) {
+            this.emit("click", command);
+         }
 
-      hide() {
-         if (this.Popup) this.Popup.hide();
-      }
+         hide() {
+            if (this.Popup) this.Popup.hide();
+         }
+      };
    }
 
    // NOTE: return JUST the class definition.
-   return ABCommonPopupEditMenu;
+   return myClass;
 }
 
 
@@ -6163,10 +6203,14 @@ __webpack_require__.r(__webpack_exports__);
 
          this.options = options;
 
+         this.CurrentAppID = null;
+         // {string}
+         // The current ABApplication.id that we are working with.
+
          this.selectedItem = this.ids.tab_object;
          // {string} {this.ids.xxx}
          // Keep track of the currently selected Tab Item (Object, Query, etc)
-      } // constructor
+      }
 
       /**
        * @method ui()
@@ -6366,6 +6410,16 @@ __webpack_require__.r(__webpack_exports__);
 
          this.tabSwitch(this.ids.tab_object);
          this.$tabbar.select(this.ids.tab_object);
+
+         /**
+          * @function _handler_refreshApp()
+          * Is called whenever an ABApplication has received new definitions
+          * and we need to load an new Instance of that object.
+          */
+         // this._handler_refreshApp = (/* def */) => {
+         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
+         //    this.transitionWorkspace(this.CurrentApplication);
+         // };
       } // init()
 
       /**
@@ -6373,11 +6427,44 @@ __webpack_require__.r(__webpack_exports__);
        * Store the current ABApplication we are working with.
        * @param {ABApplication} application
        */
-      applicationInit(application) {
+      applicationInit(appID) {
+         var application = this.AB.applicationByID(appID);
+         if (!application) {
+            this.AB.notify.developer(new Error("unable to resolve appID"), {
+               context: "ui_work:applicationInit",
+               appID,
+            });
+            return;
+         }
+
          // setup Application Label:
          var $labelAppName = $$(this.ids.labelAppName);
          $labelAppName.define("label", application.label);
          $labelAppName.refresh();
+
+         //
+         // make sure we are watching for updates on our ABApplication
+         //
+
+         // A) remove our existing listeners on the CurrentApplication
+         // var events = ["definition.updated", "definition.deleted"];
+         // if (this.CurrentApplication && this._handler_refreshApp) {
+         //    // remove current handler
+         //    events.forEach((e) => {
+         //       this.CurrentApplication.removeListener(
+         //          e,
+         //          this._handler_refreshApp
+         //       );
+         //    });
+         // }
+         this.CurrentAppID = application.id;
+
+         // B) add listeners to the CurrentApplication
+         // if (this.CurrentApplication) {
+         //    events.forEach((e) => {
+         //       this.CurrentApplication.on(e, this._handler_refreshApp);
+         //    });
+         // }
       }
 
       /**
@@ -6403,9 +6490,11 @@ __webpack_require__.r(__webpack_exports__);
        * Switch the UI to view the App Workspace screen.
        * @param {ABApplication} application
        */
-      transitionWorkspace(application) {
-         this.applicationInit(application);
-         AppObjectWorkspace.applicationLoad(application);
+      transitionWorkspace(appID) {
+         if (this.CurrentAppID != appID) {
+            this.applicationInit(appID);
+         }
+         AppObjectWorkspace.applicationLoad(appID);
          // AppQueryWorkspace.applicationLoad(application);
          // AppDatacollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);
@@ -6502,9 +6591,9 @@ __webpack_require__.r(__webpack_exports__);
       constructor() {
          super("ab_work_object");
 
-         this.CurrentApplication = null;
-         // {ABApplication}
-         // The current ABApplication we are working with.
+         this.CurrentApplicationID = null;
+         // {string} uuid
+         // The current ABApplication.id we are working with.
       }
 
       ui() {
@@ -6522,9 +6611,9 @@ __webpack_require__.r(__webpack_exports__);
 
          // Our init() function for setting up our UI
 
-         ObjectList.on("selected", (obj) => {
-            if (obj == null) ObjectWorkspace.clearObjectWorkspace();
-            else ObjectWorkspace.populateObjectWorkspace(obj);
+         ObjectList.on("selected", (objID) => {
+            if (objID == null) ObjectWorkspace.clearObjectWorkspace();
+            else ObjectWorkspace.populateObjectWorkspace(objID);
          });
 
          ObjectWorkspace.on("addNew", (selectNew) => {
@@ -6541,12 +6630,16 @@ __webpack_require__.r(__webpack_exports__);
        *
        * @param {ABApplication} application
        */
-      applicationLoad(application) {
-         this.CurrentApplication = application;
+      applicationLoad(appID) {
+         var oldAppID = this.CurrentApplicationID;
+         this.CurrentApplicationID = appID;
 
-         ObjectWorkspace.clearObjectWorkspace();
-         ObjectList.applicationLoad(application);
-         ObjectWorkspace.applicationLoad(application);
+         if (oldAppID != this.CurrentApplicationID) {
+            ObjectWorkspace.clearObjectWorkspace();
+         }
+
+         ObjectList.applicationLoad(appID);
+         ObjectWorkspace.applicationLoad(appID);
       }
 
       /**
@@ -6557,8 +6650,8 @@ __webpack_require__.r(__webpack_exports__);
       show() {
          $$(this.ids.component).show();
 
-         if (this.CurrentApplication) {
-            ObjectList?.applicationLoad(this.CurrentApplication);
+         if (this.CurrentApplicationID) {
+            ObjectList?.applicationLoad(this.CurrentApplicationID);
          }
          ObjectList?.ready();
       }
@@ -6597,9 +6690,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    var UI_COMMON_LIST = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   // var L = function (...params) {
+   //    return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   // };
 
    var AddForm = new _ui_work_object_list_newObject__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
    // the popup form for adding a new process
@@ -6608,8 +6701,9 @@ __webpack_require__.r(__webpack_exports__);
       constructor() {
          super("ui_work_object_list");
 
-         this.CurrentApplication = null;
-         var processList = null;
+         this.CurrentApplicationID = null;
+         // {string}
+         // the ABApplication.id we are currently working with.
 
          this.ListComponent = new UI_COMMON_LIST({
             idBase: this.ids.component,
@@ -6646,12 +6740,12 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          //
-         // List of Processes
+         // List of Objects
          //
          await this.ListComponent.init(AB);
 
          this.ListComponent.on("selected", (item) => {
-            this.emit("selected", item);
+            this.emit("selected", item?.id);
          });
 
          this.ListComponent.on("addNew", (selectNew) => {
@@ -6696,17 +6790,17 @@ __webpack_require__.r(__webpack_exports__);
             // CurrentApplication.
 
             // we just need to update our list of objects
-            this.applicationLoad(this.CurrentApplication);
+            this.applicationLoad(this.CurrentApplicationID);
 
             // if (select) {
             this.ListComponent.select(obj.id);
             // }
          });
 
-         this._handler_refreshApp = (def) => {
-            this.CurrentApplication = this.CurrentApplication.refreshInstance();
-            this.applicationLoad(this.CurrentApplication);
-         };
+         // this._handler_refreshApp = (def) => {
+         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
+         //    this.applicationLoad(this.CurrentApplication);
+         // };
       }
 
       addNew() {
@@ -6718,27 +6812,23 @@ __webpack_require__.r(__webpack_exports__);
        * @function applicationLoad
        * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
-       * @param {ABApplication} application
-       *        [optional] The current ABApplication we are working with.
+       * @param {string} appID
+       *        [optional] The current ABApplication.id we are working with.
        */
-      applicationLoad(application) {
-         var events = ["definition.updated", "definition.deleted"];
-         if (this.CurrentApplication && this._handler_refreshApp) {
-            // remove current handler
-            events.forEach((e) => {
-               this.CurrentApplication.removeListener(
-                  e,
-                  this._handler_refreshApp
-               );
-            });
-         }
-         this.CurrentApplication = application;
+      applicationLoad(appID) {
+         var oldAppID = this.CurrentApplicationID;
+         var selectedItem = null;
+         // {ABObject}
+         // if we are updating the SAME application, we will want to default
+         // the list to the currently selectedItem
 
-         if (this.CurrentApplication) {
-            events.forEach((e) => {
-               this.CurrentApplication.on(e, this._handler_refreshApp);
-            });
+         this.CurrentApplicationID = appID;
+
+         if (oldAppID == appID) {
+            selectedItem = this.ListComponent.selectedItem();
          }
+
+         var application = this.AB.applicationByID(appID);
 
          // NOTE: only include System Objects if the user has permission
          var f = (obj) => !obj.isSystemObject;
@@ -6747,7 +6837,11 @@ __webpack_require__.r(__webpack_exports__);
          }
          this.ListComponent.dataLoad(application?.objectsIncluded(f));
 
-         AddForm.applicationLoad(application);
+         if (selectedItem) {
+            this.ListComponent.selectItem(selectedItem.id);
+         }
+
+         AddForm.applicationLoad(appID);
       }
 
       /**
@@ -6816,8 +6910,9 @@ __webpack_require__.r(__webpack_exports__);
        */
       async exclude(item) {
          this.ListComponent.busy();
-         await this.CurrentApplication.objectRemove(item);
-         this.ListComponent.dataLoad(this.CurrentApplication.objectsIncluded());
+         var application = this.AB.applicationByID(this.CurrentApplicationID);
+         await application.objectRemove(item);
+         this.ListComponent.dataLoad(application.objectsIncluded());
 
          // this will clear the object workspace
          this.emit("selected", null);
@@ -6884,8 +6979,9 @@ __webpack_require__.r(__webpack_exports__);
             tab: `${base}_tab`,
          });
 
-         this.currentApplication = null;
-         // {ABApplication} the ABApplication we are currently working on.
+         this.currentApplicationID = null;
+         // {string}
+         // the ABApplication.id we are currently working on.
 
          this.selectNew = true;
          // {bool} do we select a new object after it is created.
@@ -6968,10 +7064,10 @@ __webpack_require__.r(__webpack_exports__);
       /**
        * @method applicationLoad()
        * prepare ourself with the current application
-       * @param {ABApplication} application
+       * @param {string} appID
        */
-      applicationLoad(application) {
-         this.currentApplication = application; // remember our current Application.
+      applicationLoad(appID) {
+         this.currentApplicationID = appID; // remember our current Application.
       }
 
       /**
@@ -7024,7 +7120,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplication) {
+         if (!this.currentApplicationID) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -7045,16 +7141,18 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          if (!newObject.createdInAppID) {
-            newObject.createdInAppID = this.currentApplication.id;
+            newObject.createdInAppID = this.currentApplicationID;
          }
 
          // show progress
          this.busy();
 
+         var application = this.AB.applicationByID(this.currentApplicationID);
+
          // if we get here, save the new Object
          try {
             var obj = await newObject.save();
-            await this.currentApplication.objectInsert(obj);
+            await application.objectInsert(obj);
             this[tabKey].emit("save.successful", obj);
             this.done(obj);
          } catch (err) {
@@ -7063,8 +7161,8 @@ __webpack_require__.r(__webpack_exports__);
 
             // an error happend during the server side creation.
             // so remove this object from the current object list of
-            // the currentApplication.
-            await this.currentApplication.objectRemove(newObject);
+            // the current application.
+            await application.objectRemove(newObject);
 
             // tell current Tab component there was an error
             this[tabKey].emit("save.error", err);
@@ -7085,13 +7183,13 @@ __webpack_require__.r(__webpack_exports__);
 
       switchTab(tabId) {
          if (tabId == this.BlankTab?.ui?.body?.id) {
-            this.BlankTab?.onShow?.(this.currentApplication);
+            this.BlankTab?.onShow?.(this.currentApplicationID);
          } else if (tabId == this.CsvTab?.ui?.body?.id) {
-            this.CsvTab?.onShow?.(this.currentApplication);
+            this.CsvTab?.onShow?.(this.currentApplicationID);
          } else if (tabId == this.ImportTab?.ui?.body?.id) {
-            this.ImportTab?.onShow?.(this.currentApplication);
+            this.ImportTab?.onShow?.(this.currentApplicationID);
          } else if (tabId == this.ExternalTab?.ui?.body?.id) {
-            this.ExternalTab?.onShow?.(this.currentApplication);
+            this.ExternalTab?.onShow?.(this.currentApplicationID);
          }
       }
    }
@@ -7358,9 +7456,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
-/* harmony import */ var _ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_popupNewDataField */ "./src/rootPages/Designer/ui_work_object_workspace_popupNewDataField.js");
-/* harmony import */ var _ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_popupViewSettings */ "./src/rootPages/Designer/ui_work_object_workspace_popupViewSettings.js");
-/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
+/* harmony import */ var _ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHeaderEditMenu */ "./src/rootPages/Designer/ui_work_object_workspace_popupHeaderEditMenu.js");
+/* harmony import */ var _ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_popupNewDataField */ "./src/rootPages/Designer/ui_work_object_workspace_popupNewDataField.js");
+/* harmony import */ var _ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace_popupViewSettings */ "./src/rootPages/Designer/ui_work_object_workspace_popupViewSettings.js");
+/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
 /*
  * ui_work_object_workspace
  *
@@ -7385,6 +7484,7 @@ __webpack_require__.r(__webpack_exports__);
 // const ABPopupExport = require("./ab_work_object_workspace_popupExport");
 // const ABPopupImport = require("./ab_work_object_workspace_popupImport");
 // const ABPopupNewDataField = require("./ab_work_object_workspace_popupNewDataField");
+
 
 
 
@@ -7459,13 +7559,16 @@ __webpack_require__.r(__webpack_exports__);
          settings.isFieldAddable = settings.isFieldAddable ?? true;
          this.settings = settings;
 
-         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
+         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_4__["default"])(AB);
          this.hashViews = {};
          // {hash}  { view.id : webix_component }
          // a hash of the live workspace view components
 
          // The Grid that displays our object:
          this.hashViews["grid"] = Datatable;
+         Datatable.on("column.header.clicked", (node, EditField) => {
+            this.PopupHeaderEditMenu.show(node, EditField);
+         });
 
          // var KanBan = new ABWorkspaceKanBan(base);
          // this.hashViews["kanban"] = KanBan;
@@ -7477,6 +7580,11 @@ __webpack_require__.r(__webpack_exports__);
          // let Track = new ABWorkspaceTrack(App, idBase);
 
          // // Various Popups on our page:
+         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.PopupHeaderEditMenu.on("click", (action, field, node) => {
+            this.callbackHeaderEditorMenu(action, field, node);
+         });
+
          // var PopupDefineLabelComponent = new ABPopupDefineLabel(App, idBase);
 
          // var PopupFilterDataTableComponent = new ABPopupFilterDataTable(
@@ -7493,7 +7601,7 @@ __webpack_require__.r(__webpack_exports__);
 
          // var PopupMassUpdateComponent = new ABPopupMassUpdate(App, idBase);
 
-         this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
 
          // var PopupSortFieldComponent = new ABPopupSortField(App, idBase);
 
@@ -7501,7 +7609,7 @@ __webpack_require__.r(__webpack_exports__);
 
          // var PopupImportObjectComponent = new ABPopupImport(App, idBase);
 
-         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
 
          // create ABViewDataCollection
          this.CurrentDatacollection = null;
@@ -7509,8 +7617,11 @@ __webpack_require__.r(__webpack_exports__);
          // An instance of an ABDataCollection to manage the data we are displaying
          // in our workspace.
 
-         this.CurrentApplication = null;
-         this.CurrentObject = null;
+         this.CurrentApplicationID = null;
+         // {string} the ABApplication.id of the current application
+
+         this.CurrentObjectID = null;
+         // {string} the ABObject.id of the current Object we are editing.
       } // constructor
 
       ui() {
@@ -7934,6 +8045,8 @@ __webpack_require__.r(__webpack_exports__);
          // KanBan.datacollectionLoad(this.CurrentDatacollection);
          // Gantt.datacollectionLoad(this.CurrentDatacollection);
 
+         allInits.push(this.PopupHeaderEditMenu.init(AB));
+
          // PopupDefineLabelComponent.init({
          //    onChange: _logic.callbackDefineLabel, // be notified when there is a change in the label
          // });
@@ -7998,11 +8111,11 @@ __webpack_require__.r(__webpack_exports__);
        *
        * Initialize the Object Workspace with the given ABApplication.
        *
-       * @param {ABApplication} application
+       * @param {string} appID
        */
-      applicationLoad(application) {
-         this.CurrentApplication = application;
-         this.PopupNewDataFieldComponent.applicationLoad(application);
+      applicationLoad(appID) {
+         this.CurrentApplicationID = appID;
+         this.PopupNewDataFieldComponent.applicationLoad(appID);
 
          // this.CurrentDatacollection.application = CurrentApplication;
       }
@@ -8013,7 +8126,8 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABField} field
        */
       callbackAddFields(/* field */) {
-         var fields = this.CurrentObject.fields();
+
+         var fields = this.CurrentObject?.fields() || [];
          var hiddenFields = [];
          var filters = [];
          var sorts = [];
@@ -8218,10 +8332,11 @@ __webpack_require__.r(__webpack_exports__);
                                     });
                                  }
                               }
-                              checkPages(
-                                 CurrentApplication.pages(),
-                                 (err) => {}
+
+                              var application = this.AB.applicationByID(
+                                 this.CurrentApplicationID
                               );
+                              checkPages(application.pages(), (err) => {});
                            })
                            .catch((err) => {
                               if (err && err.message) {
@@ -8400,9 +8515,12 @@ __webpack_require__.r(__webpack_exports__);
 
          // create the new data entry
 
-         var emptyObj = this.CurrentObject.defaultValues();
+         var object = this.CurrentObject;
+         if (!object) return;
+
+         var emptyObj = object.defaultValues();
          try {
-            var newObj = await this.CurrentObject.model().create(emptyObj);
+            var newObj = await object.model().create(emptyObj);
             if (newObj == null) return;
 
             // Now stick this into the DataCollection so the displayed widget
@@ -8566,14 +8684,14 @@ __webpack_require__.r(__webpack_exports__);
        *
        * @param {ABObject} object  	current ABObject instance we are working with.
        */
-      populateObjectWorkspace(object) {
+      populateObjectWorkspace(objectID) {
          $$(this.ids.toolbar).show();
          $$(this.ids.selectedObject).show();
 
-         this.CurrentObject = object;
+         this.CurrentObjectID = objectID;
 
          // get current view from object
-         this.workspaceViews.objectLoad(object);
+         this.workspaceViews.objectLoad(objectID);
          var currentView = this.workspaceViews.getCurrentView();
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
@@ -8600,13 +8718,14 @@ __webpack_require__.r(__webpack_exports__);
          //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).enable();
          // }
 
-         this.CurrentDatacollection.datasource = this.CurrentObject;
+         var object = this.AB.objectByID(objectID);
+         this.CurrentDatacollection.datasource = object;
 
-         Datatable.objectLoad(object);
-         // KanBan.objectLoad(object);
-         // Gantt.objectLoad(object);
+         Datatable.objectLoad(objectID);
+         // KanBan.objectLoad(objectID);
+         // Gantt.objectLoad(objectID);
 
-         this.PopupNewDataFieldComponent.objectLoad(object);
+         this.PopupNewDataFieldComponent.objectLoad(objectID);
          // PopupDefineLabelComponent.objectLoad(object);
          // PopupFilterDataTableComponent.objectLoad(object);
          // PopupFrozenColumnsComponent.objectLoad(object);
@@ -8632,7 +8751,7 @@ __webpack_require__.r(__webpack_exports__);
          //    object.workspaceHiddenFields
          // );
          // PopupExportObjectComponent.setFilename(object.label);
-         this.PopupViewSettingsComponent.objectLoad(object);
+         this.PopupViewSettingsComponent.objectLoad(objectID);
 
          // Datatable.refreshHeader();
          // _logic.refreshToolBarView();
@@ -8675,6 +8794,10 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.noSelection).show(false, false);
       }
 
+      get CurrentObject() {
+         return this.AB.objectByID(this.CurrentObjectID);
+      }
+
       /**
        * @function loadAll
        * Load all records
@@ -8703,7 +8826,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.CurrentDatacollection.fromValues({
             settings: {
-               datasourceID: this.CurrentObject.id,
+               datasourceID: this.CurrentObjectID,
                objectWorkspace: {
                   filterConditions: wheres,
                   sortFields: sorts,
@@ -8783,6 +8906,7 @@ __webpack_require__.r(__webpack_exports__);
          // $$(ids.component).setValue(ids.selectedObject);
          $$(ids.selectedObject).show(true, false);
 
+         var object = this.AB.objectByID();
          // disable add fields into the object
          if (
             this.CurrentObject.isExternal ||
@@ -8838,7 +8962,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       refreshIndexes() {
-         let indexes = this.CurrentObject.indexes() || [];
+         let indexes = this.CurrentObject?.indexes() || [];
 
          // clear indexes list
          webix.ui([], $$(ids.listIndex));
@@ -8864,6 +8988,107 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return new UIWorkObjectWorkspace(init_settings);
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_object_workspace_popupHeaderEditMenu.js":
+/*!********************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_object_workspace_popupHeaderEditMenu.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
+/*
+ * ab_work_object_workspace_popupHeaderEditMenu
+ *
+ * Manage the Add New Data Field popup.
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var ListClass = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UIWorkObjectWorkspacePopupHeaderEditMenu extends ListClass {
+      constructor() {
+         var idBase = "ui_work_object_workspace_popupHeaderEditMenu";
+
+         super("ui_work_object_workspace_popupHeaderEditMenu");
+
+         // overwrite the default common menu with our column Header
+         // options.
+         this._menuOptions = [
+            {
+               label: L("Hide field"),
+               // {string} label displayed
+
+               icon: "fa fa-eye-slash",
+               // {string} the fontawesome icon reference
+
+               command: "hide",
+               // {string} the returned command key
+
+               imported: true,
+               // {bool} include this option on an Imported Field?
+            },
+            {
+               label: L("Filter field"),
+               icon: "fa fa-filter",
+               command: "filter",
+               imported: true,
+            },
+            {
+               label: L("Sort field"),
+               icon: "fa fa-sort",
+               command: "sort",
+               imported: true,
+            },
+            {
+               label: L("Freeze field"),
+               icon: "fa fa-thumb-tack",
+               command: "freeze",
+               imported: true,
+            },
+            {
+               label: L("Edit field"),
+               icon: "fa fa-pencil-square-o",
+               command: "edit",
+               imported: false,
+            },
+            {
+               label: L("Delete field"),
+               icon: "fa fa-trash",
+               command: "delete",
+               imported: false,
+            },
+         ];
+
+         this.$node = null;
+         this.field = null;
+      }
+
+      show(node, field) {
+         this.$node = node;
+         this.field = field;
+         super.show(node);
+      }
+
+      trigger(command) {
+         this.emit("click", command, this.field, this.$node);
+      }
+   }
+   return new UIWorkObjectWorkspacePopupHeaderEditMenu();
 }
 
 
@@ -8934,9 +9159,9 @@ __webpack_require__.r(__webpack_exports__);
          // The current Property editor that is being displayed.
 
          // var _currentApplication = null;
-         this._currentObject = null;
-         // {ABObject}
-         // The current ABObject being edited in our Object Workspace.
+         this._currentObjectID = null;
+         // {string}
+         // The current ABObject.id being edited in our Object Workspace.
 
          this.defaultEditorComponent = null;
          // {PropertyEditor}
@@ -9147,22 +9372,26 @@ __webpack_require__.r(__webpack_exports__);
 
       // our internal business logic
 
-      applicationLoad(application) {
+      applicationLoad(appID) {
          // _currentApplication = application;
 
          // make sure all the Property components refer to this ABApplication
          for (var menuName in this._componentHash) {
-            this._componentHash[menuName]?.applicationLoad(application);
+            this._componentHash[menuName]?.applicationLoad(appID);
          }
       }
 
-      objectLoad(object) {
-         this._currentObject = object;
+      objectLoad(objectID) {
+         this._currentObjectID = objectID;
 
          // make sure all the Property components refer to this ABObject
          for (var menuName in this._componentHash) {
-            this._componentHash[menuName]?.objectLoad(this._currentObject);
+            this._componentHash[menuName]?.objectLoad(this._currentObjectID);
          }
+      }
+
+      get _currentObject() {
+         return this.AB.objectByID(this._currentObjectID);
       }
 
       buttonCancel() {
@@ -9259,9 +9488,6 @@ __webpack_require__.r(__webpack_exports__);
                            width: width,
                         },
                      });
-
-                     // Update link column id to source column
-                     // field.settings.linkColumn = linkCol.id;
                   }
                } else {
                   // NOTE: update label before .toObj for .unTranslate to .translations
@@ -9957,9 +10183,9 @@ __webpack_require__.r(__webpack_exports__);
          // an ABApplication, so we create a "mock" app for our
          // workspace views to use to display.
 
-         this.object = null;
-         // {ABObject}
-         // the current ABObject that is being displayed in our space.
+         this.objectID = null;
+         // {string}
+         // the current ABObject.id that is being displayed in our space.
       }
 
       // Our webix UI definition:
@@ -10031,8 +10257,8 @@ __webpack_require__.r(__webpack_exports__);
          this.datacollection = dc;
       }
 
-      objectLoad(object) {
-         this.object = object;
+      objectLoad(objectID) {
+         this.objectID = objectID;
       }
 
       ready() {
@@ -10068,6 +10294,10 @@ __webpack_require__.r(__webpack_exports__);
          // Now call .datacollectionLoad() again to actually load the data.
          component.datacollectionLoad(this.datacollection);
 
+         component.on("column.header.clicked", (node, EditField) => {
+            this.emit("column.header.clicked", node, EditField);
+         });
+
          this._currentComponent = component;
       }
 
@@ -10095,7 +10325,8 @@ __webpack_require__.r(__webpack_exports__);
        *        An array of the ABField.id of the frozen columns.
        */
       refreshHeader(fields, hiddenFields, filters, sorts, frozenColumns) {
-         var columnHeaders = this.object.columnHeaders(true, true, [], [], []);
+         var object = this.AB.objectByID(this.objectID);
+         var columnHeaders = object.columnHeaders(true, true, [], [], []);
          columnHeaders.forEach((h) => {
             if (hiddenFields.indexOf(h.id) > -1) {
                h.hidden = true;
@@ -10189,9 +10420,9 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
          // {ABFactory}
 
-         this.object = null;
-         // {ABObject}
-         // The current ABObject we are providing workspace views
+         this.objectID = null;
+         // {string}
+         // The current ABObject.id we are providing workspace views for
 
          this._settings = null;
          // {hash} { ABObject.id  : {collection} }
@@ -10212,14 +10443,14 @@ __webpack_require__.r(__webpack_exports__);
          this._settings = (await this.AB.Storage.get("workspaceviews")) || {};
       }
 
-      objectLoad(object) {
-         if (this.object) {
+      objectLoad(objectID) {
+         if (this.objectID) {
             // save current data:
-            this._settings[this.object.id] = this.toObj();
+            this._settings[this.objectID] = this.toObj();
          }
-         this.object = object;
+         this.objectID = objectID;
 
-         this.fromObj(this._settings[object.id]);
+         this.fromObj(this._settings[objectID]);
       }
 
       /**
@@ -10288,9 +10519,6 @@ __webpack_require__.r(__webpack_exports__);
 
       getCurrentView() {
          return this._views.find((v) => v.id == this.currentViewID);
-         // return this.list((v) => {
-         //    return v.id == this.currentViewID;
-         // })[0];
       }
 
       setCurrentView(viewID) {

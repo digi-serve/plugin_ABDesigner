@@ -12,9 +12,9 @@ import UIListNewProcess from "./ui_work_object_list_newObject";
 export default function (AB) {
    var UI_COMMON_LIST = UICommonListFactory(AB);
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   // var L = function (...params) {
+   //    return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   // };
 
    var AddForm = new UIListNewProcess(AB);
    // the popup form for adding a new process
@@ -23,8 +23,9 @@ export default function (AB) {
       constructor() {
          super("ui_work_object_list");
 
-         this.CurrentApplication = null;
-         var processList = null;
+         this.CurrentApplicationID = null;
+         // {string}
+         // the ABApplication.id we are currently working with.
 
          this.ListComponent = new UI_COMMON_LIST({
             idBase: this.ids.component,
@@ -61,12 +62,12 @@ export default function (AB) {
          });
 
          //
-         // List of Processes
+         // List of Objects
          //
          await this.ListComponent.init(AB);
 
          this.ListComponent.on("selected", (item) => {
-            this.emit("selected", item);
+            this.emit("selected", item?.id);
          });
 
          this.ListComponent.on("addNew", (selectNew) => {
@@ -111,17 +112,17 @@ export default function (AB) {
             // CurrentApplication.
 
             // we just need to update our list of objects
-            this.applicationLoad(this.CurrentApplication);
+            this.applicationLoad(this.CurrentApplicationID);
 
             // if (select) {
             this.ListComponent.select(obj.id);
             // }
          });
 
-         this._handler_refreshApp = (def) => {
-            this.CurrentApplication = this.CurrentApplication.refreshInstance();
-            this.applicationLoad(this.CurrentApplication);
-         };
+         // this._handler_refreshApp = (def) => {
+         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
+         //    this.applicationLoad(this.CurrentApplication);
+         // };
       }
 
       addNew() {
@@ -133,27 +134,23 @@ export default function (AB) {
        * @function applicationLoad
        * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
-       * @param {ABApplication} application
-       *        [optional] The current ABApplication we are working with.
+       * @param {string} appID
+       *        [optional] The current ABApplication.id we are working with.
        */
-      applicationLoad(application) {
-         var events = ["definition.updated", "definition.deleted"];
-         if (this.CurrentApplication && this._handler_refreshApp) {
-            // remove current handler
-            events.forEach((e) => {
-               this.CurrentApplication.removeListener(
-                  e,
-                  this._handler_refreshApp
-               );
-            });
-         }
-         this.CurrentApplication = application;
+      applicationLoad(appID) {
+         var oldAppID = this.CurrentApplicationID;
+         var selectedItem = null;
+         // {ABObject}
+         // if we are updating the SAME application, we will want to default
+         // the list to the currently selectedItem
 
-         if (this.CurrentApplication) {
-            events.forEach((e) => {
-               this.CurrentApplication.on(e, this._handler_refreshApp);
-            });
+         this.CurrentApplicationID = appID;
+
+         if (oldAppID == appID) {
+            selectedItem = this.ListComponent.selectedItem();
          }
+
+         var application = this.AB.applicationByID(appID);
 
          // NOTE: only include System Objects if the user has permission
          var f = (obj) => !obj.isSystemObject;
@@ -162,7 +159,11 @@ export default function (AB) {
          }
          this.ListComponent.dataLoad(application?.objectsIncluded(f));
 
-         AddForm.applicationLoad(application);
+         if (selectedItem) {
+            this.ListComponent.selectItem(selectedItem.id);
+         }
+
+         AddForm.applicationLoad(appID);
       }
 
       /**
@@ -231,8 +232,9 @@ export default function (AB) {
        */
       async exclude(item) {
          this.ListComponent.busy();
-         await this.CurrentApplication.objectRemove(item);
-         this.ListComponent.dataLoad(this.CurrentApplication.objectsIncluded());
+         var application = this.AB.applicationByID(this.CurrentApplicationID);
+         await application.objectRemove(item);
+         this.ListComponent.dataLoad(application.objectsIncluded());
 
          // this will clear the object workspace
          this.emit("selected", null);

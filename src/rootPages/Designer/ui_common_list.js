@@ -131,7 +131,7 @@ export default function (AB) {
                   },
                   on: {
                      onAfterSelect: (id) => {
-                        this.selectItem(id);
+                        this.onSelectItem(id);
                      },
                      onBeforeEditStop: (state, editor) => {
                         this.onBeforeEditStop(state, editor);
@@ -207,9 +207,8 @@ export default function (AB) {
                                        this.$view
                                           .querySelectorAll("button")
                                           .forEach((b) => {
-                                             var bid = b.getAttribute(
-                                                "button_id"
-                                             );
+                                             var bid =
+                                                b.getAttribute("button_id");
                                              AB.ClassUI.CYPRESS_REF(
                                                 b,
                                                 `${ids.sort}_${bid}`
@@ -400,8 +399,8 @@ export default function (AB) {
          return false;
       }
 
-      /*
-       * @function copy
+      /**
+       * @method copy
        * make a copy of the current selected item.
        *
        * copies should have all the same .toObj() data,
@@ -486,6 +485,10 @@ export default function (AB) {
          if (this.$list) return this.$list.count();
       }
 
+      selectedItem() {
+         return this.$list.getSelectedItem(false);
+      }
+
       onAfterEditStop(state, editor /*, ignoreUpdate */) {
          this.showGear(editor.id);
 
@@ -556,6 +559,20 @@ export default function (AB) {
       }
 
       /**
+       * @function onSelectItem()
+       *
+       * Perform these actions when an Process is selected in the List.
+       */
+      onSelectItem(id) {
+         var process = this.$list.getItem(id);
+
+         // _logic.callbacks.onChange(object);
+         this.emit("selected", process);
+
+         this.showGear(id);
+      }
+
+      /**
        * @function save()
        *
        */
@@ -567,18 +584,10 @@ export default function (AB) {
          this.AB.Storage.set(this.idBase, this._settings);
       }
 
-      /**
-       * @function selectItem()
-       *
-       * Perform these actions when an Process is selected in the List.
-       */
       selectItem(id) {
-         var process = this.$list.getItem(id);
-
-         // _logic.callbacks.onChange(object);
-         this.emit("selected", process);
-
-         this.showGear(id);
+         this.$list.blockEvent();
+         this.select(id);
+         this.$list.unblockEvent();
       }
 
       showGear(id) {

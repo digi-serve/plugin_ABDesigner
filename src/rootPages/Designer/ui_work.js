@@ -42,10 +42,14 @@ export default function (AB) {
 
          this.options = options;
 
+         this.CurrentAppID = null;
+         // {string}
+         // The current ABApplication.id that we are working with.
+
          this.selectedItem = this.ids.tab_object;
          // {string} {this.ids.xxx}
          // Keep track of the currently selected Tab Item (Object, Query, etc)
-      } // constructor
+      }
 
       /**
        * @method ui()
@@ -245,6 +249,16 @@ export default function (AB) {
 
          this.tabSwitch(this.ids.tab_object);
          this.$tabbar.select(this.ids.tab_object);
+
+         /**
+          * @function _handler_refreshApp()
+          * Is called whenever an ABApplication has received new definitions
+          * and we need to load an new Instance of that object.
+          */
+         // this._handler_refreshApp = (/* def */) => {
+         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
+         //    this.transitionWorkspace(this.CurrentApplication);
+         // };
       } // init()
 
       /**
@@ -252,11 +266,44 @@ export default function (AB) {
        * Store the current ABApplication we are working with.
        * @param {ABApplication} application
        */
-      applicationInit(application) {
+      applicationInit(appID) {
+         var application = this.AB.applicationByID(appID);
+         if (!application) {
+            this.AB.notify.developer(new Error("unable to resolve appID"), {
+               context: "ui_work:applicationInit",
+               appID,
+            });
+            return;
+         }
+
          // setup Application Label:
          var $labelAppName = $$(this.ids.labelAppName);
          $labelAppName.define("label", application.label);
          $labelAppName.refresh();
+
+         //
+         // make sure we are watching for updates on our ABApplication
+         //
+
+         // A) remove our existing listeners on the CurrentApplication
+         // var events = ["definition.updated", "definition.deleted"];
+         // if (this.CurrentApplication && this._handler_refreshApp) {
+         //    // remove current handler
+         //    events.forEach((e) => {
+         //       this.CurrentApplication.removeListener(
+         //          e,
+         //          this._handler_refreshApp
+         //       );
+         //    });
+         // }
+         this.CurrentAppID = application.id;
+
+         // B) add listeners to the CurrentApplication
+         // if (this.CurrentApplication) {
+         //    events.forEach((e) => {
+         //       this.CurrentApplication.on(e, this._handler_refreshApp);
+         //    });
+         // }
       }
 
       /**
@@ -282,9 +329,11 @@ export default function (AB) {
        * Switch the UI to view the App Workspace screen.
        * @param {ABApplication} application
        */
-      transitionWorkspace(application) {
-         this.applicationInit(application);
-         AppObjectWorkspace.applicationLoad(application);
+      transitionWorkspace(appID) {
+         if (this.CurrentAppID != appID) {
+            this.applicationInit(appID);
+         }
+         AppObjectWorkspace.applicationLoad(appID);
          // AppQueryWorkspace.applicationLoad(application);
          // AppDatacollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);

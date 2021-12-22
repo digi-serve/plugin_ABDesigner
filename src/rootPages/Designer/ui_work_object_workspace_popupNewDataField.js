@@ -51,9 +51,9 @@ export default function (AB) {
          // The current Property editor that is being displayed.
 
          // var _currentApplication = null;
-         this._currentObject = null;
-         // {ABObject}
-         // The current ABObject being edited in our Object Workspace.
+         this._currentObjectID = null;
+         // {string}
+         // The current ABObject.id being edited in our Object Workspace.
 
          this.defaultEditorComponent = null;
          // {PropertyEditor}
@@ -264,22 +264,26 @@ export default function (AB) {
 
       // our internal business logic
 
-      applicationLoad(application) {
+      applicationLoad(appID) {
          // _currentApplication = application;
 
          // make sure all the Property components refer to this ABApplication
          for (var menuName in this._componentHash) {
-            this._componentHash[menuName]?.applicationLoad(application);
+            this._componentHash[menuName]?.applicationLoad(appID);
          }
       }
 
-      objectLoad(object) {
-         this._currentObject = object;
+      objectLoad(objectID) {
+         this._currentObjectID = objectID;
 
          // make sure all the Property components refer to this ABObject
          for (var menuName in this._componentHash) {
-            this._componentHash[menuName]?.objectLoad(this._currentObject);
+            this._componentHash[menuName]?.objectLoad(this._currentObjectID);
          }
+      }
+
+      get _currentObject() {
+         return this.AB.objectByID(this._currentObjectID);
       }
 
       buttonCancel() {
@@ -376,9 +380,6 @@ export default function (AB) {
                            width: width,
                         },
                      });
-
-                     // Update link column id to source column
-                     // field.settings.linkColumn = linkCol.id;
                   }
                } else {
                   // NOTE: update label before .toObj for .unTranslate to .translations

@@ -34,9 +34,9 @@ export default function (AB) {
          this.AB = AB;
          // {ABFactory}
 
-         this.object = null;
-         // {ABObject}
-         // The current ABObject we are providing workspace views
+         this.objectID = null;
+         // {string}
+         // The current ABObject.id we are providing workspace views for
 
          this._settings = null;
          // {hash} { ABObject.id  : {collection} }
@@ -57,14 +57,14 @@ export default function (AB) {
          this._settings = (await this.AB.Storage.get("workspaceviews")) || {};
       }
 
-      objectLoad(object) {
-         if (this.object) {
+      objectLoad(objectID) {
+         if (this.objectID) {
             // save current data:
-            this._settings[this.object.id] = this.toObj();
+            this._settings[this.objectID] = this.toObj();
          }
-         this.object = object;
+         this.objectID = objectID;
 
-         this.fromObj(this._settings[object.id]);
+         this.fromObj(this._settings[objectID]);
       }
 
       /**
@@ -133,9 +133,6 @@ export default function (AB) {
 
       getCurrentView() {
          return this._views.find((v) => v.id == this.currentViewID);
-         // return this.list((v) => {
-         //    return v.id == this.currentViewID;
-         // })[0];
       }
 
       setCurrentView(viewID) {

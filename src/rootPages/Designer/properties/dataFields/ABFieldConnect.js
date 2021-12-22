@@ -261,6 +261,8 @@ export default function (AB) {
       }
 
       show() {
+         super.show();
+
          this.populateSelect(false);
          var ids = this.ids;
 
@@ -347,8 +349,9 @@ export default function (AB) {
       populateSelect(/* populate, callback */) {
          var options = [];
          // if an ABApplication is set then load in the related objects
-         if (this.currentApplication) {
-            this.currentApplication.objectsIncluded().forEach((o) => {
+         var application = this.AB.applicationByID(this.currentApplicationID);
+         if (application) {
+            application.objectsIncluded().forEach((o) => {
                options.push({ id: o.id, value: o.label });
             });
          } else {

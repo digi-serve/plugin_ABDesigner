@@ -54,13 +54,13 @@ export default function (AB) {
             this.base = base;
             this.AB = AB;
 
-            this.currentApplication = null;
-            // {ABApplication}
-            // The current ABApplication being edited in our ABDesigner.
+            this.currentApplicationID = null;
+            // {string}
+            // The current ABApplication.id being edited in our ABDesigner.
 
-            this.currentObject = null;
-            // {ABObject}
-            // The current ABObject being edited in our object workspace.
+            this.currentObjectID = null;
+            // {string}
+            // The current ABObject.id being edited in our object workspace.
          }
 
          ui(elements = []) {
@@ -300,8 +300,8 @@ export default function (AB) {
             if (settings && settings.rules) Filter.setValue(settings.rules);
          }
 
-         applicationLoad(app) {
-            this.currentApplication = app;
+         applicationLoad(appID) {
+            this.currentApplicationID = appID;
          }
 
          clearEditor() {
@@ -338,6 +338,10 @@ export default function (AB) {
 
             // hide warning message of null data
             $$(ids.numberOfNull).hide();
+         }
+
+         get currentObject() {
+            return this.AB.objectByID(this.currentObjectID);
          }
 
          /**
@@ -515,10 +519,18 @@ export default function (AB) {
             }
 
             // columnName should not be in use by other fields on this object
-            var fieldColName = this.currentObject
-               ?.fields()
-               .find((f) => f.columnName == colName);
-            if (fieldColName) {
+            // get All fields with matching colName
+            var fieldColName = this.currentObject?.fields(
+               (f) => f.columnName == colName
+            );
+            // ignore current edit field
+            if (this._CurrentField) {
+               fieldColName = fieldColName.filter(
+                  (f) => f.id != this._CurrentField.id
+               );
+            }
+            // if any more matches, this is a problem
+            if (fieldColName.length > 0) {
                this.markInvalid(
                   "columnName",
                   L("This column name is in use by another field ({0})", [
@@ -535,8 +547,8 @@ export default function (AB) {
             $$(this.ids.component).markInvalid(name, message);
          }
 
-         objectLoad(object) {
-            this.currentObject = object;
+         objectLoad(objectID) {
+            this.currentObjectID = objectID;
          }
 
          /**
@@ -551,15 +563,14 @@ export default function (AB) {
 
             // these columns are located on the base ABField object
             ["label", "columnName"].forEach((c) => {
-               if ($$(ids[c]?.setValue)) {
-                  $$(ids[c].setValue(field[c]));
-               }
+               $$(ids[c]).setValue?.(field[c]);
             });
+            $$(ids.fieldDescription).setValue(field.fieldDescription());
 
             // the remaining columns are located in .settings
             Object.keys(ids).forEach((c) => {
-               if ($$(ids[c])?.setValue) {
-                  $$(ids[c].setValue(field[c]));
+               if (typeof field.settings[c] != "undefined") {
+                  $$(ids[c])?.setValue?.(field.settings[c]);
                }
             });
             $$(ids.label).setValue(field.label);

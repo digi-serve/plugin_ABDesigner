@@ -25,9 +25,9 @@ export default function (AB) {
       constructor() {
          super("ab_work_object");
 
-         this.CurrentApplication = null;
-         // {ABApplication}
-         // The current ABApplication we are working with.
+         this.CurrentApplicationID = null;
+         // {string} uuid
+         // The current ABApplication.id we are working with.
       }
 
       ui() {
@@ -45,9 +45,9 @@ export default function (AB) {
 
          // Our init() function for setting up our UI
 
-         ObjectList.on("selected", (obj) => {
-            if (obj == null) ObjectWorkspace.clearObjectWorkspace();
-            else ObjectWorkspace.populateObjectWorkspace(obj);
+         ObjectList.on("selected", (objID) => {
+            if (objID == null) ObjectWorkspace.clearObjectWorkspace();
+            else ObjectWorkspace.populateObjectWorkspace(objID);
          });
 
          ObjectWorkspace.on("addNew", (selectNew) => {
@@ -64,12 +64,16 @@ export default function (AB) {
        *
        * @param {ABApplication} application
        */
-      applicationLoad(application) {
-         this.CurrentApplication = application;
+      applicationLoad(appID) {
+         var oldAppID = this.CurrentApplicationID;
+         this.CurrentApplicationID = appID;
 
-         ObjectWorkspace.clearObjectWorkspace();
-         ObjectList.applicationLoad(application);
-         ObjectWorkspace.applicationLoad(application);
+         if (oldAppID != this.CurrentApplicationID) {
+            ObjectWorkspace.clearObjectWorkspace();
+         }
+
+         ObjectList.applicationLoad(appID);
+         ObjectWorkspace.applicationLoad(appID);
       }
 
       /**
@@ -80,8 +84,8 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
 
-         if (this.CurrentApplication) {
-            ObjectList?.applicationLoad(this.CurrentApplication);
+         if (this.CurrentApplicationID) {
+            ObjectList?.applicationLoad(this.CurrentApplicationID);
          }
          ObjectList?.ready();
       }

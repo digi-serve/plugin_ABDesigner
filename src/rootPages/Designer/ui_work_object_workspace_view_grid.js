@@ -27,9 +27,9 @@ export default function (AB) {
          // an ABApplication, so we create a "mock" app for our
          // workspace views to use to display.
 
-         this.object = null;
-         // {ABObject}
-         // the current ABObject that is being displayed in our space.
+         this.objectID = null;
+         // {string}
+         // the current ABObject.id that is being displayed in our space.
       }
 
       // Our webix UI definition:
@@ -101,8 +101,8 @@ export default function (AB) {
          this.datacollection = dc;
       }
 
-      objectLoad(object) {
-         this.object = object;
+      objectLoad(objectID) {
+         this.objectID = objectID;
       }
 
       ready() {
@@ -138,6 +138,10 @@ export default function (AB) {
          // Now call .datacollectionLoad() again to actually load the data.
          component.datacollectionLoad(this.datacollection);
 
+         component.on("column.header.clicked", (node, EditField) => {
+            this.emit("column.header.clicked", node, EditField);
+         });
+
          this._currentComponent = component;
       }
 
@@ -165,7 +169,8 @@ export default function (AB) {
        *        An array of the ABField.id of the frozen columns.
        */
       refreshHeader(fields, hiddenFields, filters, sorts, frozenColumns) {
-         var columnHeaders = this.object.columnHeaders(true, true, [], [], []);
+         var object = this.AB.objectByID(this.objectID);
+         var columnHeaders = object.columnHeaders(true, true, [], [], []);
          columnHeaders.forEach((h) => {
             if (hiddenFields.indexOf(h.id) > -1) {
                h.hidden = true;

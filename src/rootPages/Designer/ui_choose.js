@@ -33,8 +33,8 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
-         AppList.on("view.workplace", (App) => {
-            this.emit("view.workplace", App);
+         AppList.on("view.workplace", (AppID) => {
+            this.emit("view.workplace", AppID);
          });
 
          AppList.on("view.form", () => {

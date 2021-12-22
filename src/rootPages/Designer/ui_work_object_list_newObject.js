@@ -37,8 +37,9 @@ export default function (AB) {
             tab: `${base}_tab`,
          });
 
-         this.currentApplication = null;
-         // {ABApplication} the ABApplication we are currently working on.
+         this.currentApplicationID = null;
+         // {string}
+         // the ABApplication.id we are currently working on.
 
          this.selectNew = true;
          // {bool} do we select a new object after it is created.
@@ -121,10 +122,10 @@ export default function (AB) {
       /**
        * @method applicationLoad()
        * prepare ourself with the current application
-       * @param {ABApplication} application
+       * @param {string} appID
        */
-      applicationLoad(application) {
-         this.currentApplication = application; // remember our current Application.
+      applicationLoad(appID) {
+         this.currentApplicationID = appID; // remember our current Application.
       }
 
       /**
@@ -177,7 +178,7 @@ export default function (AB) {
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplication) {
+         if (!this.currentApplicationID) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -198,16 +199,18 @@ export default function (AB) {
          }
 
          if (!newObject.createdInAppID) {
-            newObject.createdInAppID = this.currentApplication.id;
+            newObject.createdInAppID = this.currentApplicationID;
          }
 
          // show progress
          this.busy();
 
+         var application = this.AB.applicationByID(this.currentApplicationID);
+
          // if we get here, save the new Object
          try {
             var obj = await newObject.save();
-            await this.currentApplication.objectInsert(obj);
+            await application.objectInsert(obj);
             this[tabKey].emit("save.successful", obj);
             this.done(obj);
          } catch (err) {
@@ -216,8 +219,8 @@ export default function (AB) {
 
             // an error happend during the server side creation.
             // so remove this object from the current object list of
-            // the currentApplication.
-            await this.currentApplication.objectRemove(newObject);
+            // the current application.
+            await application.objectRemove(newObject);
 
             // tell current Tab component there was an error
             this[tabKey].emit("save.error", err);
@@ -238,13 +241,13 @@ export default function (AB) {
 
       switchTab(tabId) {
          if (tabId == this.BlankTab?.ui?.body?.id) {
-            this.BlankTab?.onShow?.(this.currentApplication);
+            this.BlankTab?.onShow?.(this.currentApplicationID);
          } else if (tabId == this.CsvTab?.ui?.body?.id) {
-            this.CsvTab?.onShow?.(this.currentApplication);
+            this.CsvTab?.onShow?.(this.currentApplicationID);
          } else if (tabId == this.ImportTab?.ui?.body?.id) {
-            this.ImportTab?.onShow?.(this.currentApplication);
+            this.ImportTab?.onShow?.(this.currentApplicationID);
          } else if (tabId == this.ExternalTab?.ui?.body?.id) {
-            this.ExternalTab?.onShow?.(this.currentApplication);
+            this.ExternalTab?.onShow?.(this.currentApplicationID);
          }
       }
    }
