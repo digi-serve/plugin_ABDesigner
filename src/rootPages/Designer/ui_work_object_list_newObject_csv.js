@@ -10,6 +10,7 @@ export default function (AB) {
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
    };
+   let uiSettings = AB.Config.uiSettings();
 
    class UI_Work_Object_List_NewObject_Csv extends AB.ClassUI {
       constructor() {
@@ -30,7 +31,6 @@ export default function (AB) {
 
       ui() {
          let ids = this.ids;
-         let uiSettings = AB.Config.uiSettings();
 
          // Our webix UI definition:
          return {
@@ -269,7 +269,7 @@ export default function (AB) {
                   {
                      view: "text",
                      value: col.columnName,
-                     width: 170,
+                     width: uiSettings.labelWidthXLarge,
                   },
                   {
                      view: "select",
