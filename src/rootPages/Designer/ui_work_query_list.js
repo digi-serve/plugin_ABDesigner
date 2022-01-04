@@ -91,7 +91,7 @@ export default function (AB) {
             this.AddForm.hide();
          });
 
-         this.AddForm.on("save", (q, select) => {
+         this.AddForm.on("save", (q /*, select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
