@@ -30,6 +30,7 @@ export default function (AB) {
 
       ui() {
          let ids = this.ids;
+         let uiSettings = AB.Config.uiSettings();
 
          // Our webix UI definition:
          return {
@@ -47,7 +48,7 @@ export default function (AB) {
                      name: "name",
                      required: true,
                      placeholder: L("Object name"),
-                     labelWidth: 70,
+                     labelWidth: uiSettings.labelWidthMedium,
                   },
                   {
                      view: "uploader",
@@ -81,7 +82,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "separatedBy",
                      label: L("Separated by"),
-                     labelWidth: 140,
+                     labelWidth: uiSettings.labelWidthXLarge,
                      options: this._csvImporter.getSeparateItems(),
                      value: ",",
                      on: {
@@ -276,23 +277,33 @@ export default function (AB) {
                      options: [
                         {
                            id: "string",
-                           value: this.allFields.filter((f) => f.key == "string")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "string")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "LongText",
-                           value: this.allFields.filter((f) => f.key == "LongText")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "LongText")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "number",
-                           value: this.allFields.filter((f) => f.key == "number")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "number")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "date",
-                           value: this.allFields.filter((f) => f.key == "date")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "date")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "boolean",
-                           value: this.allFields.filter((f) => f.key == "boolean")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "boolean")[0]
+                              .defaults().menuName,
                         },
                      ],
                      width: 120,
