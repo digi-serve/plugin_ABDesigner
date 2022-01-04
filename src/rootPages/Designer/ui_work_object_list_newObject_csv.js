@@ -438,12 +438,18 @@ export default function (AB) {
 
          // if there was no error, clear the form for the next
          // entry:
-         return subTasks.then(() => {
-            this.formClear();
-            this.$importButton.enable();
+         return subTasks
+            .then(() => {
+               this.formClear();
+               this.$importButton.enable();
 
-            return Promise.resolve();
-         });
+               return Promise.resolve();
+            })
+            .catch((err) => {
+               AB.notify.developer(err, {
+                  message: "Error import data rows from CSV",
+               });
+            });
       }
 
       onError(err) {
