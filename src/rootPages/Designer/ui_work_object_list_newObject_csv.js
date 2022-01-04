@@ -417,24 +417,24 @@ export default function (AB) {
          // add rows to Server
          var objModel = newObj.model();
 
-         // prepare row data
-         let rowDatas = [];
+         // Add each records sequentially
          this._dataRows.forEach((data, index) => {
-            if (this.$headerOnFirstLine.getValue() && index == 0) return;
+            subTasks = subTasks.then(() => {
+               if (this.$headerOnFirstLine.getValue() && index == 0)
+                  return Promise.resolve();
 
-            let rowData = {};
-            let colValues = data;
+               var rowData = {};
+               var colValues = data;
 
-            newObj.fields().forEach((col) => {
-               if (colValues[col.settings.weight] != null)
-                  rowData[col.columnName] = colValues[col.settings.weight];
+               newObj.fields().forEach((col) => {
+                  if (colValues[col.settings.weight] != null)
+                     rowData[col.columnName] = colValues[col.settings.weight];
+               });
+
+               // Add row data
+               return objModel.create(rowData);
             });
-
-            rowDatas.push(rowData);
          });
-
-         // Add bulk of data
-         subTasks = subTasks.then(() => objModel.createAll(rowDatas));
 
          // if there was no error, clear the form for the next
          // entry:
