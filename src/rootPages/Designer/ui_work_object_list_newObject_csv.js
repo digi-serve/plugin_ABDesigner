@@ -420,8 +420,7 @@ export default function (AB) {
          // prepare row data
          let rowDatas = [];
          this._dataRows.forEach((data, index) => {
-            if (this.$headerOnFirstLine.getValue() && index == 0)
-               return Promise.resolve();
+            if (this.$headerOnFirstLine.getValue() && index == 0) return;
 
             let rowData = {};
             let colValues = data;
