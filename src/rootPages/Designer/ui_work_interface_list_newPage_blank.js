@@ -19,6 +19,7 @@ export default function (AB) {
             buttonSave: `${base}_save`,
             buttonCancel: `${base}_cancel`,
          });
+         this.ids.parentList = {}
       }
 
       ui() {
@@ -43,7 +44,7 @@ export default function (AB) {
                     name: "parent",
                     options: [],
                     //
-                    placeholder: L("[ Root Page ]"),
+                    placeholder: L("[Root Page]"),
                     labelWidth: 110,
                     // on: {
                     //   onAfterRender() {
@@ -133,6 +134,41 @@ export default function (AB) {
          return Promise.resolve();
       }
 
+      /**
+        * @function applicationLoad()
+        *
+        * Prepare our New Popups with the current Application
+        */
+      applicationLoad(application) {
+        this.currentApplication = application;
+
+        var options = [{ id: "-", value: L("[Root page]") }]; // L("ab.interface.rootPage", "*[Root page]")
+
+        var addPage = function(page, indent) {
+          indent = indent || "";
+          options.push({
+              id: page.urlPointer(),
+              value: indent + page.label
+          });
+          page
+              // .pages((p) => p instanceof ABPage) // can't import in parent
+              .pages((p) => p.constructor.name === "ABViewPage")
+              .forEach(function(p) {
+                addPage(p, indent + "-");
+              });
+        };
+        // this.currentApplication.pages((p) => p instanceof ABPage).forEach(
+        this.currentApplication.pages((p) => p.constructor.name === "ABViewPage").forEach(
+          function(page) {
+              addPage(page, "");
+          }
+        );
+
+        // $$(this.ids.parentList).define("options", options);
+        $$(this.ids.parentList).define("options", options);
+        $$(this.ids.parentList).refresh();
+      }
+
       cancel() {
          this.formClear();
          this.emit("cancel");
@@ -214,6 +250,12 @@ export default function (AB) {
          }
 
          var values = Form.getValues();
+
+         if (values.parent === "-") {
+           values.parent = null
+         } else if (values.parent) {
+           values.parent = this.currentApplication.urlResolve(values.parent);
+         }
 
          // set uuid to be primary column
          values.primaryColumnName = "uuid";

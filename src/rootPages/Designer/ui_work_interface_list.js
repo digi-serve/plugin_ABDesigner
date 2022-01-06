@@ -14,14 +14,16 @@ import UI_Common_PopupEditMenu from "./ui_common_popupEditMenu";
 
 export default function (AB) {
    var PopupEditPageComponent = new UI_Common_PopupEditMenu(AB);
-   var PopupAddPageComponent = new UIListNewProcess(AB);
+  //  var PopupNewPageComponent = new UIListNewProcess(AB);
+
+  var AddForm = new UIListNewProcess(AB);
+  // the popup form for adding a new process
 
    const uiConfig = AB.Config.uiSettings();
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+    };
 
-   // the popup form for adding a new process
 
    class UI_Work_Interface_List extends AB.ClassUI {
       constructor() {
@@ -34,7 +36,6 @@ export default function (AB) {
 
         this.EditPopup = new PopupEditPageComponent(base);
 
-        this.AddForm = PopupAddPageComponent;
         //   idBase: this.ids.component,
         //   labels: {
         //      addNew: "Add new page",
@@ -158,9 +159,11 @@ export default function (AB) {
             $List.adjust();
          }
 
-        //  PopupNewPageComponent.init({
-        //     onSave: _logic.callbackNewPage
-        //  });
+        await AddForm.init(AB);
+
+        AddForm.on("cancel", () => {
+           AddForm.hide();
+        });
 
         await this.EditPopup.init(AB, {
           onClick: this.callbackPageEditMenu,
@@ -201,13 +204,13 @@ export default function (AB) {
           this.rename();
         });
 
-        await this.AddForm.init(AB);
+        await AddForm.init(AB);
 
-        this.AddForm.on("cancel", () => {
-          this.AddForm.hide();
+        AddForm.on("cancel", () => {
+          AddForm.hide();
         });
 
-        this.AddForm.on("save", (obj, select) => {
+        AddForm.on("save", (obj, select) => {
           // the PopupEditPageComponent already takes care of updating the
           // CurrentApplication.
 
@@ -287,7 +290,7 @@ export default function (AB) {
           this.ready();
 
           // // prepare our Popup with the current Application
-          // PopupNewPageComponent.applicationLoad(application);
+          AddForm.applicationLoad(application);
           // this.EditPopup.applicationLoad(application);
       }
 
@@ -325,7 +328,7 @@ export default function (AB) {
        */
       clickNewView(selectNew) {
          // show the new popup
-         this.AddForm.show();
+         AddForm.show();
       }
 
       /*
@@ -510,7 +513,7 @@ export default function (AB) {
 
         $$(this.ids.list).select(page.id);
 
-        PopupNewPageComponent.hide();
+        AddForm.hide();
       }
       listBusy () {
         if ($$(this.ids.list) && $$(this.ids.list).showProgress)
@@ -592,7 +595,7 @@ export default function (AB) {
                  this.listReady();
 
                  // refresh the root page list
-                 PopupNewPageComponent.applicationLoad(CurrentApplication);
+                 AddForm.applicationLoad(CurrentApplication);
 
                  // TODO : should use message box
                  webix.alert({

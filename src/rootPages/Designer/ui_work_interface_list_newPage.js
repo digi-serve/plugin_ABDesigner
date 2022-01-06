@@ -129,6 +129,7 @@ export default function (AB) {
        */
       applicationLoad(application) {
          this.currentApplication = application; // remember our current Application.
+         this.BlankTab.applicationLoad(application); // send so parent pagelist can be made
       }
 
       /**
@@ -191,7 +192,7 @@ export default function (AB) {
          }
 
          // create a new (unsaved) instance of our interface:
-         var newInterface = this.AB.interfaceNew(values);
+         var newInterface = this.currentApplication.pageNew(values);
 
          // have newInterface validate it's values.
          var validator = newInterface.isValid();
