@@ -4,8 +4,8 @@
  * Manage the ABInterface List
  *
  */
-import UICommonListFactory from "./ui_common_list";
-// import UIListNewProcess from "./ui_work_interface_list_newInterface";
+
+import UIListNewProcess from "./ui_work_interface_list_newPage";
 
 //import UI_Work_Interface_List_NewPage from "./ui_work_interface_list_newPage";
 import UI_Common_PopupEditMenu from "./ui_common_popupEditMenu";
@@ -13,15 +13,14 @@ import UI_Common_PopupEditMenu from "./ui_common_popupEditMenu";
 // const ABProcess = require("../classes/platform/ABProcess");
 
 export default function (AB) {
-   var UI_COMMON_LIST = UICommonListFactory(AB);
    var PopupEditPageComponent = new UI_Common_PopupEditMenu(AB);
+   var PopupAddPageComponent = new UIListNewProcess(AB);
 
    const uiConfig = AB.Config.uiSettings();
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
    };
 
-  //  var AddForm = new UIListNewProcess(AB);
    // the popup form for adding a new process
 
    class UI_Work_Interface_List extends AB.ClassUI {
@@ -33,8 +32,24 @@ export default function (AB) {
           buttonNew: `${base}_buttonNew`
         });
 
-        this.EditForm = new PopupEditPageComponent();
+        this.EditPopup = new PopupEditPageComponent(base);
 
+        this.AddForm = PopupAddPageComponent;
+        //   idBase: this.ids.component,
+        //   labels: {
+        //      addNew: "Add new page",
+        //      confirmDeleteTitle: "Delete Page",
+        //      title: "Pages",
+        //      searchPlaceholder: "Page name",
+        //   },
+        //   // we can overrid the default template like this:
+        //   // templateListItem:
+        //   //    "<div class='ab-object-list-item'>#label##warnings#{common.iconGear}</div>",
+        //   menu: {
+        //      copy: true,
+        //      exclude: false,
+        //   },
+        // });
         this.CurrentApplication = null;
         var processList = null;
 
@@ -117,6 +132,7 @@ export default function (AB) {
             }
           ]
       };
+        // Making custom UI settings above
         // return this.ListComponent.ui();
       }
 
@@ -124,10 +140,10 @@ export default function (AB) {
       async init(AB, options) {
          this.AB = AB;
 
-         this.on("addNew", (selectNew) => {
+         this.on("clickNewView", (selectNew) => {
             // if we receive a signal to add a new Interface from another source
             // like the blank interface workspace offering an Add New button:
-            this.clickNewProcess(selectNew);
+            this.clickNewView(selectNew);
          });
 
 
@@ -146,38 +162,52 @@ export default function (AB) {
         //     onSave: _logic.callbackNewPage
         //  });
 
-         await this.EditForm.init(AB, {
-            onClick: this.callbackPageEditMenu,
-            hideExclude: true
-         });
-         //
-         // List of Processes
-         //
-        //  this.ListComponent.on("deleted", (item) => {
-        //     this.emit("deleted", item);
-        //  });
-
-        //  this.ListComponent.on("copied", (data) => {
-        //     this.copy(data);
-        //  });
-
-        // ListComponent.on("menu", (data)=>{
-        // 	console.log(data);
-        // 	switch (data.command) {
-        // 		case "exclude":
-        // 			this._logic.exclude(process);
-        // 			break;
-
-        // 		case "copy":
-        // 			break;
-        // 	}
-        // })
-
-        this.EditForm.on("cancel", () => {
-          this.EditForm.hide();
+        await this.EditPopup.init(AB, {
+          onClick: this.callbackPageEditMenu,
+          // onClick: {
+          //   "ab-interface-list-edit": (e, id, trg) => {
+          //      this.callbackPageEditMenu(e, id, trg);
+          //   }},
+          hideExclude: true
         });
 
-        this.EditForm.on("save", (obj, select) => {
+        this.EditPopup.menuOptions ( [
+          {
+             label: L("Rename"),
+             icon: "fa fa-pencil-square-o",
+             command: "rename",
+          },
+          {
+             label: L("Copy"),
+             icon: "fa fa-files-o",
+             command: "copy",
+          },
+          {
+             label: L("Delete"),
+             icon: "fa fa-trash",
+             command: "delete",
+          },
+        ]);
+
+        this.EditPopup.on("delete", (item) => {
+          this.remove(item);
+        });
+
+        this.EditPopup.on("copy", (data) => {
+          this.copy(data);
+        });
+
+        this.EditPopup.on("rename", () => {
+          this.rename();
+        });
+
+        await this.AddForm.init(AB);
+
+        this.AddForm.on("cancel", () => {
+          this.AddForm.hide();
+        });
+
+        this.AddForm.on("save", (obj, select) => {
           // the PopupEditPageComponent already takes care of updating the
           // CurrentApplication.
 
@@ -197,7 +227,7 @@ export default function (AB) {
 
       addNew() {
          console.error("!! Who is calling this?");
-         this.clickNewProcess(true);
+         this.clickNewView(true);
       }
 
       /**
@@ -258,7 +288,7 @@ export default function (AB) {
 
           // // prepare our Popup with the current Application
           // PopupNewPageComponent.applicationLoad(application);
-          // this.EditForm.applicationLoad(application);
+          // this.EditPopup.applicationLoad(application);
       }
 
       /**
@@ -289,13 +319,13 @@ export default function (AB) {
       // }
 
       /**
-       * @function clickNewProcess
+       * @function clickNewView
        *
-       * Manages initiating the transition to the new Process Popup window
+       * Manages initiating the transition to the new Page Popup window
        */
-      clickNewProcess(selectNew) {
+      clickNewView(selectNew) {
          // show the new popup
-         //AddForm.show();
+         this.AddForm.show();
       }
 
       /*
@@ -317,21 +347,6 @@ export default function (AB) {
          });
       }
 
-      // /*
-      //  * @function exclude
-      //  * the list component notified us of an exclude action and which
-      //  * item was chosen.
-      //  *
-      //  * perform the removal and update the UI.
-      //  */
-      // async exclude(item) {
-      //    this.ListComponent.busy();
-      //    await this.CurrentApplication.interfaceRemove(item);
-      //    this.ListComponent.dataLoad(this.CurrentApplication.interfacesIncluded());
-
-      //    // this will clear the interface workspace
-      //    this.emit("selected", null);
-      // }
       showGear (id) {
         var domNode = $$(this.ids.list).getItemNode(id);
         if (domNode) {
@@ -369,6 +384,22 @@ export default function (AB) {
         var pageID = $$(this.ids.list).getSelectedId(false);
         $$(this.ids.list).edit(pageID);
       }
+      /*
+       * @function copy
+       * make a copy of the current selected item.
+       *
+       * copies should have all the same .toObj() data,
+       * but will need unique names, and ids.
+       *
+       * we start the process by making a copy and then
+       * having the user enter a new label/name for it.
+       *
+       * our .afterEdit() routines will detect it is a copy
+       * then alert the parent UI component of the "copied" data
+       *
+       * @param {obj} selectedItem the currently selected item in
+       * 		our list.
+       */
       copy () {
         let selectedPage = $$(this.ids.list).getSelectedItem(false);
 
@@ -403,32 +434,34 @@ export default function (AB) {
         if (!selectedPage) return;
 
         // verify they mean to do this:
-        OP.Dialog.Confirm({
-           title: labels.component.confirmDeleteTitle,
-           message: labels.component.confirmDeleteMessage.replace(
-              "{0}",
-              selectedPage.label
-           ),
-           callback: (isOK) => {
-              if (isOK) {
-                 this.listBusy();
+        webix.confirm({
+          title: L("Delete Page"),
+          text: L("Are you sure you wish to delete this page?", [selectedPage.label]),
+          ok: L("Yes"),
+          cancel: L("No"),
+          callback: async (isOK) => {
+             if (isOK) {
+                this.busy();
 
-                 selectedPage.destroy().then(() => {
-                    this.listReady();
+                try {
+                   await selectedPage.destroy();
+                   this.ready();
+                   $$(this.ids.list).remove(selectedPage.id);
 
-                    if (viewList.exists(selectedPage.id)) {
-                       viewList.remove(selectedPage.id);
-                    }
+                   // let the calling component know about
+                   // the deletion:
+                   this.emit("deleted", selectedPage);
 
-                    // refresh the root page list
-                    PopupNewPageComponent.applicationLoad(
-                       CurrentApplication
-                    );
-
-                    AB.actions.clearInterfaceWorkspace();
-                 });
-              }
-           }
+                   // clear object workspace
+                   this.emit("selected", null);
+                } catch (e) {
+                   console.error(e, {
+                      context: "ui_common_list:remove(): error removing item",
+                   });
+                   this.ready();
+                }
+             }
+          },
         });
       }
       /**
@@ -451,7 +484,7 @@ export default function (AB) {
       }
       clickEditMenu (e, id, trg) {
         // Show menu
-        this.EditForm.show(trg);
+        this.EditPopup.show(trg);
 
         return false;
       }
@@ -522,9 +555,26 @@ export default function (AB) {
         */
       onAfterSelect (id) {
           var view = $$(this.ids.list).getItem(id);
-          AB.actions.populateInterfaceWorkspace(view);
+          //AB.actions.populateInterfaceWorkspace(view);
 
           this.showGear(id);
+      }
+      onBeforeEditStop(state /*, editor */) {
+        console.log(state)
+        var selectedItem = $$(this.ids.list).getSelectedItem(false);
+        selectedItem.label = state.value;
+
+        // if this item supports isValid()
+        if (selectedItem.isValid) {
+           var validator = selectedItem.isValid();
+           if (validator.fail()) {
+              selectedItem.label = state.old;
+
+              return false; // stop here.
+           }
+        }
+
+        return true;
       }
       onAfterEditStop (state, editor, ignoreUpdate) {
         this.showGear(editor.id);
@@ -538,30 +588,24 @@ export default function (AB) {
            // Call server to rename
            selectedPage
               .save()
-              .catch(function() {
-                 this.listReady();
-
-                 OP.Dialog.Alert({
-                    text: labels.common.renameErrorMessage.replace(
-                       "{0}",
-                       state.old
-                    )
-                 });
-              })
-              .then(function() {
+              .then( () => {
                  this.listReady();
 
                  // refresh the root page list
                  PopupNewPageComponent.applicationLoad(CurrentApplication);
 
                  // TODO : should use message box
-                 OP.Dialog.Alert({
-                    text: labels.common.renameSuccessMessage.replace(
-                       "{0}",
-                       state.value
-                    )
+                 webix.alert({
+                    text: L("<b>{0}</b> is renamed.", [state.value])
                  });
-              });
+              })
+              .catch(function() {
+                this.listReady();
+
+                webix.alert({
+                   text: L("System could not rename <b>{0}</b>.", [state.value])
+                });
+             })
         }
       }
       onAfterClose () {
@@ -586,7 +630,7 @@ export default function (AB) {
       //    },
 
       //    addNewProcess: function (selectNew, callback) {
-      //       _logic.clickNewProcess(selectNew, callback);
+      //       _logic.clickNewView(selectNew, callback);
       //    },
       // });
    }
