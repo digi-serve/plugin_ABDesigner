@@ -119,7 +119,10 @@ export default function (AB) {
          });
 
          this._handler_refreshApp = (def) => {
-            this.CurrentApplication = this.CurrentApplication.refreshInstance();
+           if (this.CurrentApplication.refreshInstance){
+             // TODO: Johnny refactor this
+             this.CurrentApplication = this.CurrentApplication.refreshInstance();
+           }
             this.applicationLoad(this.CurrentApplication);
          };
       }

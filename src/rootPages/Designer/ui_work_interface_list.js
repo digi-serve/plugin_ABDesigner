@@ -151,6 +151,7 @@ export default function (AB) {
          if ($$(this.ids.component)) $$(this.ids.component).adjust();
 
          let $List = $$(this.ids.list);
+         this.ListComponent = $List;
 
          if ($List) {
             webix.extend($List, webix.ProgressBar);
@@ -158,12 +159,6 @@ export default function (AB) {
             $List.data.sync(this.viewList);
             $List.adjust();
          }
-
-        await AddForm.init(AB);
-
-        AddForm.on("cancel", () => {
-           AddForm.hide();
-        });
 
         await this.EditPopup.init(AB, {
           onClick: this.callbackPageEditMenu,
@@ -218,12 +213,15 @@ export default function (AB) {
           this.applicationLoad(this.CurrentApplication);
 
           // if (select) {
-          this.ListComponent.select(obj.id);
+           this.ListComponent.select(obj.id);
           // }
         });
 
         this._handler_refreshApp = (def) => {
-          this.CurrentApplication = this.CurrentApplication.refreshInstance();
+          if (this.CurrentApplication.refreshInstance){
+            // TODO: Johnny refactor this
+            this.CurrentApplication = this.CurrentApplication.refreshInstance();
+          }
           this.applicationLoad(this.CurrentApplication);
         };
       }
@@ -449,8 +447,7 @@ export default function (AB) {
                 try {
                    await selectedPage.destroy();
                    this.ready();
-                   $$(this.ids.list).remove(selectedPage.id);
-
+                   $$(this.ids.list).remove($$(this.ids.list).getSelectedId());
                    // let the calling component know about
                    // the deletion:
                    this.emit("deleted", selectedPage);
@@ -595,16 +592,16 @@ export default function (AB) {
                  this.listReady();
 
                  // refresh the root page list
-                 AddForm.applicationLoad(CurrentApplication);
+                 AddForm.applicationLoad(this.CurrentApplication);
 
                  // TODO : should use message box
                  webix.alert({
                     text: L("<b>{0}</b> is renamed.", [state.value])
                  });
               })
-              .catch(function() {
+              .catch((err) => {
                 this.listReady();
-
+                console.error(err)
                 webix.alert({
                    text: L("System could not rename <b>{0}</b>.", [state.value])
                 });

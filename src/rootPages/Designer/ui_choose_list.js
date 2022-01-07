@@ -351,7 +351,7 @@ export default function (AB) {
          );
 
          this._handler_reload = (def) => {
-            if (def.type == "application") {
+            if (def?.type == "application") {
                this.loaded = false;
                this.loadData();
             }

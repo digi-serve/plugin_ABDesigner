@@ -151,14 +151,14 @@ export default function (AB) {
               value: indent + page.label
           });
           page
-              // .pages((p) => p instanceof ABPage) // can't import in parent
-              .pages((p) => p.constructor.name === "ABViewPage")
+              // .pages((p) => p instanceof AB.Class.ABViewPage)
+              .pages()
               .forEach(function(p) {
                 addPage(p, indent + "-");
               });
         };
-        // this.currentApplication.pages((p) => p instanceof ABPage).forEach(
-        this.currentApplication.pages((p) => p.constructor.name === "ABViewPage").forEach(
+        // this.currentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
+        this.currentApplication.pages().forEach(
           function(page) {
               addPage(page, "");
           }

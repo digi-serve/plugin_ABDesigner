@@ -27,7 +27,6 @@
 import UIBlankPage from "./ui_work_interface_list_newPage_blank"
 //import UIQuickPage from "./ui_work_interface_list_newPage_quick"
 
-// const ABPage = require('../classes/platform/views/ABViewPage');
 export default function (AB) {
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
@@ -130,6 +129,7 @@ export default function (AB) {
       applicationLoad(application) {
          this.currentApplication = application; // remember our current Application.
          this.BlankTab.applicationLoad(application); // send so parent pagelist can be made
+        //  this.QuickTab.applicationLoad(application);
       }
 
       /**
@@ -191,8 +191,25 @@ export default function (AB) {
             return false;
          }
 
+         if (!values) {
+            // SaveButton.enable();
+            // CurrentEditor.formReady();
+            return;
+         }
+
          // create a new (unsaved) instance of our interface:
-         var newInterface = this.currentApplication.pageNew(values);
+         // this interface only creates Root Pages, or pages related to
+         var newInterface = null;
+         if (values.useParent && values.parent) {
+              // ?????????????????
+              newInterface = values.parent;
+         } else if (values.parent) {
+              newInterface = values.parent.pageNew(values);
+         } else {
+              //page = CurrentApplication.pageNew(values);
+              newInterface = this.currentApplication.pageNew(values);
+         }
+        //
 
          // have newInterface validate it's values.
          var validator = newInterface.isValid();
@@ -212,7 +229,7 @@ export default function (AB) {
          // if we get here, save the new Page
          try {
             var obj = await newInterface.save();
-            await this.currentApplication.interfaceInsert(obj);
+            // await this.currentApplication.pageInsert(obj);
             this[tabKey].emit("save.successful", obj);
             this.done(obj);
          } catch (err) {
@@ -222,7 +239,7 @@ export default function (AB) {
             // an error happend during the server side creation.
             // so remove this object from the current object list of
             // the currentApplication.
-            await this.currentApplication.interfaceRemove(newInterface);
+            await this.currentApplication.pageRemove(newInterface);
 
             // tell current Tab component there was an error
             this[tabKey].emit("save.error", err);
