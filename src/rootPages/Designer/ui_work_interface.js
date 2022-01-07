@@ -10,10 +10,10 @@ import UI_Work_Interface_List from "./ui_work_interface_list";
 
 export default function (AB) {
    var InterfaceList = UI_Work_Interface_List(AB);
-  //  var InterfaceWorkspace = UI_Work_Interface_Workspace_Class(
-  //     AB
-  //     /* leave empty for default settings */
-  //  );
+   //  var InterfaceWorkspace = UI_Work_Interface_Workspace_Class(
+   //     AB
+   //     /* leave empty for default settings */
+   //  );
 
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
@@ -36,7 +36,7 @@ export default function (AB) {
             id: this.ids.component,
             type: "space",
             margin: 10,
-            cols: [InterfaceList.ui(), { view: "resizer" }, {} ] // ,InterfaceWorkspace.ui()
+            cols: [InterfaceList.ui(), { view: "resizer" }, {}], // ,InterfaceWorkspace.ui()
          };
       }
 
@@ -46,18 +46,19 @@ export default function (AB) {
          // Our init() function for setting up our UI
 
          InterfaceList.on("selected", (obj) => {
-           console.log("this is unfinished")
+            console.log("this is unfinished");
             // if (obj == null) InterfaceWorkspace.clearInterfaceWorkspace();
             // else InterfaceWorkspace.populateInterfaceWorkspace(obj);
          });
 
-        //  InterfaceWorkspace.on("addNew", (selectNew) => {
-        //     InterfaceList.emit("addNew", selectNew);
-        //  });
+         //  InterfaceWorkspace.on("addNew", (selectNew) => {
+         //     InterfaceList.emit("addNew", selectNew);
+         //  });
 
-         return Promise.all([//InterfaceWorkspace.init(AB),
-           InterfaceList.init(AB)
-          ]);
+         return Promise.all([
+            //InterfaceWorkspace.init(AB),
+            InterfaceList.init(AB),
+         ]);
       }
 
       /**
@@ -70,9 +71,9 @@ export default function (AB) {
       applicationLoad(application) {
          this.CurrentApplication = application;
 
-        //  InterfaceWorkspace.clearInterfaceWorkspace();
+         //  InterfaceWorkspace.clearInterfaceWorkspace();
          InterfaceList.applicationLoad(application);
-        //  InterfaceWorkspace.applicationLoad(application);
+         //  InterfaceWorkspace.applicationLoad(application);
       }
 
       /**

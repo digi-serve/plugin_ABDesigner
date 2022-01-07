@@ -110,7 +110,6 @@ export default function (AB) {
                         align: "left",
                         type: "icon",
                         icon: "fa fa-arrow-left",
-                        align: "left",
                         hidden: this.options?.IsBackHidden ?? false, // hide this button in the admin lve page
                         click: () => {
                            this.emit("view.chooser");

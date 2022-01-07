@@ -19,7 +19,7 @@ export default function (AB) {
             buttonSave: `${base}_save`,
             buttonCancel: `${base}_cancel`,
          });
-         this.ids.parentList = {}
+         this.ids.parentList = {};
       }
 
       ui() {
@@ -37,23 +37,23 @@ export default function (AB) {
                },
                elements: [
                   {
-                    view: "select",
-                    id: this.ids.parentList,
-                    // label: labels.component.parentPage,
-                    label: L("Parent Page"),
-                    name: "parent",
-                    options: [],
-                    //
-                    placeholder: L("[Root Page]"),
-                    labelWidth: 110,
-                    // on: {
-                    //   onAfterRender() {
-                    //       AB.ClassUI.CYPRESS_REF(
-                    //         this,
-                    //         "ui_work_interface_list_newPage_blank_name"
-                    //       );
-                    //   },
-                    // },
+                     view: "select",
+                     id: this.ids.parentList,
+                     // label: labels.component.parentPage,
+                     label: L("Parent Page"),
+                     name: "parent",
+                     options: [],
+                     //
+                     placeholder: L("[Root Page]"),
+                     labelWidth: 110,
+                     // on: {
+                     //   onAfterRender() {
+                     //       AB.ClassUI.CYPRESS_REF(
+                     //         this,
+                     //         "ui_work_interface_list_newPage_blank_name"
+                     //       );
+                     //   },
+                     // },
                   },
                   {
                      view: "text",
@@ -135,38 +135,36 @@ export default function (AB) {
       }
 
       /**
-        * @function applicationLoad()
-        *
-        * Prepare our New Popups with the current Application
-        */
+       * @function applicationLoad()
+       *
+       * Prepare our New Popups with the current Application
+       */
       applicationLoad(application) {
-        this.currentApplication = application;
+         this.currentApplication = application;
 
-        var options = [{ id: "-", value: L("[Root page]") }]; // L("ab.interface.rootPage", "*[Root page]")
+         var options = [{ id: "-", value: L("[Root page]") }]; // L("ab.interface.rootPage", "*[Root page]")
 
-        var addPage = function(page, indent) {
-          indent = indent || "";
-          options.push({
-              id: page.urlPointer(),
-              value: indent + page.label
-          });
-          page
-              // .pages((p) => p instanceof AB.Class.ABViewPage)
-              .pages()
-              .forEach(function(p) {
-                addPage(p, indent + "-");
-              });
-        };
-        // this.currentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
-        this.currentApplication.pages().forEach(
-          function(page) {
-              addPage(page, "");
-          }
-        );
+         var addPage = function (page, indent) {
+            indent = indent || "";
+            options.push({
+               id: page.urlPointer(),
+               value: indent + page.label,
+            });
+            page
+               // .pages((p) => p instanceof AB.Class.ABViewPage)
+               .pages()
+               .forEach(function (p) {
+                  addPage(p, indent + "-");
+               });
+         };
+         // this.currentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
+         this.currentApplication.pages().forEach(function (page) {
+            addPage(page, "");
+         });
 
-        // $$(this.ids.parentList).define("options", options);
-        $$(this.ids.parentList).define("options", options);
-        $$(this.ids.parentList).refresh();
+         // $$(this.ids.parentList).define("options", options);
+         $$(this.ids.parentList).define("options", options);
+         $$(this.ids.parentList).refresh();
       }
 
       cancel() {
@@ -252,9 +250,9 @@ export default function (AB) {
          var values = Form.getValues();
 
          if (values.parent === "-") {
-           values.parent = null
+            values.parent = null;
          } else if (values.parent) {
-           values.parent = this.currentApplication.urlResolve(values.parent);
+            values.parent = this.currentApplication.urlResolve(values.parent);
          }
 
          // set uuid to be primary column

@@ -24,7 +24,7 @@
  *
  */
 
-import UIBlankPage from "./ui_work_interface_list_newPage_blank"
+import UIBlankPage from "./ui_work_interface_list_newPage_blank";
 //import UIQuickPage from "./ui_work_interface_list_newPage_quick"
 
 export default function (AB) {
@@ -52,7 +52,6 @@ export default function (AB) {
 
          this.BlankTab = new UIBlankPage(AB);
          //this.QuickTab = new UIQuickPage(AB);
-
       }
 
       ui() {
@@ -69,7 +68,7 @@ export default function (AB) {
                view: "tabview",
                id: this.ids.tab,
                cells: [
-                  this.BlankTab.ui()
+                  this.BlankTab.ui(),
                   //this.QuickTab.ui(),
                ],
                tabbar: {
@@ -106,17 +105,15 @@ export default function (AB) {
          this.$component = $$(this.ids.component);
 
          var allInits = [];
-         ["BlankTab"/*, "QuickTab" */].forEach(
-            (k) => {
-               allInits.push(this[k].init(AB));
-               this[k].on("cancel", () => {
-                  this.emit("cancel");
-               });
-               this[k].on("save", (values) => {
-                  this.save(values, k);
-               });
-            }
-         );
+         ["BlankTab" /*, "QuickTab" */].forEach((k) => {
+            allInits.push(this[k].init(AB));
+            this[k].on("cancel", () => {
+               this.emit("cancel");
+            });
+            this[k].on("save", (values) => {
+               this.save(values, k);
+            });
+         });
 
          return Promise.all(allInits);
       }
@@ -129,7 +126,7 @@ export default function (AB) {
       applicationLoad(application) {
          this.currentApplication = application; // remember our current Application.
          this.BlankTab.applicationLoad(application); // send so parent pagelist can be made
-        //  this.QuickTab.applicationLoad(application);
+         //  this.QuickTab.applicationLoad(application);
       }
 
       /**
@@ -201,15 +198,15 @@ export default function (AB) {
          // this interface only creates Root Pages, or pages related to
          var newInterface = null;
          if (values.useParent && values.parent) {
-              // ?????????????????
-              newInterface = values.parent;
+            // ?????????????????
+            newInterface = values.parent;
          } else if (values.parent) {
-              newInterface = values.parent.pageNew(values);
+            newInterface = values.parent.pageNew(values);
          } else {
-              //page = CurrentApplication.pageNew(values);
-              newInterface = this.currentApplication.pageNew(values);
+            //page = CurrentApplication.pageNew(values);
+            newInterface = this.currentApplication.pageNew(values);
          }
-        //
+         //
 
          // have newInterface validate it's values.
          var validator = newInterface.isValid();

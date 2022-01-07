@@ -122,7 +122,7 @@ export default function (AB) {
          // }
 
          if (options.onClick) {
-           this.onClick = options.onClick;
+            this.onClick = options.onClick;
          }
          // hide "copy" item
          if (options.hideCopy) {
@@ -181,11 +181,11 @@ export default function (AB) {
             return mo.label == label;
          })[0];
          if (option) {
-            if (this.onClick){
-              this.emit(option.command, itemNode);
-              //this.onClick(option.command);
+            if (this.onClick) {
+               this.emit(option.command, itemNode);
+               //this.onClick(option.command);
             } else {
-              this.emit("click", option.command);
+               this.emit("click", option.command);
             }
          }
 
