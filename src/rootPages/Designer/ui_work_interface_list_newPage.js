@@ -103,6 +103,7 @@ export default function (AB) {
          webix.extend($$(this.ids.component), webix.ProgressBar);
 
          this.$component = $$(this.ids.component);
+         this.$form = $$(this.ids.form);
 
          var allInits = [];
          ["BlankTab" /*, "QuickTab" */].forEach((k) => {

@@ -6,6 +6,7 @@
  */
 
 import UIListNewProcess from "./ui_work_interface_list_newPage";
+import UIListCopyProcess from "./ui_work_interface_list_copyPage";
 
 //import UI_Work_Interface_List_NewPage from "./ui_work_interface_list_newPage";
 import UI_Common_PopupEditMenu from "./ui_common_popupEditMenu";
@@ -17,6 +18,7 @@ export default function (AB) {
    //  var PopupNewPageComponent = new UIListNewProcess(AB);
 
    var AddForm = new UIListNewProcess(AB);
+   var CopyForm = new UIListCopyProcess(AB);
    // the popup form for adding a new process
 
    const uiConfig = AB.Config.uiSettings();
@@ -187,8 +189,8 @@ export default function (AB) {
             this.remove(item);
          });
 
-         this.EditPopup.on("copy", (data) => {
-            this.copy(data);
+         this.EditPopup.on("copy", () => {
+            this.copy();
          });
 
          this.EditPopup.on("rename", () => {
@@ -286,6 +288,7 @@ export default function (AB) {
 
          // // prepare our Popup with the current Application
          AddForm.applicationLoad(application);
+         CopyForm.applicationLoad(application);
          // this.EditPopup.applicationLoad(application);
       }
 
@@ -399,33 +402,34 @@ export default function (AB) {
        * 		our list.
        */
       copy() {
-         let selectedPage = $$(this.ids.list).getSelectedItem(false);
-
+         var selectedPage = $$(this.ids.list).getSelectedItem(false);
          // show loading cursor
          this.listBusy();
 
-         // get a copy of the page
-         selectedPage
-            .copy(null, selectedPage.parent)
-            .then((copiedPage) => {
-               // copiedPage.parent = selectedPage.parent;
-               // copiedPage.label = copiedPage.label + " (copied)";
-               // copiedPage.save().then(() => {
-               this.callbackNewPage(copiedPage);
-               this.listReady();
-               // });
-            })
-            .catch((err) => {
-               var strError = err.toString();
-               webix.alert({
-                  title: "Error copying page",
-                  ok: "fix it",
-                  text: strError,
-                  type: "alert-error",
-               });
-               console.log(err);
-               this.listReady();
-            });
+         CopyForm.init(AB, selectedPage);
+
+         // Data must be loaded AFTER init, as it populates the form immediatly
+         CopyForm.applicationLoad(this.CurrentApplication);
+
+         CopyForm.on("save", (obj) => {
+            // the PopupEditPageComponent already takes care of updating the
+            // CurrentApplication.
+
+            // we just need to update our list of interfaces
+            this.applicationLoad(this.CurrentApplication);
+            this.callbackNewPage(obj);
+
+            // Select the new page
+            this.ListComponent.select(obj.id);
+            this.listReady();
+         });
+
+         CopyForm.on("cancel", () => {
+            CopyForm.hide();
+            this.listReady();
+         });
+
+         CopyForm.show();
       }
       remove() {
          var selectedPage = $$(this.ids.list).getSelectedItem(false);
@@ -495,13 +499,15 @@ export default function (AB) {
        * Once a New Page was created in the Popup, follow up with it here.
        */
       callbackNewPage(page) {
-         var parentPage = page.pageParent();
+         var parentPage = page.pageParent() || page.parent;
          var parentPageId = parentPage.id != page.id ? parentPage.id : null;
-         if (!this.viewList.exists(page.id)) viewList.add(page, null, parentPageId);
+         if (!this.viewList.exists(page.id))
+            this.viewList.add(page, null, parentPageId);
 
          // add sub-pages to tree-view
          page.pages().forEach((p, index) => {
-            if (!this.viewList.exists(p.id)) this.viewList.add(p, index, page.id);
+            if (!this.viewList.exists(p.id))
+               this.viewList.add(p, index, page.id);
          });
 
          $$(this.ids.list).refresh();
