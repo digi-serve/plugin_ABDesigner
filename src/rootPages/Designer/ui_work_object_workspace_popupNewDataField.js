@@ -10,6 +10,7 @@ import FPropertyManager from "./properties/PropertyManager";
 // const ABFieldManager = require("../AppBuilder/core/ABFieldManager");
 
 export default function (AB) {
+   const ClassUI = AB.ClassUI;
    const uiConfig = AB.Config.uiSettings();
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
@@ -17,7 +18,7 @@ export default function (AB) {
 
    var PropertyManager = FPropertyManager(AB);
 
-   class UIWorkObjectWorkspacePopupNewDataField extends AB.ClassUI {
+   class UIWorkObjectWorkspacePopupNewDataField extends ClassUI {
       //.extend(idBase, function(App) {
 
       constructor() {
@@ -51,7 +52,7 @@ export default function (AB) {
          // The current Property editor that is being displayed.
 
          // var _currentApplication = null;
-         this._currentObjectID = null;
+         this.CurrentObjectID = null;
          // {string}
          // The current ABObject.id being edited in our Object Workspace.
 
@@ -95,11 +96,16 @@ export default function (AB) {
                   },
                   {
                      view: "button",
-                     label: L("Close"),
                      autowidth: true,
-                     align: "center",
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
                      click: () => {
                         this.buttonCancel();
+                     },
+                     on: {
+                        onAfterRender() {
+                           ClassUI.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -264,26 +270,26 @@ export default function (AB) {
 
       // our internal business logic
 
-      applicationLoad(appID) {
+      applicationLoad(application) {
          // _currentApplication = application;
 
          // make sure all the Property components refer to this ABApplication
          for (var menuName in this._componentHash) {
-            this._componentHash[menuName]?.applicationLoad(appID);
+            this._componentHash[menuName]?.applicationLoad(application);
          }
       }
 
-      objectLoad(objectID) {
-         this._currentObjectID = objectID;
+      objectLoad(object) {
+         this.CurrentObjectID = object.id;
 
          // make sure all the Property components refer to this ABObject
          for (var menuName in this._componentHash) {
-            this._componentHash[menuName]?.objectLoad(this._currentObjectID);
+            this._componentHash[menuName]?.objectLoad(this.CurrentObjectID);
          }
       }
 
-      get _currentObject() {
-         return this.AB.objectByID(this._currentObjectID);
+      get CurrentObject() {
+         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       buttonCancel() {
@@ -319,7 +325,7 @@ export default function (AB) {
                // if this is an ADD operation, (_editField will be undefined)
                if (!this._editField) {
                   // get a new instance of a field:
-                  field = this._currentObject.fieldNew(vals);
+                  field = this.CurrentObject.fieldNew(vals);
 
                   // Provide a default width based on the column label
                   var width = 20 + field.label.length * 10;
@@ -356,7 +362,7 @@ export default function (AB) {
                         field.settings.linkViaType == "many"
                      ) {
                         // NOTE : include random number to prevent duplicate column names
-                        linkColumnName = `${this._currentObject.name}${rand}`;
+                        linkColumnName = `${this.CurrentObject.name}${rand}`;
                      }
 
                      linkCol = linkObject.fieldNew({
@@ -365,7 +371,7 @@ export default function (AB) {
                         key: field.key,
 
                         columnName: linkColumnName,
-                        label: this._currentObject.label,
+                        label: this.CurrentObject.label,
 
                         settings: {
                            showIcon: field.settings.showIcon,
@@ -564,7 +570,7 @@ export default function (AB) {
          var ids = this.ids;
 
          // allow add the connect field only to import object
-         if (this._currentObject.isImported) allowFieldKey = "connectObject";
+         if (this.CurrentObject.isImported) allowFieldKey = "connectObject";
 
          if (allowFieldKey) {
             var connectField = ABFieldManager.allFields().filter(

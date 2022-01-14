@@ -7,8 +7,6 @@
 import UICommonListFactory from "./ui_common_list";
 import UIListNewProcess from "./ui_work_object_list_newObject";
 
-// const ABProcess = require("../classes/platform/ABProcess");
-
 export default function (AB) {
    var UI_COMMON_LIST = UICommonListFactory(AB);
 
@@ -134,23 +132,21 @@ export default function (AB) {
        * @function applicationLoad
        * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
-       * @param {string} appID
-       *        [optional] The current ABApplication.id we are working with.
+       * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
-      applicationLoad(appID) {
+      applicationLoad(application) {
          var oldAppID = this.CurrentApplicationID;
          var selectedItem = null;
          // {ABObject}
          // if we are updating the SAME application, we will want to default
          // the list to the currently selectedItem
 
-         this.CurrentApplicationID = appID;
+         this.CurrentApplicationID = application?.id;
 
-         if (oldAppID == appID) {
+         if (oldAppID == this.CurrentApplicationID) {
             selectedItem = this.ListComponent.selectedItem();
          }
-
-         var application = this.AB.applicationByID(appID);
 
          // NOTE: only include System Objects if the user has permission
          var f = (obj) => !obj.isSystemObject;
@@ -163,7 +159,7 @@ export default function (AB) {
             this.ListComponent.selectItem(selectedItem.id);
          }
 
-         AddForm.applicationLoad(appID);
+         AddForm.applicationLoad(application);
       }
 
       /**

@@ -1,6 +1,6 @@
 /*
- * ABField
- * A Generic Property manager for All our fields.
+ * ABView
+ * A Generic Property manager for All our ABViews.
  */
 
 var myClass = null;
@@ -10,13 +10,13 @@ var myClass = null;
 
 export default function (AB) {
    if (!myClass) {
-      const uiConfig = AB.Config.uiSettings();
-      var L = function (...params) {
-         return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-      };
+      // const uiConfig = AB.Config.uiSettings();
+      // var L = function (...params) {
+      //    return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+      // };
 
-      myClass = class ABFieldProperty extends AB.ClassUI {
-         constructor(base = "properties_abfield", ids = {}) {
+      myClass = class ABViewProperty extends AB.ClassUI {
+         constructor(base = "properties_abview", ids = {}) {
             // base: {string} unique base id reference
             // ids: {hash}  { key => '' }
             // this is provided by the Sub Class and has the keys
@@ -24,7 +24,8 @@ export default function (AB) {
 
             var common = {
                component: `${base}_component`,
-
+               /*
+// TODO:
                // the common property fields
                label: `${base}_label`,
                columnName: `${base}_columnName`,
@@ -37,6 +38,7 @@ export default function (AB) {
                addValidation: `${base}_addvalidation`,
                shorthand: `${base}_shorthand`,
                validationRules: `${base}_validationRules`,
+*/
             };
 
             Object.keys(ids).forEach((k) => {
@@ -64,6 +66,9 @@ export default function (AB) {
          }
 
          ui(elements = []) {
+            /*
+// TODO: this is still from ABField.js
+
             var ids = this.ids;
 
             var FC = this.FieldClass();
@@ -240,6 +245,8 @@ export default function (AB) {
             });
 
             return _ui;
+*/
+            return {};
          }
 
          async init(AB) {
@@ -247,60 +254,20 @@ export default function (AB) {
 
             var FC = this.FieldClass();
             if (FC) {
+               /*
+// TODO:
                $$(this.ids.fieldDescription).define(
                   "label",
                   L(FC.defaults().description)
                );
             } else {
                $$(this.ids.fieldDescription).hide();
+*/
             }
          }
 
-         addValidation(settings) {
-            var ids = this.ids;
-            var Filter = new this.AB.Class.FilterComplex(
-               this.AB._App,
-               "field_validation_rules",
-               this.AB
-            );
-            $$(ids.filterComplex).addView({
-               view: "form",
-               css: "abValidationForm",
-               cols: [
-                  {
-                     rows: [
-                        {
-                           view: "text",
-                           name: "invalidMessage",
-                           labelWidth: uiConfig.labelWidthLarge,
-                           value: settings?.invalidMessage
-                              ? settings.invalidMessage
-                              : "",
-                           label: L("Invalid Message"),
-                        },
-                        Filter.ui,
-                     ],
-                  },
-                  {
-                     view: "button",
-                     css: "webix_danger",
-                     icon: "fa fa-trash",
-                     type: "icon",
-                     autowidth: true,
-                     click: function () {
-                        var $viewCond = this.getParentView();
-                        $$(ids.filterComplex).removeView($viewCond);
-                     },
-                  },
-               ],
-            });
-            $$(Filter.ids.save).hide();
-            Filter.fieldsLoad(this.object.fields());
-            if (settings && settings.rules) Filter.setValue(settings.rules);
-         }
-
-         applicationLoad(application) {
-            this.currentApplicationID = application?.id;
+         applicationLoad(appID) {
+            this.currentApplicationID = appID;
          }
 
          clearEditor() {
@@ -309,6 +276,8 @@ export default function (AB) {
          }
 
          clear() {
+            /*
+// TODO:
             var ids = this.ids;
             this._CurrentField = null;
 
@@ -337,6 +306,11 @@ export default function (AB) {
 
             // hide warning message of null data
             $$(ids.numberOfNull).hide();
+*/
+         }
+
+         get currentApplication() {
+            return this.AB.applicationByID(this.currentApplicationID);
          }
 
          get currentObject() {
@@ -345,78 +319,20 @@ export default function (AB) {
 
          /**
           * @method defaults()
-          * Return the FieldClass() default values.
-          * NOTE: the child class MUST implement FieldClass() to return the
-          * proper ABFieldXXX class definition.
+          * Return the ViewClass() default values.
+          * NOTE: the child class MUST implement ViewClass() to return the
+          * proper ABViewXXX class definition.
           * @return {obj}
           */
          defaults() {
-            var FieldClass = this.FieldClass();
-            if (!FieldClass) {
+            var ViewClass = this.ViewClass();
+            if (!ViewClass) {
                console.error(
-                  "!!! ABFieldStringProperty: could not find FieldClass[string]"
+                  "!!! properties/views/ABView: could not find ViewClass"
                );
                return null;
             }
-            return FieldClass.defaults();
-         }
-
-         defaultValues() {
-            var values = {
-               label: "",
-               columnName: "",
-               showIcon: 1,
-               required: 0,
-               unique: 0,
-               validationRules: "",
-            };
-
-            var FieldClass = this.FieldClass();
-            if (FieldClass) {
-               var fcValues = FieldClass.defaultValues();
-               Object.keys(fcValues).forEach((k) => {
-                  if (typeof values[k] == "undefined") {
-                     values[k] = fcValues[k];
-                  }
-               });
-            }
-
-            return values;
-         }
-
-         /**
-          * @function eachDeep
-          * a depth first fn to apply fn() to each element of our list.
-          * @param {array} list  array of webix elements to scan
-          * @param {fn} fn function to apply to each element.
-          */
-         eachDeep(list, fn) {
-            list.forEach((e) => {
-               // process sub columns
-               if (e.cols) {
-                  this.eachDeep(e.cols, fn);
-                  return;
-               }
-
-               if (e.body?.cols) {
-                  this.eachDeep(e.body.cols, fn);
-                  return;
-               }
-
-               // or rows
-               if (e.rows) {
-                  this.eachDeep(e.rows, fn);
-                  return;
-               }
-
-               if (e.body?.rows) {
-                  this.eachDeep(e.body.rows, fn);
-                  return;
-               }
-
-               // or just process this element:
-               fn(e);
-            });
+            return ViewClass.common();
          }
 
          editorPopulate(field) {
@@ -424,68 +340,8 @@ export default function (AB) {
             this.populate(field);
          }
 
-         /**
-          * @method FieldClass()
-          * A method to return the proper ABFieldXXX Definition.
-          * NOTE: Must be overwritten by the Child Class
-          */
-         FieldClass() {
-            console.error("!!! Child Class has not overwritten FieldClass()");
-            return null;
-            // return super._FieldClass("string");
-         }
-
-         _FieldClass(key) {
-            return this.AB.Class.ABFieldManager.fieldByKey(key);
-         }
-
          formValues() {
             return $$(this.ids.component).getValues();
-         }
-
-         async getNumberOfNullValue(isRequired) {
-            var ids = this.ids;
-            if (
-               isRequired &&
-               this._CurrentField &&
-               this._CurrentField.id &&
-               this._CurrentField.settings.required != isRequired
-            ) {
-               // TODO: disable save button
-
-               // get count number
-               try {
-                  var data = await this._CurrentField.object.model().count({
-                     where: {
-                        glue: "and",
-                        rules: [
-                           {
-                              key: this._CurrentField.id,
-                              rule: "is_null",
-                           },
-                        ],
-                     },
-                  });
-
-                  if (data.count > 0) {
-                     $$(ids.numberOfNull).setValue(
-                        L(
-                           "** There are {0} rows that will be updated to default value",
-                           [data.count]
-                        )
-                     );
-                     $$(ids.numberOfNull).show();
-                  } else {
-                     $$(ids.numberOfNull).hide();
-                  }
-
-                  // TODO: enable save button
-               } catch (err) {
-                  // TODO: enable save button
-               }
-            } else {
-               $$(ids.numberOfNull).hide();
-            }
          }
 
          /**
@@ -495,6 +351,8 @@ export default function (AB) {
           * @return {bool}
           */
          isValid() {
+            /*
+// TODO:
             var ids = this.ids;
             var isValid = $$(ids.component).validate(),
                colName = this.formValues()["columnName"];
@@ -540,6 +398,7 @@ export default function (AB) {
             }
 
             return isValid;
+*/
          }
 
          markInvalid(name, message) {
@@ -556,7 +415,9 @@ export default function (AB) {
           * @param {ABField} field
           *        The ABFieldXXX instance that we are editing the settings for.
           */
-         populate(field) {
+         populate(/* field */) {
+            /*
+// TODO:
             var ids = this.ids;
             this._CurrentField = field;
 
@@ -600,6 +461,7 @@ export default function (AB) {
                   field.addValidation(ids, settings);
                });
             }
+*/
          }
 
          requiredOnChange() {
@@ -618,6 +480,8 @@ export default function (AB) {
           * @return {obj}
           */
          values() {
+            /*
+// TODO:
             var ids = this.ids;
 
             var settings = $$(ids.component).getValues();
@@ -651,6 +515,27 @@ export default function (AB) {
             values.key = FC.defaults().key;
 
             return values;
+*/
+            return {};
+         }
+
+         /**
+          * @method FieldClass()
+          * A method to return the proper ABFieldXXX Definition.
+          * NOTE: Must be overwritten by the Child Class
+          */
+         ViewClass() {
+            console.error("!!! Child Class has not overwritten FieldClass()");
+            return null;
+            // return super._FieldClass("string");
+         }
+
+         _ViewClass(key) {
+            var app = this.CurrentApplication;
+            if (!app) {
+               app = this.AB.applicationNew({});
+            }
+            return app.viewAll((V) => V.common().key == key)[0];
          }
       };
    }

@@ -8,7 +8,7 @@
  * widget to display.
  *
  */
-import FViewGridProperties from "./properties/views/ABViewGrid";
+import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
 
 export default function (AB) {
    var L = function (...params) {
@@ -67,9 +67,11 @@ export default function (AB) {
 
          // For our ABDesigner Object workspace, these settings are
          // enabled:
-         ["isEditable", "massUpdate", "allowDelete"].forEach((k) => {
-            defaultGrid.settings[k] = 1;
-         });
+         ["isEditable", "massUpdate", "allowDelete", "trackView"].forEach(
+            (k) => {
+               defaultGrid.settings[k] = 1;
+            }
+         );
          defaultGrid.settings.padding = 0;
          defaultGrid.settings.showToolbar = 0;
          defaultGrid.settings.gridFilter = {
@@ -101,27 +103,33 @@ export default function (AB) {
          this.datacollection = dc;
       }
 
-      objectLoad(objectID) {
-         this.objectID = objectID;
+      get $grid() {
+         return this._currentComponent?.getDataTable();
+      }
+
+      objectLoad(object) {
+         this.objectID = object.id;
       }
 
       ready() {
          this.ListComponent.ready();
       }
 
-      show(view) {
-         this.viewLoad(view);
+      async show(view) {
+         await this.viewLoad(view);
          $$(this.ids.component).show();
+         this.emit("show");
       }
 
-      viewLoad(view) {
+      async viewLoad(view) {
          this.currentViewDef = view;
+
          this.currentView = this._mockApp.viewNew(
             view.component,
             this._mockApp,
             null
          );
-         var component = this.currentView.componentV2();
+         var component = this.currentView.component();
 
          // OK, a ABViewGrid component wont display the grid unless there
          // is a .datacollection or .dataviewID specified.
@@ -133,7 +141,7 @@ export default function (AB) {
          var ui = component.ui();
          ui.id = this.ids.component;
          webix.ui(ui, $$(this.ids.component));
-         component.init(this.AB);
+         await component.init(this.AB);
 
          // Now call .datacollectionLoad() again to actually load the data.
          component.datacollectionLoad(this.datacollection);
@@ -142,7 +150,38 @@ export default function (AB) {
             this.emit("column.header.clicked", node, EditField);
          });
 
+         component.on("object.track", (currentObject, id) => {
+            this.emit("object.track", currentObject, id);
+         });
+
+         component.on("selection", () => {
+            this.emit("selection");
+         });
+
+         component.on("selection.cleared", () => {
+            this.emit("selection.cleared");
+         });
+
+         component.on("column.order", (fieldOrder) => {
+            this.emit("column.order", fieldOrder);
+         });
+
          this._currentComponent = component;
+      }
+
+      viewNew(data) {
+         var defaults = this.defaultSettings();
+         defaults.name = data.name;
+
+         return defaults;
+      }
+
+      deleteSelected($view) {
+         return this._currentComponent.toolbarDeleteSelected($view);
+      }
+
+      massUpdate($view) {
+         return this._currentComponent.toolbarMassUpdate($view);
       }
 
       /**
@@ -165,19 +204,32 @@ export default function (AB) {
        *        The current filter settings.
        * @param {array} sorts
        *        The current sort settings.
-       * @param {array} frozenColumns
-       *        An array of the ABField.id of the frozen columns.
+       * @param {string} frozenColumnID
+       *        the ABField.columnName of the column that we have frozen.
        */
-      refreshHeader(fields, hiddenFields, filters, sorts, frozenColumns) {
+      refreshHeader(
+         /* fields,*/ hiddenFields = [],
+         filters,
+         sorts,
+         frozenColumnID
+      ) {
          var object = this.AB.objectByID(this.objectID);
          var columnHeaders = object.columnHeaders(true, true, [], [], []);
-         columnHeaders.forEach((h) => {
-            if (hiddenFields.indexOf(h.id) > -1) {
-               h.hidden = true;
-            }
-         });
+
+         // this calculation is done in the ABViewGridComponent.refreshHeader():
+         // columnHeaders.forEach((h) => {
+         //    if (hiddenFields.indexOf(h.id) > -1) {
+         //       h.hidden = true;
+         //    }
+         // });
 
          this._currentComponent.columnConfig(columnHeaders);
+
+         this._currentComponent.settings.hiddenFields = hiddenFields;
+         this._currentComponent.settings.filterConditions = filters;
+         this._currentComponent.settings.sortFields = sorts;
+         this._currentComponent.settings.frozenColumnID = frozenColumnID;
+
          this._currentComponent.refreshHeader(true);
       }
 
@@ -186,7 +238,10 @@ export default function (AB) {
        *
        * add a new row to the data table
        */
+      /*
       rowAdd() {
+         // TODO: delete this, I think...
+         debugger;
          if (!settings.isEditable) return;
 
          var emptyObj = CurrentObject.defaultValues();
@@ -206,6 +261,7 @@ export default function (AB) {
                   CurrentDatacollection.__dataCollection.add(obj, 0);
             });
       }
+      */
    }
    return new UI_Work_Object_Workspace_View_Grid();
 }

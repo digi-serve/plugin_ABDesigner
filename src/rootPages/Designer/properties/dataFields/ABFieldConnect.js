@@ -110,11 +110,6 @@ export default function (AB) {
                         },
                      },
                   },
-
-                  /////
-                  ///// LEFT OFF HERE  && don't forget .show()
-                  /////
-
                   {
                      id: ids.fieldLinkVia,
                      view: "label",
@@ -258,6 +253,25 @@ export default function (AB) {
       populate(field) {
          var ids = this.ids;
          super.populate(field);
+      }
+
+      selectLinkViaType(newValue /*, oldValue */) {
+         let labelEntry = L("entry");
+         let labelEntries = L("entries");
+
+         let $fieldLink2 = $$(this.ids.fieldLink2);
+
+         let message = $fieldLink2.getValue() || "";
+
+         if (newValue == "many") {
+            message = message.replace(labelEntry, labelEntries);
+         } else {
+            message = message.replace(labelEntries, labelEntry);
+         }
+         $fieldLink2.define("label", message);
+         $fieldLink2.refresh();
+
+         this.updateCustomIndex();
       }
 
       show() {

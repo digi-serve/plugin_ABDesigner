@@ -184,12 +184,16 @@ export default function (AB) {
             var option = this._menuOptions.filter((mo) => {
                return mo.label == label;
             })[0];
+
+            // NOTE: .hide() the popup before .trigger() so we don't auto
+            // close any popups that get triggered.
+            this.hide();
+
             if (option) {
                // this._logic.callbacks.onClick(option.command);
                this.trigger(option.command);
             }
 
-            this.hide();
             return false;
          }
 

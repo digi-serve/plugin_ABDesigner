@@ -1,11 +1,22 @@
 // ABObjectWorkspaceViewCollection.js
 //
-// Manages the settings for a collection of views in the AppBuilder Object Workspace
+// Manages the settings for a collection of views in the AppBuilder Object
+// Workspace
+//
+// Within the workspace, we offer the ability to view the current ABObject in
+// different ways: Grid, KanBan, Gantt
+//
+// We can define multiple views for each method, and each view will allow you
+// to customize certain view settings: Hidden Fields, Filters, Sorts, Frozen
+// columns, etc...
+//
+//
+
 import ABWorkspaceDatatable from "./ui_work_object_workspace_view_grid";
 
-import FViewGanttProperties from "./properties/views/ABViewGantt";
-import FViewGridProperties from "./properties/views/ABViewGrid";
-import FViewKanbanProperties from "./properties/views/ABViewKanban";
+import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
+import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
+import FViewKanbanProperties from "./properties/workspaceViews/ABViewKanban";
 
 export default function (AB) {
    var L = function (...params) {
@@ -19,10 +30,13 @@ export default function (AB) {
    const ViewGridProperties = FViewGridProperties(AB);
    const ViewKanbanProperties = FViewKanbanProperties(AB);
 
-   var hashViews = {};
-   hashViews[ViewGanttProperties.type()] = ViewGanttProperties;
-   hashViews[ViewGridProperties.type()] = ViewGridProperties;
-   hashViews[ViewKanbanProperties.type()] = ViewKanbanProperties;
+   var hashViewProperties = {};
+   hashViewProperties[ViewGanttProperties.type()] = ViewGanttProperties;
+   hashViewProperties[ViewGridProperties.type()] = ViewGridProperties;
+   hashViewProperties[ViewKanbanProperties.type()] = ViewKanbanProperties;
+
+   var hashViewComponents = {};
+   hashViewComponents[ViewGridProperties.type()] = Datatable;
 
    const defaultAttributes = {
       currentViewID: undefined,
@@ -118,7 +132,7 @@ export default function (AB) {
       importViews(viewSettings) {
          this._views = [];
          viewSettings.list.forEach((view) => {
-            this.addView(view, false);
+            this.viewAdd(view, false);
          });
       }
 
@@ -140,16 +154,25 @@ export default function (AB) {
          this._currentView = this.getCurrentView();
       }
 
-      addView(view, save = true) {
-         // var newView = new hashViews[view.type](view, this);
+      async viewAdd(view, save = true) {
+         // var newView = new hashViewProperties[view.type](view, this);
          this._views.push(view);
          if (save) {
-            this.save();
+            await this.save();
          }
          return view;
       }
 
-      removeView(view) {
+      async viewNew(data) {
+         var ViewType = hashViewComponents[data.type];
+         if (!ViewType) return;
+
+         var newView = ViewType.viewNew(data);
+         await this.viewAdd(newView);
+         return newView;
+      }
+
+      viewRemove(view) {
          var indexToRemove = this._views.indexOf(view);
          this._views.splice(indexToRemove, 1);
          if (view.id === this.currentViewID) {
@@ -164,26 +187,20 @@ export default function (AB) {
        * @return {Promise}
        */
       async save() {
+         this._settings[this.objectID] = this.toObj();
          await this.AB.Storage.set("workspaceviews", this._settings);
       }
 
-      updateView(viewToUpdate, view) {
-         var newView;
-         if (view.type === viewToUpdate.type) {
-            viewToUpdate.update(view);
-            newView = viewToUpdate;
-         } else {
-            newView = new hashViews[view.type](view, this);
-            var indexToRemove = this._views.indexOf(viewToUpdate);
-            this._views.splice(indexToRemove, 1, newView);
-            if (this.currentViewID === viewToUpdate.id) {
-               this.currentViewID = newView.id;
-            }
-         }
-         this.save();
-         return newView;
+      async viewUpdate(view) {
+         var indexToReplace = this._views.indexOf(view);
+         this._views.splice(indexToReplace, 1, view);
+
+         await this.save();
       }
 
+      ///
+      /// CurrentView Operations
+      ///
       get filterConditions() {
          return this._currentView.filterConditions;
       }

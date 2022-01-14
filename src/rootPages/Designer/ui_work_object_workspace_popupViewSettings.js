@@ -1,22 +1,23 @@
 /*
- * ab_work_object_workspace_PopupAddView
+ * ui_work_object_workspace_popupViewSettings
  *
- * Manage the Sort Fields popup.
+ * Manage the popup to collect the settings for a workspace view.
  *
  */
 
-import FormABViewGantt from "./properties/views/ABViewGantt";
-import FormABViewGrid from "./properties/views/ABViewGrid";
-import FormABViewKanBan from "./properties/views/ABViewKanban";
+import FormABViewGantt from "./properties/workspaceViews/ABViewGantt";
+import FormABViewGrid from "./properties/workspaceViews/ABViewGrid";
+import FormABViewKanBan from "./properties/workspaceViews/ABViewKanban";
 
 export default function (AB) {
    const ABViewGrid = FormABViewGrid(AB);
+   const ClassUI = AB.ClassUI;
 
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
    };
 
-   class UI_Work_Object_Workspace_PopupAddView extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupAddView extends ClassUI {
       constructor() {
          var base = "abd_work_object_workspace_popupAddView";
 
@@ -27,11 +28,13 @@ export default function (AB) {
             nameInput: `${base}_popupAddViewName`,
             typeInput: `${base}_popupAddViewType`,
             cancelButton: `${base}_popupAddViewCancelButton`,
+            cancelX: `${base}_cancelX`,
             saveButton: `${base}_popupAddViewSaveButton`,
          });
 
-         this._object = null;
-         // {ABObject} the current ABObject we are working with.
+         this.CurrentObjectID = null;
+         // {string}
+         // The current ABObject.id being edited in our Object Workspace.
 
          this._view = null;
          // {Grid/kanban/Gantt} the current UI View type we are displaying
@@ -65,6 +68,11 @@ export default function (AB) {
                   on: {
                      onChange: (/* id */) => {
                         $$(ids.nameInput).validate();
+                     },
+                  },
+                  on: {
+                     onAfterRender() {
+                        ClassUI.CYPRESS_REF(this);
                      },
                   },
                },
@@ -105,6 +113,7 @@ export default function (AB) {
                   cols: [
                      { fillspace: true },
                      {
+                        id: ids.buttonCancel,
                         view: "button",
                         value: L("Cancel"),
                         css: "ab-cancel-button",
@@ -112,8 +121,14 @@ export default function (AB) {
                         click: () => {
                            this.buttonCancel();
                         },
+                        on: {
+                           onAfterRender() {
+                              ClassUI.CYPRESS_REF(this);
+                           },
+                        },
                      },
                      {
+                        id: ids.buttonSave,
                         view: "button",
                         css: "webix_primary",
                         value: L("Save"),
@@ -121,6 +136,11 @@ export default function (AB) {
                         type: "form",
                         click: () => {
                            this.buttonSave();
+                        },
+                        on: {
+                           onAfterRender() {
+                              ClassUI.CYPRESS_REF(this);
+                           },
                         },
                      },
                   ],
@@ -144,12 +164,18 @@ export default function (AB) {
                      align: "center",
                   },
                   {
+                     id: ids.cancelX,
                      view: "button",
-                     label: L("Close"),
                      autowidth: true,
-                     align: "center",
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
                      click: () => {
                         this.buttonCancel();
+                     },
+                     on: {
+                        onAfterRender() {
+                           ClassUI.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -172,8 +198,12 @@ export default function (AB) {
          return Promise.resolve();
       } // init()
 
+      get CurrentObject() {
+         return this.AB.objectByID(this.CurrentObjectID);
+      }
+
       objectLoad(object) {
-         this._object = object;
+         this.CurrentObjectID = object.id;
       }
 
       switchType(typeView) {
@@ -182,10 +212,10 @@ export default function (AB) {
          // initial
          switch (typeView) {
             case "kanban":
-               this.comKanban.init(this._object, this._view);
+               this.comKanban.init(this.CurrentObject, this._view);
                break;
             case "gantt":
-               this.comGantt.init(this._object, this._view);
+               this.comGantt.init(this.CurrentObject, this._view);
                break;
          }
 
@@ -212,8 +242,10 @@ export default function (AB) {
 
       /**
        * @function show()
-       *
-       * Show this component.
+       * Show this component.  If a viewObj is passed in, then we are editing
+       * a component. Otherwise, this is an Add operation.
+       * @param {ui_work_object_workspace_view_*} viewObj
+       *        The currentView definitions of an existing view we are editing
        */
       show(viewObj) {
          this._view = viewObj;
@@ -222,7 +254,6 @@ export default function (AB) {
 
       /**
        * @function hide()
-       *
        * hide this component.
        */
       hide() {
@@ -269,11 +300,13 @@ export default function (AB) {
 
          // var viewObj;
          if (this._view) {
-            // viewObj = this._object.workspaceViews.updateView(this._view, view);
-            this.emit("updated", view);
+            Object.keys(view).forEach((k) => {
+               this._view[k] = view[k];
+            });
+            this.emit("updated", this._view);
             // this.callbacks.onViewUpdated(viewObj);
          } else {
-            // viewObj = this._object.workspaceViews.addView(view);
+            // viewObj = this.CurrentObject.workspaceViews.addView(view);
             this.emit("added", view);
             // this.callbacks.onViewAdded(viewObj);
          }

@@ -265,45 +265,16 @@ export default function (AB) {
        * @method applicationInit()
        * Store the current ABApplication we are working with.
        * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
-      applicationInit(appID) {
-         var application = this.AB.applicationByID(appID);
-         if (!application) {
-            this.AB.notify.developer(new Error("unable to resolve appID"), {
-               context: "ui_work:applicationInit",
-               appID,
-            });
-            return;
+      applicationInit(application) {
+         if (application) {
+            // setup Application Label:
+            var $labelAppName = $$(this.ids.labelAppName);
+            $labelAppName.define("label", application?.label);
+            $labelAppName.refresh();
          }
-
-         // setup Application Label:
-         var $labelAppName = $$(this.ids.labelAppName);
-         $labelAppName.define("label", application.label);
-         $labelAppName.refresh();
-
-         //
-         // make sure we are watching for updates on our ABApplication
-         //
-
-         // A) remove our existing listeners on the CurrentApplication
-         // var events = ["definition.updated", "definition.deleted"];
-         // if (this.CurrentApplication && this._handler_refreshApp) {
-         //    // remove current handler
-         //    events.forEach((e) => {
-         //       this.CurrentApplication.removeListener(
-         //          e,
-         //          this._handler_refreshApp
-         //       );
-         //    });
-         // }
-         this.CurrentAppID = application.id;
-
-         // B) add listeners to the CurrentApplication
-         // if (this.CurrentApplication) {
-         //    events.forEach((e) => {
-         //       this.CurrentApplication.on(e, this._handler_refreshApp);
-         //    });
-         // }
+         this.CurrentAppID = application?.id;
       }
 
       /**
@@ -328,12 +299,13 @@ export default function (AB) {
        * @method transitionWorkspace
        * Switch the UI to view the App Workspace screen.
        * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
-      transitionWorkspace(appID) {
-         if (this.CurrentAppID != appID) {
-            this.applicationInit(appID);
+      transitionWorkspace(application) {
+         if (this.CurrentAppID != application?.id) {
+            this.applicationInit(application);
          }
-         AppObjectWorkspace.applicationLoad(appID);
+         AppObjectWorkspace.applicationLoad(application);
          // AppQueryWorkspace.applicationLoad(application);
          // AppDatacollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);

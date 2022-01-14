@@ -122,10 +122,11 @@ export default function (AB) {
       /**
        * @method applicationLoad()
        * prepare ourself with the current application
-       * @param {string} appID
+       * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
-      applicationLoad(appID) {
-         this.currentApplicationID = appID; // remember our current Application.
+      applicationLoad(application) {
+         this.currentApplicationID = application?.id;
       }
 
       /**

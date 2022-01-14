@@ -58,22 +58,21 @@ export default function (AB) {
       }
 
       /**
-       * @function applicationLoad
-       *
+       * @method applicationLoad
        * Initialize the Object Workspace with the given ABApplication.
-       *
        * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
-      applicationLoad(appID) {
+      applicationLoad(application) {
          var oldAppID = this.CurrentApplicationID;
-         this.CurrentApplicationID = appID;
+         this.CurrentApplicationID = application?.id;
 
          if (oldAppID != this.CurrentApplicationID) {
             ObjectWorkspace.clearObjectWorkspace();
          }
 
-         ObjectList.applicationLoad(appID);
-         ObjectWorkspace.applicationLoad(appID);
+         ObjectList.applicationLoad(application);
+         ObjectWorkspace.applicationLoad(application);
       }
 
       /**
@@ -84,9 +83,9 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
 
-         if (this.CurrentApplicationID) {
-            ObjectList?.applicationLoad(this.CurrentApplicationID);
-         }
+         // if (this.CurrentApplicationID) {
+         //    ObjectList?.applicationLoad(this.CurrentApplicationID);
+         // }
          ObjectList?.ready();
       }
    }
