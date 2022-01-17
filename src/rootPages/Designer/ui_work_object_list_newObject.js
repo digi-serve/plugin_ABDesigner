@@ -19,15 +19,16 @@
  */
 
 import UIBlankObject from "./ui_work_object_list_newObject_blank";
-// const ABCsvObject = require("./ab_work_object_list_newObject_csv");
-// const ABImportObject = require("./ab_work_object_list_newObject_import");
+import UICsvObject from "./ui_work_object_list_newObject_csv";
+import UIImportObject from "./ui_work_object_list_newObject_import";
 // const ABImportExternal = require("./ab_work_object_list_newObject_external");
 export default function (AB) {
+   const ClassUI = AB.ClassUI;
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
    };
 
-   class UI_Work_Object_List_NewObject extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject extends ClassUI {
       //.extend(idBase, function(App) {
 
       constructor() {
@@ -47,9 +48,9 @@ export default function (AB) {
          // var callback = null;
 
          this.BlankTab = UIBlankObject(AB);
+         this.CsvTab = UICsvObject(AB);
+         this.ImportTab = UIImportObject(AB);
          /*
-         this.CsvTab = new ABCsvObject(AB);
-         this.ImportTab = new ABImportObject(AB);
          this.ExternalTab = new ABImportExternal(AB);
          */
       }
@@ -62,13 +63,40 @@ export default function (AB) {
             // width: 400,
             position: "center",
             modal: true,
-            head: L("Add new object"),
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new object"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
             selectNewObject: true,
             body: {
                view: "tabview",
                id: this.ids.tab,
                cells: [
-                  this.BlankTab.ui() /*, this.CsvTab.ui(), this.ImportTab.ui(), this.ExternalTab.ui() */,
+                  this.BlankTab.ui() /*, this.ImportTab.ui(), this.ExternalTab.ui() */,
+                  this.CsvTab.ui(),
+                  this.ImportTab.ui(),
                ],
                tabbar: {
                   on: {
@@ -104,7 +132,7 @@ export default function (AB) {
          this.$component = $$(this.ids.component);
 
          var allInits = [];
-         ["BlankTab" /*, "CsvTab", "ImportTab", "ExternalTab"*/].forEach(
+         ["BlankTab", "CsvTab", "ImportTab" /*, "ExternalTab"*/].forEach(
             (k) => {
                allInits.push(this[k].init(AB));
                this[k].on("cancel", () => {

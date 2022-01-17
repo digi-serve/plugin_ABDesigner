@@ -6,7 +6,7 @@
  */
 
 import UI_Work_Object from "./ui_work_object";
-// const AB_Work_Query = require("./ab_work_query");
+import UI_Work_Query from "./ui_work_query";
 // const AB_Work_Datacollection = require("./ab_work_dataview");
 // const AB_Work_Process = require("./ab_work_process");
 // const AB_Work_Interface = require("./ab_work_interface");
@@ -17,7 +17,7 @@ export default function (AB) {
    };
 
    var AppObjectWorkspace = UI_Work_Object(AB);
-   // var AppQueryWorkspace = new AB_Work_Query(App);
+   const AppQueryWorkspace = new (UI_Work_Query(AB))();
    // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
    // var AppProcessWorkspace = new AB_Work_Process(App);
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);
@@ -205,7 +205,7 @@ export default function (AB) {
                         id: this.ids.workspace,
                         cells: [
                            AppObjectWorkspace.ui(),
-                           // AppQueryWorkspace.ui,
+                           AppQueryWorkspace.ui(),
                            // AppDatacollectionWorkspace.ui,
                            // AppProcessWorkspace.ui,
                            // AppInterfaceWorkspace.ui,
@@ -227,7 +227,7 @@ export default function (AB) {
          this.AB = AB;
 
          AppObjectWorkspace.init(AB);
-         // AppQueryWorkspace.init(AB);
+         AppQueryWorkspace.init(AB);
          // AppDatacollectionWorkspace.init(AB);
          // AppProcessWorkspace.init(AB);
          // AppInterfaceWorkspace.init(AB);
@@ -306,7 +306,7 @@ export default function (AB) {
             this.applicationInit(application);
          }
          AppObjectWorkspace.applicationLoad(application);
-         // AppQueryWorkspace.applicationLoad(application);
+         AppQueryWorkspace.applicationLoad(application);
          // AppDatacollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);

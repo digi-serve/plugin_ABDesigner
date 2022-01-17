@@ -6997,6 +6997,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_work_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object */ "./src/rootPages/Designer/ui_work_object.js");
+/* harmony import */ var _ui_work_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query */ "./src/rootPages/Designer/ui_work_query.js");
 /*
  * ab_work
  *
@@ -7005,7 +7006,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-// const AB_Work_Query = require("./ab_work_query");
+
 // const AB_Work_Datacollection = require("./ab_work_dataview");
 // const AB_Work_Process = require("./ab_work_process");
 // const AB_Work_Interface = require("./ab_work_interface");
@@ -7016,7 +7017,7 @@ __webpack_require__.r(__webpack_exports__);
    };
 
    var AppObjectWorkspace = (0,_ui_work_object__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // var AppQueryWorkspace = new AB_Work_Query(App);
+   const AppQueryWorkspace = new ((0,_ui_work_query__WEBPACK_IMPORTED_MODULE_1__["default"])(AB))();
    // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
    // var AppProcessWorkspace = new AB_Work_Process(App);
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);
@@ -7204,7 +7205,7 @@ __webpack_require__.r(__webpack_exports__);
                         id: this.ids.workspace,
                         cells: [
                            AppObjectWorkspace.ui(),
-                           // AppQueryWorkspace.ui,
+                           AppQueryWorkspace.ui(),
                            // AppDatacollectionWorkspace.ui,
                            // AppProcessWorkspace.ui,
                            // AppInterfaceWorkspace.ui,
@@ -7226,7 +7227,7 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
 
          AppObjectWorkspace.init(AB);
-         // AppQueryWorkspace.init(AB);
+         AppQueryWorkspace.init(AB);
          // AppDatacollectionWorkspace.init(AB);
          // AppProcessWorkspace.init(AB);
          // AppInterfaceWorkspace.init(AB);
@@ -7305,7 +7306,7 @@ __webpack_require__.r(__webpack_exports__);
             this.applicationInit(application);
          }
          AppObjectWorkspace.applicationLoad(application);
-         // AppQueryWorkspace.applicationLoad(application);
+         AppQueryWorkspace.applicationLoad(application);
          // AppDatacollectionWorkspace.applicationLoad(application);
          // AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
@@ -7431,6 +7432,15 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          return Promise.all([ObjectWorkspace.init(AB), ObjectList.init(AB)]);
+      }
+
+      /**
+       * @method CurrentApplication
+       * return the current ABApplication being worked on.
+       * @return {ABApplication} application
+       */
+      get CurrentApplication() {
+         return this.AB.applicationByID(this.CurrentApplicationID);
       }
 
       /**
@@ -7592,22 +7602,26 @@ __webpack_require__.r(__webpack_exports__);
             AddForm.hide();
          });
 
-         AddForm.on("save", (obj, select) => {
+         AddForm.on("save", (obj /* , select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
             // we just need to update our list of objects
-            this.applicationLoad(this.CurrentApplicationID);
+            this.applicationLoad(this.CurrentApplication);
 
             // if (select) {
             this.ListComponent.select(obj.id);
             // }
          });
+      }
 
-         // this._handler_refreshApp = (def) => {
-         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
-         //    this.applicationLoad(this.CurrentApplication);
-         // };
+      /**
+       * @method CurrentApplication
+       * return the current ABApplication being worked on.
+       * @return {ABApplication} application
+       */
+      get CurrentApplication() {
+         return this.AB.applicationByID(this.CurrentApplicationID);
       }
 
       addNew() {
@@ -7745,6 +7759,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object_list_newObject_blank */ "./src/rootPages/Designer/ui_work_object_list_newObject_blank.js");
+/* harmony import */ var _ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_list_newObject_csv */ "./src/rootPages/Designer/ui_work_object_list_newObject_csv.js");
+/* harmony import */ var _ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_list_newObject_import */ "./src/rootPages/Designer/ui_work_object_list_newObject_import.js");
 /*
  * ui_work_object_list_newObject
  *
@@ -7766,15 +7782,16 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-// const ABCsvObject = require("./ab_work_object_list_newObject_csv");
-// const ABImportObject = require("./ab_work_object_list_newObject_import");
+
+
 // const ABImportExternal = require("./ab_work_object_list_newObject_external");
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const ClassUI = AB.ClassUI;
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
    };
 
-   class UI_Work_Object_List_NewObject extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject extends ClassUI {
       //.extend(idBase, function(App) {
 
       constructor() {
@@ -7794,9 +7811,9 @@ __webpack_require__.r(__webpack_exports__);
          // var callback = null;
 
          this.BlankTab = (0,_ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+         this.CsvTab = (0,_ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.ImportTab = (0,_ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
          /*
-         this.CsvTab = new ABCsvObject(AB);
-         this.ImportTab = new ABImportObject(AB);
          this.ExternalTab = new ABImportExternal(AB);
          */
       }
@@ -7809,13 +7826,40 @@ __webpack_require__.r(__webpack_exports__);
             // width: 400,
             position: "center",
             modal: true,
-            head: L("Add new object"),
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new object"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
             selectNewObject: true,
             body: {
                view: "tabview",
                id: this.ids.tab,
                cells: [
-                  this.BlankTab.ui() /*, this.CsvTab.ui(), this.ImportTab.ui(), this.ExternalTab.ui() */,
+                  this.BlankTab.ui() /*, this.ImportTab.ui(), this.ExternalTab.ui() */,
+                  this.CsvTab.ui(),
+                  this.ImportTab.ui(),
                ],
                tabbar: {
                   on: {
@@ -7851,7 +7895,7 @@ __webpack_require__.r(__webpack_exports__);
          this.$component = $$(this.ids.component);
 
          var allInits = [];
-         ["BlankTab" /*, "CsvTab", "ImportTab", "ExternalTab"*/].forEach(
+         ["BlankTab", "CsvTab", "ImportTab" /*, "ExternalTab"*/].forEach(
             (k) => {
                allInits.push(this[k].init(AB));
                this[k].on("cancel", () => {
@@ -8245,6 +8289,828 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
    return new UI_Work_Object_List_NewObject_Blank();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_object_list_newObject_csv.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_object_list_newObject_csv.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/CSVImporter.js */ "./src/utils/CSVImporter.js");
+/* harmony import */ var _utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0__);
+/*
+ * ui_work_object_list_newObject_csv
+ *
+ * Display the form for import CSV file to a object.
+ *
+ */
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+   let uiSettings = AB.Config.uiSettings();
+
+   class UI_Work_Object_List_NewObject_Csv extends AB.ClassUI {
+      constructor() {
+         var base = "ui_work_object_list_newObject_csv";
+         super({
+            component: base,
+
+            form: `${base}_csvForm`,
+            uploadFileList: `${base}_uploadFileList`,
+            separatedBy: `${base}_separatedBy`,
+            headerOnFirstLine: `${base}_headerOnFirstLine`,
+            columnList: `${base}_columnList`,
+            importButton: `${base}_importButton`,
+         });
+
+         this._csvImporter = new (_utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0___default())(AB);
+      }
+
+      ui() {
+         let ids = this.ids;
+
+         // Our webix UI definition:
+         return {
+            id: ids.component,
+            header: L("Import CSV"),
+            body: {
+               view: "form",
+               id: ids.form,
+               width: 400,
+               rules: {},
+               elements: [
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: L("Object name"),
+                     labelWidth: uiSettings.labelWidthMedium,
+                  },
+                  {
+                     view: "uploader",
+                     name: "csvFile",
+                     value: L("Choose a CSV file"),
+                     accept: "text/csv",
+                     multiple: false,
+                     autosend: false,
+                     link: ids.uploadFileList,
+                     on: {
+                        onBeforeFileAdd: (fileInfo) => {
+                           return this.loadCsvFile(fileInfo);
+                        },
+                     },
+                  },
+                  {
+                     id: ids.uploadFileList,
+                     name: "uploadedFile",
+                     view: "list",
+                     type: "uploader",
+                     autoheight: true,
+                     borderless: true,
+                     onClick: {
+                        webix_remove_upload: (e, id, trg) => {
+                           this.removeCsvFile(id);
+                        },
+                     },
+                  },
+                  {
+                     id: ids.separatedBy,
+                     view: "richselect",
+                     name: "separatedBy",
+                     label: L("Separated by"),
+                     labelWidth: uiSettings.labelWidthXLarge,
+                     options: this._csvImporter.getSeparateItems(),
+                     value: ",",
+                     on: {
+                        onChange: () => {
+                           this.populateColumnList();
+                        },
+                     },
+                  },
+                  {
+                     id: ids.headerOnFirstLine,
+                     view: "checkbox",
+                     name: "headerOnFirstLine",
+                     labelRight: L("Header on first line"),
+                     labelWidth: 0,
+                     disabled: true,
+                     value: true,
+                     on: {
+                        onChange: (newVal, oldVal) => {
+                           this.populateColumnList();
+                        },
+                     },
+                  },
+                  {
+                     type: "space",
+                     rows: [
+                        {
+                           view: "scrollview",
+                           height: 260,
+                           minHeight: 260,
+                           maxHeight: 260,
+                           body: {
+                              id: ids.columnList,
+                              disabled: true,
+                              rows: [],
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           name: "cancel",
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.cancel();
+                           },
+                        },
+                        {
+                           view: "button",
+                           name: "import",
+                           id: ids.importButton,
+                           value: L("Import"),
+                           css: "webix_primary",
+                           disabled: true,
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              this.import();
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.allFields = this.AB.Class.ABFieldManager.allFields();
+
+         this._dataRows = [];
+
+         this.$form = $$(this.ids.form);
+         this.$uploadFileList = $$(this.ids.uploadFileList);
+         this.$separatedBy = $$(this.ids.separatedBy);
+         this.$headerOnFirstLine = $$(this.ids.headerOnFirstLine);
+         this.$columnList = $$(this.ids.columnList);
+         this.$importButton = $$(this.ids.importButton);
+
+         // "save.error" is triggered by the ui_work_object_list_newObject
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_object_list_newObject
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      async loadCsvFile(fileInfo) {
+         if (!this._csvImporter.validateFile(fileInfo)) {
+            webix.alert({
+               title: L("This file extension is not allowed"),
+               text: L("Please only upload CSV files"),
+               ok: L("OK"),
+            });
+
+            return false;
+         }
+
+         // show loading cursor
+         if (this.$form.showProgress) this.$form.showProgress({ type: "icon" });
+
+         // read CSV file
+         let separatedBy = this.$separatedBy.getValue();
+         this._dataRows = await this._csvImporter.getDataRows(
+            fileInfo,
+            separatedBy
+         );
+
+         this.$headerOnFirstLine.enable();
+         this.$columnList.enable();
+         this.$importButton.enable();
+
+         this.populateColumnList();
+
+         if (this.$form.hideProgress) this.$form.hideProgress();
+
+         return true;
+      }
+
+      removeCsvFile(fileId) {
+         this.$uploadFileList.remove(fileId);
+         this.formClear();
+         return true;
+      }
+
+      populateColumnList() {
+         webix.ui([], this.$columnList);
+
+         var firstLine = this._dataRows[0];
+         if (firstLine == null) return;
+
+         var columnList = [];
+
+         if (this.$headerOnFirstLine.getValue()) {
+            columnList = firstLine.map((colName, index) => {
+               return {
+                  include: true,
+                  columnName: colName,
+                  dataType: this._csvImporter.getGuessDataType(
+                     this._dataRows,
+                     index
+                  ),
+               };
+            });
+         } else {
+            for (var i = 0; i < firstLine.length; i++) {
+               columnList.push({
+                  include: true,
+                  columnName: "Field " + (i + 1),
+                  dataType: this._csvImporter.getGuessDataType(
+                     this._dataRows,
+                     i
+                  ),
+               });
+            }
+         }
+
+         // Add dynamic columns UI
+         let uiColumns = [];
+         columnList.forEach((col) => {
+            uiColumns.push({
+               height: 40,
+               cols: [
+                  {
+                     view: "checkbox",
+                     value: col.include,
+                     width: 30,
+                  },
+                  {
+                     view: "text",
+                     value: col.columnName,
+                     width: uiSettings.labelWidthXLarge,
+                  },
+                  {
+                     view: "select",
+                     value: col.dataType,
+                     options: [
+                        {
+                           id: "string",
+                           value: this.allFields
+                              .filter((f) => f.key == "string")[0]
+                              .defaults().menuName,
+                        },
+                        {
+                           id: "LongText",
+                           value: this.allFields
+                              .filter((f) => f.key == "LongText")[0]
+                              .defaults().menuName,
+                        },
+                        {
+                           id: "number",
+                           value: this.allFields
+                              .filter((f) => f.key == "number")[0]
+                              .defaults().menuName,
+                        },
+                        {
+                           id: "date",
+                           value: this.allFields
+                              .filter((f) => f.key == "date")[0]
+                              .defaults().menuName,
+                        },
+                        {
+                           id: "boolean",
+                           value: this.allFields
+                              .filter((f) => f.key == "boolean")[0]
+                              .defaults().menuName,
+                        },
+                     ],
+                     width: 120,
+                  },
+               ],
+            });
+         });
+
+         webix.ui(uiColumns, $$(this.$columnList));
+      }
+
+      import() {
+         this.$importButton.disable();
+
+         if (!this.$form.validate()) {
+            this.$importButton.enable();
+            return false;
+         }
+
+         // Validate required column names
+         let columnViews = $$(this.$columnList).getChildViews();
+         var emptyColNames = columnViews.filter((cView) => {
+            return (
+               cView.queryView({ view: "checkbox" }).getValue() &&
+               cView.queryView({ view: "text" }).getValue().trim().length == 0
+            );
+         });
+         if (emptyColNames.length > 0) {
+            webix.alert({
+               title: L("Column name is required"),
+               text: L("Please enter column name"),
+               ok: L("OK"),
+            });
+
+            this.$importButton.enable();
+            return false;
+         }
+
+         // Validate reserve column names
+         var reservedColNames = columnViews.filter((cView) => {
+            return (
+               cView.queryView({ view: "checkbox" }).getValue() &&
+               this.allFields[0].reservedNames.indexOf(
+                  cView
+                     .queryView({ view: "text" })
+                     .getValue()
+                     .trim()
+                     .toLowerCase()
+               ) > -1
+            );
+         });
+         if (reservedColNames.length > 0) {
+            webix.alert({
+               title: L("Column name is invalid"),
+               text: L(
+                  "Please enter column name that does not match [{0}]",
+                  this.allFields[0].reservedNames.join(", ")
+               ),
+               ok: L("OK"),
+            });
+
+            this.$importButton.enable();
+            return false;
+         }
+
+         // create new object
+         let newObjAttr = {
+            primaryColumnName: "uuid", // set uuid to be primary column
+            name: this.$form.getValues()["name"],
+         };
+
+         // now send data back to be added:
+         this.emit("save", newObjAttr);
+      }
+
+      onSuccess(newObj) {
+         let subTasks = Promise.resolve();
+
+         // add new columns to object
+         let columnViews = $$(this.$columnList).getChildViews();
+         columnViews.forEach((cView, index) => {
+            let include = cView.queryView({ view: "checkbox" }).getValue();
+            if (!include) return;
+
+            let columnName = cView.queryView({ view: "text" }).getValue();
+            let dataType = cView.queryView({ view: "select" }).getValue();
+
+            let newField = {
+               // id: AB.uuid(),
+               columnName: columnName,
+               label: columnName,
+               key: dataType,
+               settings: {
+                  showIcon: 1,
+                  weight: index,
+               },
+            };
+
+            switch (dataType) {
+               case "string":
+               case "LongText":
+                  newField.settings.supportMultilingual = 0;
+                  break;
+            }
+
+            let field = newObj.fieldNew(newField);
+            subTasks = subTasks.then(() => field.save());
+            // .then(() => field.migrateCreate());
+         });
+
+         // add rows to Server
+         var objModel = newObj.model();
+
+         // Add each records sequentially
+         this._dataRows.forEach((data, index) => {
+            subTasks = subTasks.then(() => {
+               if (this.$headerOnFirstLine.getValue() && index == 0)
+                  return Promise.resolve();
+
+               var rowData = {};
+               var colValues = data;
+
+               newObj.fields().forEach((col) => {
+                  if (colValues[col.settings.weight] != null)
+                     rowData[col.columnName] = colValues[col.settings.weight];
+               });
+
+               // Add row data
+               return objModel.create(rowData);
+            });
+         });
+
+         // if there was no error, clear the form for the next
+         // entry:
+         return subTasks
+            .then(() => {
+               this.formClear();
+               this.$importButton.enable();
+
+               return Promise.resolve();
+            })
+            .catch((err) => {
+               AB.notify.developer(err, {
+                  message: "Error import data rows from CSV",
+               });
+            });
+      }
+
+      onError(err) {
+         // if this was our Validation() object:
+         if (err) {
+            if (err.updateForm) err.updateForm(this.$form);
+
+            // get notified if there was an error saving.
+            this.$importButton.enable();
+         }
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         this._dataRows = [];
+
+         this.$form.clearValidation();
+         this.$form.clear();
+         this.$separatedBy.setValue(",");
+
+         webix.ui([], $$(this.$columnList));
+         this.$uploadFileList.clearAll();
+
+         this.$headerOnFirstLine.disable();
+         this.$columnList.disable();
+         this.$importButton.disable();
+      }
+   }
+   return new UI_Work_Object_List_NewObject_Csv();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_object_list_newObject_import.js":
+/*!************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_object_list_newObject_import.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ui_work_object_list_newObject_import
+ *
+ * Display the form for importing an existing object into the application.
+ *
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Object_List_NewObject_Import extends AB.ClassUI {
+      constructor() {
+         var base = "ui_work_object_list_newObject_import";
+         super({
+            component: base,
+
+            form: `${base}_import`,
+            filter: `${base}_filter`,
+            objectList: `${base}_objectList`,
+            columnList: `${base}_columnList`,
+            buttonSave: `${base}_save`,
+            buttonCancel: `${base}_cancel`,
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Existing"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               elements: [
+                  // Filter
+                  {
+                     cols: [
+                        {
+                           view: "icon",
+                           icon: "fa fa-filter",
+                           align: "left",
+                        },
+                        {
+                           view: "text",
+                           id: this.ids.filter,
+                           on: {
+                              onTimedKeyPress: () => this.filter(),
+                           },
+                        },
+                     ],
+                  },
+
+                  // Model list
+                  {
+                     view: "list",
+                     id: this.ids.objectList,
+                     select: true,
+                     height: 200,
+                     minHeight: 250,
+                     maxHeight: 250,
+                     data: [],
+                     template: "<div>#label#</div>",
+                     on: {
+                        onSelectChange: () => this.objectSelect(),
+                     },
+                  },
+
+                  // Columns list
+                  {
+                     view: "label",
+                     label: `<b>${L("Columns")}</b>`,
+                     height: 20,
+                  },
+                  {
+                     view: "list",
+                     id: this.ids.columnList,
+                     datatype: "json",
+                     multiselect: false,
+                     select: false,
+                     height: 200,
+                     minHeight: 200,
+                     maxHeight: 200,
+                     type: {
+                        height: 40,
+                        isvisible: {
+                           view: "checkbox",
+                           width: 30,
+                        },
+                     },
+                     template: (obj, common) => {
+                        // return `
+                        //     <span style="float: left;">${common.isvisible(obj, common)}</span>
+                        //     <span style="float: left;">${obj.label}</span>
+                        // `;
+                        return `
+                               <span style="float: left;"><i class="fa fa-${obj.icon}"></i></span>
+                               <span style="float: left;">&nbsp;${obj.label}</span>
+                           `;
+                     },
+                  },
+
+                  // Import & Cancel buttons
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => this.cancel(),
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Import"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => this.save(),
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+         this.$filter = $$(this.ids.filter);
+         this.$objectList = $$(this.ids.objectList);
+         this.$columnList = $$(this.ids.columnList);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$buttonCancel = $$(this.ids.buttonCancel);
+
+         // "save.error" is triggered by the ui_work_object_list_newObject
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_object_list_newObject
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      onShow(app) {
+         this.currentApp = app;
+         this.formClear();
+
+         // now all objects are *global* but an application might only
+         // reference a sub set of them.  Here we just need to show
+         // the objects our current application isn't referencing:
+
+         let availableObjs = this.currentApp.objectsExcluded(
+            (o) => !o.isSystemObject || AB.Account.isSystemDesigner()
+         );
+         this.$objectList.parse(availableObjs, "json");
+      }
+
+      filter() {
+         let filterText = this.$filter.getValue();
+         this.$objectList.filter("#label#", filterText);
+      }
+
+      objectSelect() {
+         this.$columnList.clearAll();
+
+         let selectedObj = this.$objectList.getSelectedItem(false);
+         if (selectedObj) {
+            let colNames = [];
+
+            // Now that ABObjects are ABDefinitions, we no longer
+            // have to lookup the data from the server:
+
+            selectedObj.fields().forEach((f) => {
+               // Skip these columns
+               // TODO : skip connect field
+               // if (col.model) continue;
+               // if (col.collection) continue;
+
+               //    let fieldClass = ABFieldManager.allFields().filter(
+               //       (field) => field.defaults().key == f.key
+               //    )[0];
+               //    if (fieldClass == null) return;
+
+               //    // If connect field does not link to objects in app, then skip
+               //    if (
+               //       f.key == "connectObject" &&
+               //       !currentApp.objectsIncluded(
+               //          (obj) => obj.id == f.settings.linkObject
+               //       )[0]
+               //    ) {
+               //       return;
+               //    }
+
+               colNames.push({
+                  id: f.id,
+                  label: f.label,
+                  isvisible: true,
+                  icon: f.icon,
+                  // disabled: !supported
+               });
+            });
+
+            if (colNames.length == 0) {
+               colNames.push({
+                  id: "none",
+                  label: L("No Fields Defined"),
+                  isvisible: true,
+               });
+            }
+
+            this.$columnList.parse(colNames);
+         }
+      }
+
+      save() {
+         var selectedObj = this.$objectList.getSelectedItem();
+         if (!selectedObj) return false;
+
+         this.$buttonSave.disable();
+
+         this.emit("save", selectedObj);
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         // Filter section
+         this.$form.clearValidation();
+         this.$form.clear();
+         // Lists
+         this.$objectList.clearAll();
+         this.$columnList.clearAll();
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_object_list_newObject object had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of objects:
+       *        - A javascript Error() object
+       *        - An ABValidation object returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            var message = L("the entered data is invalid");
+            // if this was our Validation() object:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            var values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating Object: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_object_list_newObject successfully saved the values.
+       */
+      onSuccess() {
+         this.$buttonSave.enable();
+      }
+   }
+
+   return new UI_Work_Object_List_NewObject_Import();
 }
 
 
@@ -13904,6 +14770,1386 @@ __webpack_require__.r(__webpack_exports__);
    }
    return new ABObjectWorkspaceViewCollection();
 }
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query.js":
+/*!*************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_work_query_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_query_list */ "./src/rootPages/Designer/ui_work_query_list.js");
+/* harmony import */ var _ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_workspace */ "./src/rootPages/Designer/ui_work_query_workspace.js");
+/*
+ * ui_work_query
+ *
+ * Display the Query Tab UI:
+ *
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   class UI_Work_Query extends AB.ClassUI {
+      constructor() {
+         super("ab_work_query");
+
+         this.CurrentApplicationID = null;
+         // {string} uuid
+         // The current ABApplication.id we are working with.
+
+         this.QueryList = (0,_ui_work_query_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+         this.QueryWorkspace = (0,_ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            type: "space",
+            cols: [
+               this.QueryList.ui(),
+               { view: "resizer" },
+               this.QueryWorkspace.ui(),
+            ],
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         // Our init() function for setting up our UI
+         this.QueryList.on("selected", this.select);
+
+         return Promise.all([
+            this.QueryWorkspace.init(AB),
+            this.QueryList.init(AB),
+         ]);
+      }
+
+      /**
+       * @method CurrentApplication
+       * return the current ABApplication being worked on.
+       * @return {ABApplication} application
+       */
+      get CurrentApplication() {
+         return this.AB.applicationByID(this.CurrentApplicationID);
+      }
+
+      /**
+       * @function applicationLoad
+       *
+       * Initialize the Query Workspace with the given ABApplication.
+       *
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         this.CurrentApplicationID = application?.id;
+
+         this.QueryWorkspace.clearWorkspace();
+         this.QueryList.applicationLoad(application);
+         this.QueryWorkspace.applicationLoad(application);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         $$(this.ids.component).show();
+
+         var app = this.CurrentApplication;
+         if (app) {
+            this.QueryList?.applicationLoad(app);
+         }
+         this.QueryList?.ready();
+      }
+
+      select(q) {
+         this.QueryWorkspace.resetTabs();
+         this.QueryWorkspace.populateQueryWorkspace(q);
+      }
+   }
+
+   return UI_Work_Query;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list.js":
+/*!******************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
+/* harmony import */ var _ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list_newQuery */ "./src/rootPages/Designer/ui_work_query_list_newQuery.js");
+/*
+ * ui_work_query_list
+ *
+ * Manage the ABObjectQuery List
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UI_COMMON_LIST = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+
+   class UI_Work_Query_List extends AB.ClassUI {
+      constructor() {
+         super("ui_work_query_list");
+
+         this.CurrentApplicationID = null;
+         // {string} uuid
+         // The current ABApplication.id we are working with.
+
+         // {ui_common_list} instance to display a list of our objects.
+         this.ListComponent = new UI_COMMON_LIST({
+            idBase: this.ids.component,
+            labels: {
+               addNew: "Add new query",
+               confirmDeleteTitle: "Delete Query",
+               title: "Queries",
+               searchPlaceholder: "Query name",
+            },
+            // we can overrid the default template like this:
+            // templateListItem:
+            //    "<div class='ab-object-list-item'>#label##warnings#{common.iconGear}</div>",
+            menu: {
+               copy: false,
+               exclude: true,
+            },
+         });
+         this.AddForm = (0,_ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+      }
+
+      // Our webix UI definition:
+      ui() {
+         return this.ListComponent.ui();
+      }
+
+      // Our init() function for setting up our UI
+      async init(AB, options) {
+         this.AB = AB;
+
+         this.on("addNew", (selectNew) => {
+            // if we receive a signal to add a new Query from another source
+            this.clickNewQuery(selectNew);
+         });
+
+         //
+         // List of Processes
+         //
+         var allInits = [];
+         allInits.push(this.ListComponent.init(AB));
+
+         this.ListComponent.on("selected", (item) => {
+            this.emit("selected", item);
+         });
+
+         this.ListComponent.on("addNew", (selectNew) => {
+            this.clickNewQuery(selectNew);
+         });
+
+         this.ListComponent.on("deleted", (item) => {
+            this.emit("deleted", item);
+         });
+
+         this.ListComponent.on("exclude", (item) => {
+            this.exclude(item);
+         });
+
+         this.ListComponent.on("copied", (data) => {
+            this.copy(data);
+         });
+
+         //
+         // Add Form
+         //
+         allInits.push(this.AddForm.init(AB));
+
+         this.AddForm.on("cancel", () => {
+            this.AddForm.hide();
+         });
+
+         this.AddForm.on("save", (q /*, select */) => {
+            // the AddForm already takes care of updating the
+            // CurrentApplication.
+
+            // we just need to update our list of objects
+            this.applicationLoad(this.CurrentApplication);
+
+            // if (select) {
+            this.ListComponent.select(q.id);
+            // }
+         });
+
+         await Promise.all(allInits);
+      }
+
+      /**
+       * @function applicationLoad
+       * Initialize the List from the provided ABApplication
+       * If no ABApplication is provided, then show an empty form. (create operation)
+       * @param {ABApplication} application
+       *        [optional] The current ABApplication we are working with.
+       */
+      applicationLoad(application) {
+         this.CurrentApplicationID = application.id;
+
+         this.ListComponent.dataLoad(application?.queriesIncluded());
+
+         this.AddForm.applicationLoad(application);
+      }
+
+      /**
+       * @method CurrentApplication
+       * return the current ABApplication being worked on.
+       * @return {ABApplication} application
+       */
+      get CurrentApplication() {
+         return this.AB.applicationByID(this.CurrentApplicationID);
+      }
+
+      /*
+       * @function exclude
+       * the list component notified us of an exclude action and which
+       * item was chosen.
+       *
+       * perform the removal and update the UI.
+       */
+      async exclude(item) {
+         this.ListComponent.busy();
+         var app = this.CurrentApplication;
+         await app.queryRemove(item);
+         this.ListComponent.dataLoad(app.queriesIncluded());
+
+         // this will clear the  workspace
+         this.emit("selected", null);
+      }
+
+      ready() {
+         this.ListComponent.ready();
+      }
+
+      /**
+       * @function clickNewQuery
+       *
+       * Manages initiating the transition to the new Process Popup window
+       */
+      clickNewQuery(selectNew) {
+         // show the new popup
+         this.AddForm.show();
+      }
+   }
+
+   return new UI_Work_Query_List();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list_newQuery.js":
+/*!***************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list_newQuery.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_blank */ "./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js");
+/* harmony import */ var _ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_import */ "./src/rootPages/Designer/ui_work_query_list_newQuery_import.js");
+/*
+ * ui_work_query_list_newQuery
+ *
+ * Display the form for creating a new Query.  This Popup will manage several
+ * different sub components for gathering Query data for saving.
+ *
+ * The sub components will gather the data for the query and do basic form
+ * validations on their interface.
+ *
+ * when ready, the sub component will emit "save" with the values gathered by
+ * the form.  This component will manage the actual final query validation,
+ * and saving to this application.
+ *
+ * On success, "save.success" will be emitted on the sub-component, and this
+ * component.
+ *
+ * On Error, "save.error" will be emitted on the sub-component.
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Query_List_NewQuery extends AB.ClassUI {
+      constructor() {
+         const base = "ui_work_query_list_newQuery";
+         super({
+            component: base,
+            tab: `${base}_tab`,
+         });
+
+         this.CurrentApplicationID = null;
+         // {string} uuid
+         // The current ABApplication.id we are working with.
+
+         this.selectNew = true;
+         // {bool} do we select a new query after it is created.
+
+         // var callback = null;
+
+         this.BlankTab = (0,_ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+         this.ImportTab = (0,_ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            view: "window",
+            id: this.ids.component,
+            position: "center",
+            modal: true,
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new query"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            selectNewQuery: true,
+            body: {
+               view: "tabview",
+               id: this.ids.tab,
+               cells: [this.BlankTab.ui(), this.ImportTab.ui()],
+               tabbar: {
+                  on: {
+                     onAfterTabClick: (id) => {
+                        this.switchTab(id);
+                     },
+                     onAfterRender() {
+                        this.$view
+                           .querySelectorAll(".webix_item_tab")
+                           .forEach((t) => {
+                              var tid = t.getAttribute("button_id");
+                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                           });
+                     },
+                  },
+               },
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         webix.ui(this.ui());
+         webix.extend($$(this.ids.component), webix.ProgressBar);
+
+         this.$component = $$(this.ids.component);
+
+         let allInits = [];
+         ["BlankTab", "ImportTab"].forEach((k) => {
+            allInits.push(this[k].init(AB));
+            this[k].on("cancel", () => {
+               this.emit("cancel");
+            });
+            this[k].on("save", (values) => {
+               if (values.id) {
+                  return this.import(values, k);
+               }
+               this.save(values, k);
+            });
+         });
+
+         return Promise.all(allInits);
+      }
+
+      /**
+       * @method applicationLoad()
+       * prepare ourself with the current application
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         this.CurrentApplicationID = application?.id;
+      }
+
+      /**
+       * @method CurrentApplication
+       * return the current ABApplication being worked on.
+       * @return {ABApplication} application
+       */
+      get CurrentApplication() {
+         return this.AB.applicationByID(this.CurrentApplicationID);
+      }
+
+      /**
+       * @method done()
+       * Finished saving, so hide the popup and clean up.
+       * @param {object} obj
+       */
+      done(obj) {
+         this.ready();
+         this.hide(); // hide our popup
+         this.emit("save", obj, this.selectNew);
+         // _logic.callbacks.onDone(null, obj, selectNew, callback); // tell parent component we're done
+      }
+
+      /**
+       * @method import()
+       * take an existing query and add it to our ABApplication.
+       * @param {ABObjectQuery} query
+       * @param {string} tabKey
+       *        which of our tabs triggered this method?
+       */
+      async import(query, tabKey) {
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            await this.CurrentApplication.queryInsert(query);
+            this[tabKey].emit("save.successful", query);
+            this.done(query);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this object from the current object list of
+            // the CurrentApplication.
+            // NOTE: It has error "queryRemove" is not a function
+            // await this.CurrentApplication.queryRemove(newQuery);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      /**
+       * @method save
+       * take the data gathered by our child creation tabs, and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @param {string}  tabKey
+       *        the "key" of the tab initiating the save.
+       * @return {Promise}
+       */
+      async save(values, tabKey) {
+         // must have an application set.
+         if (!this.CurrentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            this[tabKey].emit("save.error", true);
+            return false;
+         }
+
+         // create a new (unsaved) instance of our object:
+         let newQuery = this.AB.queryNew(values);
+
+         // have newObject validate it's values.
+         let validator = newQuery.isValid();
+         if (validator.fail()) {
+            this[tabKey].emit("save.error", validator);
+            // cb(validator); // tell current Tab component the errors
+            return false; // stop here.
+         }
+
+         if (!newQuery.createdInAppID) {
+            newQuery.createdInAppID = this.CurrentApplicationID;
+         }
+
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            let query = await newQuery.save();
+            await this.CurrentApplication.queryInsert(query);
+            this[tabKey].emit("save.successful", query);
+            this.done(query);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this object from the current object list of
+            // the CurrentApplication.
+            // NOTE: It has error "queryRemove" is not a function
+            // await this.CurrentApplication.queryRemove(newQuery);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      async import(query, tabKey) {
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            await this.CurrentApplication.queryInsert(query);
+            this[tabKey].emit("save.successful", query);
+            this.done(query);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this object from the current object list of
+            // the CurrentApplication.
+            // NOTE: It has error "queryRemove" is not a function
+            // await this.CurrentApplication.queryRemove(newQuery);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show(shouldSelectNew) {
+         if (shouldSelectNew != null) {
+            this.selectNew = shouldSelectNew;
+         }
+         if (this.$component) this.$component.show();
+
+         const id = $$(this.ids.tab).getValue();
+         this.switchTab(id);
+      }
+
+      /**
+       * @function hide()
+       *
+       * remove the busy indicator from the form.
+       */
+      hide() {
+         if (this.$component) this.$component.hide();
+      }
+
+      /**
+       * Show the busy indicator
+       */
+      busy() {
+         if (this.$component) {
+            this.$component.showProgress();
+         }
+      }
+
+      /**
+       * Hide the busy indicator
+       */
+      ready() {
+         if (this.$component) {
+            this.$component.hideProgress();
+         }
+      }
+
+      switchTab(tabId) {
+         if (tabId == this.BlankTab?.ui()?.body?.id || !tabId) {
+            this.BlankTab?.onShow?.(this.CurrentApplication);
+         } else if (tabId == this.ImportTab?.ui()?.body?.id) {
+            this.ImportTab?.onShow?.(this.CurrentApplication);
+         }
+      }
+   }
+
+   return new UI_Work_Query_List_NewQuery();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ui_work_query_list_newQuery_blank
+ *
+ * Display the form for creating a new ABQuery.
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Query_List_NewQuery_Blank extends AB.ClassUI {
+      constructor() {
+         const base = "ui_work_query_list_newQuery_blank";
+         super({
+            component: base,
+
+            form: `${base}_blank`,
+            buttonSave: `${base}_save`,
+            buttonCancel: `${base}_cancel`,
+            object: `${base}_object`,
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Create"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               rules: {
+                  // TODO:
+                  // name: inputValidator.rules.validateQueryName
+               },
+               elements: [
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: L("Query name"),
+                     labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_query_list_newQuery_blank_name"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     id: this.ids.object,
+                     view: "richselect",
+                     label: L("Object"),
+                     name: "object",
+                     required: true,
+                     placeholder: L("Select an object"),
+                     labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_query_list_newQuery_blank_object"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.cancel();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Add Query"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              return this.save();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$objectList = $$(this.ids.object);
+
+         // "save.error" is triggered by the ui_work_query_list_newQuery
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_query_list_newQuery
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         if (this.$form) {
+            this.$form.clearValidation();
+            this.$form.clear();
+         }
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_query_list_newQuery query had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of queries:
+       *        - A javascript Error() query
+       *        - An ABValidation query returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            console.error(err);
+            var message = L("the entered data is invalid");
+            // if this was our Validation() query:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            var values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating Query: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_query_list_newQuery successfully saved the values.
+       */
+      onSuccess() {
+         this.formClear();
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @function save
+       *
+       * verify the current info is ok, package it, and return it to be
+       * added to the application.createModel() method.
+       */
+      save() {
+         this.$buttonSave.disable();
+
+         var Form = this.$form;
+
+         Form.clearValidation();
+
+         // if it doesn't pass the basic form validation, return:
+         if (!Form.validate()) {
+            this.$buttonSave.enable();
+            return false;
+         }
+
+         let formVals = Form.getValues();
+         let values = {
+            name: formVals.name,
+            label: formVals.name,
+            joins: {
+               alias: "BASE_OBJECT",
+               objectID: formVals.object,
+               links: [],
+            },
+         };
+
+         this.emit("save", values);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         if ($$(this.ids.component)) $$(this.ids.component).show();
+      }
+
+      onShow(currentApplication) {
+         // populate object list
+         if (this.$objectList && currentApplication) {
+            let objectOpts = currentApplication.objectsIncluded().map((obj) => {
+               return {
+                  id: obj.id,
+                  value: obj.label,
+               };
+            });
+
+            this.$objectList.define("options", objectOpts);
+            this.$objectList.refresh();
+
+            // Set width of item list
+            let $suggestView = this.$objectList.getPopup();
+            $suggestView.attachEvent("onShow", () => {
+               $suggestView.define("width", 300);
+               $suggestView.resize();
+            });
+         }
+
+         // clear form
+         if (this.$form) {
+            this.$form.setValues({
+               name: "",
+               object: "",
+            });
+         }
+      }
+   }
+
+   return new UI_Work_Query_List_NewQuery_Blank();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_list_newQuery_import.js":
+/*!**********************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_list_newQuery_import.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ui_work_query_list_newQuery_import
+ *
+ * Display the form for importing an existing query into the application.
+ *
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const L = function (...params) {
+      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   };
+
+   class UI_Work_Query_List_NewQuery_Import extends AB.ClassUI {
+      constructor() {
+         let base = "ui_work_query_list_newQuery_import";
+         super({
+            component: base,
+
+            form: `${base}_import`,
+            filter: `${base}_filter`,
+            queryList: `${base}_queryList`,
+            buttonSave: `${base}_save`,
+            buttonCancel: `${base}_cancel`,
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Existing"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               elements: [
+                  // Filter
+                  {
+                     cols: [
+                        {
+                           view: "icon",
+                           icon: "fa fa-filter",
+                           align: "left",
+                        },
+                        {
+                           view: "text",
+                           id: this.ids.filter,
+                           on: {
+                              onTimedKeyPress: () => this.filter(),
+                           },
+                        },
+                     ],
+                  },
+
+                  // Model list
+                  {
+                     view: "list",
+                     id: this.ids.queryList,
+                     select: true,
+                     height: 200,
+                     minHeight: 250,
+                     maxHeight: 250,
+                     data: [],
+                     template: "<div>#label#</div>",
+                  },
+
+                  // Import & Cancel buttons
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => this.cancel(),
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Import"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => this.save(),
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+         this.$filter = $$(this.ids.filter);
+         this.$queryList = $$(this.ids.queryList);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$buttonCancel = $$(this.ids.buttonCancel);
+
+         // "save.error" is triggered by the ui_work_query_list_newQuery
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_query_list_newQuery
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      onShow(app) {
+         this.formClear();
+
+         // now all objects are *global* but an application might only
+         // reference a sub set of them.  Here we just need to show
+         // the objects our current application isn't referencing:
+
+         const availableQueries = app.queriesExcluded();
+         this.$queryList.parse(availableQueries, "json");
+      }
+
+      filter() {
+         let filterText = this.$filter.getValue();
+         this.$queryList.filter("#label#", filterText);
+      }
+
+      save() {
+         let selectedQuery = this.$queryList.getSelectedItem();
+         if (!selectedQuery) return false;
+
+         this.$buttonSave.disable();
+
+         this.emit("save", selectedQuery);
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         // Filter section
+         if (this.$form) {
+            this.$form.clearValidation();
+            this.$form.clear();
+         }
+         // Lists
+         if (this.$queryList) {
+            this.$queryList.clearAll();
+         }
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_object_list_newObject object had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of objects:
+       *        - A javascript Error() object
+       *        - An ABValidation object returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            let message = L("the entered data is invalid");
+            // if this was our Validation() object:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            let values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating Query: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_object_list_newObject successfully saved the values.
+       */
+      onSuccess() {
+         this.$buttonSave.enable();
+      }
+   }
+
+   return new UI_Work_Query_List_NewQuery_Import();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_workspace.js":
+/*!***********************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_workspace.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
+   class UI_Work_Query_Workspace extends AB.ClassUI {
+      constructor(settings = init_settings || {}) {
+         super();
+
+         this.settings = settings;
+      }
+
+      ui() {
+         return {};
+      }
+
+      init() {
+         // TODO
+      }
+
+      applicationLoad() {
+         // TODO
+      }
+
+      clearWorkspace() {
+         // TODO
+      }
+
+      resetTabs() {
+         // TODO
+      }
+
+      populateQueryWorkspace() {
+         // TODO
+      }
+   }
+
+   return new UI_Work_Query_Workspace();
+}
+
+
+/***/ }),
+
+/***/ "./src/utils/CSVImporter.js":
+/*!**********************************!*\
+  !*** ./src/utils/CSVImporter.js ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = class CSVImporter {
+   constructor(AB, fileReader = FileReader) {
+      this._AB = AB;
+      this._FileReader = fileReader;
+   }
+
+   L(...params) {
+      return this._AB.Multilingual.labelPlugin("ABDesigner", ...params);
+   }
+
+   getSeparateItems() {
+      return [
+         { id: ",", value: this.L("Comma (,)") },
+         {
+            id: "\t",
+            value: this.L("Tab (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)"),
+         },
+         { id: ";", value: this.L("Semicolon (;)") },
+         { id: "s", value: this.L("Space ( )") },
+      ];
+   }
+
+   /**
+    * @method validateFile
+    * Validate file extension
+    *
+    * @param {*} fileInfo - https://docs.webix.com/api__ui.uploader_onbeforefileadd_event.html
+    *
+    * @return {boolean}
+    */
+   validateFile(fileInfo) {
+      if (!fileInfo || !fileInfo.file || !fileInfo.file.type) return false;
+
+      // validate file type
+      let extensionType = fileInfo.file.type.toLowerCase();
+      if (
+         extensionType == "text/csv" ||
+         extensionType == "application/vnd.ms-excel"
+      ) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+
+   /**
+    * @method getDataRows
+    * Pull data rows from the CSV file
+    *
+    * @param {Object} fileInfo - https://docs.webix.com/api__ui.uploader_onbeforefileadd_event.html
+    * @param {string} separatedBy
+    *
+    * @return {Promise} -[
+    * 						["Value 1.1", "Value 1.2", "Value 1.3"],
+    * 						["Value 2.1", "Value 2.2", "Value 2.3"],
+    * 					]
+    */
+   async getDataRows(fileInfo, separatedBy) {
+      if (!this.validateFile(fileInfo))
+         return Promise.reject(this.L(".fileInfo parameter is invalid"));
+
+      return new Promise((resolve, reject) => {
+         // read CSV file
+         let reader = new this._FileReader();
+         reader.onload = (e) => {
+            const result = this.convertToArray(reader.result, separatedBy);
+
+            resolve(result);
+         };
+         reader.readAsText(fileInfo.file);
+      });
+   }
+
+   /**
+    * @method convertToArray
+    * Pull data rows from the CSV file
+    *
+    * @param {string} text
+    * @param {string} separatedBy
+    *
+    * @return {Promise} -[
+    * 						["Value 1.1", "Value 1.2", "Value 1.3"],
+    * 						["Value 2.1", "Value 2.2", "Value 2.3"],
+    * 					]
+    */
+   convertToArray(text = "", separatedBy = ",") {
+      let result = [];
+
+      // split lines
+      let dataRows = text
+         .split(/\r\n|\n|\r/) // CRLF = \r\n; LF = \n; CR = \r;
+         .filter((row) => row && row.length > 0);
+
+      // split columns
+      (dataRows || []).forEach((row) => {
+         let dataCols = [];
+         if (separatedBy == ",") {
+            // NOTE: if the file contains ,, .match(), then can not recognize this empty string
+            row = row.replace(/,,/g, ", ,");
+
+            // https://stackoverflow.com/questions/11456850/split-a-string-by-commas-but-ignore-commas-within-double-quotes-using-javascript#answer-11457952
+            dataCols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+         } else {
+            dataCols = row.split(separatedBy);
+         }
+
+         result.push(dataCols.map((dCol) => this.reformat(dCol)));
+      });
+
+      return result;
+   }
+
+   /**
+    * @method getGuessDataType
+    *
+    * @param dataRows {Array} - [
+    * 								["Value 1.1", "Value 1.2", "Value 1.3"],
+    * 								["Value 2.1", "Value 2.2", "Value 2.3"],
+    * 							]
+    * @param colIndex {Number}
+    *
+    * @return {string}
+    */
+   getGuessDataType(dataRows, colIndex) {
+      var data,
+         repeatNum = 10;
+
+      // Loop to find a value
+      for (var i = 1; i <= repeatNum; i++) {
+         var line = dataRows[i];
+         if (!line) break;
+
+         data = line[colIndex];
+
+         if (data != null && data.length > 0) break;
+      }
+
+      if (data === null || data === undefined || data === "") {
+         return "string";
+      } else if (
+         data == 0 ||
+         data == 1 ||
+         data == true ||
+         data == false ||
+         data == "checked" ||
+         data == "unchecked"
+      ) {
+         return "boolean";
+      } else if (!isNaN(data)) {
+         return "number";
+      } else if (Date.parse(data)) {
+         return "date";
+      } else {
+         if (data.length > 100) return "LongText";
+         else return "string";
+      }
+   }
+
+   /**
+    * @method reformat
+    *
+    * @param {string} str
+    */
+   reformat(str) {
+      if (!str) return "";
+
+      return str.trim().replace(/"/g, "").replace(/'/g, "");
+   }
+};
 
 
 /***/ })

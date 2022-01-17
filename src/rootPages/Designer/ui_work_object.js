@@ -58,6 +58,15 @@ export default function (AB) {
       }
 
       /**
+       * @method CurrentApplication
+       * return the current ABApplication being worked on.
+       * @return {ABApplication} application
+       */
+      get CurrentApplication() {
+         return this.AB.applicationByID(this.CurrentApplicationID);
+      }
+
+      /**
        * @method applicationLoad
        * Initialize the Object Workspace with the given ABApplication.
        * @param {ABApplication} application

@@ -4,13 +4,24 @@
   "description": "(AppBuilder) A UI for designing AB resources.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --config test/.mocharc.js test/**/*.test.js test/**/**/*.test.js",
     "watch": "node_modules/.bin/webpack-cli --watch --progress"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/register": "^7.15.3",
+    "esm": "^3.2.25",
+    "jsdom": "^18.0.0",
+    "mocha": "^9.1.2",
+    "sinon": "^11.1.2",
     "webpack": "^5.51.2",
     "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "path": "^0.12.7"
   }
 }

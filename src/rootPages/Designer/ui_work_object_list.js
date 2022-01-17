@@ -105,22 +105,26 @@ export default function (AB) {
             AddForm.hide();
          });
 
-         AddForm.on("save", (obj, select) => {
+         AddForm.on("save", (obj /* , select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
             // we just need to update our list of objects
-            this.applicationLoad(this.CurrentApplicationID);
+            this.applicationLoad(this.CurrentApplication);
 
             // if (select) {
             this.ListComponent.select(obj.id);
             // }
          });
+      }
 
-         // this._handler_refreshApp = (def) => {
-         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
-         //    this.applicationLoad(this.CurrentApplication);
-         // };
+      /**
+       * @method CurrentApplication
+       * return the current ABApplication being worked on.
+       * @return {ABApplication} application
+       */
+      get CurrentApplication() {
+         return this.AB.applicationByID(this.CurrentApplicationID);
       }
 
       addNew() {
