@@ -5,24 +5,24 @@ import { EventEmitter } from "events";
 
 import AB from "../../_mock/AB.js";
 import UICommonList from "../../../src/rootPages/Designer/ui_common_list";
-import UIQueryList from "../../../src/rootPages/Designer/ui_work_query_list";
+import UIProcessList from "../../../src/rootPages/Designer/ui_work_process_list";
 
-const base = "ui_work_query_list";
+const base = "ui_work_process_list";
 
 function getTarget(ab = null) {
    if (!ab) ab = new AB();
-   const UI_Query_List = UIQueryList(ab);
-   const target = new UI_Query_List();
+   const UI_Process_List = UIProcessList(ab);
+   const target = new UI_Process_List();
    target.ListComponent = sinon.createStubInstance(UICommonList(ab));
 
    return target;
 }
 
-describe("ui_work_query_list", function () {
+describe("ui_work_process_list", function () {
    it(".constructor - should set valid properties", function () {
       const ab = new AB();
-      const UI_Query_List = UIQueryList(ab);
-      const target = new UI_Query_List();
+      const UI_Process_List = UIProcessList(ab);
+      const target = new UI_Process_List();
 
       assert.equal(base, target.ids.component);
       assert.equal(true, target.ListComponent != null);
@@ -59,10 +59,10 @@ describe("ui_work_query_list", function () {
       assert.equal("save", spyAddFormOn.getCalls()[1].args[0]);
    });
 
-   it(".applicationLoad - should listen events of application and load query data", function () {
+   it(".applicationLoad - should listen events of application and load process data", function () {
       const target = getTarget();
       const application = sinon.createStubInstance(EventEmitter);
-      application.queriesIncluded = () => ["Query1", "Query2"];
+      application.processes = () => ["Process1", "Process2"];
       const spyAddFormApplicationLoad = sinon.spy(
          target.AddForm,
          "applicationLoad"
@@ -74,9 +74,7 @@ describe("ui_work_query_list", function () {
       assert.equal("definition.deleted", application.on.getCalls()[1].args[0]);
       assert.equal(
          true,
-         target.ListComponent.dataLoad.calledOnceWith(
-            application.queriesIncluded()
-         )
+         target.ListComponent.dataLoad.calledOnceWith(application.processes())
       );
       assert.equal(true, spyAddFormApplicationLoad.calledOnceWith(application));
    });
@@ -89,11 +87,11 @@ describe("ui_work_query_list", function () {
       assert.equal(true, target.ListComponent.ready.calledOnce);
    });
 
-   it(".clickNewQuery - should call .show of .AddForm", function () {
+   it(".clickNewProcess - should call .show of .AddForm", function () {
       const target = getTarget();
       const spyAddFormShow = sinon.spy(target.AddForm, "show");
 
-      target.clickNewQuery();
+      target.clickNewProcess();
 
       assert.equal(true, spyAddFormShow.calledOnce);
    });

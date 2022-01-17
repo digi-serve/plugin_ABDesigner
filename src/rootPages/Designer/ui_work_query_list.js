@@ -74,10 +74,6 @@ export default function (AB) {
             this.exclude(item);
          });
 
-         this.ListComponent.on("copied", (data) => {
-            this.copy(data);
-         });
-
          //
          // Add Form
          //
@@ -155,6 +151,22 @@ export default function (AB) {
       clickNewQuery(selectNew) {
          // show the new popup
          this.AddForm.show();
+      }
+
+      /**
+       * @function exclude
+       * the list component notified us of an exclude action and which
+       * item was chosen.
+       *
+       * perform the removal and update the UI.
+       */
+      async exclude(item) {
+         this.ListComponent.busy();
+         await this.CurrentApplication.queryRemove(item);
+         this.ListComponent.dataLoad(this.CurrentApplication.queriesIncluded());
+
+         // this will clear the object workspace
+         this.emit("selected", null);
       }
    }
 
