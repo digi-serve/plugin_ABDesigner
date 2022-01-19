@@ -4,32 +4,22 @@
  * Manage the Frozen Columns popup.
  *
  */
-
-// const ABComponent = require("../AppBuilder/platform/ABComponent");
+import UI_Class from "./ui_class";
 
 export default function (AB) {
-   const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   // const uiConfig = AB.Config.uiSettings();
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupFrozenColumns extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupFrozenColumns extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupFrozenColumns";
-         super({
-            component: `${idBase}_popupFrozen`,
-            list: `${idBase}_popupFrozen_list`,
+         super("ui_work_object_workspace_popupFrozenColumns", {
+            list: "",
          });
 
          this._setting = "";
          // {string}
          // the ABField.columnName of the field that we want to freeze at.
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
-
-         var CurrentView = null;
       }
 
       ui() {
@@ -65,7 +55,7 @@ export default function (AB) {
                      value: L("Clear All"),
                      type: "form",
                      on: {
-                        onItemClick: (id, e, node) => {
+                        onItemClick: (/* id, e, node */) => {
                            return this.clickClearAll();
                         },
                      },
@@ -82,7 +72,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      init(AB) {
+      async init(AB) {
          this.AB = AB;
 
          webix.ui(this.ui());
@@ -90,15 +80,6 @@ export default function (AB) {
 
       changed() {
          this.emit("changed", this._setting);
-      }
-
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       // our internal business logic
@@ -119,7 +100,7 @@ export default function (AB) {
        * update the list to show which columns are frozen by showing an icon
        * next to the column name
        */
-      clickListItem(id, e, node) {
+      clickListItem(id /*, e, node */) {
          // update our Object with current frozen column id
          var List = $$(this.ids.list);
          var recordClicked = List.getItem(id);
@@ -233,9 +214,9 @@ export default function (AB) {
        * @param {ABObject} object
        *        the currently selected object.
        */
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       onShow() {
          // refresh list

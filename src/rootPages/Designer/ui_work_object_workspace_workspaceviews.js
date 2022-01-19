@@ -11,7 +11,7 @@
 // columns, etc...
 //
 //
-
+import UI_Class from "./ui_class";
 import ABWorkspaceDatatable from "./ui_work_object_workspace_view_grid";
 
 import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
@@ -19,9 +19,8 @@ import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
 import FViewKanbanProperties from "./properties/workspaceViews/ABViewKanban";
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
 
    const Datatable = ABWorkspaceDatatable(AB);
 
@@ -43,14 +42,12 @@ export default function (AB) {
       list: [],
    };
 
-   class ABObjectWorkspaceViewCollection {
+   class ABObjectWorkspaceViewCollection extends UIClass {
       constructor() {
+         super("ui_work_object_workspace_workspaceviews");
+
          this.AB = AB;
          // {ABFactory}
-
-         this.objectID = null;
-         // {string}
-         // The current ABObject.id we are providing workspace views for
 
          this._settings = null;
          // {hash} { ABObject.id  : {collection} }
@@ -71,14 +68,14 @@ export default function (AB) {
          this._settings = (await this.AB.Storage.get("workspaceviews")) || {};
       }
 
-      objectLoad(objectID) {
-         if (this.objectID) {
+      objectLoad(object) {
+         if (this.CurrentObjectID) {
             // save current data:
-            this._settings[this.objectID] = this.toObj();
+            this._settings[this.CurrentObjectID] = this.toObj();
          }
-         this.objectID = objectID;
+         super.objectLoad(object);
 
-         this.fromObj(this._settings[objectID]);
+         this.fromObj(this._settings[this.CurrentObjectID]);
       }
 
       /**
@@ -187,7 +184,7 @@ export default function (AB) {
        * @return {Promise}
        */
       async save() {
-         this._settings[this.objectID] = this.toObj();
+         this._settings[this.CurrentObjectID] = this.toObj();
          await this.AB.Storage.set("workspaceviews", this._settings);
       }
 

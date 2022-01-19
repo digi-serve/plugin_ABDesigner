@@ -4,28 +4,22 @@
  * Manage the ABObject List
  *
  */
-import UICommonListFactory from "./ui_common_list";
+import UI_Class from "./ui_class";
+import UI_COMMON_LIST from "./ui_common_list";
 import UIListNewProcess from "./ui_work_object_list_newObject";
 
 export default function (AB) {
-   var UI_COMMON_LIST = UICommonListFactory(AB);
-
-   // var L = function (...params) {
-   //    return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   // };
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
 
    var AddForm = new UIListNewProcess(AB);
    // the popup form for adding a new process
 
-   class UI_Work_Object_List extends AB.ClassUI {
+   class UI_Work_Object_List extends UIClass {
       constructor() {
          super("ui_work_object_list");
 
-         this.CurrentApplicationID = null;
-         // {string}
-         // the ABApplication.id we are currently working with.
-
-         this.ListComponent = new UI_COMMON_LIST({
+         this.ListComponent = UI_COMMON_LIST(AB, {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new object",
@@ -50,7 +44,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
@@ -119,20 +113,6 @@ export default function (AB) {
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
-      }
-
-      addNew() {
-         console.error("!! Who is calling this?");
-         this.clickNewProcess(true);
-      }
-
-      /**
        * @function applicationLoad
        * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
@@ -146,7 +126,7 @@ export default function (AB) {
          // if we are updating the SAME application, we will want to default
          // the list to the currently selectedItem
 
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
 
          if (oldAppID == this.CurrentApplicationID) {
             selectedItem = this.ListComponent.selectedItem();
@@ -167,38 +147,10 @@ export default function (AB) {
       }
 
       /**
-       * @function callbackNewProcess
-       *
-       * Once a New Process was created in the Popup, follow up with it here.
-       */
-      // callbackNewProcess(err, object, selectNew, callback) {
-      //    debugger;
-      //    if (err) {
-      //       OP.Error.log("Error creating New Process", { error: err });
-      //       return;
-      //    }
-
-      //    let objects = this.CurrentApplication.objects();
-      //    processList.parse(objects);
-
-      //    // if (processList.exists(object.id))
-      //    // 	processList.updateItem(object.id, object);
-      //    // else
-      //    // 	processList.add(object);
-
-      //    if (selectNew != null && selectNew == true) {
-      //       $$(ids.list).select(object.id);
-      //    } else if (callback) {
-      //       callback();
-      //    }
-      // }
-
-      /**
        * @function clickNewProcess
-       *
        * Manages initiating the transition to the new Process Popup window
        */
-      clickNewProcess(selectNew) {
+      clickNewProcess(/* selectNew */) {
          // show the new popup
          AddForm.show();
       }
@@ -232,9 +184,9 @@ export default function (AB) {
        */
       async exclude(item) {
          this.ListComponent.busy();
-         var application = this.AB.applicationByID(this.CurrentApplicationID);
-         await application.objectRemove(item);
-         this.ListComponent.dataLoad(application.objectsIncluded());
+         var app = this.CurrentApplication;
+         await app.objectRemove(item);
+         this.ListComponent.dataLoad(app.objectsIncluded());
 
          // this will clear the object workspace
          this.emit("selected", null);

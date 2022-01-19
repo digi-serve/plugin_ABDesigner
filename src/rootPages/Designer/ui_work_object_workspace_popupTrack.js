@@ -5,14 +5,13 @@
  *
  */
 // const ABComponent = require("../classes/platform/ABComponent");
+import UI_Class from "./ui_class";
 
 export default function (AB) {
-   const ClassUI = AB.ClassUI;
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UIWorkObjectWorkspacePopupTrack extends ClassUI {
+   class UI_Work_Object_Workspace_PopupTrack extends UIClass {
       /**
        * @param {object} App
        * @param {string} idBase
@@ -54,7 +53,7 @@ export default function (AB) {
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -142,7 +141,7 @@ export default function (AB) {
       }
 
       open(object, rowId) {
-         this.CurrentObject = object;
+         this.objectLoad(object);
 
          let ids = this.ids;
          let $popup = $$(ids.popup);
@@ -182,5 +181,5 @@ export default function (AB) {
       }
    }
 
-   return new UIWorkObjectWorkspacePopupTrack();
+   return new UI_Work_Object_Workspace_PopupTrack();
 }

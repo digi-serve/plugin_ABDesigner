@@ -4,29 +4,22 @@
  * Manage the Sort Fields popup.
  *
  */
+import UI_Class from "./ui_class";
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupSortFields extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupSortFields extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupSortFields";
-
-         super({
-            component: `${idBase}`,
-            list: `${idBase}_list`,
-            form: `${idBase}_form`,
+         super("ui_work_object_workspace_popupSortFields", {
+            list: "",
+            form: "",
          });
 
          this._blockOnChange = false;
          // {bool}
          // Do we process our onChange event or not?
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
       }
 
       uiForm() {
@@ -70,15 +63,6 @@ export default function (AB) {
       init(AB) {
          this.AB = AB;
          webix.ui(this.ui());
-      }
-
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       /**
@@ -215,9 +199,9 @@ export default function (AB) {
        * @param {ABObject} object
        *        the currently selected object.
        */
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       /**
        * @method setSettings

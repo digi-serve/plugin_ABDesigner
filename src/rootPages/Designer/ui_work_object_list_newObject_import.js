@@ -4,24 +4,22 @@
  * Display the form for importing an existing object into the application.
  *
  */
-
+import UI_Class from "./ui_class";
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_List_NewObject_Import extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject_Import extends UIClass {
       constructor() {
-         var base = "ui_work_object_list_newObject_import";
-         super({
-            component: base,
+         super("ui_work_object_list_newObject_import", {
+            // component: base,
 
-            form: `${base}_import`,
-            filter: `${base}_filter`,
-            objectList: `${base}_objectList`,
-            columnList: `${base}_columnList`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
+            form: "",
+            filter: "",
+            objectList: "",
+            columnList: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
       }
 
@@ -90,7 +88,7 @@ export default function (AB) {
                            width: 30,
                         },
                      },
-                     template: (obj, common) => {
+                     template: (obj /* , common */) => {
                         // return `
                         //     <span style="float: left;">${common.isvisible(obj, common)}</span>
                         //     <span style="float: left;">${obj.label}</span>
@@ -158,14 +156,13 @@ export default function (AB) {
       }
 
       onShow(app) {
-         this.currentApp = app;
          this.formClear();
 
          // now all objects are *global* but an application might only
          // reference a sub set of them.  Here we just need to show
          // the objects our current application isn't referencing:
 
-         let availableObjs = this.currentApp.objectsExcluded(
+         let availableObjs = app.objectsExcluded(
             (o) => !o.isSystemObject || AB.Account.isSystemDesigner()
          );
          this.$objectList.parse(availableObjs, "json");

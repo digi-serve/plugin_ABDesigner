@@ -1,17 +1,22 @@
-export default function (AB, init_settings) {
-   class UIWorkProcessWorkspace extends AB.ClassUI {
-      constructor(settings = init_settings || {}) {
+import UI_Class from "./ui_class";
+export default function (AB) {
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
+   class UI_Work_Process_Workspace extends UIClass {
+      constructor() {
          super();
-
-         this.settings = settings;
       }
 
-      ui() {}
+      ui() {
+         return {};
+      }
 
-      init() {}
+      async init(AB) {
+         this.AB = AB;
+      }
 
       populateWorkspace() {}
    }
 
-   return UIWorkProcessWorkspace;
+   return new UI_Work_Process_Workspace();
 }

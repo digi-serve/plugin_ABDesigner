@@ -153,10 +153,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ABField
  * A Generic Property manager for All our fields.
  */
+
 
 var myClass = null;
 // {singleton}
@@ -166,11 +168,10 @@ var myClass = null;
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    if (!myClass) {
       const uiConfig = AB.Config.uiSettings();
-      var L = function (...params) {
-         return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-      };
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      var L = UIClass.L();
 
-      myClass = class ABFieldProperty extends AB.ClassUI {
+      myClass = class ABFieldProperty extends UIClass {
          constructor(base = "properties_abfield", ids = {}) {
             // base: {string} unique base id reference
             // ids: {hash}  { key => '' }
@@ -178,20 +179,20 @@ var myClass = null;
             // unique to the Sub Class' interface elements.
 
             var common = {
-               component: `${base}_component`,
+               // component: `${base}_component`,
 
                // the common property fields
-               label: `${base}_label`,
-               columnName: `${base}_columnName`,
-               fieldDescription: `${base}_fieldDescription`,
-               showIcon: `${base}_showIcon`,
-               required: `${base}_required`,
-               numberOfNull: `${base}_numberOfNull`,
-               unique: `${base}_unique`,
-               filterComplex: `${base}_filtercomplex`,
-               addValidation: `${base}_addvalidation`,
-               shorthand: `${base}_shorthand`,
-               validationRules: `${base}_validationRules`,
+               label: "",
+               columnName: "",
+               fieldDescription: "",
+               showIcon: "",
+               required: "",
+               numberOfNull: "",
+               unique: "",
+               filterComplex: "",
+               addValidation: "",
+               shorthand: "",
+               validationRules: "",
             };
 
             Object.keys(ids).forEach((k) => {
@@ -201,21 +202,13 @@ var myClass = null;
                   );
                   return;
                }
-               common[k] = `${base}_${k}`;
+               common[k] = "";
             });
 
-            super(common);
+            super(base, common);
 
             this.base = base;
             this.AB = AB;
-
-            this.currentApplicationID = null;
-            // {string}
-            // The current ABApplication.id being edited in our ABDesigner.
-
-            this.currentObjectID = null;
-            // {string}
-            // The current ABObject.id being edited in our object workspace.
          }
 
          ui(elements = []) {
@@ -253,7 +246,7 @@ var myClass = null;
                            }
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -267,7 +260,7 @@ var myClass = null;
                      placeholder: L("Database field name"),
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -278,7 +271,7 @@ var myClass = null;
                      align: "right",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -291,7 +284,7 @@ var myClass = null;
                      value: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -311,7 +304,7 @@ var myClass = null;
                            this.getNumberOfNullValue(newVal);
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -324,7 +317,7 @@ var myClass = null;
                      hidden: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -338,7 +331,7 @@ var myClass = null;
                      labelWidth: uiConfig.labelWidthCheckbox,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -356,7 +349,7 @@ var myClass = null;
                      },
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -369,7 +362,7 @@ var myClass = null;
                      name: "validationRules",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -450,12 +443,8 @@ var myClass = null;
                ],
             });
             $$(Filter.ids.save).hide();
-            Filter.fieldsLoad(this.object.fields());
+            Filter.fieldsLoad(this.object.fields()); // Should This Be this.CurrentObject ?
             if (settings && settings.rules) Filter.setValue(settings.rules);
-         }
-
-         applicationLoad(application) {
-            this.currentApplicationID = application?.id;
          }
 
          clearEditor() {
@@ -492,10 +481,6 @@ var myClass = null;
 
             // hide warning message of null data
             $$(ids.numberOfNull).hide();
-         }
-
-         get currentObject() {
-            return this.AB.objectByID(this.currentObjectID);
          }
 
          /**
@@ -674,7 +659,7 @@ var myClass = null;
 
             // columnName should not be in use by other fields on this object
             // get All fields with matching colName
-            var fieldColName = this.currentObject?.fields(
+            var fieldColName = this.CurrentObject?.fields(
                (f) => f.columnName == colName
             );
             // ignore current edit field
@@ -699,10 +684,6 @@ var myClass = null;
 
          markInvalid(name, message) {
             $$(this.ids.component).markInvalid(name, message);
-         }
-
-         objectLoad(objectID) {
-            this.currentObjectID = objectID;
          }
 
          /**
@@ -836,17 +817,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = ABField.L();
 
    class ABFieldConnectProperty extends ABField {
       constructor() {
-         var base = "properties_abfield_connect";
-
-         super(base, {
+         super("properties_abfield_connect", {
             linkObject: "",
             objectCreateNew: "",
 
@@ -1079,10 +1056,10 @@ __webpack_require__.r(__webpack_exports__);
          return isValid;
       }
 
-      populate(field) {
-         var ids = this.ids;
-         super.populate(field);
-      }
+      // populate(field) {
+      //    var ids = this.ids;
+      //    super.populate(field);
+      // }
 
       selectLinkViaType(newValue /*, oldValue */) {
          let labelEntry = L("entry");
@@ -1112,11 +1089,11 @@ __webpack_require__.r(__webpack_exports__);
          // show current object name
          $$(ids.fieldLink).setValue(
             L("Each <b>{0}</b> entry connects with", [
-               this.currentObject?.label,
+               this.CurrentObject?.label,
             ])
          );
          $$(ids.fieldLink2).setValue(
-            L("<b>{0}</b> entry.", [this.currentObject?.label])
+            L("<b>{0}</b> entry.", [this.CurrentObject?.label])
          );
 
          // keep the column name element to use when custom index is checked
@@ -1192,7 +1169,7 @@ __webpack_require__.r(__webpack_exports__);
       populateSelect(/* populate, callback */) {
          var options = [];
          // if an ABApplication is set then load in the related objects
-         var application = this.AB.applicationByID(this.currentApplicationID);
+         var application = this.CurrentApplication;
          if (application) {
             application.objectsIncluded().forEach((o) => {
                options.push({ id: o.id, value: o.label });
@@ -1302,11 +1279,11 @@ __webpack_require__.r(__webpack_exports__);
          }
          // M:1
          else if (link == "many:one") {
-            sourceObject = this.currentObject;
+            sourceObject = this.CurrentObject;
          }
          // M:N
          else if (link == "many:many") {
-            sourceObject = this.currentObject;
+            sourceObject = this.CurrentObject;
 
             let linkObject = this.AB.objectByID(linkObjectId);
 
@@ -1413,17 +1390,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = ABField.L();
 
    class ABFieldNumberProperty extends ABField {
       constructor() {
-         var base = "properties_abfield_number";
-
-         super(base, {
+         super("properties_abfield_number", {
             default: "",
             decimalOptions: "",
             typeDecimalPlaces: "",
@@ -1827,16 +1800,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = ABField.L();
 
    class ABFieldStringProperty extends ABField {
       constructor() {
-         var base = "properties_abfield_string";
-         super(base, {
+         super("properties_abfield_string", {
             default: "",
             supportMultilingual: "",
          });
@@ -1903,6 +1873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * UIProcessParticipant_SelectManagersUI
  *
@@ -1912,21 +1883,20 @@ __webpack_require__.r(__webpack_exports__);
  * @return {ClassUI} The Class Definition for this UI widget.
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = (...params) => {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
-   class UIProcessParticipant_SelectManagersUI extends AB.ClassUI {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UIProcessParticipant_SelectManagersUI extends UIClass {
       constructor(id) {
-         super({
-            component: id,
-            form: `${id}_form`,
-            name: `${id}_name`,
-            role: `${id}_role`,
-            useRole: `${id}_useRoles`,
-            useAccount: `${id}_useAccounts`,
-            account: `${id}_account`,
+         super(id, {
+            form: "",
+            name: "",
+            role: "",
+            useRole: "",
+            useAccount: "",
+            account: "",
          });
       }
 
@@ -1963,7 +1933,7 @@ __webpack_require__.r(__webpack_exports__);
                         },
                         on: {
                            onAfterRender() {
-                              AB.ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -1982,7 +1952,7 @@ __webpack_require__.r(__webpack_exports__);
                                  // can fix this for us.
                                  onAfterRender() {
                                     this.data.each((a) => {
-                                       AB.ClassUI.CYPRESS_REF(
+                                       UIClass.CYPRESS_REF(
                                           this.getItemNode(a.id),
                                           `${ids.role}_${a.id}`
                                        );
@@ -1999,7 +1969,7 @@ __webpack_require__.r(__webpack_exports__);
                                     }
                                     $roleCombo.setValue(currentItems);
                                     // var item = this.getItem(id);
-                                    // AB.ClassUI.CYPRESS_REF(
+                                    // UIClass.CYPRESS_REF(
                                     //    this.getItemNode(item.id),
                                     //    `${ids.role}_${item.id}`
                                     // );
@@ -2013,7 +1983,7 @@ __webpack_require__.r(__webpack_exports__);
                         on: {
                            onAfterRender: function () {
                               // set data-cy for original field to track clicks to open option list
-                              AB.ClassUI.CYPRESS_REF(this.getNode(), ids.role);
+                              UIClass.CYPRESS_REF(this.getNode(), ids.role);
                            },
                            onChange: function (/* newVal, oldVal */) {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
@@ -2041,7 +2011,7 @@ __webpack_require__.r(__webpack_exports__);
                         },
                         on: {
                            onAfterRender() {
-                              AB.ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -2060,7 +2030,7 @@ __webpack_require__.r(__webpack_exports__);
                                  // can fix this for us.
                                  onAfterRender() {
                                     this.data.each((a) => {
-                                       AB.ClassUI.CYPRESS_REF(
+                                       UIClass.CYPRESS_REF(
                                           this.getItemNode(a.id),
                                           `${ids.account}_${a.id}`
                                        );
@@ -2077,7 +2047,7 @@ __webpack_require__.r(__webpack_exports__);
                                     }
                                     $accountCombo.setValue(currentItems);
                                     // var item = this.getItem(id);
-                                    // AB.ClassUI.CYPRESS_REF(
+                                    // UIClass.CYPRESS_REF(
                                     //    this.getItemNode(item.id),
                                     //    `${ids.account}_${item.id}`
                                     // );
@@ -2091,10 +2061,7 @@ __webpack_require__.r(__webpack_exports__);
                         on: {
                            onAfterRender: function () {
                               // set data-cy for original field to track clicks to open option list
-                              AB.ClassUI.CYPRESS_REF(
-                                 this.getNode(),
-                                 ids.account
-                              );
+                              UIClass.CYPRESS_REF(this.getNode(), ids.account);
                            },
                            onChange: function (/* newVal, oldVal */) {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
@@ -2171,6 +2138,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ABView
  * A Generic Property manager for All our ABViews.
@@ -2181,14 +2149,15 @@ var myClass = null;
 // we will want to call this factory fn() repeatedly in our imports,
 // but we only want to define 1 Class reference.
 
+
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    if (!myClass) {
       // const uiConfig = AB.Config.uiSettings();
-      // var L = function (...params) {
-      //    return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-      // };
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      // var L = UIClass.L();
 
-      myClass = class ABViewProperty extends AB.ClassUI {
+      myClass = class ABViewProperty extends UIClass {
          constructor(base = "properties_abview", ids = {}) {
             // base: {string} unique base id reference
             // ids: {hash}  { key => '' }
@@ -2196,7 +2165,7 @@ var myClass = null;
             // unique to the Sub Class' interface elements.
 
             var common = {
-               component: `${base}_component`,
+               // component: `${base}_component`,
                /*
 // TODO:
                // the common property fields
@@ -2221,21 +2190,13 @@ var myClass = null;
                   );
                   return;
                }
-               common[k] = `${base}_${k}`;
+               common[k] = "";
             });
 
-            super(common);
+            super(base, common);
 
             this.base = base;
             this.AB = AB;
-
-            this.currentApplicationID = null;
-            // {string}
-            // The current ABApplication.id being edited in our ABDesigner.
-
-            this.currentObjectID = null;
-            // {string}
-            // The current ABObject.id being edited in our object workspace.
          }
 
          ui(elements = []) {
@@ -2276,7 +2237,7 @@ var myClass = null;
                            }
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2290,7 +2251,7 @@ var myClass = null;
                      placeholder: L("Database field name"),
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2301,7 +2262,7 @@ var myClass = null;
                      align: "right",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2314,7 +2275,7 @@ var myClass = null;
                      value: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2334,7 +2295,7 @@ var myClass = null;
                            this.getNumberOfNullValue(newVal);
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2347,7 +2308,7 @@ var myClass = null;
                      hidden: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2361,7 +2322,7 @@ var myClass = null;
                      labelWidth: uiConfig.labelWidthCheckbox,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2379,7 +2340,7 @@ var myClass = null;
                      },
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2392,7 +2353,7 @@ var myClass = null;
                      name: "validationRules",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2439,10 +2400,6 @@ var myClass = null;
             }
          }
 
-         applicationLoad(appID) {
-            this.currentApplicationID = appID;
-         }
-
          clearEditor() {
             console.error("!!! Depreciated! call clear() instead.");
             this.clear();
@@ -2480,14 +2437,6 @@ var myClass = null;
             // hide warning message of null data
             $$(ids.numberOfNull).hide();
 */
-         }
-
-         get currentApplication() {
-            return this.AB.applicationByID(this.currentApplicationID);
-         }
-
-         get currentObject() {
-            return this.AB.objectByID(this.currentObjectID);
          }
 
          /**
@@ -2576,10 +2525,6 @@ var myClass = null;
 
          markInvalid(name, message) {
             $$(this.ids.component).markInvalid(name, message);
-         }
-
-         objectLoad(objectID) {
-            this.currentObjectID = objectID;
          }
 
          /**
@@ -2738,11 +2683,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-
    var ABViewClassProperty = (0,_ABView__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = ABViewClassProperty.L();
 
    class ABViewCSVImporterProperty extends ABViewClassProperty {
       constructor() {
@@ -2992,6 +2934,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
 // ABObjectWorkspaceViewGantt.js
 //
 // Manages the settings for a Gantt Chart View in the AppBuilder Object Workspace
@@ -3018,20 +2961,21 @@ var defaultValues = {
    notes: "none", // id of a ABFieldString, ABFieldLongText
 };
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
-   let L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
-   class ABObjectWorkspaceViewGantt extends AB.ClassUI {
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class ABObjectWorkspaceViewGantt extends UIClass {
       constructor(idBase) {
-         super({
-            title: `${idBase}_popupGanttTitle`,
-            startDate: `${idBase}_popupGanttStartDate`,
-            endDate: `${idBase}_popupGanttEndDate`,
-            duration: `${idBase}_popupGanttDuration`,
-            progress: `${idBase}_popupGanttProgress`,
-            notes: `${idBase}_popupGanttNotes`,
+         super(idBase, {
+            title: "",
+            startDate: "",
+            endDate: "",
+            duration: "",
+            progress: "",
+            notes: "",
          });
       }
 
@@ -3506,6 +3450,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
 // ABViewGrid.js
 //
 // Manages the settings for a Data Grid View in the AppBuilder Object Workspace
@@ -3522,12 +3467,13 @@ var defaultValues = {
    hiddenFields: [], // array of [ids] to add hidden:true to
 };
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
-   let L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
-   class ABViewGrid extends AB.ClassUI {
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class ABViewGrid extends UIClass {
       constructor(idBase) {
          super(idBase);
 
@@ -3611,6 +3557,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
 // ABViewKanbanProperties.js
 //
 // Manages the settings for a KanBan View in the Object Workspace
@@ -3633,17 +3580,18 @@ var defaultValues = {
    ownerField: null,
 };
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
-   let L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
-   class ABViewKanban extends AB.ClassUI {
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class ABViewKanban extends UIClass {
       constructor(idBase) {
-         super({
-            vGroupInput: `${idBase}_popupAddViewVGroup`,
-            hGroupInput: `${idBase}_popupAddViewHGroup`,
-            ownerInput: `${idBase}_popupAddViewOwner`,
+         super(idBase, {
+            vGroupInput: "",
+            hGroupInput: "",
+            ownerInput: "",
          });
       }
 
@@ -3982,8 +3930,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_choose_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_choose.js */ "./src/rootPages/Designer/ui_choose.js");
-/* harmony import */ var _ui_work_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work.js */ "./src/rootPages/Designer/ui_work.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_choose_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_choose.js */ "./src/rootPages/Designer/ui_choose.js");
+/* harmony import */ var _ui_work_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work.js */ "./src/rootPages/Designer/ui_work.js");
 /*
  * UI
  *
@@ -3997,14 +3946,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const AppChooser = (0,_ui_choose_js__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   const AppWorkspace = (0,_ui_work_js__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const AppChooser = (0,_ui_choose_js__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const AppWorkspace = (0,_ui_work_js__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
 
-   class UI extends AB.ClassUI {
+   var L = UIClass.L();
+
+   class UI extends UIClass {
       constructor() {
          super("abd");
          this.id = this.ids.component;
@@ -4060,23 +4009,22 @@ __webpack_require__.r(__webpack_exports__);
             AppChooser.show();
          });
 
-         return Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]).then(
-            () => {
-               // Register for ABDefinition Updates
-               return this.AB.Network.post({
-                  url: `/definition/register`,
-               }).catch((err) => {
-                  if (err?.code == "E_NOPERM") {
-                     // ?? What do we do here ??
-                     this.AB.notify.developer(err, {
-                        plugin: "ABDesigner",
-                        context: "ui::init():/definition/register",
-                        msg: "User is not able to access /definition/register",
-                     });
-                  }
+         await Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]);
+
+         try {
+            await this.AB.Network.post({
+               url: `/definition/register`,
+            });
+         } catch (err) {
+            if (err?.code == "E_NOPERM") {
+               // ?? What do we do here ??
+               this.AB.notify.developer(err, {
+                  plugin: "ABDesigner",
+                  context: "ui::init():/definition/register",
+                  msg: "User is not able to access /definition/register",
                });
             }
-         );
+         }
       }
 
       /**
@@ -4110,8 +4058,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_choose_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_choose_list */ "./src/rootPages/Designer/ui_choose_list.js");
-/* harmony import */ var _ui_choose_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_choose_form */ "./src/rootPages/Designer/ui_choose_form.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_choose_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_choose_list */ "./src/rootPages/Designer/ui_choose_list.js");
+/* harmony import */ var _ui_choose_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_choose_form */ "./src/rootPages/Designer/ui_choose_form.js");
 /*
  * UI Choose
  *
@@ -4127,10 +4076,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const AppList = (0,_ui_choose_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   const AppForm = (0,_ui_choose_form__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const AppList = (0,_ui_choose_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const AppForm = (0,_ui_choose_form__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
 
-   class UIChoose extends AB.ClassUI {
+   class UI_Choose extends UIClass {
       constructor() {
          super("abd_choose");
       }
@@ -4172,7 +4122,7 @@ __webpack_require__.r(__webpack_exports__);
          AppList.show();
       }
    }
-   return new UIChoose();
+   return new UI_Choose();
 }
 
 
@@ -4189,7 +4139,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./properties/process/ABProcessParticipant_selectManagersUI.js */ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/process/ABProcessParticipant_selectManagersUI.js */ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js");
 /*
  * AB Choose Form
  *
@@ -4203,33 +4154,26 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-   const ClassSelectManagersUI = (0,_properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+   const ClassSelectManagersUI = (0,_properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
-   class ABChooseForm extends AB.ClassUI {
+   class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
 
       constructor() {
-         var base = "abd_choose_form";
-         super({
-            component: base,
-            warnings: `${base}_warnings`,
-            form: `${base}_form`,
-            appFormPermissionList: `${base}_permission`,
-            appFormCreateRoleButton: `${base}_createRole`,
+         super("abd_choose_form", {
+            warnings: "",
+            form: "",
+            appFormPermissionList: "",
+            appFormCreateRoleButton: "",
 
-            saveButton: `${base}_buttonSave`,
-            accessManager: `${base}_accessManager`,
-            accessManagerToolbar: `${base}_accessManagerToolbar`,
-            translationManager: `${base}_translationManager`,
-            translationManagerToolbar: `${base}_translationManagerToolbar`,
+            saveButton: "",
+            accessManager: "",
+            accessManagerToolbar: "",
+            translationManager: "",
+            translationManagerToolbar: "",
          });
-
-         this.Application = null;
-         // {ABApplication} The current ABApplication being Updated().
-         // Should be null if performing a Create()
       }
 
       ui() {
@@ -4818,10 +4762,10 @@ __webpack_require__.r(__webpack_exports__);
 
          // if there is a selected Application, then this is an UPDATE
          // var updateApp = App.actions.getSelectedApplication();
-         if (this.Application) {
+         if (this.CurrentApplication) {
             if (this.formValidate("update")) {
                try {
-                  await this.applicationUpdate(this.Application);
+                  await this.applicationUpdate(this.CurrentApplication);
                   this.toList();
                } catch (e) {
                   /* error is handled in .applicationUpdate() */
@@ -4906,7 +4850,7 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABApplication} application  instance of the ABApplication
        */
       formPopulate(application) {
-         this.Application = application;
+         super.applicationLoad(application);
 
          // Populate data to form
          if (application) {
@@ -4922,7 +4866,9 @@ __webpack_require__.r(__webpack_exports__);
                }
             });
 
-            var messages = this.Application.warnings().map((w) => w.message);
+            var messages = this.CurrentApplication.warnings().map(
+               (w) => w.message
+            );
             $$(this.ids.warnings).setValue(messages.join("\n"));
 
             // populate access manager ui
@@ -4964,7 +4910,7 @@ __webpack_require__.r(__webpack_exports__);
        * return the form to an empty state.
        */
       formReset() {
-         this.Application = null;
+         super.applicationLoad(null);
 
          this.$form.clear();
          this.$form.clearValidation();
@@ -5403,7 +5349,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
 /*
  * UI Choose List
  *
@@ -5419,27 +5366,19 @@ __webpack_require__.r(__webpack_exports__);
    // const AppForm = AB_Choose_Form_Factory(AB);
 
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   const AB_Choose_List_Menu = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const AB_Choose_List_Menu = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
-   class UIChooseList extends AB.ClassUI {
+   class UIChooseList extends UIClass {
       constructor() {
-         var base = "abd_choose_list";
-         super(base);
-         var baseTB = `${base}_toolbar`;
-
-         var ids = {
-            toolbar: baseTB,
-            buttonCreateNewApplication: `${baseTB}_createnewapp`,
-            uploader: `${baseTB}_uploader`,
-            exporter: `${baseTB}_exporter`,
-            list: `${base}_list`,
-         };
-         Object.keys(ids).forEach((k) => {
-            this.ids[k] = ids[k];
+         super("abd_choose_list", {
+            toolbar: "",
+            buttonCreateNewApplication: "",
+            uploader: "",
+            exporter: "",
+            list: "",
          });
       }
 
@@ -5477,7 +5416,7 @@ __webpack_require__.r(__webpack_exports__);
                               fillspace: true,
                               on: {
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -5518,7 +5457,7 @@ __webpack_require__.r(__webpack_exports__);
                               },
                               on: {
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -5569,7 +5508,7 @@ __webpack_require__.r(__webpack_exports__);
                                     return false;
                                  },
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -5589,7 +5528,7 @@ __webpack_require__.r(__webpack_exports__);
                               },
                               on: {
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -5630,7 +5569,7 @@ __webpack_require__.r(__webpack_exports__);
                         on: {
                            onAfterRender() {
                               this.data.each((a) => {
-                                 AB.ClassUI.CYPRESS_REF(
+                                 UIClass.CYPRESS_REF(
                                     this.getItemNode(a.id),
                                     a.id
                                  );
@@ -5982,6 +5921,90 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/ui_class.js":
+/*!********************************************!*\
+  !*** ./src/rootPages/Designer/ui_class.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ui_class
+ *
+ * A common UI object for our UI pages.
+ *
+
+ */
+
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      myClass = class UI extends AB.ClassUI {
+         constructor(...params) {
+            super(...params);
+
+            this.CurrentApplicationID = null;
+            // {string} uuid
+            // The current ABApplication.id we are working with.
+
+            this.CurrentObjectID = null;
+            // {string}
+            // the ABObject.id of the object we are working with.
+         }
+
+         static L() {
+            return function (...params) {
+               return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+            };
+         }
+
+         /**
+          * @method CurrentApplication
+          * return the current ABApplication being worked on.
+          * @return {ABApplication} application
+          */
+         get CurrentApplication() {
+            return this.AB.applicationByID(this.CurrentApplicationID);
+         }
+
+         /**
+          * @function applicationLoad
+          * save the ABApplication.id of the current application.
+          * @param {ABApplication} app
+          */
+         applicationLoad(app) {
+            this.CurrentApplicationID = app?.id;
+         }
+
+         objectLoad(obj) {
+            this.CurrentObjectID = obj?.id;
+         }
+
+         /**
+          * @method CurrentObject()
+          * A helper to return the current ABObject we are working with.
+          * @return {ABObject}
+          */
+         get CurrentObject() {
+            return this.AB.objectByID(this.CurrentObjectID);
+         }
+      };
+   }
+
+   return myClass;
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/ui_common_list.js":
 /*!**************************************************!*\
   !*** ./src/rootPages/Designer/ui_common_list.js ***!
@@ -6003,7 +6026,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, options) {
    var UIListEditMenu = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
 
    const uiConfig = AB.Config.uiSettings();
@@ -6608,14 +6631,20 @@ __webpack_require__.r(__webpack_exports__);
        */
       templateListItem(obj, common) {
          var warnings = obj.warningsAll();
-         var warnText = "";
-         if (warnings.length > 0) {
-            warnText = `(${warnings.length})`;
+
+         if (typeof this._templateListItem == "string") {
+            var warnText = "";
+            if (warnings.length > 0) {
+               warnText = `(${warnings.length})`;
+            }
+
+            return this._templateListItem
+               .replace("#label#", obj.label || "??label??")
+               .replace("{common.iconGear}", common.iconGear(obj))
+               .replace("#warnings#", warnText);
          }
-         return this._templateListItem
-            .replace("#label#", obj.label || "??label??")
-            .replace("{common.iconGear}", common.iconGear(obj))
-            .replace("#warnings#", warnText);
+         // else they sent in a function()
+         return this._templateListItem(obj, common, warnings);
       }
 
       /**
@@ -6743,7 +6772,7 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    // NOTE: We are returning the Class here, not an instance:
-   return UI_Common_List;
+   return new UI_Common_List(options);
 }
 
 
@@ -6760,6 +6789,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ab_common_popupEditMenu
  *
@@ -6769,6 +6799,7 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
+
 var myClass = null;
 // {singleton}
 // we will want to call this factory fn() repeatedly in our imports,
@@ -6776,11 +6807,10 @@ var myClass = null;
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    if (!myClass) {
-      var L = function (...params) {
-         return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-      };
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      var L = UIClass.L();
 
-      myClass = class ABCommonPopupEditMenu extends AB.ClassUI {
+      myClass = class ABCommonPopupEditMenu extends UIClass {
          constructor(contextID) {
             var idBase = "abd_common_popupEditMenu";
             super(idBase);
@@ -6825,22 +6855,22 @@ var myClass = null;
             this.Popup = null;
             this._menuOptions = [
                {
-                  label: L("Rename"),
+                  label: this.labels.rename,
                   icon: "fa fa-pencil-square-o",
                   command: "rename",
                },
                {
-                  label: L("Copy"),
+                  label: this.labels.copy,
                   icon: "fa fa-files-o",
                   command: "copy",
                },
                {
-                  label: L("Exclude"),
+                  label: this.labels.exclude,
                   icon: "fa fa-reply",
                   command: "exclude",
                },
                {
-                  label: L("Delete"),
+                  label: this.labels.delete,
                   icon: "fa fa-trash",
                   command: "delete",
                },
@@ -6996,8 +7026,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object */ "./src/rootPages/Designer/ui_work_object.js");
-/* harmony import */ var _ui_work_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query */ "./src/rootPages/Designer/ui_work_query.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_object__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object */ "./src/rootPages/Designer/ui_work_object.js");
+/* harmony import */ var _ui_work_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_query */ "./src/rootPages/Designer/ui_work_query.js");
+/* harmony import */ var _ui_work_datacollection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_datacollection */ "./src/rootPages/Designer/ui_work_datacollection.js");
+/* harmony import */ var _ui_work_process__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui_work_process */ "./src/rootPages/Designer/ui_work_process.js");
 /*
  * ab_work
  *
@@ -7007,44 +7040,37 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// const AB_Work_Datacollection = require("./ab_work_dataview");
-// const AB_Work_Process = require("./ab_work_process");
+
+
 // const AB_Work_Interface = require("./ab_work_interface");
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   var AppObjectWorkspace = (0,_ui_work_object__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   const AppQueryWorkspace = new ((0,_ui_work_query__WEBPACK_IMPORTED_MODULE_1__["default"])(AB))();
-   // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
-   // var AppProcessWorkspace = new AB_Work_Process(App);
+   var AppObjectWorkspace = (0,_ui_work_object__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const AppQueryWorkspace = (0,_ui_work_query__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+   const AppDataCollectionWorkspace = (0,_ui_work_datacollection__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
+   const AppProcessWorkspace = (0,_ui_work_process__WEBPACK_IMPORTED_MODULE_4__["default"])(AB);
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);
 
-   class UI_Work extends AB.ClassUI {
+   class UI_Work extends UIClass {
       constructor(options = {}) {
-         var base = "abd_work";
-         super({
-            component: `${base}_component`,
-            toolBar: `${base}_toolbar`,
-            labelAppName: `${base}_label_appname`,
-            tabbar: `${base}_tabbar`,
-            tab_object: `${base}_tab_object`,
-            tab_query: `${base}_tab_query`,
-            tab_dataview: `${base}_tab_dataview`,
-            tab_processview: `${base}_tab_processview`,
-            tab_interface: `${base}_tab_interface`,
-            workspace: `${base}_workspace`,
-            collapseMenu: `${base}_collapseMenu`,
-            expandMenu: `${base}_expandMenu`,
+         super("abd_work", {
+            toolBar: "",
+            labelAppName: "",
+            tabbar: "",
+            tab_object: "",
+            tab_query: "",
+            tab_datacollection: "",
+            tab_processview: "",
+            tab_interface: "",
+            workspace: "",
+            collapseMenu: "",
+            expandMenu: "",
          });
 
          this.options = options;
-
-         this.CurrentAppID = null;
-         // {string}
-         // The current ABApplication.id that we are working with.
 
          this.selectedItem = this.ids.tab_object;
          // {string} {this.ids.xxx}
@@ -7069,7 +7095,7 @@ __webpack_require__.r(__webpack_exports__);
                icon: "fa fa-fw fa-filter",
             },
             {
-               id: this.ids.tab_dataview,
+               id: this.ids.tab_datacollection,
                value: L("Data Collections"),
                icon: "fa fa-fw fa-table",
             },
@@ -7110,7 +7136,6 @@ __webpack_require__.r(__webpack_exports__);
                         css: "webix_transparent",
                         label: L("Back to Applications page"),
                         autowidth: true,
-                        align: "left",
                         type: "icon",
                         icon: "fa fa-arrow-left",
                         align: "left",
@@ -7206,8 +7231,8 @@ __webpack_require__.r(__webpack_exports__);
                         cells: [
                            AppObjectWorkspace.ui(),
                            AppQueryWorkspace.ui(),
-                           // AppDatacollectionWorkspace.ui,
-                           // AppProcessWorkspace.ui,
+                           AppDataCollectionWorkspace.ui(),
+                           AppProcessWorkspace.ui(),
                            // AppInterfaceWorkspace.ui,
                         ],
                      },
@@ -7228,8 +7253,8 @@ __webpack_require__.r(__webpack_exports__);
 
          AppObjectWorkspace.init(AB);
          AppQueryWorkspace.init(AB);
-         // AppDatacollectionWorkspace.init(AB);
-         // AppProcessWorkspace.init(AB);
+         AppDataCollectionWorkspace.init(AB);
+         AppProcessWorkspace.init(AB);
          // AppInterfaceWorkspace.init(AB);
 
          this.$tabbar = $$(this.ids.tabbar);
@@ -7249,16 +7274,6 @@ __webpack_require__.r(__webpack_exports__);
 
          this.tabSwitch(this.ids.tab_object);
          this.$tabbar.select(this.ids.tab_object);
-
-         /**
-          * @function _handler_refreshApp()
-          * Is called whenever an ABApplication has received new definitions
-          * and we need to load an new Instance of that object.
-          */
-         // this._handler_refreshApp = (/* def */) => {
-         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
-         //    this.transitionWorkspace(this.CurrentApplication);
-         // };
       } // init()
 
       /**
@@ -7274,7 +7289,7 @@ __webpack_require__.r(__webpack_exports__);
             $labelAppName.define("label", application?.label);
             $labelAppName.refresh();
          }
-         this.CurrentAppID = application?.id;
+         super.applicationLoad(application);
       }
 
       /**
@@ -7302,13 +7317,13 @@ __webpack_require__.r(__webpack_exports__);
        *        The current ABApplication we are working with.
        */
       transitionWorkspace(application) {
-         if (this.CurrentAppID != application?.id) {
+         if (this.CurrentApplicationID != application?.id) {
             this.applicationInit(application);
          }
          AppObjectWorkspace.applicationLoad(application);
          AppQueryWorkspace.applicationLoad(application);
-         // AppDatacollectionWorkspace.applicationLoad(application);
-         // AppProcessWorkspace.applicationLoad(application);
+         AppDataCollectionWorkspace.applicationLoad(application);
+         AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
 
          this.show();
@@ -7333,8 +7348,8 @@ __webpack_require__.r(__webpack_exports__);
                break;
 
             // Datacollection Workspace Tab
-            case this.ids.tab_dataview:
-               AppDatacollectionWorkspace.show();
+            case this.ids.tab_datacollection:
+               AppDataCollectionWorkspace.show();
                break;
 
             // Process Workspace Tab
@@ -7362,6 +7377,1183 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/ui_work_datacollection.js":
+/*!**********************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_datacollection.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_datacollection_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_datacollection_list */ "./src/rootPages/Designer/ui_work_datacollection_list.js");
+/* harmony import */ var _ui_work_datacollection_workspace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_datacollection_workspace */ "./src/rootPages/Designer/ui_work_datacollection_workspace.js");
+/*
+ * ui_work_datacollection
+ *
+ * Display the DataCollection Tab UI:
+ *
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   class UI_Work_DataCollection extends UIClass {
+      constructor() {
+         super("ui_work_datacollection");
+
+         this.DataCollectionList = (0,_ui_work_datacollection_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.DataCollectionWorkspace = (0,_ui_work_datacollection_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            type: "space",
+            cols: [
+               this.DataCollectionList.ui(),
+               { view: "resizer", width: 11 },
+               this.DataCollectionWorkspace.ui(),
+            ],
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         // Our init() function for setting up our UI
+         this.DataCollectionList.on("selected", this.select);
+
+         return Promise.all([
+            this.DataCollectionWorkspace.init(AB),
+            this.DataCollectionList.init(AB),
+         ]);
+      }
+
+      /**
+       * @function applicationLoad
+       * Initialize the Datacollection Workspace with the given ABApplication.
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application);
+
+         this.DataCollectionWorkspace.clearWorkspace();
+         this.DataCollectionList.applicationLoad(application);
+         this.DataCollectionWorkspace.applicationLoad(application);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         $$(this.ids.component).show();
+
+         // this.DataCollectionList.busy();
+
+         var app = this.CurrentApplication;
+         if (app) {
+            this.DataCollectionWorkspace.applicationLoad(app);
+            this.DataCollectionList.applicationLoad(app);
+         }
+         this.DataCollectionList.ready();
+      }
+
+      select(dc) {
+         this.DataCollectionWorkspace.clearWorkspace();
+         this.DataCollectionWorkspace.populateWorkspace(dc);
+      }
+   }
+
+   return new UI_Work_DataCollection();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_datacollection_list.js":
+/*!***************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_datacollection_list.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
+/* harmony import */ var _ui_work_datacollection_list_newDatacollection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_datacollection_list_newDatacollection */ "./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection.js");
+/*
+ * ui_work_datacollection_list
+ *
+ * Manage the ABDataCollection List
+ *
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   class UI_Work_Datacollection_List extends UIClass {
+      constructor() {
+         super("ui_work_datacollection_list");
+
+         // {ui_common_list} instance to display a list of our data collections.
+         this.ListComponent = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, {
+            idBase: this.ids.component,
+            labels: {
+               addNew: "Add new data collection",
+               confirmDeleteTitle: "Delete Data Collection",
+               title: "Data Collections",
+               searchPlaceholder: "Data Collection name",
+            },
+            menu: {
+               copy: false,
+               exclude: true,
+            },
+            /**
+             * @function templateListItem
+             *
+             * Defines the template for each row of our Data view list.
+             *
+             * @param {ABDatacollection} obj the current instance of ABDatacollection for the row.
+             * @param {?} common the webix.common icon data structure
+             * @return {string}
+             */
+            templateListItem: function (datacollection, common, warnings) {
+               var warnIcon = "";
+               if (warnings?.length > 0) {
+                  warnIcon = `(${warnings.length})`;
+               }
+               return `<div class='ab-datacollection-list-item'>
+                        <i class="fa ${
+                           datacollection.settings.isQuery
+                              ? "fa-filter"
+                              : "fa-database"
+                        }"></i>
+                        ${datacollection.label || "??label??"}${warnIcon}
+                        ${common.iconGear(datacollection)} 
+                        </div>`;
+            },
+         });
+         this.AddForm = (0,_ui_work_datacollection_list_newDatacollection__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+      }
+
+      // Our webix UI definition:
+      ui() {
+         return this.ListComponent.ui();
+      }
+
+      // Our init() function for setting up our UI
+      async init(AB) {
+         this.AB = AB;
+
+         this.on("addNew", (selectNew) => {
+            // if we receive a signal to add a new Data Collection from another source
+            this.clickNewDataCollection(selectNew);
+         });
+
+         //
+         // List of Processes
+         //
+         await this.ListComponent.init(AB);
+
+         this.ListComponent.on("selected", (item) => {
+            this.emit("selected", item);
+         });
+
+         this.ListComponent.on("addNew", (selectNew) => {
+            this.clickNewDataCollection(selectNew);
+         });
+
+         this.ListComponent.on("deleted", (item) => {
+            this.emit("deleted", item);
+         });
+
+         this.ListComponent.on("exclude", (item) => {
+            this.exclude(item);
+         });
+
+         //
+         // Add Form
+         //
+         await this.AddForm.init(AB);
+
+         this.AddForm.on("cancel", () => {
+            this.AddForm.hide();
+         });
+
+         this.AddForm.on("save", (q /* , select */) => {
+            // the AddForm already takes care of updating the
+            // CurrentApplication.
+
+            // we just need to update our list of data collections
+            this.applicationLoad(this.CurrentApplication);
+
+            // if (select) {
+            this.ListComponent.select(q.id);
+            // }
+         });
+      }
+
+      /**
+       * @function applicationLoad
+       *
+       * Initialize the Data Collection List from the provided ABApplication
+       *
+       * If no ABApplication is provided, then show an empty form. (create operation)
+       *
+       * @param {ABApplication} application  	[optional] The current ABApplication
+       *										we are working with.
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application);
+
+         // clear our list and display our data collections:
+         this.ListComponent.dataLoad(application?.datacollectionsIncluded());
+
+         // prepare our Popup with the current Application
+         this.AddForm.applicationLoad(application);
+      }
+
+      /**
+       * @function exclude
+       * the list component notified us of an exclude action and which
+       * item was chosen.
+       *
+       * perform the removal and update the UI.
+       */
+      async exclude(item) {
+         this.ListComponent.busy();
+         var app = this.CurrentApplication;
+         await app?.datacollectionRemove(item);
+         this.ListComponent.dataLoad(app?.datacollectionsIncluded());
+
+         // this will clear the data collection workspace
+         this.emit("selected", null);
+      }
+
+      ready() {
+         this.ListComponent.ready();
+      }
+
+      /**
+       * @function clickNewDataCollection
+       *
+       * Manages initiating the transition to the new Process Popup window
+       */
+      clickNewDataCollection(/* selectNew */) {
+         // show the new popup
+         this.AddForm.show();
+      }
+   }
+
+   return new UI_Work_Datacollection_List();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection.js":
+/*!*********************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_datacollection_list_newDatacollection_blank__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_datacollection_list_newDatacollection_blank */ "./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection_blank.js");
+/* harmony import */ var _ui_work_datacollection_list_newDatacollection_import__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_datacollection_list_newDatacollection_import */ "./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection_import.js");
+/*
+ * ui_work_datacollection_list_newDataCollection
+ *
+ * Display the form for creating a new Data collection.  This Popup will manage several
+ * different sub components for gathering Data collection data for saving.
+ *
+ * The sub components will gather the data for the data collection and do basic form
+ * validations on their interface.
+ *
+ * when ready, the sub component will emit "save" with the values gathered by
+ * the form.  This component will manage the actual final datacollection validation,
+ * and saving to this application.
+ *
+ * On success, "save.success" will be emitted on the sub-component, and this
+ * component.
+ *
+ * On Error, "save.error" will be emitted on the sub-component.
+ *
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_DataCollection_List_NewDataCollection extends UIClass {
+      constructor() {
+         super("ui_work_datacollection_list_newDataCollection", {
+            tab: "",
+         });
+
+         this.selectNew = true;
+         // {bool} do we select a new data collection after it is created.
+
+         // var callback = null;
+
+         this.BlankTab = (0,_ui_work_datacollection_list_newDatacollection_blank__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.ImportTab = (0,_ui_work_datacollection_list_newDatacollection_import__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            view: "window",
+            id: this.ids.component,
+            position: "center",
+            modal: true,
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new Data Collection"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            selectNewDataCollection: true,
+            body: {
+               view: "tabview",
+               id: this.ids.tab,
+               cells: [this.BlankTab.ui(), this.ImportTab.ui()],
+               tabbar: {
+                  on: {
+                     onAfterTabClick: (id) => {
+                        this.switchTab(id);
+                     },
+                     onAfterRender() {
+                        this.$view
+                           .querySelectorAll(".webix_item_tab")
+                           .forEach((t) => {
+                              var tid = t.getAttribute("button_id");
+                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                           });
+                     },
+                  },
+               },
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         webix.ui(this.ui());
+         webix.extend($$(this.ids.component), webix.ProgressBar);
+
+         this.$component = $$(this.ids.component);
+
+         let allInits = [];
+         ["BlankTab", "ImportTab"].forEach((k) => {
+            allInits.push(this[k].init(AB));
+            this[k].on("cancel", () => {
+               this.emit("cancel");
+            });
+            this[k].on("save", (values) => {
+               if (values.id) {
+                  return this.import(values, k);
+               }
+               this.save(values, k);
+            });
+         });
+
+         return Promise.all(allInits);
+      }
+
+      /**
+       * @method applicationLoad()
+       * prepare ourself with the current application
+       * @param {ABApplication} application
+       */
+      // applicationLoad(application) {
+      //    this.CurrentApplicationID = application.id;
+      // }
+
+      /**
+       * Show the busy indicator
+       */
+      busy() {
+         this.$component?.showProgress?.();
+      }
+
+      /**
+       * @method done()
+       * Finished saving, so hide the popup and clean up.
+       * @param {object} obj
+       */
+      done(obj) {
+         this.ready();
+         this.hide(); // hide our popup
+         this.emit("save", obj, this.selectNew);
+      }
+
+      /**
+       * @function hide()
+       *
+       * remove the busy indicator from the form.
+       */
+      hide() {
+         this.$component?.hide();
+      }
+
+      /**
+       * @method import()
+       * take an existing ABDataCollection and add it to our ABApplication.
+       * @param {ABODataCollection} dc
+       * @param {string} tabKey
+       *        which of our tabs triggered this method?
+       */
+      async import(dc, tabKey) {
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            await this.CurrentApplication.datacollectionInsert(dc);
+            this[tabKey].emit("save.successful", dc);
+            this.done(dc);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this object from the current datacollection list of
+            // the CurrentApplication.
+            // NOTE: It has error "queryRemove" is not a function
+            // await this.CurrentApplication.datacollectionRemove(newQuery);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      /**
+       * Hide the busy indicator
+       */
+      ready() {
+         this.$component?.hideProgress?.();
+      }
+      /**
+       * @method save
+       * take the data gathered by our child creation tabs, and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @param {string}  tabKey
+       *        the "key" of the tab initiating the save.
+       * @return {Promise}
+       */
+      async save(values, tabKey) {
+         // must have an application set.
+         if (!this.CurrentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            this[tabKey].emit("save.error", true);
+            return false;
+         }
+
+         // create a new (unsaved) instance of our data collection:
+         let newDataCollection = this.AB.datacollectionNew(values);
+
+         // have newObject validate it's values.
+         let validator = newDataCollection.isValid();
+         if (validator.fail()) {
+            this[tabKey].emit("save.error", validator);
+            // cb(validator); // tell current Tab component the errors
+            return false; // stop here.
+         }
+
+         if (!newDataCollection.createdInAppID) {
+            newDataCollection.createdInAppID = this.CurrentApplicationID;
+         }
+
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            let datacollection = await newDataCollection.save();
+            await this.CurrentApplication.datacollectionInsert(datacollection);
+            this[tabKey].emit("save.successful", datacollection);
+            this.done(datacollection);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this data collection from the current data collection list of
+            // the CurrentApplication.
+            // NOTE: It has error "datacollectionRemove" is not a function
+            // await this.CurrentApplication.datacollectionRemove(newDataCollection);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show(shouldSelectNew) {
+         if (shouldSelectNew != null) {
+            this.selectNew = shouldSelectNew;
+         }
+         this.$component?.show();
+
+         const id = $$(this.ids.tab).getValue();
+         this.switchTab(id);
+      }
+
+      switchTab(tabId) {
+         if (tabId == this.BlankTab?.ui()?.body?.id || !tabId) {
+            this.BlankTab?.onShow?.(this.CurrentApplication);
+         } else if (tabId == this.ImportTab?.ui()?.body?.id) {
+            this.ImportTab?.onShow?.(this.CurrentApplication);
+         }
+      }
+   }
+
+   return new UI_Work_DataCollection_List_NewDataCollection();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection_blank.js":
+/*!***************************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection_blank.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ui_work_dataCollection_list_newDataCollection_blank
+ *
+ * Display the form for creating a new ABDataCollection.
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_DataCollection_List_NewDataCollection_Blank extends UIClass {
+      constructor() {
+         super("ui_work_dataCollection_list_newDataCollection_blank", {
+            // component: base, <-- auto-generated
+
+            form: "",
+            buttonSave: "",
+            buttonCancel: "",
+            object: "",
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Create"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               rules: {
+                  // TODO:
+                  // name: inputValidator.rules.validateDataCollectionName
+               },
+               elements: [
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: L("Data Collection name"),
+                     labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           UIClass.CYPRESS_REF(
+                              this,
+                              "ui_work_dataCollection_list_newDatacollection_blank_name"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     id: this.ids.object,
+                     view: "richselect",
+                     label: L("Object"),
+                     name: "object",
+                     required: true,
+                     placeholder: L("Select an object"),
+                     labelWidth: 70,
+                     on: {
+                        onAfterRender() {
+                           UIClass.CYPRESS_REF(
+                              this,
+                              "ui_work_dataCollection_list_newDatacollection_blank_object"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.cancel();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 UIClass.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Add Data Collection"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              return this.save();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 UIClass.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$objectList = $$(this.ids.object);
+
+         // "save.error" is triggered by the ui_work_dataCollection_list_newDataCollection
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_dataCollection_list_newDataCollection
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         if (this.$form) {
+            this.$form.clearValidation();
+            this.$form.clear();
+         }
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_dataCollection_list_newDataCollection had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of queries:
+       *        - A javascript Error() dataCollection
+       *        - An ABValidation dataCollection returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            console.error(err);
+            var message = L("the entered data is invalid");
+            // if this was our Validation() dataCollection:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            var values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating DataCollection: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_dataCollection_list_newDatacollection successfully saved the values.
+       */
+      onSuccess() {
+         this.formClear();
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @function save
+       *
+       * verify the current info is ok, package it, and return it to be
+       * added to the application.createModel() method.
+       */
+      save() {
+         this.$buttonSave.disable();
+
+         var Form = this.$form;
+
+         Form.clearValidation();
+
+         // if it doesn't pass the basic form validation, return:
+         if (!Form.validate()) {
+            this.$buttonSave.enable();
+            return false;
+         }
+
+         let formVals = Form.getValues();
+         let id = formVals.object;
+         let selectedObject = this.AB.objectByID(id);
+         if (!selectedObject) {
+            selectedObject = this.AB.queryByID(id);
+         }
+
+         let values = {
+            name: formVals.name,
+            label: formVals.name,
+            settings: {
+               datasourceID: id,
+               isQuery: selectedObject?.isQuery ?? false,
+            },
+         };
+
+         this.emit("save", values);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         if ($$(this.ids.component)) $$(this.ids.component).show();
+      }
+
+      onShow(currentApplication) {
+         // populate object list
+         if (this.$objectList && currentApplication) {
+            let datasourceOpts = [];
+
+            // Objects
+            datasourceOpts = datasourceOpts.concat(
+               currentApplication.objectsIncluded().map((obj) => {
+                  return {
+                     id: obj.id,
+                     value: obj.label,
+                     icon: "fa fa-database",
+                     isQuery: false,
+                  };
+               })
+            );
+
+            // Queries
+            datasourceOpts = datasourceOpts.concat(
+               currentApplication.queriesIncluded().map((q) => {
+                  return {
+                     id: q.id,
+                     value: q.label,
+                     icon: "fa fa-filter",
+                     isQuery: true,
+                  };
+               })
+            );
+
+            this.$objectList.define("options", datasourceOpts);
+            this.$objectList.refresh();
+
+            // Set width of item list
+            let $suggestView = this.$objectList.getPopup();
+            $suggestView.attachEvent("onShow", () => {
+               $suggestView.define("width", 350);
+               $suggestView.resize();
+            });
+         }
+
+         // clear form
+         if (this.$form) {
+            this.$form.setValues({
+               name: "",
+               object: "",
+            });
+         }
+      }
+   }
+
+   return new UI_Work_DataCollection_List_NewDataCollection_Blank();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection_import.js":
+/*!****************************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_datacollection_list_newDatacollection_import.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ab_work_datacollection_list_newDatacollection_import
+ *
+ * Display the form for importing an existing data collection into the application.
+ *
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_DataCollection_List_NewDataCollection_Import extends UIClass {
+      constructor() {
+         super("ui_work_datacollection_list_newDatacollection_import", {
+            // component: base, <-- auto generated
+
+            form: "",
+            filter: "",
+            datacollectionList: "",
+            buttonSave: "",
+            buttonCancel: "",
+         });
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Existing"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               elements: [
+                  // Filter
+                  {
+                     cols: [
+                        {
+                           view: "icon",
+                           icon: "fa fa-filter",
+                           align: "left",
+                        },
+                        {
+                           view: "text",
+                           id: this.ids.filter,
+                           on: {
+                              onTimedKeyPress: () => this.filter(),
+                           },
+                        },
+                     ],
+                  },
+
+                  // Model list
+                  {
+                     view: "list",
+                     id: this.ids.datacollectionList,
+                     select: true,
+                     height: 200,
+                     minHeight: 250,
+                     maxHeight: 250,
+                     data: [],
+                     template: "<div>#label#</div>",
+                  },
+
+                  // Import & Cancel buttons
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => this.cancel(),
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Import"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => this.save(),
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+         this.$filter = $$(this.ids.filter);
+         this.$datacollectionList = $$(this.ids.datacollectionList);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         this.$buttonCancel = $$(this.ids.buttonCancel);
+
+         // "save.error" is triggered by the ui_work_datacollection_list_newDatacollection
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // "save.successful" is triggered by the ui_work_datacollection_list_newDatacollection
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+      }
+
+      onShow(app) {
+         this.formClear();
+
+         // now all objects are *global* but an application might only
+         // reference a sub set of them.  Here we just need to show
+         // the objects our current application isn't referencing:
+
+         const availableQueries = app.datacollectionsExcluded();
+         this.$datacollectionList.parse(availableQueries, "json");
+      }
+
+      filter() {
+         let filterText = this.$filter.getValue();
+         this.$datacollectionList.filter("#label#", filterText);
+      }
+
+      save() {
+         let selectedDataCollection =
+            this.$datacollectionList.getSelectedItem();
+         if (!selectedDataCollection) return false;
+
+         this.$buttonSave.disable();
+
+         this.emit("save", selectedDataCollection);
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         // Filter section
+         if (this.$form) {
+            this.$form.clearValidation();
+            this.$form.clear();
+         }
+         // Lists
+         if (this.$datacollectionList) {
+            this.$datacollectionList.clearAll();
+         }
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_object_list_newObject object had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of objects:
+       *        - A javascript Error() object
+       *        - An ABValidation object returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            console.error(err);
+            let message = L("the entered data is invalid");
+            // if this was our Validation() object:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            let values = this.$form.getValues();
+            webix.alert({
+               title: L("Error creating DataCollection: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_object_list_newObject successfully saved the values.
+       */
+      onSuccess() {
+         this.$buttonSave.enable();
+      }
+   }
+
+   return new UI_Work_DataCollection_List_NewDataCollection_Import();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_datacollection_workspace.js":
+/*!********************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_datacollection_workspace.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+   class UI_Work_Datacollection_Workspace extends UIClass {
+      constructor(settings = init_settings || {}) {
+         super("ui_work_datacollection_workspace");
+
+         this.settings = settings;
+      }
+
+      ui() {
+         return {};
+      }
+
+      init() {
+         // TODO
+         return Promise.resolve();
+      }
+
+      // applicationLoad(app) {
+      //    super.applicationLoad(app);
+      //    // TODO
+      // }
+
+      clearWorkspace() {
+         // TODO
+      }
+
+      populateWorkspace() {
+         // TODO
+      }
+   }
+
+   return new UI_Work_Datacollection_Workspace();
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/ui_work_object.js":
 /*!**************************************************!*\
   !*** ./src/rootPages/Designer/ui_work_object.js ***!
@@ -7373,8 +8565,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_object_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object_list */ "./src/rootPages/Designer/ui_work_object_list.js");
-/* harmony import */ var _ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace */ "./src/rootPages/Designer/ui_work_object_workspace.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_object_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_list */ "./src/rootPages/Designer/ui_work_object_list.js");
+/* harmony import */ var _ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace */ "./src/rootPages/Designer/ui_work_object_workspace.js");
 /*
  * ui_work_object
  *
@@ -7386,25 +8579,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var ObjectList = (0,_ui_work_object_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var ObjectWorkspace = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_1__["default"])(
-      AB
-      /* leave empty for default settings */
-   );
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+   var ObjectList = (0,_ui_work_object_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   var ObjectWorkspace = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-
-   class UI_Work_Object extends AB.ClassUI {
+   class UI_Work_Object extends UIClass {
       //.extend(idBase, function(App) {
 
       constructor() {
-         super("ab_work_object");
-
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
+         super("ui_work_object");
       }
 
       ui() {
@@ -7435,15 +8619,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
-      }
-
-      /**
        * @method applicationLoad
        * Initialize the Object Workspace with the given ABApplication.
        * @param {ABApplication} application
@@ -7451,7 +8626,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       applicationLoad(application) {
          var oldAppID = this.CurrentApplicationID;
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
 
          if (oldAppID != this.CurrentApplicationID) {
             ObjectWorkspace.clearObjectWorkspace();
@@ -7493,8 +8668,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
-/* harmony import */ var _ui_work_object_list_newObject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_list_newObject */ "./src/rootPages/Designer/ui_work_object_list_newObject.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
+/* harmony import */ var _ui_work_object_list_newObject__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_list_newObject */ "./src/rootPages/Designer/ui_work_object_list_newObject.js");
 /*
  * ui_work_object_list
  *
@@ -7504,25 +8680,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var UI_COMMON_LIST = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
 
-   // var L = function (...params) {
-   //    return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   // };
-
-   var AddForm = new _ui_work_object_list_newObject__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
+   var AddForm = new _ui_work_object_list_newObject__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
    // the popup form for adding a new process
 
-   class UI_Work_Object_List extends AB.ClassUI {
+   class UI_Work_Object_List extends UIClass {
       constructor() {
          super("ui_work_object_list");
 
-         this.CurrentApplicationID = null;
-         // {string}
-         // the ABApplication.id we are currently working with.
-
-         this.ListComponent = new UI_COMMON_LIST({
+         this.ListComponent = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new object",
@@ -7547,7 +8717,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
@@ -7616,20 +8786,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
-      }
-
-      addNew() {
-         console.error("!! Who is calling this?");
-         this.clickNewProcess(true);
-      }
-
-      /**
        * @function applicationLoad
        * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
@@ -7643,7 +8799,7 @@ __webpack_require__.r(__webpack_exports__);
          // if we are updating the SAME application, we will want to default
          // the list to the currently selectedItem
 
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
 
          if (oldAppID == this.CurrentApplicationID) {
             selectedItem = this.ListComponent.selectedItem();
@@ -7664,38 +8820,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @function callbackNewProcess
-       *
-       * Once a New Process was created in the Popup, follow up with it here.
-       */
-      // callbackNewProcess(err, object, selectNew, callback) {
-      //    debugger;
-      //    if (err) {
-      //       OP.Error.log("Error creating New Process", { error: err });
-      //       return;
-      //    }
-
-      //    let objects = this.CurrentApplication.objects();
-      //    processList.parse(objects);
-
-      //    // if (processList.exists(object.id))
-      //    // 	processList.updateItem(object.id, object);
-      //    // else
-      //    // 	processList.add(object);
-
-      //    if (selectNew != null && selectNew == true) {
-      //       $$(ids.list).select(object.id);
-      //    } else if (callback) {
-      //       callback();
-      //    }
-      // }
-
-      /**
        * @function clickNewProcess
-       *
        * Manages initiating the transition to the new Process Popup window
        */
-      clickNewProcess(selectNew) {
+      clickNewProcess(/* selectNew */) {
          // show the new popup
          AddForm.show();
       }
@@ -7729,9 +8857,9 @@ __webpack_require__.r(__webpack_exports__);
        */
       async exclude(item) {
          this.ListComponent.busy();
-         var application = this.AB.applicationByID(this.CurrentApplicationID);
-         await application.objectRemove(item);
-         this.ListComponent.dataLoad(application.objectsIncluded());
+         var app = this.CurrentApplication;
+         await app.objectRemove(item);
+         this.ListComponent.dataLoad(app.objectsIncluded());
 
          // this will clear the object workspace
          this.emit("selected", null);
@@ -7758,9 +8886,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object_list_newObject_blank */ "./src/rootPages/Designer/ui_work_object_list_newObject_blank.js");
-/* harmony import */ var _ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_list_newObject_csv */ "./src/rootPages/Designer/ui_work_object_list_newObject_csv.js");
-/* harmony import */ var _ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_list_newObject_import */ "./src/rootPages/Designer/ui_work_object_list_newObject_import.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_list_newObject_blank */ "./src/rootPages/Designer/ui_work_object_list_newObject_blank.js");
+/* harmony import */ var _ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_list_newObject_csv */ "./src/rootPages/Designer/ui_work_object_list_newObject_csv.js");
+/* harmony import */ var _ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_list_newObject_import */ "./src/rootPages/Designer/ui_work_object_list_newObject_import.js");
 /*
  * ui_work_object_list_newObject
  *
@@ -7786,33 +8915,23 @@ __webpack_require__.r(__webpack_exports__);
 
 // const ABImportExternal = require("./ab_work_object_list_newObject_external");
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const ClassUI = AB.ClassUI;
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_List_NewObject extends ClassUI {
-      //.extend(idBase, function(App) {
-
+   class UI_Work_Object_List_NewObject extends UIClass {
       constructor() {
-         var base = "ab_work_object_list_newObject";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super("ui_work_object_list_newObject", {
+            tab: "",
          });
-
-         this.currentApplicationID = null;
-         // {string}
-         // the ABApplication.id we are currently working on.
 
          this.selectNew = true;
          // {bool} do we select a new object after it is created.
 
          // var callback = null;
 
-         this.BlankTab = (0,_ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-         this.CsvTab = (0,_ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-         this.ImportTab = (0,_ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+         this.BlankTab = (0,_ui_work_object_list_newObject_blank__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.CsvTab = (0,_ui_work_object_list_newObject_csv__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+         this.ImportTab = (0,_ui_work_object_list_newObject_import__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
          /*
          this.ExternalTab = new ABImportExternal(AB);
          */
@@ -7846,7 +8965,7 @@ __webpack_require__.r(__webpack_exports__);
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -7871,7 +8990,7 @@ __webpack_require__.r(__webpack_exports__);
                            .querySelectorAll(".webix_item_tab")
                            .forEach((t) => {
                               var tid = t.getAttribute("button_id");
-                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                              UIClass.CYPRESS_REF(t, `${tid}_tab`);
                            });
                      },
                   },
@@ -7916,9 +9035,10 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABApplication} application
        *        The current ABApplication we are working with.
        */
-      applicationLoad(application) {
-         this.currentApplicationID = application?.id;
-      }
+      // applicationLoad(application) {
+
+      //    this.CurrentApplicationID = application?.id;
+      // }
 
       /**
        * @function hide()
@@ -7926,25 +9046,21 @@ __webpack_require__.r(__webpack_exports__);
        * remove the busy indicator from the form.
        */
       hide() {
-         if (this.$component) this.$component.hide();
+         this.$component?.hide();
       }
 
       /**
        * Show the busy indicator
        */
       busy() {
-         if (this.$component) {
-            this.$component.showProgress();
-         }
+         this.$component?.showProgress?.();
       }
 
       /**
        * Hide the busy indicator
        */
       ready() {
-         if (this.$component) {
-            this.$component.hideProgress();
-         }
+         this.$component?.hideProgress?.();
       }
 
       /**
@@ -7956,7 +9072,6 @@ __webpack_require__.r(__webpack_exports__);
          this.ready();
          this.hide(); // hide our popup
          this.emit("save", obj, this.selectNew);
-         // _logic.callbacks.onDone(null, obj, selectNew, callback); // tell parent component we're done
       }
 
       /**
@@ -7970,7 +9085,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplicationID) {
+         if (!this.CurrentApplicationID) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -7991,13 +9106,13 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          if (!newObject.createdInAppID) {
-            newObject.createdInAppID = this.currentApplicationID;
+            newObject.createdInAppID = this.CurrentApplicationID;
          }
 
          // show progress
          this.busy();
 
-         var application = this.AB.applicationByID(this.currentApplicationID);
+         var application = this.CurrentApplication;
 
          // if we get here, save the new Object
          try {
@@ -8021,7 +9136,6 @@ __webpack_require__.r(__webpack_exports__);
 
       /**
        * @function show()
-       *
        * Show this component.
        */
       show(shouldSelectNew) {
@@ -8033,13 +9147,13 @@ __webpack_require__.r(__webpack_exports__);
 
       switchTab(tabId) {
          if (tabId == this.BlankTab?.ui?.body?.id) {
-            this.BlankTab?.onShow?.(this.currentApplicationID);
+            this.BlankTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.CsvTab?.ui?.body?.id) {
-            this.CsvTab?.onShow?.(this.currentApplicationID);
+            this.CsvTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.ImportTab?.ui?.body?.id) {
-            this.ImportTab?.onShow?.(this.currentApplicationID);
+            this.ImportTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.ExternalTab?.ui?.body?.id) {
-            this.ExternalTab?.onShow?.(this.currentApplicationID);
+            this.ExternalTab?.onShow?.(this.CurrentApplicationID);
          }
       }
    }
@@ -8061,6 +9175,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_object_list_newObject_blank
  *
@@ -8068,19 +9183,17 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_List_NewObject_Blank extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject_Blank extends UIClass {
       constructor() {
-         var base = "ui_work_object_list_newObject_blank";
-         super({
-            component: base,
+         super("ui_work_object_list_newObject_blank", {
+            // component: base,
 
-            form: `${base}_blank`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
+            form: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
       }
 
@@ -8107,7 +9220,7 @@ __webpack_require__.r(__webpack_exports__);
                      labelWidth: 70,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_object_list_newObject_blank_name"
                            );
@@ -8121,7 +9234,7 @@ __webpack_require__.r(__webpack_exports__);
                      labelWidth: 0,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_object_list_newObject_blank_isSystemObj"
                            );
@@ -8143,7 +9256,7 @@ __webpack_require__.r(__webpack_exports__);
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -8159,7 +9272,7 @@ __webpack_require__.r(__webpack_exports__);
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -8285,7 +9398,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         if ($$(this.ids.component)) $$(this.ids.component).show();
+         $$(this.ids.component)?.show();
       }
    }
    return new UI_Work_Object_List_NewObject_Blank();
@@ -8305,8 +9418,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/CSVImporter.js */ "./src/utils/CSVImporter.js");
-/* harmony import */ var _utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/CSVImporter.js */ "./src/utils/CSVImporter.js");
+/* harmony import */ var _utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_1__);
 /*
  * ui_work_object_list_newObject_csv
  *
@@ -8315,27 +9429,26 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
    let uiSettings = AB.Config.uiSettings();
 
-   class UI_Work_Object_List_NewObject_Csv extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject_Csv extends UIClass {
       constructor() {
-         var base = "ui_work_object_list_newObject_csv";
-         super({
-            component: base,
+         super("ui_work_object_list_newObject_csv", {
+            // component: base,
 
-            form: `${base}_csvForm`,
-            uploadFileList: `${base}_uploadFileList`,
-            separatedBy: `${base}_separatedBy`,
-            headerOnFirstLine: `${base}_headerOnFirstLine`,
-            columnList: `${base}_columnList`,
-            importButton: `${base}_importButton`,
+            form: "",
+            uploadFileList: "",
+            separatedBy: "",
+            headerOnFirstLine: "",
+            columnList: "",
+            importButton: "",
          });
 
-         this._csvImporter = new (_utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_0___default())(AB);
+         this._csvImporter = new (_utils_CSVImporter_js__WEBPACK_IMPORTED_MODULE_1___default())(AB);
       }
 
       ui() {
@@ -8381,7 +9494,7 @@ __webpack_require__.r(__webpack_exports__);
                      autoheight: true,
                      borderless: true,
                      onClick: {
-                        webix_remove_upload: (e, id, trg) => {
+                        webix_remove_upload: (e, id /*, trg */) => {
                            this.removeCsvFile(id);
                         },
                      },
@@ -8409,7 +9522,7 @@ __webpack_require__.r(__webpack_exports__);
                      disabled: true,
                      value: true,
                      on: {
-                        onChange: (newVal, oldVal) => {
+                        onChange: (/* newVal, oldVal */) => {
                            this.populateColumnList();
                         },
                      },
@@ -8808,6 +9921,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_object_list_newObject_import
  *
@@ -8816,22 +9930,20 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_List_NewObject_Import extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject_Import extends UIClass {
       constructor() {
-         var base = "ui_work_object_list_newObject_import";
-         super({
-            component: base,
+         super("ui_work_object_list_newObject_import", {
+            // component: base,
 
-            form: `${base}_import`,
-            filter: `${base}_filter`,
-            objectList: `${base}_objectList`,
-            columnList: `${base}_columnList`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
+            form: "",
+            filter: "",
+            objectList: "",
+            columnList: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
       }
 
@@ -8900,7 +10012,7 @@ __webpack_require__.r(__webpack_exports__);
                            width: 30,
                         },
                      },
-                     template: (obj, common) => {
+                     template: (obj /* , common */) => {
                         // return `
                         //     <span style="float: left;">${common.isvisible(obj, common)}</span>
                         //     <span style="float: left;">${obj.label}</span>
@@ -8968,14 +10080,13 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       onShow(app) {
-         this.currentApp = app;
          this.formClear();
 
          // now all objects are *global* but an application might only
          // reference a sub set of them.  Here we just need to show
          // the objects our current application isn't referencing:
 
-         let availableObjs = this.currentApp.objectsExcluded(
+         let availableObjs = app.objectsExcluded(
             (o) => !o.isSystemObject || AB.Account.isSystemDesigner()
          );
          this.$objectList.parse(availableObjs, "json");
@@ -9127,19 +10238,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object_workspace_popupCustomIndex */ "./src/rootPages/Designer/ui_work_object_workspace_popupCustomIndex.js");
-/* harmony import */ var _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_popupDefineLabel */ "./src/rootPages/Designer/ui_work_object_workspace_popupDefineLabel.js");
-/* harmony import */ var _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_popupExport */ "./src/rootPages/Designer/ui_work_object_workspace_popupExport.js");
-/* harmony import */ var _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace_popupFrozenColumns */ "./src/rootPages/Designer/ui_work_object_workspace_popupFrozenColumns.js");
-/* harmony import */ var _ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHeaderEditMenu */ "./src/rootPages/Designer/ui_work_object_workspace_popupHeaderEditMenu.js");
-/* harmony import */ var _ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHideFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupHideFields.js");
-/* harmony import */ var _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ui_work_object_workspace_popupImport */ "./src/rootPages/Designer/ui_work_object_workspace_popupImport.js");
-/* harmony import */ var _ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ui_work_object_workspace_popupNewDataField */ "./src/rootPages/Designer/ui_work_object_workspace_popupNewDataField.js");
-/* harmony import */ var _ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ui_work_object_workspace_popupSortFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupSortFields.js");
-/* harmony import */ var _ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ui_work_object_workspace_popupViewSettings */ "./src/rootPages/Designer/ui_work_object_workspace_popupViewSettings.js");
-/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
-/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
-/* harmony import */ var _ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ui_work_object_workspace_popupTrack */ "./src/rootPages/Designer/ui_work_object_workspace_popupTrack.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_popupCustomIndex */ "./src/rootPages/Designer/ui_work_object_workspace_popupCustomIndex.js");
+/* harmony import */ var _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_popupDefineLabel */ "./src/rootPages/Designer/ui_work_object_workspace_popupDefineLabel.js");
+/* harmony import */ var _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace_popupExport */ "./src/rootPages/Designer/ui_work_object_workspace_popupExport.js");
+/* harmony import */ var _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui_work_object_workspace_popupFrozenColumns */ "./src/rootPages/Designer/ui_work_object_workspace_popupFrozenColumns.js");
+/* harmony import */ var _ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHeaderEditMenu */ "./src/rootPages/Designer/ui_work_object_workspace_popupHeaderEditMenu.js");
+/* harmony import */ var _ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHideFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupHideFields.js");
+/* harmony import */ var _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ui_work_object_workspace_popupImport */ "./src/rootPages/Designer/ui_work_object_workspace_popupImport.js");
+/* harmony import */ var _ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ui_work_object_workspace_popupNewDataField */ "./src/rootPages/Designer/ui_work_object_workspace_popupNewDataField.js");
+/* harmony import */ var _ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ui_work_object_workspace_popupSortFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupSortFields.js");
+/* harmony import */ var _ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ui_work_object_workspace_popupViewSettings */ "./src/rootPages/Designer/ui_work_object_workspace_popupViewSettings.js");
+/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
+/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
+/* harmony import */ var _ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ui_work_object_workspace_popupTrack */ "./src/rootPages/Designer/ui_work_object_workspace_popupTrack.js");
 /*
  * ui_work_object_workspace
  *
@@ -9172,14 +10284,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   var Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_11__["default"])(AB);
-   var Track = (0,_ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_12__["default"])(AB);
+   var Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_12__["default"])(AB);
+   var Track = (0,_ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_13__["default"])(AB);
 
-   class UIWorkObjectWorkspace extends AB.ClassUI {
+   class UIWorkObjectWorkspace extends UIClass {
       /**
        * @param {object} App
        * @param {string} idBase
@@ -9196,39 +10307,37 @@ __webpack_require__.r(__webpack_exports__);
        * 							}
        */
       constructor(settings = {}) {
-         var base = "abd_work_object_workspace";
+         super("abd_work_object_workspace", {
+            // component: `${base}_component`,
 
-         super({
-            component: `${base}_component`,
+            buttonAddField: "",
+            buttonDeleteSelected: "",
+            buttonExport: "",
+            buttonImport: "",
+            buttonFieldsVisible: "",
+            buttonFilter: "",
+            buttonFrozen: "",
+            buttonLabel: "",
+            buttonMassUpdate: "",
+            buttonRowNew: "",
+            buttonSort: "",
 
-            buttonAddField: `${base}_buttonAddField`,
-            buttonDeleteSelected: `${base}_deleteSelected`,
-            buttonExport: `${base}_buttonExport`,
-            buttonImport: `${base}_buttonImport`,
-            buttonFieldsVisible: `${base}_buttonFieldsVisible`,
-            buttonFilter: `${base}_buttonFilter`,
-            buttonFrozen: `${base}_buttonFrozen`,
-            buttonLabel: `${base}_buttonLabel`,
-            buttonMassUpdate: `${base}_buttonMassUpdate`,
-            buttonRowNew: `${base}_buttonRowNew`,
-            buttonSort: `${base}_buttonSort`,
+            listIndex: "",
+            buttonIndex: "",
 
-            listIndex: `${base}_listIndex`,
-            buttonIndex: `${base}_buttonIndex`,
+            datatable: "",
+            error: "",
+            error_msg: "",
 
-            datatable: `${base}_datatable`,
-            error: `${base}_error`,
-            error_msg: `${base}_error_msg`,
-
-            viewMenu: `${base}_viewMenu`,
-            viewMenuButton: `${base}_viewMenuButton`,
-            viewMenuNewView: `${base}_viewMenuNewView`,
+            viewMenu: "",
+            viewMenuButton: "",
+            viewMenuNewView: "",
 
             // Toolbar:
-            toolbar: `${base}_toolbar`,
+            toolbar: "",
 
-            noSelection: `${base}_noSelection`,
-            selectedObject: `${base}_selectedObject`,
+            noSelection: "",
+            selectedObject: "",
          });
 
          // default settings
@@ -9241,7 +10350,7 @@ __webpack_require__.r(__webpack_exports__);
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
          // this.settings = settings;
 
-         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_10__["default"])(AB);
+         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_11__["default"])(AB);
          this.hashViews = {};
          // {hash}  { view.id : webix_component }
          // a hash of the live workspace view components
@@ -9278,18 +10387,18 @@ __webpack_require__.r(__webpack_exports__);
          // var Gantt = new ABWorkspaceGantt(base);
          // this.hashViews["gantt"] = Gantt;
 
-         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_0__["default"](AB);
+         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
          this.PopupCustomIndex.on("changed", () => {
             this.refreshIndexes();
          });
 
          // // Various Popups on our page:
-         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_4__["default"])(AB);
+         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__["default"])(AB);
          this.PopupHeaderEditMenu.on("click", (action, field, node) => {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
-         this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
+         this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
          this.PopupDefineLabelComponent.on("changed", () => {
             this.callbackDefineLabel();
          });
@@ -9299,42 +10408,39 @@ __webpack_require__.r(__webpack_exports__);
          //    idBase
          // );
 
-         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_3__["default"](AB);
+         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__["default"](AB);
          this.PopupFrozenColumnsComponent.on("changed", (settings) => {
             this.callbackFrozenColumns(settings);
          });
 
-         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_5__["default"])(AB);
+         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__["default"])(AB);
          this.PopupHideFieldComponent.on("changed", (settings) => {
             this.callbackFieldsVisible(settings);
          });
 
          // var PopupMassUpdateComponent = new ABPopupMassUpdate(App, idBase);
 
-         this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_7__["default"])(AB);
+         this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_8__["default"])(AB);
 
-         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_8__["default"])(AB);
+         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__["default"])(AB);
          this.PopupSortFieldComponent.on("changed", (settings) => {
             this.callbackSortFields(settings);
          });
 
-         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
+         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__["default"](AB);
 
-         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_6__["default"](AB);
+         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__["default"](AB);
          // this.PopupImportObjectComponent.on("done", () => {
          //    this.populateObjectWorkspace(this.CurrentObject);
          // });
 
-         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_9__["default"])(AB);
+         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_10__["default"])(AB);
 
          // create ABViewDataCollection
          this.CurrentDatacollection = null;
          // {ABDataCollection}
          // An instance of an ABDataCollection to manage the data we are displaying
          // in our workspace.
-
-         this.CurrentApplicationID = null;
-         // {string} the ABApplication.id of the current application
 
          this.CurrentObjectID = null;
          // {string} the ABObject.id of the current Object we are editing.
@@ -9817,7 +10923,7 @@ __webpack_require__.r(__webpack_exports__);
        *        The current ABApplication we are working with.
        */
       applicationLoad(application) {
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
          this.PopupNewDataFieldComponent.applicationLoad(application);
 
          // this.CurrentDatacollection.application = CurrentApplication;
@@ -10037,10 +11143,10 @@ __webpack_require__.r(__webpack_exports__);
                                  }
                               }
 
-                              var application = this.AB.applicationByID(
-                                 this.CurrentApplicationID
+                              checkPages(
+                                 this.CurrentApplication.pages(),
+                                 (err) => {}
                               );
-                              checkPages(application.pages(), (err) => {});
                            })
                            .catch((err) => {
                               if (err && err.message) {
@@ -10348,9 +11454,10 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.selectedObject).show();
 
          this.CurrentObjectID = objectID;
+         var object = this.AB.objectByID(objectID);
 
          // get current view from object
-         this.workspaceViews.objectLoad(objectID);
+         this.workspaceViews.objectLoad(object);
          var currentView = this.workspaceViews.getCurrentView();
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
@@ -10377,7 +11484,6 @@ __webpack_require__.r(__webpack_exports__);
          //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).enable();
          // }
 
-         var object = this.AB.objectByID(objectID);
          this.CurrentDatacollection.datasource = object;
 
          Datatable.objectLoad(object);
@@ -10668,6 +11774,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_object_workspace_popupIndex
  *
@@ -10676,30 +11783,26 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const ClassUI = AB.ClassUI;
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
    const ABIndex = AB.Class.ABIndex;
 
-   class UI_Work_Object_Workspace_PopupIndex extends ClassUI {
+   class UI_Work_Object_Workspace_PopupIndex extends UIClass {
       /**
        * @param {object} App
        * @param {string} idBase
        */
       constructor() {
-         var idBase = "ui_work_object_workspace_popupIndex";
-
-         super({
-            component: idBase,
-            popup: `${idBase}_popup`,
-            form: `${idBase}_form`,
-            name: `${idBase}_name`,
-            fields: `${idBase}_fields`,
-            unique: `${idBase}_unique`,
-            removeButton: `${idBase}_removeButton`,
-            saveButton: `${idBase}_saveButton`,
+         super("ui_work_object_workspace_popupIndex", {
+            // component: idBase,
+            popup: "",
+            form: "",
+            name: "",
+            fields: "",
+            unique: "",
+            removeButton: "",
+            saveButton: "",
          });
       }
 
@@ -10731,7 +11834,7 @@ __webpack_require__.r(__webpack_exports__);
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -11002,6 +12105,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_object_workspace_popupDefineLabel
  *
@@ -11010,24 +12114,17 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupDefineLabel extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupDefineLabel extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupDefineLabel";
-
-         super({
-            component: idBase,
-            format: `${idBase}_format`,
-            list: `${idBase}_list`,
-            buttonSave: `${idBase}_buttonSave`,
+         super("ui_work_object_workspace_popupDefineLabel", {
+            // component: idBase,
+            format: "",
+            list: "",
+            buttonSave: "",
          });
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
       }
 
       ui() {
@@ -11128,15 +12225,6 @@ __webpack_require__.r(__webpack_exports__);
          this.emit("changed", this._settings);
       }
 
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
       buttonCancel() {
          $$(this.ids.component).hide();
       }
@@ -11191,7 +12279,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       objectLoad(object) {
-         this.CurrentObjectID = object.id;
+         super.objectLoad(object);
 
          // clear our list
          var List = $$(this.ids.list);
@@ -11285,6 +12373,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ab_work_object_workspace_popupExport
  *
@@ -11293,22 +12382,15 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
 
-   class UI_Work_Object_PopupExport extends AB.ClassUI {
+   class UI_Work_Object_PopupExport extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupExport";
-
-         super({
-            popupExport: `${idBase}_popupExport`,
-            list: `${idBase}_popupExport_list`,
+         super("ui_work_object_workspace_popupExport", {
+            popupExport: "",
+            list: "",
          });
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
 
          this.DatacollectionID = null;
          // {string}
@@ -11366,15 +12448,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
-      /**
        * @method Datacollection()
        * A helper to return the current ABObject we are working with.
        * @return {ABObject}
@@ -11383,9 +12456,9 @@ __webpack_require__.r(__webpack_exports__);
          return this.AB.datacollectionByID(this.DatacollectionID);
       }
 
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       dataCollectionLoad(dc) {
          this.DatacollectionID = dc.id;
@@ -11499,7 +12572,7 @@ __webpack_require__.r(__webpack_exports__);
             $$(this.ids.popupExport).hide();
          } catch (err) {
             this.AB.notify.developer(err, {
-               message: `ui_work_object_workspace_popupExport:export(): could not export: ${name}`,
+               message: `${this.ids.component}:export(): could not export: ${name}`,
             });
          }
       }
@@ -11522,6 +12595,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_object_workspace_popupFrozenColumns
  *
@@ -11529,31 +12603,21 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-// const ABComponent = require("../AppBuilder/platform/ABComponent");
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   // const uiConfig = AB.Config.uiSettings();
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupFrozenColumns extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupFrozenColumns extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupFrozenColumns";
-         super({
-            component: `${idBase}_popupFrozen`,
-            list: `${idBase}_popupFrozen_list`,
+         super("ui_work_object_workspace_popupFrozenColumns", {
+            list: "",
          });
 
          this._setting = "";
          // {string}
          // the ABField.columnName of the field that we want to freeze at.
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
-
-         var CurrentView = null;
       }
 
       ui() {
@@ -11589,7 +12653,7 @@ __webpack_require__.r(__webpack_exports__);
                      value: L("Clear All"),
                      type: "form",
                      on: {
-                        onItemClick: (id, e, node) => {
+                        onItemClick: (/* id, e, node */) => {
                            return this.clickClearAll();
                         },
                      },
@@ -11606,7 +12670,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       // Our init() function for setting up our UI
-      init(AB) {
+      async init(AB) {
          this.AB = AB;
 
          webix.ui(this.ui());
@@ -11614,15 +12678,6 @@ __webpack_require__.r(__webpack_exports__);
 
       changed() {
          this.emit("changed", this._setting);
-      }
-
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       // our internal business logic
@@ -11643,7 +12698,7 @@ __webpack_require__.r(__webpack_exports__);
        * update the list to show which columns are frozen by showing an icon
        * next to the column name
        */
-      clickListItem(id, e, node) {
+      clickListItem(id /*, e, node */) {
          // update our Object with current frozen column id
          var List = $$(this.ids.list);
          var recordClicked = List.getItem(id);
@@ -11757,9 +12812,9 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABObject} object
        *        the currently selected object.
        */
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       onShow() {
          // refresh list
@@ -11821,7 +12876,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
 /*
  * ab_work_object_workspace_popupHeaderEditMenu
  *
@@ -11832,15 +12888,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var ListClass = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   var ListClass = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
    class UIWorkObjectWorkspacePopupHeaderEditMenu extends ListClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupHeaderEditMenu";
-
          super("ui_work_object_workspace_popupHeaderEditMenu");
 
          // overwrite the default common menu with our column Header
@@ -11922,6 +12975,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_object_workspace_popupHideFields
  *
@@ -11930,29 +12984,21 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupHideFields extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupHideFields extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupHideFields";
-
-         super({
-            component: `${idBase}`,
-            list: `${idBase}_list`,
-            buttonHide: `${idBase}_buttonHide`,
-            buttonShow: `${idBase}_buttonShow`,
+         super("ui_work_object_workspace_popupHideFields", {
+            list: "",
+            buttonHide: "",
+            buttonShow: "",
          });
 
          this._settings = [];
          // {array}
          // an array of the ABField.columnNames of the fields
          // that we want to hide.
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
 
          this._frozenColumnID = null;
          // {string}
@@ -12048,15 +13094,6 @@ __webpack_require__.r(__webpack_exports__);
 
       changed() {
          this.emit("changed", this._settings);
-      }
-
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       // our internal business logic
@@ -12249,9 +13286,9 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABObject} object
        *        the currently selected ABObject.
        */
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       /**
        * @method onShow
@@ -12317,7 +13354,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _properties_views_ABViewCSVImporter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./properties/views/ABViewCSVImporter */ "./src/rootPages/Designer/properties/views/ABViewCSVImporter.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _properties_views_ABViewCSVImporter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/views/ABViewCSVImporter */ "./src/rootPages/Designer/properties/views/ABViewCSVImporter.js");
 /*
  * ui_work_object_workspace_popupImport
  *
@@ -12326,29 +13364,21 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-   const ViewProperties = (0,_properties_views_ABViewCSVImporter__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+   const ViewProperties = (0,_properties_views_ABViewCSVImporter__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
-   class UI_Work_Object_Workspace_PopupImport extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupImport extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupImport";
-
-         super({
-            component: idBase,
-         });
+         super("ui_work_object_workspace_popupImport");
 
          this._mockApp = AB.applicationNew({});
          // {ABApplication}
          // Any ABViews we create are expected to be in relation to
          // an ABApplication, so we create a "mock" app for our
          // workspace views to use to display.
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
 
          this.popup = null;
          // {ABViewCSVImporter}
@@ -12374,17 +13404,8 @@ __webpack_require__.r(__webpack_exports__);
          this.popup.objectLoad(this.CurrentObject);
       }
 
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
       objectLoad(object) {
-         this.CurrentObjectID = object.id;
+         super.objectLoad(object);
 
          this.popup?.objectLoad(object);
       }
@@ -12420,7 +13441,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _properties_PropertyManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./properties/PropertyManager */ "./src/rootPages/Designer/properties/PropertyManager.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _properties_PropertyManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/PropertyManager */ "./src/rootPages/Designer/properties/PropertyManager.js");
 /*
  * ui_work_object_workspace_popupNewDataField
  *
@@ -12433,26 +13455,21 @@ __webpack_require__.r(__webpack_exports__);
 // const ABFieldManager = require("../AppBuilder/core/ABFieldManager");
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const ClassUI = AB.ClassUI;
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   var PropertyManager = (0,_properties_PropertyManager__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var PropertyManager = (0,_properties_PropertyManager__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
-   class UIWorkObjectWorkspacePopupNewDataField extends ClassUI {
+   class UI_Work_Object_Workspace_PopupNewDataField extends UIClass {
       //.extend(idBase, function(App) {
 
       constructor() {
-         var base = "abd_work_object_workspace_popupNewDataField";
-
-         super({
-            component: `${base}_popNewField`,
-            types: `${base}_popNewField_types`,
-            editDefinitions: `${base}_popNewField_editDefinitions`,
-            buttonSave: `${base}_popNewField_buttonSave`,
-            buttonCancel: `${base}_popNewField_buttonCancel`,
+         super("abd_work_object_workspace_popupNewDataField", {
+            types: "",
+            editDefinitions: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
 
          // var _objectHash = {}; // 'name' => ABFieldXXX object
@@ -12473,11 +13490,6 @@ __webpack_require__.r(__webpack_exports__);
          this._currentEditor = null;
          // {PropertyEditor}
          // The current Property editor that is being displayed.
-
-         // var _currentApplication = null;
-         this.CurrentObjectID = null;
-         // {string}
-         // The current ABObject.id being edited in our Object Workspace.
 
          this.defaultEditorComponent = null;
          // {PropertyEditor}
@@ -12527,7 +13539,7 @@ __webpack_require__.r(__webpack_exports__);
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -12556,7 +13568,7 @@ __webpack_require__.r(__webpack_exports__);
                            { id: "temporary", view: "temporary" },
                         ],
                         on: {
-                           onChange: (id, ev, node) => {
+                           onChange: (id /* , ev, node */) => {
                               this.onChange(id);
                            },
                         },
@@ -12703,16 +13715,12 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       objectLoad(object) {
-         this.CurrentObjectID = object.id;
+         super.objectLoad(object);
 
          // make sure all the Property components refer to this ABObject
          for (var menuName in this._componentHash) {
             this._componentHash[menuName]?.objectLoad(this.CurrentObjectID);
          }
-      }
-
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       buttonCancel() {
@@ -12996,7 +14004,7 @@ __webpack_require__.r(__webpack_exports__);
          if (this.CurrentObject.isImported) allowFieldKey = "connectObject";
 
          if (allowFieldKey) {
-            var connectField = ABFieldManager.allFields().filter(
+            var connectField = PropertyManager.fields().filter(
                (f) => f.defaults().key == allowFieldKey
             )[0];
             if (!connectField) return;
@@ -13155,7 +14163,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    } // end class
 
-   return new UIWorkObjectWorkspacePopupNewDataField();
+   return new UI_Work_Object_Workspace_PopupNewDataField();
 }
 
 
@@ -13172,6 +14180,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_object_workspace_popupSortFields
  *
@@ -13179,28 +14188,21 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupSortFields extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupSortFields extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupSortFields";
-
-         super({
-            component: `${idBase}`,
-            list: `${idBase}_list`,
-            form: `${idBase}_form`,
+         super("ui_work_object_workspace_popupSortFields", {
+            list: "",
+            form: "",
          });
 
          this._blockOnChange = false;
          // {bool}
          // Do we process our onChange event or not?
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
       }
 
       uiForm() {
@@ -13244,15 +14246,6 @@ __webpack_require__.r(__webpack_exports__);
       init(AB) {
          this.AB = AB;
          webix.ui(this.ui());
-      }
-
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       /**
@@ -13389,9 +14382,9 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABObject} object
        *        the currently selected object.
        */
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       /**
        * @method setSettings
@@ -13710,6 +14703,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ab_work_object_workspace_track
  *
@@ -13718,13 +14712,12 @@ __webpack_require__.r(__webpack_exports__);
  */
 // const ABComponent = require("../classes/platform/ABComponent");
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const ClassUI = AB.ClassUI;
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
-   class UIWorkObjectWorkspacePopupTrack extends ClassUI {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Object_Workspace_PopupTrack extends UIClass {
       /**
        * @param {object} App
        * @param {string} idBase
@@ -13766,7 +14759,7 @@ __webpack_require__.r(__webpack_exports__);
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -13854,7 +14847,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       open(object, rowId) {
-         this.CurrentObject = object;
+         this.objectLoad(object);
 
          let ids = this.ids;
          let $popup = $$(ids.popup);
@@ -13894,7 +14887,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UIWorkObjectWorkspacePopupTrack();
+   return new UI_Work_Object_Workspace_PopupTrack();
 }
 
 
@@ -13911,9 +14904,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGantt */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGantt.js");
-/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
-/* harmony import */ var _properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewKanban */ "./src/rootPages/Designer/properties/workspaceViews/ABViewKanban.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGantt */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGantt.js");
+/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
+/* harmony import */ var _properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewKanban */ "./src/rootPages/Designer/properties/workspaceViews/ABViewKanban.js");
 /*
  * ui_work_object_workspace_popupViewSettings
  *
@@ -13926,37 +14920,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const ABViewGrid = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-   const ClassUI = AB.ClassUI;
+   const ABViewGrid = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-
-   class UI_Work_Object_Workspace_PopupAddView extends ClassUI {
+   class UI_Work_Object_Workspace_PopupAddView extends UIClass {
       constructor() {
          var base = "abd_work_object_workspace_popupAddView";
-
-         super({
-            component: `${base}_component`,
-            form: `${base}_popupAddViewForm`,
-            formAdditional: `${base}_popupAddViewFormAdditional`,
-            nameInput: `${base}_popupAddViewName`,
-            typeInput: `${base}_popupAddViewType`,
-            cancelButton: `${base}_popupAddViewCancelButton`,
-            cancelX: `${base}_cancelX`,
-            saveButton: `${base}_popupAddViewSaveButton`,
+         super(base, {
+            form: "",
+            formAdditional: "",
+            nameInput: "",
+            typeInput: "",
+            cancelButton: "",
+            cancelX: "",
+            saveButton: "",
          });
-
-         this.CurrentObjectID = null;
-         // {string}
-         // The current ABObject.id being edited in our Object Workspace.
 
          this._view = null;
          // {Grid/kanban/Gantt} the current UI View type we are displaying
 
-         this.comKanban = (0,_properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${base}_kanban`);
-         this.comGantt = (0,_properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_0__["default"])(AB, `${base}_gantt`);
+         this.comKanban = (0,_properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_3__["default"])(AB, `${base}_kanban`);
+         this.comGantt = (0,_properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${base}_gantt`);
       }
 
       ui() {
@@ -13985,10 +14970,8 @@ __webpack_require__.r(__webpack_exports__);
                      onChange: (/* id */) => {
                         $$(ids.nameInput).validate();
                      },
-                  },
-                  on: {
                      onAfterRender() {
-                        ClassUI.CYPRESS_REF(this);
+                        UIClass.CYPRESS_REF(this);
                      },
                   },
                },
@@ -14039,7 +15022,7 @@ __webpack_require__.r(__webpack_exports__);
                         },
                         on: {
                            onAfterRender() {
-                              ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -14055,7 +15038,7 @@ __webpack_require__.r(__webpack_exports__);
                         },
                         on: {
                            onAfterRender() {
-                              ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -14090,7 +15073,7 @@ __webpack_require__.r(__webpack_exports__);
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -14113,14 +15096,6 @@ __webpack_require__.r(__webpack_exports__);
          webix.ui(this.ui());
          return Promise.resolve();
       } // init()
-
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
 
       switchType(typeView) {
          $$(this.ids.formAdditional).showBatch(typeView);
@@ -14246,7 +15221,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
 /*
  * ui_work_object_workspace_view_grid
  *
@@ -14259,14 +15235,14 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   const ViewGridProperties = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const ViewGridProperties = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
-   class UI_Work_Object_Workspace_View_Grid extends AB.ClassUI {
+   class UI_Work_Object_Workspace_View_Grid extends UIClass {
       constructor() {
          super("ui_work_object_workspace_view_grid");
 
@@ -14275,10 +15251,6 @@ __webpack_require__.r(__webpack_exports__);
          // Any ABViews we create are expected to be in relation to
          // an ABApplication, so we create a "mock" app for our
          // workspace views to use to display.
-
-         this.objectID = null;
-         // {string}
-         // the current ABObject.id that is being displayed in our space.
       }
 
       // Our webix UI definition:
@@ -14299,7 +15271,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
       }
 
@@ -14354,10 +15326,6 @@ __webpack_require__.r(__webpack_exports__);
 
       get $grid() {
          return this._currentComponent?.getDataTable();
-      }
-
-      objectLoad(object) {
-         this.objectID = object.id;
       }
 
       ready() {
@@ -14462,7 +15430,7 @@ __webpack_require__.r(__webpack_exports__);
          sorts,
          frozenColumnID
       ) {
-         var object = this.AB.objectByID(this.objectID);
+         var object = this.CurrentObject;
          var columnHeaders = object.columnHeaders(true, true, [], [], []);
 
          // this calculation is done in the ABViewGridComponent.refreshHeader():
@@ -14529,10 +15497,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
-/* harmony import */ var _properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGantt */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGantt.js");
-/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
-/* harmony import */ var _properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewKanban */ "./src/rootPages/Designer/properties/workspaceViews/ABViewKanban.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
+/* harmony import */ var _properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGantt */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGantt.js");
+/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
+/* harmony import */ var _properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewKanban */ "./src/rootPages/Designer/properties/workspaceViews/ABViewKanban.js");
 // ABObjectWorkspaceViewCollection.js
 //
 // Manages the settings for a collection of views in the AppBuilder Object
@@ -14554,16 +15523,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
 
-   const Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    // Gather a list of the various View Properties
-   const ViewGanttProperties = (0,_properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-   const ViewGridProperties = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
-   const ViewKanbanProperties = (0,_properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
+   const ViewGanttProperties = (0,_properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+   const ViewGridProperties = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
+   const ViewKanbanProperties = (0,_properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_4__["default"])(AB);
 
    var hashViewProperties = {};
    hashViewProperties[ViewGanttProperties.type()] = ViewGanttProperties;
@@ -14578,14 +15546,12 @@ __webpack_require__.r(__webpack_exports__);
       list: [],
    };
 
-   class ABObjectWorkspaceViewCollection {
+   class ABObjectWorkspaceViewCollection extends UIClass {
       constructor() {
+         super("ui_work_object_workspace_workspaceviews");
+
          this.AB = AB;
          // {ABFactory}
-
-         this.objectID = null;
-         // {string}
-         // The current ABObject.id we are providing workspace views for
 
          this._settings = null;
          // {hash} { ABObject.id  : {collection} }
@@ -14606,14 +15572,14 @@ __webpack_require__.r(__webpack_exports__);
          this._settings = (await this.AB.Storage.get("workspaceviews")) || {};
       }
 
-      objectLoad(objectID) {
-         if (this.objectID) {
+      objectLoad(object) {
+         if (this.CurrentObjectID) {
             // save current data:
-            this._settings[this.objectID] = this.toObj();
+            this._settings[this.CurrentObjectID] = this.toObj();
          }
-         this.objectID = objectID;
+         super.objectLoad(object);
 
-         this.fromObj(this._settings[objectID]);
+         this.fromObj(this._settings[this.CurrentObjectID]);
       }
 
       /**
@@ -14722,7 +15688,7 @@ __webpack_require__.r(__webpack_exports__);
        * @return {Promise}
        */
       async save() {
-         this._settings[this.objectID] = this.toObj();
+         this._settings[this.CurrentObjectID] = this.toObj();
          await this.AB.Storage.set("workspaceviews", this._settings);
       }
 
@@ -14774,6 +15740,559 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/ui_work_process.js":
+/*!***************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_process.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_process_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_process_list */ "./src/rootPages/Designer/ui_work_process_list.js");
+/* harmony import */ var _ui_work_process_workspace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_process_workspace */ "./src/rootPages/Designer/ui_work_process_workspace.js");
+/*
+ * ui_work_process
+ *
+ * Display the Process Tab UI:
+ *
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+
+   class UI_Work_Process extends UIClass {
+      constructor() {
+         super("ui_work_process");
+
+         this.CurrentProcessID = null;
+         // {string} uuid
+         // The current ABProcess.id we are working with.
+
+         this.ProcessList = (0,_ui_work_process_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.ProcessWorkspace = (0,_ui_work_process_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            type: "space",
+            margin: 10,
+            cols: [
+               this.ProcessList.ui(),
+               { view: "resizer", css: "bg_gray", width: 11 },
+               this.ProcessWorkspace.ui(),
+            ],
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         // Our init() function for setting up our UI
+         // the ProcessWorkspace can show an [add] button if there is
+         // no Process selected. When that Add button is pressed,
+         // trigger our addNew process on our ProcessList
+         this.ProcessWorkspace.on("addNew", () => {
+            this.ProcessList.clickNewProcess(true);
+         });
+
+         this.ProcessList.on("selected", this.select);
+
+         this.ProcessList.on("deleted", (process) => {
+            if (this.CurrentProcessID == process.id) {
+               this.select(null);
+            }
+         });
+
+         return Promise.all([
+            this.ProcessWorkspace.init(AB),
+            this.ProcessList.init(AB),
+         ]);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         $$(this.ids.component).show();
+
+         var app = this.CurrentApplication;
+         if (app && (!app.loadedProcesss || this.ProcessList?.count() < 1)) {
+            this.ProcessList?.busy();
+            this.ProcessList?.applicationLoad(app);
+            this.ProcessList?.ready();
+         }
+      }
+
+      select(process) {
+         this.CurrentProcessID = process.id;
+
+         if (process == null) this.ProcessWorkspace?.clearWorkspace();
+         else this.ProcessWorkspace?.populateWorkspace(process);
+      }
+   }
+
+   return new UI_Work_Process();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_process_list.js":
+/*!********************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_process_list.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
+/* harmony import */ var _ui_work_process_list_newProcess__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_process_list_newProcess */ "./src/rootPages/Designer/ui_work_process_list_newProcess.js");
+/*
+ * ui_work_process_list
+ *
+ * Manage the Process List
+ *
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+
+   class UI_Work_Process_List extends UIClass {
+      constructor() {
+         super("ui_work_process_list");
+
+         // {ui_common_list} instance to display a list of our objects.
+         this.ListComponent = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, {
+            idBase: this.ids.component,
+            labels: {
+               addNew: "Add new process",
+               confirmDeleteTitle: "Delete Process",
+               title: "Processes",
+               searchPlaceholder: "Process name",
+            },
+            // we can overrid the default template like this:
+            templateListItem:
+               "<div class='ab-object-list-item'>#label#{common.iconGear}</div>",
+            menu: {
+               copy: false,
+               exclude: true,
+            },
+         });
+
+         // the popup form for adding a new process
+         this.AddForm = (0,_ui_work_process_list_newProcess__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+      }
+
+      // Our webix UI definition:
+      ui() {
+         return this.ListComponent.ui();
+      }
+
+      // Our init() function for setting up our UI
+      async init(AB) {
+         this.AB = AB;
+
+         this.on("addNew", (selectNew) => {
+            // if we receive a signal to add a new Object from another source
+            // like the blank object workspace offering an Add New button:
+            this.clickNewProcess(selectNew);
+         });
+
+         //
+         // List of Processes
+         //
+         await this.ListComponent.init(AB);
+
+         this.ListComponent.on("selected", (item) => {
+            this.emit("selected", item);
+         });
+
+         this.ListComponent.on("addNew", (selectNew) => {
+            this.clickNewProcess(selectNew);
+         });
+
+         this.ListComponent.on("deleted", (item) => {
+            this.emit("deleted", item);
+         });
+
+         this.ListComponent.on("exclude", (item) => {
+            this.exclude(item);
+         });
+
+         this.ListComponent.on("copied", (data) => {
+            this.copy(data);
+         });
+
+         //
+         // Add Form
+         //
+         await this.AddForm.init(AB);
+
+         this.AddForm.on("cancel", () => {
+            this.AddForm.hide();
+         });
+
+         this.AddForm.on("save", (process /*, select */) => {
+            // the AddForm already takes care of updating the
+            // CurrentApplication.
+
+            // we just need to update our list of objects
+            this.applicationLoad(this.CurrentApplication);
+
+            // if (select) {
+            this.ListComponent.select(process.id);
+            // }
+         });
+      }
+
+      /**
+       * @function applicationLoad
+       * Initialize the List from the provided ABApplication
+       * If no ABApplication is provided, then show an empty form. (create operation)
+       * @param {ABApplication} application
+       *        [optional] The current ABApplication we are working with.
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application);
+         this.ListComponent.dataLoad(application?.processes());
+         this.AddForm.applicationLoad(application);
+      }
+
+      /**
+       * @function clickNewProcess
+       *
+       * Manages initiating the transition to the new Process Popup window
+       */
+      clickNewProcess(/* selectNew */) {
+         // show the new popup
+         this.AddForm.show();
+      }
+
+      /**
+       * @function copy
+       * the list component notified us of a copy action and has
+       * given us the new data for the copied item.
+       *
+       * now our job is to create a new instance of that Item and
+       * tell the list to display it
+       */
+      copy(data) {
+         this.ListComponent.busy();
+
+         this.CurrentApplication.processCreate(data.item).then((newProcess) => {
+            this.ListComponent.ready();
+            this.ListComponent.dataLoad(this.CurrentApplication.processes());
+            this.ListComponent.select(newProcess.id);
+         });
+      }
+
+      /**
+       * @function exclude
+       * the list component notified us of an exclude action and which
+       * item was chosen.
+       *
+       * perform the removal and update the UI.
+       */
+      async exclude(process) {
+         this.ListComponent.busy();
+         await this.CurrentApplication.processRemove(process);
+         this.ListComponent.dataLoad(this.CurrentApplication.processes());
+
+         // this will clear the object workspace
+         this.emit("selected", null);
+      }
+
+      busy() {
+         this.ListComponent.busy();
+      }
+
+      ready() {
+         this.ListComponent.ready();
+      }
+   }
+   return new UI_Work_Process_List();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_process_list_newProcess.js":
+/*!*******************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_process_list_newProcess.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ui_work_process_list_newProcess
+ *
+ * Display the form for creating a new Application.
+ *
+ */
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Process_List_NewProcess extends UIClass {
+      constructor() {
+         super("ui_work_process_list_newProcess", {
+            form: "",
+            buttonCancel: "",
+            buttonSave: "",
+         });
+
+         // {bool} do we select a new data collection after it is created.
+         this.selectNew = true;
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            view: "window",
+            id: this.ids.component,
+            position: "center",
+            modal: true,
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new Process"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           UIClass.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               rules: {
+                  // TODO:
+                  // name: inputValidator.rules.validateObjectName
+               },
+               elements: [
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: L("Enter process name"),
+                     labelWidth: 70,
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.emit("cancel");
+                           },
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Save"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              return this.save();
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         webix.ui(this.ui());
+         this.$component = $$(this.ids.component);
+         this.$form = $$(this.ids.form);
+         this.$buttonSave = $$(this.ids.buttonSave);
+         webix.extend(this.$component, webix.ProgressBar);
+
+         this.hide();
+      }
+
+      /**
+       * @method save
+       * take the data gathered by our child creation tabs, and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @return {Promise}
+       */
+      async save(values) {
+         // must have an application set.
+         if (!this.CurrentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            this.emit("save.error", true);
+            return false;
+         }
+
+         this.busy();
+
+         try {
+            // create a new process:
+            let newProcess = await this.CurrentApplication.processCreate(
+               values
+            );
+            this.emit("save", newProcess);
+            this.clear();
+            this.hide();
+         } catch (err) {
+            console.error(err);
+            this.emit("save.error", err);
+            return false;
+         }
+
+         this.ready();
+         return true;
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         if (this.$component) this.$component.show();
+      }
+
+      /**
+       * @function hide()
+       *
+       * remove the busy indicator from the form.
+       */
+      hide() {
+         if (this.$component) this.$component.hide();
+      }
+
+      /**
+       * @function clear()
+       *
+       */
+      clear() {
+         this.$form.clearValidation();
+         this.$form.clear();
+         this.$buttonSave.enable();
+      }
+
+      /**
+       * Show the busy indicator
+       */
+      busy() {
+         if (this.$component && this.$component.showProgress) {
+            this.$component.showProgress({ type: "icon" });
+         }
+      }
+
+      /**
+       * Hide the busy indicator
+       */
+      ready() {
+         if (this.$component && this.$component.hideProgress) {
+            this.$component.hideProgress();
+         }
+      }
+   }
+
+   return new UI_Work_Process_List_NewProcess();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_process_workspace.js":
+/*!*************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_process_workspace.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+   class UI_Work_Process_Workspace extends UIClass {
+      constructor() {
+         super();
+      }
+
+      ui() {
+         return {};
+      }
+
+      async init(AB) {
+         this.AB = AB;
+      }
+
+      populateWorkspace() {}
+   }
+
+   return new UI_Work_Process_Workspace();
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/ui_work_query.js":
 /*!*************************************************!*\
   !*** ./src/rootPages/Designer/ui_work_query.js ***!
@@ -14785,8 +16304,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_query_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_query_list */ "./src/rootPages/Designer/ui_work_query_list.js");
-/* harmony import */ var _ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_workspace */ "./src/rootPages/Designer/ui_work_query_workspace.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_query_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list */ "./src/rootPages/Designer/ui_work_query_list.js");
+/* harmony import */ var _ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_query_workspace */ "./src/rootPages/Designer/ui_work_query_workspace.js");
 /*
  * ui_work_query
  *
@@ -14798,16 +16318,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   class UI_Work_Query extends AB.ClassUI {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+   class UI_Work_Query extends UIClass {
       constructor() {
          super("ab_work_query");
 
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
-
-         this.QueryList = (0,_ui_work_query_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-         this.QueryWorkspace = (0,_ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.QueryList = (0,_ui_work_query_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.QueryWorkspace = (0,_ui_work_query_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
       }
 
       ui() {
@@ -14836,15 +16354,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
-      }
-
-      /**
        * @function applicationLoad
        *
        * Initialize the Query Workspace with the given ABApplication.
@@ -14852,7 +16361,7 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABApplication} application
        */
       applicationLoad(application) {
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
 
          this.QueryWorkspace.clearWorkspace();
          this.QueryList.applicationLoad(application);
@@ -14880,7 +16389,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return UI_Work_Query;
+   return new UI_Work_Query();
 }
 
 
@@ -14897,8 +16406,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
-/* harmony import */ var _ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list_newQuery */ "./src/rootPages/Designer/ui_work_query_list_newQuery.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_common_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_common_list */ "./src/rootPages/Designer/ui_common_list.js");
+/* harmony import */ var _ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_query_list_newQuery */ "./src/rootPages/Designer/ui_work_query_list_newQuery.js");
 /*
  * ui_work_query_list
  *
@@ -14908,19 +16418,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const UI_COMMON_LIST = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
 
-   class UI_Work_Query_List extends AB.ClassUI {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+   class UI_Work_Query_List extends UIClass {
       constructor() {
          super("ui_work_query_list");
 
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
-
          // {ui_common_list} instance to display a list of our objects.
-         this.ListComponent = new UI_COMMON_LIST({
+         this.ListComponent = (0,_ui_common_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new query",
@@ -14936,7 +16443,7 @@ __webpack_require__.r(__webpack_exports__);
                exclude: true,
             },
          });
-         this.AddForm = (0,_ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.AddForm = (0,_ui_work_query_list_newQuery__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
       }
 
       // Our webix UI definition:
@@ -14945,7 +16452,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
@@ -14973,10 +16480,6 @@ __webpack_require__.r(__webpack_exports__);
 
          this.ListComponent.on("exclude", (item) => {
             this.exclude(item);
-         });
-
-         this.ListComponent.on("copied", (data) => {
-            this.copy(data);
          });
 
          //
@@ -15011,20 +16514,19 @@ __webpack_require__.r(__webpack_exports__);
        *        [optional] The current ABApplication we are working with.
        */
       applicationLoad(application) {
-         this.CurrentApplicationID = application.id;
-
+         super.applicationLoad(application);
          this.ListComponent.dataLoad(application?.queriesIncluded());
-
          this.AddForm.applicationLoad(application);
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
+       * @function clickNewQuery
+       *
+       * Manages initiating the transition to the new Process Popup window
        */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
+      clickNewQuery(/* selectNew */) {
+         // show the new popup
+         this.AddForm.show();
       }
 
       /*
@@ -15047,16 +16549,6 @@ __webpack_require__.r(__webpack_exports__);
       ready() {
          this.ListComponent.ready();
       }
-
-      /**
-       * @function clickNewQuery
-       *
-       * Manages initiating the transition to the new Process Popup window
-       */
-      clickNewQuery(selectNew) {
-         // show the new popup
-         this.AddForm.show();
-      }
    }
 
    return new UI_Work_Query_List();
@@ -15076,8 +16568,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_blank */ "./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js");
-/* harmony import */ var _ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_import */ "./src/rootPages/Designer/ui_work_query_list_newQuery_import.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_blank */ "./src/rootPages/Designer/ui_work_query_list_newQuery_blank.js");
+/* harmony import */ var _ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_query_list_newQuery_import */ "./src/rootPages/Designer/ui_work_query_list_newQuery_import.js");
 /*
  * ui_work_query_list_newQuery
  *
@@ -15100,30 +16593,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Query_List_NewQuery extends AB.ClassUI {
+   class UI_Work_Query_List_NewQuery extends UIClass {
       constructor() {
-         const base = "ui_work_query_list_newQuery";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super("ui_work_query_list_newQuery", {
+            tab: "",
          });
-
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
 
          this.selectNew = true;
          // {bool} do we select a new query after it is created.
 
          // var callback = null;
 
-         this.BlankTab = (0,_ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-         this.ImportTab = (0,_ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.BlankTab = (0,_ui_work_query_list_newQuery_blank__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.ImportTab = (0,_ui_work_query_list_newQuery_import__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
       }
 
       ui() {
@@ -15206,24 +16693,6 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          return Promise.all(allInits);
-      }
-
-      /**
-       * @method applicationLoad()
-       * prepare ourself with the current application
-       * @param {ABApplication} application
-       */
-      applicationLoad(application) {
-         this.CurrentApplicationID = application?.id;
-      }
-
-      /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
       }
 
       /**
@@ -15328,30 +16797,6 @@ __webpack_require__.r(__webpack_exports__);
          }
       }
 
-      async import(query, tabKey) {
-         // show progress
-         this.busy();
-
-         // if we get here, save the new Object
-         try {
-            await this.CurrentApplication.queryInsert(query);
-            this[tabKey].emit("save.successful", query);
-            this.done(query);
-         } catch (err) {
-            // hide progress
-            this.ready();
-
-            // an error happend during the server side creation.
-            // so remove this object from the current object list of
-            // the CurrentApplication.
-            // NOTE: It has error "queryRemove" is not a function
-            // await this.CurrentApplication.queryRemove(newQuery);
-
-            // tell current Tab component there was an error
-            this[tabKey].emit("save.error", err);
-         }
-      }
-
       /**
        * @function show()
        *
@@ -15420,27 +16865,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_query_list_newQuery_blank
  *
  * Display the form for creating a new ABQuery.
  */
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Query_List_NewQuery_Blank extends AB.ClassUI {
+   class UI_Work_Query_List_NewQuery_Blank extends UIClass {
       constructor() {
-         const base = "ui_work_query_list_newQuery_blank";
-         super({
-            component: base,
-
-            form: `${base}_blank`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
-            object: `${base}_object`,
+         super("ui_work_query_list_newQuery_blank", {
+            form: "",
+            buttonSave: "",
+            buttonCancel: "",
+            object: "",
          });
       }
 
@@ -15467,7 +16910,7 @@ __webpack_require__.r(__webpack_exports__);
                      labelWidth: 70,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_query_list_newQuery_blank_name"
                            );
@@ -15484,7 +16927,7 @@ __webpack_require__.r(__webpack_exports__);
                      labelWidth: 70,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_query_list_newQuery_blank_object"
                            );
@@ -15506,7 +16949,7 @@ __webpack_require__.r(__webpack_exports__);
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -15522,7 +16965,7 @@ __webpack_require__.r(__webpack_exports__);
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -15708,6 +17151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /*
  * ui_work_query_list_newQuery_import
  *
@@ -15715,22 +17159,19 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Query_List_NewQuery_Import extends AB.ClassUI {
+   class UI_Work_Query_List_NewQuery_Import extends UIClass {
       constructor() {
-         let base = "ui_work_query_list_newQuery_import";
-         super({
-            component: base,
-
-            form: `${base}_import`,
-            filter: `${base}_filter`,
-            queryList: `${base}_queryList`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
+         super("ui_work_query_list_newQuery_import", {
+            form: "",
+            filter: "",
+            queryList: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
       }
 
@@ -15936,8 +17377,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
-   class UI_Work_Query_Workspace extends AB.ClassUI {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   // var L = UIClass.L();
+   class UI_Work_Query_Workspace extends UIClass {
       constructor(settings = init_settings || {}) {
          super();
 
@@ -15952,9 +17398,10 @@ __webpack_require__.r(__webpack_exports__);
          // TODO
       }
 
-      applicationLoad() {
-         // TODO
-      }
+      // applicationLoad(app) {
+      //    super.applicationLoad(app);
+      //    // TODO
+      // }
 
       clearWorkspace() {
          // TODO

@@ -17,25 +17,19 @@
  * On Error, "save.error" will be emitted on the sub-component.
  *
  */
+import UI_Class from "./ui_class";
 import UIBlankQuery from "./ui_work_query_list_newQuery_blank";
 import UIImportQuery from "./ui_work_query_list_newQuery_import";
 
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Query_List_NewQuery extends AB.ClassUI {
+   class UI_Work_Query_List_NewQuery extends UIClass {
       constructor() {
-         const base = "ui_work_query_list_newQuery";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super("ui_work_query_list_newQuery", {
+            tab: "",
          });
-
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
 
          this.selectNew = true;
          // {bool} do we select a new query after it is created.
@@ -129,24 +123,6 @@ export default function (AB) {
       }
 
       /**
-       * @method applicationLoad()
-       * prepare ourself with the current application
-       * @param {ABApplication} application
-       */
-      applicationLoad(application) {
-         this.CurrentApplicationID = application?.id;
-      }
-
-      /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
-      }
-
-      /**
        * @method done()
        * Finished saving, so hide the popup and clean up.
        * @param {object} obj
@@ -230,30 +206,6 @@ export default function (AB) {
          // if we get here, save the new Object
          try {
             let query = await newQuery.save();
-            await this.CurrentApplication.queryInsert(query);
-            this[tabKey].emit("save.successful", query);
-            this.done(query);
-         } catch (err) {
-            // hide progress
-            this.ready();
-
-            // an error happend during the server side creation.
-            // so remove this object from the current object list of
-            // the CurrentApplication.
-            // NOTE: It has error "queryRemove" is not a function
-            // await this.CurrentApplication.queryRemove(newQuery);
-
-            // tell current Tab component there was an error
-            this[tabKey].emit("save.error", err);
-         }
-      }
-
-      async import(query, tabKey) {
-         // show progress
-         this.busy();
-
-         // if we get here, save the new Object
-         try {
             await this.CurrentApplication.queryInsert(query);
             this[tabKey].emit("save.successful", query);
             this.done(query);

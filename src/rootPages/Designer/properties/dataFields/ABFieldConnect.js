@@ -7,17 +7,13 @@ import FFieldClass from "./ABField";
 
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
    var ABField = FFieldClass(AB);
+   var L = ABField.L();
 
    class ABFieldConnectProperty extends ABField {
       constructor() {
-         var base = "properties_abfield_connect";
-
-         super(base, {
+         super("properties_abfield_connect", {
             linkObject: "",
             objectCreateNew: "",
 
@@ -250,10 +246,10 @@ export default function (AB) {
          return isValid;
       }
 
-      populate(field) {
-         var ids = this.ids;
-         super.populate(field);
-      }
+      // populate(field) {
+      //    var ids = this.ids;
+      //    super.populate(field);
+      // }
 
       selectLinkViaType(newValue /*, oldValue */) {
          let labelEntry = L("entry");
@@ -283,11 +279,11 @@ export default function (AB) {
          // show current object name
          $$(ids.fieldLink).setValue(
             L("Each <b>{0}</b> entry connects with", [
-               this.currentObject?.label,
+               this.CurrentObject?.label,
             ])
          );
          $$(ids.fieldLink2).setValue(
-            L("<b>{0}</b> entry.", [this.currentObject?.label])
+            L("<b>{0}</b> entry.", [this.CurrentObject?.label])
          );
 
          // keep the column name element to use when custom index is checked
@@ -363,7 +359,7 @@ export default function (AB) {
       populateSelect(/* populate, callback */) {
          var options = [];
          // if an ABApplication is set then load in the related objects
-         var application = this.AB.applicationByID(this.currentApplicationID);
+         var application = this.CurrentApplication;
          if (application) {
             application.objectsIncluded().forEach((o) => {
                options.push({ id: o.id, value: o.label });
@@ -473,11 +469,11 @@ export default function (AB) {
          }
          // M:1
          else if (link == "many:one") {
-            sourceObject = this.currentObject;
+            sourceObject = this.CurrentObject;
          }
          // M:N
          else if (link == "many:many") {
-            sourceObject = this.currentObject;
+            sourceObject = this.CurrentObject;
 
             let linkObject = this.AB.objectByID(linkObjectId);
 

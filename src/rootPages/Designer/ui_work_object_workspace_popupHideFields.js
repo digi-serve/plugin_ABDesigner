@@ -4,31 +4,23 @@
  * Manage the Hide Fields popup.
  *
  */
-
+import UI_Class from "./ui_class";
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupHideFields extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupHideFields extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupHideFields";
-
-         super({
-            component: `${idBase}`,
-            list: `${idBase}_list`,
-            buttonHide: `${idBase}_buttonHide`,
-            buttonShow: `${idBase}_buttonShow`,
+         super("ui_work_object_workspace_popupHideFields", {
+            list: "",
+            buttonHide: "",
+            buttonShow: "",
          });
 
          this._settings = [];
          // {array}
          // an array of the ABField.columnNames of the fields
          // that we want to hide.
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
 
          this._frozenColumnID = null;
          // {string}
@@ -124,15 +116,6 @@ export default function (AB) {
 
       changed() {
          this.emit("changed", this._settings);
-      }
-
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       // our internal business logic
@@ -325,9 +308,9 @@ export default function (AB) {
        * @param {ABObject} object
        *        the currently selected ABObject.
        */
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       /**
        * @method onShow

@@ -4,19 +4,16 @@
  * Manage the Add New Data Field popup.
  *
  */
-
+import UI_Class from "./ui_class";
 import UIListEditMenuFactory from "./ui_common_popupEditMenu";
 
 export default function (AB) {
    var ListClass = UIListEditMenuFactory(AB);
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    class UIWorkObjectWorkspacePopupHeaderEditMenu extends ListClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupHeaderEditMenu";
-
          super("ui_work_object_workspace_popupHeaderEditMenu");
 
          // overwrite the default common menu with our column Header

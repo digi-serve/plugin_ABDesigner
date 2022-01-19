@@ -4,32 +4,28 @@
  * Manage the Object Workspace custom index popup.
  *
  */
-
+import UI_Class from "./ui_class";
 export default function (AB) {
-   const ClassUI = AB.ClassUI;
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    const ABIndex = AB.Class.ABIndex;
 
-   class UI_Work_Object_Workspace_PopupIndex extends ClassUI {
+   class UI_Work_Object_Workspace_PopupIndex extends UIClass {
       /**
        * @param {object} App
        * @param {string} idBase
        */
       constructor() {
-         var idBase = "ui_work_object_workspace_popupIndex";
-
-         super({
-            component: idBase,
-            popup: `${idBase}_popup`,
-            form: `${idBase}_form`,
-            name: `${idBase}_name`,
-            fields: `${idBase}_fields`,
-            unique: `${idBase}_unique`,
-            removeButton: `${idBase}_removeButton`,
-            saveButton: `${idBase}_saveButton`,
+         super("ui_work_object_workspace_popupIndex", {
+            // component: idBase,
+            popup: "",
+            form: "",
+            name: "",
+            fields: "",
+            unique: "",
+            removeButton: "",
+            saveButton: "",
          });
       }
 
@@ -61,7 +57,7 @@ export default function (AB) {
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },

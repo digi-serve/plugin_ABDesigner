@@ -4,32 +4,27 @@
  * Manage the Add New Data Field popup for creating new Fields on an object.
  *
  */
-
+import UI_Class from "./ui_class";
 import FPropertyManager from "./properties/PropertyManager";
 
 // const ABFieldManager = require("../AppBuilder/core/ABFieldManager");
 
 export default function (AB) {
-   const ClassUI = AB.ClassUI;
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    var PropertyManager = FPropertyManager(AB);
 
-   class UIWorkObjectWorkspacePopupNewDataField extends ClassUI {
+   class UI_Work_Object_Workspace_PopupNewDataField extends UIClass {
       //.extend(idBase, function(App) {
 
       constructor() {
-         var base = "abd_work_object_workspace_popupNewDataField";
-
-         super({
-            component: `${base}_popNewField`,
-            types: `${base}_popNewField_types`,
-            editDefinitions: `${base}_popNewField_editDefinitions`,
-            buttonSave: `${base}_popNewField_buttonSave`,
-            buttonCancel: `${base}_popNewField_buttonCancel`,
+         super("abd_work_object_workspace_popupNewDataField", {
+            types: "",
+            editDefinitions: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
 
          // var _objectHash = {}; // 'name' => ABFieldXXX object
@@ -50,11 +45,6 @@ export default function (AB) {
          this._currentEditor = null;
          // {PropertyEditor}
          // The current Property editor that is being displayed.
-
-         // var _currentApplication = null;
-         this.CurrentObjectID = null;
-         // {string}
-         // The current ABObject.id being edited in our Object Workspace.
 
          this.defaultEditorComponent = null;
          // {PropertyEditor}
@@ -104,7 +94,7 @@ export default function (AB) {
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -133,7 +123,7 @@ export default function (AB) {
                            { id: "temporary", view: "temporary" },
                         ],
                         on: {
-                           onChange: (id, ev, node) => {
+                           onChange: (id /* , ev, node */) => {
                               this.onChange(id);
                            },
                         },
@@ -280,16 +270,12 @@ export default function (AB) {
       }
 
       objectLoad(object) {
-         this.CurrentObjectID = object.id;
+         super.objectLoad(object);
 
          // make sure all the Property components refer to this ABObject
          for (var menuName in this._componentHash) {
             this._componentHash[menuName]?.objectLoad(this.CurrentObjectID);
          }
-      }
-
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
       }
 
       buttonCancel() {
@@ -573,7 +559,7 @@ export default function (AB) {
          if (this.CurrentObject.isImported) allowFieldKey = "connectObject";
 
          if (allowFieldKey) {
-            var connectField = ABFieldManager.allFields().filter(
+            var connectField = PropertyManager.fields().filter(
                (f) => f.defaults().key == allowFieldKey
             )[0];
             if (!connectField) return;
@@ -732,5 +718,5 @@ export default function (AB) {
       }
    } // end class
 
-   return new UIWorkObjectWorkspacePopupNewDataField();
+   return new UI_Work_Object_Workspace_PopupNewDataField();
 }

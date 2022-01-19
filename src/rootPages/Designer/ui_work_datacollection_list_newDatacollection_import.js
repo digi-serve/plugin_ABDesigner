@@ -4,23 +4,21 @@
  * Display the form for importing an existing data collection into the application.
  *
  */
-
+import UI_Class from "./ui_class";
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_DataCollection_List_NewDataCollection_Import extends AB.ClassUI {
+   class UI_Work_DataCollection_List_NewDataCollection_Import extends UIClass {
       constructor() {
-         let base = "ui_work_datacollection_list_newDatacollection_import";
-         super({
-            component: base,
+         super("ui_work_datacollection_list_newDatacollection_import", {
+            // component: base, <-- auto generated
 
-            form: `${base}_import`,
-            filter: `${base}_filter`,
-            datacollectionList: `${base}_datacollectionList`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
+            form: "",
+            filter: "",
+            datacollectionList: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
       }
 
@@ -113,20 +111,16 @@ export default function (AB) {
          this.on("save.successful", () => {
             this.onSuccess();
          });
-
-         // init() routines are always considered async so:
-         return Promise.resolve();
       }
 
       onShow(app) {
-         this.currentApp = app;
          this.formClear();
 
          // now all objects are *global* but an application might only
          // reference a sub set of them.  Here we just need to show
          // the objects our current application isn't referencing:
 
-         const availableQueries = this.currentApp.datacollectionsExcluded();
+         const availableQueries = app.datacollectionsExcluded();
          this.$datacollectionList.parse(availableQueries, "json");
       }
 
@@ -212,5 +206,5 @@ export default function (AB) {
       }
    }
 
-   return UI_Work_DataCollection_List_NewDataCollection_Import;
+   return new UI_Work_DataCollection_List_NewDataCollection_Import();
 }

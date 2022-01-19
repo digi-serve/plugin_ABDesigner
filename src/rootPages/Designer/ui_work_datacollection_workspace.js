@@ -1,7 +1,10 @@
+import UI_Class from "./ui_class";
 export default function (AB, init_settings) {
-   class UIWorkDatacollectionWorkspace extends AB.ClassUI {
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
+   class UI_Work_Datacollection_Workspace extends UIClass {
       constructor(settings = init_settings || {}) {
-         super();
+         super("ui_work_datacollection_workspace");
 
          this.settings = settings;
       }
@@ -15,9 +18,10 @@ export default function (AB, init_settings) {
          return Promise.resolve();
       }
 
-      applicationLoad() {
-         // TODO
-      }
+      // applicationLoad(app) {
+      //    super.applicationLoad(app);
+      //    // TODO
+      // }
 
       clearWorkspace() {
          // TODO
@@ -28,5 +32,5 @@ export default function (AB, init_settings) {
       }
    }
 
-   return UIWorkDatacollectionWorkspace;
+   return new UI_Work_Datacollection_Workspace();
 }

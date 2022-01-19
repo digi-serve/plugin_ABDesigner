@@ -8,16 +8,16 @@
  * widget to display.
  *
  */
+import UI_Class from "./ui_class";
 import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    const ViewGridProperties = FViewGridProperties(AB);
 
-   class UI_Work_Object_Workspace_View_Grid extends AB.ClassUI {
+   class UI_Work_Object_Workspace_View_Grid extends UIClass {
       constructor() {
          super("ui_work_object_workspace_view_grid");
 
@@ -26,10 +26,6 @@ export default function (AB) {
          // Any ABViews we create are expected to be in relation to
          // an ABApplication, so we create a "mock" app for our
          // workspace views to use to display.
-
-         this.objectID = null;
-         // {string}
-         // the current ABObject.id that is being displayed in our space.
       }
 
       // Our webix UI definition:
@@ -50,7 +46,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
       }
 
@@ -105,10 +101,6 @@ export default function (AB) {
 
       get $grid() {
          return this._currentComponent?.getDataTable();
-      }
-
-      objectLoad(object) {
-         this.objectID = object.id;
       }
 
       ready() {
@@ -213,7 +205,7 @@ export default function (AB) {
          sorts,
          frozenColumnID
       ) {
-         var object = this.AB.objectByID(this.objectID);
+         var object = this.CurrentObject;
          var columnHeaders = object.columnHeaders(true, true, [], [], []);
 
          // this calculation is done in the ABViewGridComponent.refreshHeader():

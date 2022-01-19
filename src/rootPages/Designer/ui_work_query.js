@@ -4,18 +4,16 @@
  * Display the Query Tab UI:
  *
  */
-
+import UI_Class from "./ui_class";
 import UI_Work_Query_List from "./ui_work_query_list";
 import UI_Work_Query_Workspace from "./ui_work_query_workspace";
 
 export default function (AB) {
-   class UI_Work_Query extends AB.ClassUI {
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
+   class UI_Work_Query extends UIClass {
       constructor() {
          super("ab_work_query");
-
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
 
          this.QueryList = UI_Work_Query_List(AB);
          this.QueryWorkspace = UI_Work_Query_Workspace(AB);
@@ -47,15 +45,6 @@ export default function (AB) {
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
-      }
-
-      /**
        * @function applicationLoad
        *
        * Initialize the Query Workspace with the given ABApplication.
@@ -63,7 +52,7 @@ export default function (AB) {
        * @param {ABApplication} application
        */
       applicationLoad(application) {
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
 
          this.QueryWorkspace.clearWorkspace();
          this.QueryList.applicationLoad(application);
@@ -91,5 +80,5 @@ export default function (AB) {
       }
    }
 
-   return UI_Work_Query;
+   return new UI_Work_Query();
 }

@@ -4,26 +4,19 @@
  * Manage the Add New Data Field popup.
  *
  */
-
+import UI_Class from "./ui_class";
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_Workspace_PopupDefineLabel extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupDefineLabel extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupDefineLabel";
-
-         super({
-            component: idBase,
-            format: `${idBase}_format`,
-            list: `${idBase}_list`,
-            buttonSave: `${idBase}_buttonSave`,
+         super("ui_work_object_workspace_popupDefineLabel", {
+            // component: idBase,
+            format: "",
+            list: "",
+            buttonSave: "",
          });
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
       }
 
       ui() {
@@ -124,15 +117,6 @@ export default function (AB) {
          this.emit("changed", this._settings);
       }
 
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
       buttonCancel() {
          $$(this.ids.component).hide();
       }
@@ -187,7 +171,7 @@ export default function (AB) {
       }
 
       objectLoad(object) {
-         this.CurrentObjectID = object.id;
+         super.objectLoad(object);
 
          // clear our list
          var List = $$(this.ids.list);

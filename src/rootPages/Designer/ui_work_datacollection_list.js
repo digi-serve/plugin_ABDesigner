@@ -4,21 +4,18 @@
  * Manage the ABDataCollection List
  *
  */
-import UICommonListFactory from "./ui_common_list";
-import UIListNewProcess from "./ui_work_datacollection_list_newDatacollection";
+import UI_Class from "./ui_class";
+import UI_COMMON_LIST from "./ui_common_list";
+import UI_ADD_FORM from "./ui_work_datacollection_list_newDatacollection";
 
 export default function (AB) {
-   const UI_COMMON_LIST = UICommonListFactory(AB);
-   const UI_ADD_FORM = UIListNewProcess(AB);
-
-   class UI_Work_Datacollection_List extends AB.ClassUI {
+   const UIClass = UI_Class(AB);
+   class UI_Work_Datacollection_List extends UIClass {
       constructor() {
          super("ui_work_datacollection_list");
 
-         this.CurrentApplication = null;
-
          // {ui_common_list} instance to display a list of our data collections.
-         this.ListComponent = new UI_COMMON_LIST({
+         this.ListComponent = UI_COMMON_LIST(AB, {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new data collection",
@@ -39,25 +36,23 @@ export default function (AB) {
              * @param {?} common the webix.common icon data structure
              * @return {string}
              */
-            templateListItem: function (datacollection, common) {
+            templateListItem: function (datacollection, common, warnings) {
+               var warnIcon = "";
+               if (warnings?.length > 0) {
+                  warnIcon = `(${warnings.length})`;
+               }
                return `<div class='ab-datacollection-list-item'>
                         <i class="fa ${
                            datacollection.settings.isQuery
                               ? "fa-filter"
                               : "fa-database"
                         }"></i>
-                        ${datacollection.label || "??label??"}
-                        ${common.iconGear}
+                        ${datacollection.label || "??label??"}${warnIcon}
+                        ${common.iconGear(datacollection)} 
                         </div>`;
             },
          });
-         this.AddForm = new UI_ADD_FORM();
-
-         this._handler_refreshApp = (def) => {
-            if (!this.CurrentApplication) return;
-            this.CurrentApplication = this.CurrentApplication.refreshInstance();
-            this.applicationLoad(this.CurrentApplication);
-         };
+         this.AddForm = UI_ADD_FORM(AB);
       }
 
       // Our webix UI definition:
@@ -66,7 +61,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
@@ -104,7 +99,7 @@ export default function (AB) {
             this.AddForm.hide();
          });
 
-         this.AddForm.on("save", (q, select) => {
+         this.AddForm.on("save", (q /* , select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
@@ -128,22 +123,7 @@ export default function (AB) {
        *										we are working with.
        */
       applicationLoad(application) {
-         let events = ["definition.updated", "definition.deleted"];
-         if (this.CurrentApplication) {
-            // remove current handler
-            events.forEach((e) => {
-               this.CurrentApplication.removeListener(
-                  e,
-                  this._handler_refreshApp
-               );
-            });
-         }
-         this.CurrentApplication = application;
-         if (this.CurrentApplication) {
-            events.forEach((e) => {
-               this.CurrentApplication.on(e, this._handler_refreshApp);
-            });
-         }
+         super.applicationLoad(application);
 
          // clear our list and display our data collections:
          this.ListComponent.dataLoad(application?.datacollectionsIncluded());
@@ -161,10 +141,9 @@ export default function (AB) {
        */
       async exclude(item) {
          this.ListComponent.busy();
-         await this.CurrentApplication.datacollectionRemove(item);
-         this.ListComponent.dataLoad(
-            this.CurrentApplication?.datacollectionsIncluded()
-         );
+         var app = this.CurrentApplication;
+         await app?.datacollectionRemove(item);
+         this.ListComponent.dataLoad(app?.datacollectionsIncluded());
 
          // this will clear the data collection workspace
          this.emit("selected", null);
@@ -179,11 +158,11 @@ export default function (AB) {
        *
        * Manages initiating the transition to the new Process Popup window
        */
-      clickNewDataCollection(selectNew) {
+      clickNewDataCollection(/* selectNew */) {
          // show the new popup
          this.AddForm.show();
       }
    }
 
-   return UI_Work_Datacollection_List;
+   return new UI_Work_Datacollection_List();
 }

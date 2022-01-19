@@ -8,15 +8,16 @@
  *   - create an application from a form  :  ab_choose_form
  *
  */
-
+import UI_Class from "./ui_class";
 import AB_Choose_List_Factory from "./ui_choose_list";
 import AB_Choose_Form_Factory from "./ui_choose_form";
 
 export default function (AB) {
    const AppList = AB_Choose_List_Factory(AB);
    const AppForm = AB_Choose_Form_Factory(AB);
+   const UIClass = UI_Class(AB);
 
-   class UIChoose extends AB.ClassUI {
+   class UI_Choose extends UIClass {
       constructor() {
          super("abd_choose");
       }
@@ -58,5 +59,5 @@ export default function (AB) {
          AppList.show();
       }
    }
-   return new UIChoose();
+   return new UI_Choose();
 }

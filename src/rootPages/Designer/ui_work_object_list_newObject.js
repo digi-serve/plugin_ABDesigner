@@ -17,30 +17,20 @@
  * On Error, "save.error" will be emitted on the sub-component.
  *
  */
-
+import UI_Class from "./ui_class";
 import UIBlankObject from "./ui_work_object_list_newObject_blank";
 import UICsvObject from "./ui_work_object_list_newObject_csv";
 import UIImportObject from "./ui_work_object_list_newObject_import";
 // const ABImportExternal = require("./ab_work_object_list_newObject_external");
 export default function (AB) {
-   const ClassUI = AB.ClassUI;
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_List_NewObject extends ClassUI {
-      //.extend(idBase, function(App) {
-
+   class UI_Work_Object_List_NewObject extends UIClass {
       constructor() {
-         var base = "ab_work_object_list_newObject";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super("ui_work_object_list_newObject", {
+            tab: "",
          });
-
-         this.currentApplicationID = null;
-         // {string}
-         // the ABApplication.id we are currently working on.
 
          this.selectNew = true;
          // {bool} do we select a new object after it is created.
@@ -83,7 +73,7 @@ export default function (AB) {
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -108,7 +98,7 @@ export default function (AB) {
                            .querySelectorAll(".webix_item_tab")
                            .forEach((t) => {
                               var tid = t.getAttribute("button_id");
-                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                              UIClass.CYPRESS_REF(t, `${tid}_tab`);
                            });
                      },
                   },
@@ -153,9 +143,10 @@ export default function (AB) {
        * @param {ABApplication} application
        *        The current ABApplication we are working with.
        */
-      applicationLoad(application) {
-         this.currentApplicationID = application?.id;
-      }
+      // applicationLoad(application) {
+
+      //    this.CurrentApplicationID = application?.id;
+      // }
 
       /**
        * @function hide()
@@ -163,25 +154,21 @@ export default function (AB) {
        * remove the busy indicator from the form.
        */
       hide() {
-         if (this.$component) this.$component.hide();
+         this.$component?.hide();
       }
 
       /**
        * Show the busy indicator
        */
       busy() {
-         if (this.$component) {
-            this.$component.showProgress();
-         }
+         this.$component?.showProgress?.();
       }
 
       /**
        * Hide the busy indicator
        */
       ready() {
-         if (this.$component) {
-            this.$component.hideProgress();
-         }
+         this.$component?.hideProgress?.();
       }
 
       /**
@@ -193,7 +180,6 @@ export default function (AB) {
          this.ready();
          this.hide(); // hide our popup
          this.emit("save", obj, this.selectNew);
-         // _logic.callbacks.onDone(null, obj, selectNew, callback); // tell parent component we're done
       }
 
       /**
@@ -207,7 +193,7 @@ export default function (AB) {
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplicationID) {
+         if (!this.CurrentApplicationID) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -228,13 +214,13 @@ export default function (AB) {
          }
 
          if (!newObject.createdInAppID) {
-            newObject.createdInAppID = this.currentApplicationID;
+            newObject.createdInAppID = this.CurrentApplicationID;
          }
 
          // show progress
          this.busy();
 
-         var application = this.AB.applicationByID(this.currentApplicationID);
+         var application = this.CurrentApplication;
 
          // if we get here, save the new Object
          try {
@@ -258,7 +244,6 @@ export default function (AB) {
 
       /**
        * @function show()
-       *
        * Show this component.
        */
       show(shouldSelectNew) {
@@ -270,13 +255,13 @@ export default function (AB) {
 
       switchTab(tabId) {
          if (tabId == this.BlankTab?.ui?.body?.id) {
-            this.BlankTab?.onShow?.(this.currentApplicationID);
+            this.BlankTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.CsvTab?.ui?.body?.id) {
-            this.CsvTab?.onShow?.(this.currentApplicationID);
+            this.CsvTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.ImportTab?.ui?.body?.id) {
-            this.ImportTab?.onShow?.(this.currentApplicationID);
+            this.ImportTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.ExternalTab?.ui?.body?.id) {
-            this.ExternalTab?.onShow?.(this.currentApplicationID);
+            this.ExternalTab?.onShow?.(this.CurrentApplicationID);
          }
       }
    }

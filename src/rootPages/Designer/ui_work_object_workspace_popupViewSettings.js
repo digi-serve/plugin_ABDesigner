@@ -4,37 +4,28 @@
  * Manage the popup to collect the settings for a workspace view.
  *
  */
-
+import UI_Class from "./ui_class";
 import FormABViewGantt from "./properties/workspaceViews/ABViewGantt";
 import FormABViewGrid from "./properties/workspaceViews/ABViewGrid";
 import FormABViewKanBan from "./properties/workspaceViews/ABViewKanban";
 
 export default function (AB) {
    const ABViewGrid = FormABViewGrid(AB);
-   const ClassUI = AB.ClassUI;
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-
-   class UI_Work_Object_Workspace_PopupAddView extends ClassUI {
+   class UI_Work_Object_Workspace_PopupAddView extends UIClass {
       constructor() {
          var base = "abd_work_object_workspace_popupAddView";
-
-         super({
-            component: `${base}_component`,
-            form: `${base}_popupAddViewForm`,
-            formAdditional: `${base}_popupAddViewFormAdditional`,
-            nameInput: `${base}_popupAddViewName`,
-            typeInput: `${base}_popupAddViewType`,
-            cancelButton: `${base}_popupAddViewCancelButton`,
-            cancelX: `${base}_cancelX`,
-            saveButton: `${base}_popupAddViewSaveButton`,
+         super(base, {
+            form: "",
+            formAdditional: "",
+            nameInput: "",
+            typeInput: "",
+            cancelButton: "",
+            cancelX: "",
+            saveButton: "",
          });
-
-         this.CurrentObjectID = null;
-         // {string}
-         // The current ABObject.id being edited in our Object Workspace.
 
          this._view = null;
          // {Grid/kanban/Gantt} the current UI View type we are displaying
@@ -69,10 +60,8 @@ export default function (AB) {
                      onChange: (/* id */) => {
                         $$(ids.nameInput).validate();
                      },
-                  },
-                  on: {
                      onAfterRender() {
-                        ClassUI.CYPRESS_REF(this);
+                        UIClass.CYPRESS_REF(this);
                      },
                   },
                },
@@ -123,7 +112,7 @@ export default function (AB) {
                         },
                         on: {
                            onAfterRender() {
-                              ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -139,7 +128,7 @@ export default function (AB) {
                         },
                         on: {
                            onAfterRender() {
-                              ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -174,7 +163,7 @@ export default function (AB) {
                      },
                      on: {
                         onAfterRender() {
-                           ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -197,14 +186,6 @@ export default function (AB) {
          webix.ui(this.ui());
          return Promise.resolve();
       } // init()
-
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
 
       switchType(typeView) {
          $$(this.ids.formAdditional).showBatch(typeView);

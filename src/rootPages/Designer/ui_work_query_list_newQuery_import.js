@@ -4,23 +4,20 @@
  * Display the form for importing an existing query into the application.
  *
  */
+import UI_Class from "./ui_class";
 
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Query_List_NewQuery_Import extends AB.ClassUI {
+   class UI_Work_Query_List_NewQuery_Import extends UIClass {
       constructor() {
-         let base = "ui_work_query_list_newQuery_import";
-         super({
-            component: base,
-
-            form: `${base}_import`,
-            filter: `${base}_filter`,
-            queryList: `${base}_queryList`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
+         super("ui_work_query_list_newQuery_import", {
+            form: "",
+            filter: "",
+            queryList: "",
+            buttonSave: "",
+            buttonCancel: "",
          });
       }
 

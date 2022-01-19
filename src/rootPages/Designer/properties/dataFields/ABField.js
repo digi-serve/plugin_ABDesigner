@@ -2,6 +2,7 @@
  * ABField
  * A Generic Property manager for All our fields.
  */
+import UI_Class from "../../ui_class";
 
 var myClass = null;
 // {singleton}
@@ -11,11 +12,10 @@ var myClass = null;
 export default function (AB) {
    if (!myClass) {
       const uiConfig = AB.Config.uiSettings();
-      var L = function (...params) {
-         return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-      };
+      const UIClass = UI_Class(AB);
+      var L = UIClass.L();
 
-      myClass = class ABFieldProperty extends AB.ClassUI {
+      myClass = class ABFieldProperty extends UIClass {
          constructor(base = "properties_abfield", ids = {}) {
             // base: {string} unique base id reference
             // ids: {hash}  { key => '' }
@@ -23,20 +23,20 @@ export default function (AB) {
             // unique to the Sub Class' interface elements.
 
             var common = {
-               component: `${base}_component`,
+               // component: `${base}_component`,
 
                // the common property fields
-               label: `${base}_label`,
-               columnName: `${base}_columnName`,
-               fieldDescription: `${base}_fieldDescription`,
-               showIcon: `${base}_showIcon`,
-               required: `${base}_required`,
-               numberOfNull: `${base}_numberOfNull`,
-               unique: `${base}_unique`,
-               filterComplex: `${base}_filtercomplex`,
-               addValidation: `${base}_addvalidation`,
-               shorthand: `${base}_shorthand`,
-               validationRules: `${base}_validationRules`,
+               label: "",
+               columnName: "",
+               fieldDescription: "",
+               showIcon: "",
+               required: "",
+               numberOfNull: "",
+               unique: "",
+               filterComplex: "",
+               addValidation: "",
+               shorthand: "",
+               validationRules: "",
             };
 
             Object.keys(ids).forEach((k) => {
@@ -46,21 +46,13 @@ export default function (AB) {
                   );
                   return;
                }
-               common[k] = `${base}_${k}`;
+               common[k] = "";
             });
 
-            super(common);
+            super(base, common);
 
             this.base = base;
             this.AB = AB;
-
-            this.currentApplicationID = null;
-            // {string}
-            // The current ABApplication.id being edited in our ABDesigner.
-
-            this.currentObjectID = null;
-            // {string}
-            // The current ABObject.id being edited in our object workspace.
          }
 
          ui(elements = []) {
@@ -98,7 +90,7 @@ export default function (AB) {
                            }
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -112,7 +104,7 @@ export default function (AB) {
                      placeholder: L("Database field name"),
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -123,7 +115,7 @@ export default function (AB) {
                      align: "right",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -136,7 +128,7 @@ export default function (AB) {
                      value: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -156,7 +148,7 @@ export default function (AB) {
                            this.getNumberOfNullValue(newVal);
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -169,7 +161,7 @@ export default function (AB) {
                      hidden: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -183,7 +175,7 @@ export default function (AB) {
                      labelWidth: uiConfig.labelWidthCheckbox,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -201,7 +193,7 @@ export default function (AB) {
                      },
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -214,7 +206,7 @@ export default function (AB) {
                      name: "validationRules",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -295,12 +287,8 @@ export default function (AB) {
                ],
             });
             $$(Filter.ids.save).hide();
-            Filter.fieldsLoad(this.object.fields());
+            Filter.fieldsLoad(this.object.fields()); // Should This Be this.CurrentObject ?
             if (settings && settings.rules) Filter.setValue(settings.rules);
-         }
-
-         applicationLoad(application) {
-            this.currentApplicationID = application?.id;
          }
 
          clearEditor() {
@@ -337,10 +325,6 @@ export default function (AB) {
 
             // hide warning message of null data
             $$(ids.numberOfNull).hide();
-         }
-
-         get currentObject() {
-            return this.AB.objectByID(this.currentObjectID);
          }
 
          /**
@@ -519,7 +503,7 @@ export default function (AB) {
 
             // columnName should not be in use by other fields on this object
             // get All fields with matching colName
-            var fieldColName = this.currentObject?.fields(
+            var fieldColName = this.CurrentObject?.fields(
                (f) => f.columnName == colName
             );
             // ignore current edit field
@@ -544,10 +528,6 @@ export default function (AB) {
 
          markInvalid(name, message) {
             $$(this.ids.component).markInvalid(name, message);
-         }
-
-         objectLoad(objectID) {
-            this.currentObjectID = objectID;
          }
 
          /**

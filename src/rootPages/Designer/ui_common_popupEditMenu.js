@@ -6,6 +6,7 @@
  * options.
  *
  */
+import UI_Class from "./ui_class";
 
 var myClass = null;
 // {singleton}
@@ -14,11 +15,10 @@ var myClass = null;
 
 export default function (AB) {
    if (!myClass) {
-      var L = function (...params) {
-         return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-      };
+      const UIClass = UI_Class(AB);
+      var L = UIClass.L();
 
-      myClass = class ABCommonPopupEditMenu extends AB.ClassUI {
+      myClass = class ABCommonPopupEditMenu extends UIClass {
          constructor(contextID) {
             var idBase = "abd_common_popupEditMenu";
             super(idBase);
@@ -63,22 +63,22 @@ export default function (AB) {
             this.Popup = null;
             this._menuOptions = [
                {
-                  label: L("Rename"),
+                  label: this.labels.rename,
                   icon: "fa fa-pencil-square-o",
                   command: "rename",
                },
                {
-                  label: L("Copy"),
+                  label: this.labels.copy,
                   icon: "fa fa-files-o",
                   command: "copy",
                },
                {
-                  label: L("Exclude"),
+                  label: this.labels.exclude,
                   icon: "fa fa-reply",
                   command: "exclude",
                },
                {
-                  label: L("Delete"),
+                  label: this.labels.delete,
                   icon: "fa fa-trash",
                   command: "delete",
                },

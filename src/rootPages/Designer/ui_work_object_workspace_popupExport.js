@@ -4,24 +4,17 @@
  * Manage the Export object to files popup.
  *
  */
-
+import UI_Class from "./ui_class";
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
 
-   class UI_Work_Object_PopupExport extends AB.ClassUI {
+   class UI_Work_Object_PopupExport extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupExport";
-
-         super({
-            popupExport: `${idBase}_popupExport`,
-            list: `${idBase}_popupExport_list`,
+         super("ui_work_object_workspace_popupExport", {
+            popupExport: "",
+            list: "",
          });
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
 
          this.DatacollectionID = null;
          // {string}
@@ -79,15 +72,6 @@ export default function (AB) {
       }
 
       /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
-      /**
        * @method Datacollection()
        * A helper to return the current ABObject we are working with.
        * @return {ABObject}
@@ -96,9 +80,9 @@ export default function (AB) {
          return this.AB.datacollectionByID(this.DatacollectionID);
       }
 
-      objectLoad(object) {
-         this.CurrentObjectID = object.id;
-      }
+      // objectLoad(object) {
+      //    this.CurrentObjectID = object.id;
+      // }
 
       dataCollectionLoad(dc) {
          this.DatacollectionID = dc.id;
@@ -212,7 +196,7 @@ export default function (AB) {
             $$(this.ids.popupExport).hide();
          } catch (err) {
             this.AB.notify.developer(err, {
-               message: `ui_work_object_workspace_popupExport:export(): could not export: ${name}`,
+               message: `${this.ids.component}:export(): could not export: ${name}`,
             });
          }
       }

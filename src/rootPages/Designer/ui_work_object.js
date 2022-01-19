@@ -4,30 +4,21 @@
  * Display the Object Tab UI:
  *
  */
-
+import UI_Class from "./ui_class";
 import UI_Work_Object_List from "./ui_work_object_list";
-import UI_Work_Object_Workspace_Class from "./ui_work_object_workspace";
+import UI_Work_Object_Workspace from "./ui_work_object_workspace";
 
 export default function (AB) {
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
    var ObjectList = UI_Work_Object_List(AB);
-   var ObjectWorkspace = UI_Work_Object_Workspace_Class(
-      AB
-      /* leave empty for default settings */
-   );
+   var ObjectWorkspace = UI_Work_Object_Workspace(AB);
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-
-   class UI_Work_Object extends AB.ClassUI {
+   class UI_Work_Object extends UIClass {
       //.extend(idBase, function(App) {
 
       constructor() {
-         super("ab_work_object");
-
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
+         super("ui_work_object");
       }
 
       ui() {
@@ -58,15 +49,6 @@ export default function (AB) {
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
-       */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
-      }
-
-      /**
        * @method applicationLoad
        * Initialize the Object Workspace with the given ABApplication.
        * @param {ABApplication} application
@@ -74,7 +56,7 @@ export default function (AB) {
        */
       applicationLoad(application) {
          var oldAppID = this.CurrentApplicationID;
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
 
          if (oldAppID != this.CurrentApplicationID) {
             ObjectWorkspace.clearObjectWorkspace();

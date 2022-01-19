@@ -4,31 +4,23 @@
  * Manage the Import CSV data to our currently selected ABObject.
  *
  */
+import UI_Class from "./ui_class";
 import FViewProperties from "./properties/views/ABViewCSVImporter";
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
    const ViewProperties = FViewProperties(AB);
 
-   class UI_Work_Object_Workspace_PopupImport extends AB.ClassUI {
+   class UI_Work_Object_Workspace_PopupImport extends UIClass {
       constructor() {
-         var idBase = "ui_work_object_workspace_popupImport";
-
-         super({
-            component: idBase,
-         });
+         super("ui_work_object_workspace_popupImport");
 
          this._mockApp = AB.applicationNew({});
          // {ABApplication}
          // Any ABViews we create are expected to be in relation to
          // an ABApplication, so we create a "mock" app for our
          // workspace views to use to display.
-
-         this.CurrentObjectID = null;
-         // {string}
-         // the ABObject.id of the object we are working with.
 
          this.popup = null;
          // {ABViewCSVImporter}
@@ -54,17 +46,8 @@ export default function (AB) {
          this.popup.objectLoad(this.CurrentObject);
       }
 
-      /**
-       * @method CurrentObject()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
-      }
-
       objectLoad(object) {
-         this.CurrentObjectID = object.id;
+         super.objectLoad(object);
 
          this.popup?.objectLoad(object);
       }

@@ -14,12 +14,13 @@ var defaultValues = {
    hiddenFields: [], // array of [ids] to add hidden:true to
 };
 
-export default function (AB, ibase) {
-   let L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+import UI_Class from "../../ui_class";
 
-   class ABViewGrid extends AB.ClassUI {
+export default function (AB, ibase) {
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
+
+   class ABViewGrid extends UIClass {
       constructor(idBase) {
          super(idBase);
 

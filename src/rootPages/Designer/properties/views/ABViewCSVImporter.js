@@ -6,11 +6,8 @@
 import FViewClass from "./ABView";
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
-
    var ABViewClassProperty = FViewClass(AB);
+   var L = ABViewClassProperty.L();
 
    class ABViewCSVImporterProperty extends ABViewClassProperty {
       constructor() {

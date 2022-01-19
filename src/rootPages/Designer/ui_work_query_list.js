@@ -4,22 +4,19 @@
  * Manage the ABObjectQuery List
  *
  */
-import UICommonListFactory from "./ui_common_list";
+import UI_Class from "./ui_class";
+import UI_COMMON_LIST from "./ui_common_list";
 import UIListNewQuery from "./ui_work_query_list_newQuery";
 
 export default function (AB) {
-   const UI_COMMON_LIST = UICommonListFactory(AB);
-
-   class UI_Work_Query_List extends AB.ClassUI {
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
+   class UI_Work_Query_List extends UIClass {
       constructor() {
          super("ui_work_query_list");
 
-         this.CurrentApplicationID = null;
-         // {string} uuid
-         // The current ABApplication.id we are working with.
-
          // {ui_common_list} instance to display a list of our objects.
-         this.ListComponent = new UI_COMMON_LIST({
+         this.ListComponent = UI_COMMON_LIST(AB, {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new query",
@@ -44,7 +41,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
@@ -106,20 +103,19 @@ export default function (AB) {
        *        [optional] The current ABApplication we are working with.
        */
       applicationLoad(application) {
-         this.CurrentApplicationID = application.id;
-
+         super.applicationLoad(application);
          this.ListComponent.dataLoad(application?.queriesIncluded());
-
          this.AddForm.applicationLoad(application);
       }
 
       /**
-       * @method CurrentApplication
-       * return the current ABApplication being worked on.
-       * @return {ABApplication} application
+       * @function clickNewQuery
+       *
+       * Manages initiating the transition to the new Process Popup window
        */
-      get CurrentApplication() {
-         return this.AB.applicationByID(this.CurrentApplicationID);
+      clickNewQuery(/* selectNew */) {
+         // show the new popup
+         this.AddForm.show();
       }
 
       /*
@@ -141,32 +137,6 @@ export default function (AB) {
 
       ready() {
          this.ListComponent.ready();
-      }
-
-      /**
-       * @function clickNewQuery
-       *
-       * Manages initiating the transition to the new Process Popup window
-       */
-      clickNewQuery(selectNew) {
-         // show the new popup
-         this.AddForm.show();
-      }
-
-      /**
-       * @function exclude
-       * the list component notified us of an exclude action and which
-       * item was chosen.
-       *
-       * perform the removal and update the UI.
-       */
-      async exclude(item) {
-         this.ListComponent.busy();
-         await this.CurrentApplication.queryRemove(item);
-         this.ListComponent.dataLoad(this.CurrentApplication.queriesIncluded());
-
-         // this will clear the object workspace
-         this.emit("selected", null);
       }
    }
 

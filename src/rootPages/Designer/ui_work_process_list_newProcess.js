@@ -1,26 +1,21 @@
 /*
- * ab_work_process_list_newProcess
+ * ui_work_process_list_newProcess
  *
  * Display the form for creating a new Application.
  *
  */
+import UI_Class from "./ui_class";
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Process_List_NewProcess extends AB.ClassUI {
+   class UI_Work_Process_List_NewProcess extends UIClass {
       constructor() {
-         const base = "ab_work_process_list_newProcess";
-         super({
-            component: base,
-            form: `${base}_form`,
-            buttonCancel: `${base}_buttonCancel`,
-            buttonSave: `${base}_buttonSave`,
+         super("ui_work_process_list_newProcess", {
+            form: "",
+            buttonCancel: "",
+            buttonSave: "",
          });
-
-         // {ABApplication} the ABApplication we are currently working on.
-         this.CurrentApplication = null;
 
          // {bool} do we select a new data collection after it is created.
          this.selectNew = true;
@@ -33,7 +28,32 @@ export default function (AB) {
             id: this.ids.component,
             position: "center",
             modal: true,
-            head: L("Create"),
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new Process"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           UIClass.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
             body: {
                view: "form",
                id: this.ids.form,
@@ -62,7 +82,7 @@ export default function (AB) {
                            css: "ab-cancel-button",
                            autowidth: true,
                            click: () => {
-                              this.cancel();
+                              this.emit("cancel");
                            },
                         },
                         {
@@ -85,21 +105,14 @@ export default function (AB) {
 
       init(AB) {
          this.AB = AB;
+
+         webix.ui(this.ui());
          this.$component = $$(this.ids.component);
          this.$form = $$(this.ids.form);
          this.$buttonSave = $$(this.ids.buttonSave);
          webix.extend(this.$component, webix.ProgressBar);
 
          this.hide();
-      }
-
-      /**
-       * @method applicationLoad()
-       * prepare ourself with the current application
-       * @param {ABApplication} application
-       */
-      applicationLoad(application) {
-         this.CurrentApplication = application; // remember our current Application.
       }
 
       /**
@@ -187,5 +200,5 @@ export default function (AB) {
       }
    }
 
-   return UI_Work_Process_List_NewProcess;
+   return new UI_Work_Process_List_NewProcess();
 }

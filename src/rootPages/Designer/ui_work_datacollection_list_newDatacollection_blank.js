@@ -3,22 +3,20 @@
  *
  * Display the form for creating a new ABDataCollection.
  */
-
+import UI_Class from "./ui_class";
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_DataCollection_List_NewDataCollection_Blank extends AB.ClassUI {
+   class UI_Work_DataCollection_List_NewDataCollection_Blank extends UIClass {
       constructor() {
-         const base = "ui_work_dataCollection_list_newDataCollection_blank";
-         super({
-            component: base,
+         super("ui_work_dataCollection_list_newDataCollection_blank", {
+            // component: base, <-- auto-generated
 
-            form: `${base}_blank`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
-            object: `${base}_object`,
+            form: "",
+            buttonSave: "",
+            buttonCancel: "",
+            object: "",
          });
       }
 
@@ -45,7 +43,7 @@ export default function (AB) {
                      labelWidth: 70,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_dataCollection_list_newDatacollection_blank_name"
                            );
@@ -62,7 +60,7 @@ export default function (AB) {
                      labelWidth: 70,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_dataCollection_list_newDatacollection_blank_object"
                            );
@@ -84,7 +82,7 @@ export default function (AB) {
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -100,7 +98,7 @@ export default function (AB) {
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -216,13 +214,18 @@ export default function (AB) {
          }
 
          let formVals = Form.getValues();
-         let selectedObject = this.$objectList.getItem(formVals["object"]);
+         let id = formVals.object;
+         let selectedObject = this.AB.objectByID(id);
+         if (!selectedObject) {
+            selectedObject = this.AB.queryByID(id);
+         }
+
          let values = {
             name: formVals.name,
             label: formVals.name,
             settings: {
-               datasourceID: formVals.object,
-               isQuery: selectedObject ? selectedObject.isQuery : false,
+               datasourceID: id,
+               isQuery: selectedObject?.isQuery ?? false,
             },
          };
 
@@ -288,5 +291,5 @@ export default function (AB) {
       }
    }
 
-   return UI_Work_DataCollection_List_NewDataCollection_Blank;
+   return new UI_Work_DataCollection_List_NewDataCollection_Blank();
 }

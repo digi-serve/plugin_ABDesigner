@@ -7,7 +7,7 @@
 
 import UIListEditMenuFactory from "./ui_common_popupEditMenu";
 
-export default function (AB) {
+export default function (AB, options) {
    var UIListEditMenu = UIListEditMenuFactory(AB);
 
    const uiConfig = AB.Config.uiSettings();
@@ -612,14 +612,20 @@ export default function (AB) {
        */
       templateListItem(obj, common) {
          var warnings = obj.warningsAll();
-         var warnText = "";
-         if (warnings.length > 0) {
-            warnText = `(${warnings.length})`;
+
+         if (typeof this._templateListItem == "string") {
+            var warnText = "";
+            if (warnings.length > 0) {
+               warnText = `(${warnings.length})`;
+            }
+
+            return this._templateListItem
+               .replace("#label#", obj.label || "??label??")
+               .replace("{common.iconGear}", common.iconGear(obj))
+               .replace("#warnings#", warnText);
          }
-         return this._templateListItem
-            .replace("#label#", obj.label || "??label??")
-            .replace("{common.iconGear}", common.iconGear(obj))
-            .replace("#warnings#", warnText);
+         // else they sent in a function()
+         return this._templateListItem(obj, common, warnings);
       }
 
       /**
@@ -747,5 +753,5 @@ export default function (AB) {
    }
 
    // NOTE: We are returning the Class here, not an instance:
-   return UI_Common_List;
+   return new UI_Common_List(options);
 }

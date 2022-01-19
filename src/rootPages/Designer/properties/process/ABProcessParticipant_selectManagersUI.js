@@ -6,22 +6,21 @@
  *
  * @return {ClassUI} The Class Definition for this UI widget.
  */
+import UI_Class from "../../ui_class";
 
 export default function (AB) {
-   var L = (...params) => {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UIProcessParticipant_SelectManagersUI extends AB.ClassUI {
+   class UIProcessParticipant_SelectManagersUI extends UIClass {
       constructor(id) {
-         super({
-            component: id,
-            form: `${id}_form`,
-            name: `${id}_name`,
-            role: `${id}_role`,
-            useRole: `${id}_useRoles`,
-            useAccount: `${id}_useAccounts`,
-            account: `${id}_account`,
+         super(id, {
+            form: "",
+            name: "",
+            role: "",
+            useRole: "",
+            useAccount: "",
+            account: "",
          });
       }
 
@@ -58,7 +57,7 @@ export default function (AB) {
                         },
                         on: {
                            onAfterRender() {
-                              AB.ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -77,7 +76,7 @@ export default function (AB) {
                                  // can fix this for us.
                                  onAfterRender() {
                                     this.data.each((a) => {
-                                       AB.ClassUI.CYPRESS_REF(
+                                       UIClass.CYPRESS_REF(
                                           this.getItemNode(a.id),
                                           `${ids.role}_${a.id}`
                                        );
@@ -94,7 +93,7 @@ export default function (AB) {
                                     }
                                     $roleCombo.setValue(currentItems);
                                     // var item = this.getItem(id);
-                                    // AB.ClassUI.CYPRESS_REF(
+                                    // UIClass.CYPRESS_REF(
                                     //    this.getItemNode(item.id),
                                     //    `${ids.role}_${item.id}`
                                     // );
@@ -108,7 +107,7 @@ export default function (AB) {
                         on: {
                            onAfterRender: function () {
                               // set data-cy for original field to track clicks to open option list
-                              AB.ClassUI.CYPRESS_REF(this.getNode(), ids.role);
+                              UIClass.CYPRESS_REF(this.getNode(), ids.role);
                            },
                            onChange: function (/* newVal, oldVal */) {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
@@ -136,7 +135,7 @@ export default function (AB) {
                         },
                         on: {
                            onAfterRender() {
-                              AB.ClassUI.CYPRESS_REF(this);
+                              UIClass.CYPRESS_REF(this);
                            },
                         },
                      },
@@ -155,7 +154,7 @@ export default function (AB) {
                                  // can fix this for us.
                                  onAfterRender() {
                                     this.data.each((a) => {
-                                       AB.ClassUI.CYPRESS_REF(
+                                       UIClass.CYPRESS_REF(
                                           this.getItemNode(a.id),
                                           `${ids.account}_${a.id}`
                                        );
@@ -172,7 +171,7 @@ export default function (AB) {
                                     }
                                     $accountCombo.setValue(currentItems);
                                     // var item = this.getItem(id);
-                                    // AB.ClassUI.CYPRESS_REF(
+                                    // UIClass.CYPRESS_REF(
                                     //    this.getItemNode(item.id),
                                     //    `${ids.account}_${item.id}`
                                     // );
@@ -186,10 +185,7 @@ export default function (AB) {
                         on: {
                            onAfterRender: function () {
                               // set data-cy for original field to track clicks to open option list
-                              AB.ClassUI.CYPRESS_REF(
-                                 this.getNode(),
-                                 ids.account
-                              );
+                              UIClass.CYPRESS_REF(this.getNode(), ids.account);
                            },
                            onChange: function (/* newVal, oldVal */) {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom

@@ -4,7 +4,7 @@
  * Display the component for working with an ABApplication.
  *
  */
-
+import UI_Class from "./ui_class";
 import UI_Work_Object from "./ui_work_object";
 import UI_Work_Query from "./ui_work_query";
 import UI_Work_Datacollection from "./ui_work_datacollection";
@@ -12,39 +12,32 @@ import UI_Work_Process from "./ui_work_process";
 // const AB_Work_Interface = require("./ab_work_interface");
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    var AppObjectWorkspace = UI_Work_Object(AB);
-   const AppQueryWorkspace = new (UI_Work_Query(AB))();
-   const AppDataCollectionWorkspace = new (UI_Work_Datacollection(AB))();
-   const AppProcessWorkspace = new (UI_Work_Process(AB))();
+   const AppQueryWorkspace = UI_Work_Query(AB);
+   const AppDataCollectionWorkspace = UI_Work_Datacollection(AB);
+   const AppProcessWorkspace = UI_Work_Process(AB);
    // var AppInterfaceWorkspace = new AB_Work_Interface(App);
 
-   class UI_Work extends AB.ClassUI {
+   class UI_Work extends UIClass {
       constructor(options = {}) {
-         var base = "abd_work";
-         super({
-            component: `${base}_component`,
-            toolBar: `${base}_toolbar`,
-            labelAppName: `${base}_label_appname`,
-            tabbar: `${base}_tabbar`,
-            tab_object: `${base}_tab_object`,
-            tab_query: `${base}_tab_query`,
-            tab_datacollection: `${base}_tab_datacollection`,
-            tab_processview: `${base}_tab_processview`,
-            tab_interface: `${base}_tab_interface`,
-            workspace: `${base}_workspace`,
-            collapseMenu: `${base}_collapseMenu`,
-            expandMenu: `${base}_expandMenu`,
+         super("abd_work", {
+            toolBar: "",
+            labelAppName: "",
+            tabbar: "",
+            tab_object: "",
+            tab_query: "",
+            tab_datacollection: "",
+            tab_processview: "",
+            tab_interface: "",
+            workspace: "",
+            collapseMenu: "",
+            expandMenu: "",
          });
 
          this.options = options;
-
-         this.CurrentAppID = null;
-         // {string}
-         // The current ABApplication.id that we are working with.
 
          this.selectedItem = this.ids.tab_object;
          // {string} {this.ids.xxx}
@@ -110,7 +103,6 @@ export default function (AB) {
                         css: "webix_transparent",
                         label: L("Back to Applications page"),
                         autowidth: true,
-                        align: "left",
                         type: "icon",
                         icon: "fa fa-arrow-left",
                         align: "left",
@@ -249,16 +241,6 @@ export default function (AB) {
 
          this.tabSwitch(this.ids.tab_object);
          this.$tabbar.select(this.ids.tab_object);
-
-         /**
-          * @function _handler_refreshApp()
-          * Is called whenever an ABApplication has received new definitions
-          * and we need to load an new Instance of that object.
-          */
-         // this._handler_refreshApp = (/* def */) => {
-         //    this.CurrentApplication = this.CurrentApplication.refreshInstance();
-         //    this.transitionWorkspace(this.CurrentApplication);
-         // };
       } // init()
 
       /**
@@ -274,7 +256,7 @@ export default function (AB) {
             $labelAppName.define("label", application?.label);
             $labelAppName.refresh();
          }
-         this.CurrentAppID = application?.id;
+         super.applicationLoad(application);
       }
 
       /**
@@ -302,7 +284,7 @@ export default function (AB) {
        *        The current ABApplication we are working with.
        */
       transitionWorkspace(application) {
-         if (this.CurrentAppID != application?.id) {
+         if (this.CurrentApplicationID != application?.id) {
             this.applicationInit(application);
          }
          AppObjectWorkspace.applicationLoad(application);

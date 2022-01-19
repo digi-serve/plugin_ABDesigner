@@ -6,19 +6,19 @@
  * We switch between allowing a User to Choose an application to work
  * with, and the actual Workspace for an Application.
  */
-
+import UI_Class from "./ui_class";
 import AppChooserFactory from "./ui_choose.js";
 import AppWorkspaceFactory from "./ui_work.js";
 
 export default function (AB) {
+   const UIClass = UI_Class(AB);
+
    const AppChooser = AppChooserFactory(AB);
    const AppWorkspace = AppWorkspaceFactory(AB);
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   var L = UIClass.L();
 
-   class UI extends AB.ClassUI {
+   class UI extends UIClass {
       constructor() {
          super("abd");
          this.id = this.ids.component;
@@ -74,23 +74,22 @@ export default function (AB) {
             AppChooser.show();
          });
 
-         return Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]).then(
-            () => {
-               // Register for ABDefinition Updates
-               return this.AB.Network.post({
-                  url: `/definition/register`,
-               }).catch((err) => {
-                  if (err?.code == "E_NOPERM") {
-                     // ?? What do we do here ??
-                     this.AB.notify.developer(err, {
-                        plugin: "ABDesigner",
-                        context: "ui::init():/definition/register",
-                        msg: "User is not able to access /definition/register",
-                     });
-                  }
+         await Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]);
+
+         try {
+            await this.AB.Network.post({
+               url: `/definition/register`,
+            });
+         } catch (err) {
+            if (err?.code == "E_NOPERM") {
+               // ?? What do we do here ??
+               this.AB.notify.developer(err, {
+                  plugin: "ABDesigner",
+                  context: "ui::init():/definition/register",
+                  msg: "User is not able to access /definition/register",
                });
             }
-         );
+         }
       }
 
       /**

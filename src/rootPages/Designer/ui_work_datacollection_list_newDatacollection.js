@@ -17,35 +17,27 @@
  * On Error, "save.error" will be emitted on the sub-component.
  *
  */
-import UIBlankDataCollection from "./ui_work_datacollection_list_newDatacollection_blank";
-import UIImportDataCollection from "./ui_work_datacollection_list_newDatacollection_import";
+import UI_Class from "./ui_class";
+import UI_Blank_DataCollection from "./ui_work_datacollection_list_newDatacollection_blank";
+import UI_Import_DataCollection from "./ui_work_datacollection_list_newDatacollection_import";
 
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   const UI_Blank_DataCollection = UIBlankDataCollection(AB);
-   const UI_Import_DataCollection = UIImportDataCollection(AB);
-
-   class UI_Work_DataCollection_List_NewDataCollection extends AB.ClassUI {
+   class UI_Work_DataCollection_List_NewDataCollection extends UIClass {
       constructor() {
-         const base = "ab_work_datacollection_list_newDataCollection";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super("ui_work_datacollection_list_newDataCollection", {
+            tab: "",
          });
-
-         this.currentApplication = null;
-         // {ABApplication} the ABApplication we are currently working on.
 
          this.selectNew = true;
          // {bool} do we select a new data collection after it is created.
 
          // var callback = null;
 
-         this.BlankTab = new UI_Blank_DataCollection(AB);
-         this.ImportTab = new UI_Import_DataCollection(AB);
+         this.BlankTab = UI_Blank_DataCollection(AB);
+         this.ImportTab = UI_Import_DataCollection(AB);
       }
 
       ui() {
@@ -55,7 +47,32 @@ export default function (AB) {
             id: this.ids.component,
             position: "center",
             modal: true,
-            head: L("Add new data collection"),
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new Data Collection"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
             selectNewDataCollection: true,
             body: {
                view: "tabview",
@@ -95,6 +112,9 @@ export default function (AB) {
                this.emit("cancel");
             });
             this[k].on("save", (values) => {
+               if (values.id) {
+                  return this.import(values, k);
+               }
                this.save(values, k);
             });
          });
@@ -107,10 +127,74 @@ export default function (AB) {
        * prepare ourself with the current application
        * @param {ABApplication} application
        */
-      applicationLoad(application) {
-         this.currentApplication = application; // remember our current Application.
+      // applicationLoad(application) {
+      //    this.CurrentApplicationID = application.id;
+      // }
+
+      /**
+       * Show the busy indicator
+       */
+      busy() {
+         this.$component?.showProgress?.();
       }
 
+      /**
+       * @method done()
+       * Finished saving, so hide the popup and clean up.
+       * @param {object} obj
+       */
+      done(obj) {
+         this.ready();
+         this.hide(); // hide our popup
+         this.emit("save", obj, this.selectNew);
+      }
+
+      /**
+       * @function hide()
+       *
+       * remove the busy indicator from the form.
+       */
+      hide() {
+         this.$component?.hide();
+      }
+
+      /**
+       * @method import()
+       * take an existing ABDataCollection and add it to our ABApplication.
+       * @param {ABODataCollection} dc
+       * @param {string} tabKey
+       *        which of our tabs triggered this method?
+       */
+      async import(dc, tabKey) {
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            await this.CurrentApplication.datacollectionInsert(dc);
+            this[tabKey].emit("save.successful", dc);
+            this.done(dc);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this object from the current datacollection list of
+            // the CurrentApplication.
+            // NOTE: It has error "queryRemove" is not a function
+            // await this.CurrentApplication.datacollectionRemove(newQuery);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      /**
+       * Hide the busy indicator
+       */
+      ready() {
+         this.$component?.hideProgress?.();
+      }
       /**
        * @method save
        * take the data gathered by our child creation tabs, and
@@ -122,7 +206,7 @@ export default function (AB) {
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplication) {
+         if (!this.CurrentApplication) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -143,7 +227,7 @@ export default function (AB) {
          }
 
          if (!newDataCollection.createdInAppID) {
-            newDataCollection.createdInAppID = this.currentApplication.id;
+            newDataCollection.createdInAppID = this.CurrentApplicationID;
          }
 
          // show progress
@@ -152,7 +236,7 @@ export default function (AB) {
          // if we get here, save the new Object
          try {
             let datacollection = await newDataCollection.save();
-            await this.currentApplication.datacollectionInsert(datacollection);
+            await this.CurrentApplication.datacollectionInsert(datacollection);
             this[tabKey].emit("save.successful", datacollection);
             this.done(datacollection);
          } catch (err) {
@@ -161,9 +245,9 @@ export default function (AB) {
 
             // an error happend during the server side creation.
             // so remove this data collection from the current data collection list of
-            // the currentApplication.
+            // the CurrentApplication.
             // NOTE: It has error "datacollectionRemove" is not a function
-            // await this.currentApplication.datacollectionRemove(newDataCollection);
+            // await this.CurrentApplication.datacollectionRemove(newDataCollection);
 
             // tell current Tab component there was an error
             this[tabKey].emit("save.error", err);
@@ -179,47 +263,20 @@ export default function (AB) {
          if (shouldSelectNew != null) {
             this.selectNew = shouldSelectNew;
          }
-         if (this.$component) this.$component.show();
+         this.$component?.show();
 
          const id = $$(this.ids.tab).getValue();
          this.switchTab(id);
       }
 
-      /**
-       * @function hide()
-       *
-       * remove the busy indicator from the form.
-       */
-      hide() {
-         if (this.$component) this.$component.hide();
-      }
-
-      /**
-       * Show the busy indicator
-       */
-      busy() {
-         if (this.$component) {
-            this.$component.showProgress();
-         }
-      }
-
-      /**
-       * Hide the busy indicator
-       */
-      ready() {
-         if (this.$component) {
-            this.$component.hideProgress();
-         }
-      }
-
       switchTab(tabId) {
          if (tabId == this.BlankTab?.ui()?.body?.id || !tabId) {
-            this.BlankTab?.onShow?.(this.currentApplication);
+            this.BlankTab?.onShow?.(this.CurrentApplication);
          } else if (tabId == this.ImportTab?.ui()?.body?.id) {
-            this.ImportTab?.onShow?.(this.currentApplication);
+            this.ImportTab?.onShow?.(this.CurrentApplication);
          }
       }
    }
 
-   return UI_Work_DataCollection_List_NewDataCollection;
+   return new UI_Work_DataCollection_List_NewDataCollection();
 }

@@ -4,26 +4,25 @@
  * Display the form for import CSV file to a object.
  *
  */
+import UI_Class from "./ui_class";
 import CSVImporter from "../../utils/CSVImporter.js";
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
    let uiSettings = AB.Config.uiSettings();
 
-   class UI_Work_Object_List_NewObject_Csv extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject_Csv extends UIClass {
       constructor() {
-         var base = "ui_work_object_list_newObject_csv";
-         super({
-            component: base,
+         super("ui_work_object_list_newObject_csv", {
+            // component: base,
 
-            form: `${base}_csvForm`,
-            uploadFileList: `${base}_uploadFileList`,
-            separatedBy: `${base}_separatedBy`,
-            headerOnFirstLine: `${base}_headerOnFirstLine`,
-            columnList: `${base}_columnList`,
-            importButton: `${base}_importButton`,
+            form: "",
+            uploadFileList: "",
+            separatedBy: "",
+            headerOnFirstLine: "",
+            columnList: "",
+            importButton: "",
          });
 
          this._csvImporter = new CSVImporter(AB);
@@ -72,7 +71,7 @@ export default function (AB) {
                      autoheight: true,
                      borderless: true,
                      onClick: {
-                        webix_remove_upload: (e, id, trg) => {
+                        webix_remove_upload: (e, id /*, trg */) => {
                            this.removeCsvFile(id);
                         },
                      },
@@ -100,7 +99,7 @@ export default function (AB) {
                      disabled: true,
                      value: true,
                      on: {
-                        onChange: (newVal, oldVal) => {
+                        onChange: (/* newVal, oldVal */) => {
                            this.populateColumnList();
                         },
                      },

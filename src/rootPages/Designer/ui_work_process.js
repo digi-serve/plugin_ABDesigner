@@ -1,24 +1,26 @@
 /*
- * ab_work_process
+ * ui_work_process
  *
  * Display the Process Tab UI:
  *
  */
-
+import UI_Class from "./ui_class";
 import UI_Work_Process_List from "./ui_work_process_list";
 import UI_Work_Process_Workspace from "./ui_work_process_workspace";
 
 export default function (AB) {
-   const Process_List = UI_Work_Process_List(AB);
-   const Process_Workspace = UI_Work_Process_Workspace(AB);
+   const UIClass = UI_Class(AB);
 
-   class UI_Work_Process extends AB.ClassUI {
+   class UI_Work_Process extends UIClass {
       constructor() {
-         super("ab_work_process");
+         super("ui_work_process");
 
-         this.CurrentApplication = null;
-         this.ProcessList = new Process_List();
-         this.ProcessWorkspace = new Process_Workspace(/** default settings */);
+         this.CurrentProcessID = null;
+         // {string} uuid
+         // The current ABProcess.id we are working with.
+
+         this.ProcessList = UI_Work_Process_List(AB);
+         this.ProcessWorkspace = UI_Work_Process_Workspace(AB);
       }
 
       ui() {
@@ -49,7 +51,7 @@ export default function (AB) {
          this.ProcessList.on("selected", this.select);
 
          this.ProcessList.on("deleted", (process) => {
-            if (this.CurrentProcess.id == process.id) {
+            if (this.CurrentProcessID == process.id) {
                this.select(null);
             }
          });
@@ -61,19 +63,6 @@ export default function (AB) {
       }
 
       /**
-       * @function applicationLoad
-       *
-       * Initialize the Query Workspace with the given ABApplication.
-       *
-       * @param {ABApplication} application
-       */
-      applicationLoad(application) {
-         this.CurrentApplication = application;
-
-         this.ProcessList.applicationLoad(application);
-      }
-
-      /**
        * @function show()
        *
        * Show this component.
@@ -81,24 +70,21 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
 
-         if (
-            this.CurrentApplication &&
-            (!this.CurrentApplication.loadedProcesss ||
-               this.ProcessList?.count() < 1)
-         ) {
+         var app = this.CurrentApplication;
+         if (app && (!app.loadedProcesss || this.ProcessList?.count() < 1)) {
             this.ProcessList?.busy();
-            this.ProcessList?.applicationLoad(this.CurrentApplication);
+            this.ProcessList?.applicationLoad(app);
             this.ProcessList?.ready();
          }
       }
 
       select(process) {
-         this.CurrentProcess = process;
+         this.CurrentProcessID = process.id;
 
          if (process == null) this.ProcessWorkspace?.clearWorkspace();
          else this.ProcessWorkspace?.populateWorkspace(process);
       }
    }
 
-   return UI_Work_Process;
+   return new UI_Work_Process();
 }

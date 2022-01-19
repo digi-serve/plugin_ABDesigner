@@ -8,14 +8,15 @@ var myClass = null;
 // we will want to call this factory fn() repeatedly in our imports,
 // but we only want to define 1 Class reference.
 
+import UI_Class from "../../ui_class";
+
 export default function (AB) {
    if (!myClass) {
       // const uiConfig = AB.Config.uiSettings();
-      // var L = function (...params) {
-      //    return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-      // };
+      const UIClass = UI_Class(AB);
+      // var L = UIClass.L();
 
-      myClass = class ABViewProperty extends AB.ClassUI {
+      myClass = class ABViewProperty extends UIClass {
          constructor(base = "properties_abview", ids = {}) {
             // base: {string} unique base id reference
             // ids: {hash}  { key => '' }
@@ -23,7 +24,7 @@ export default function (AB) {
             // unique to the Sub Class' interface elements.
 
             var common = {
-               component: `${base}_component`,
+               // component: `${base}_component`,
                /*
 // TODO:
                // the common property fields
@@ -48,21 +49,13 @@ export default function (AB) {
                   );
                   return;
                }
-               common[k] = `${base}_${k}`;
+               common[k] = "";
             });
 
-            super(common);
+            super(base, common);
 
             this.base = base;
             this.AB = AB;
-
-            this.currentApplicationID = null;
-            // {string}
-            // The current ABApplication.id being edited in our ABDesigner.
-
-            this.currentObjectID = null;
-            // {string}
-            // The current ABObject.id being edited in our object workspace.
          }
 
          ui(elements = []) {
@@ -103,7 +96,7 @@ export default function (AB) {
                            }
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -117,7 +110,7 @@ export default function (AB) {
                      placeholder: L("Database field name"),
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -128,7 +121,7 @@ export default function (AB) {
                      align: "right",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -141,7 +134,7 @@ export default function (AB) {
                      value: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -161,7 +154,7 @@ export default function (AB) {
                            this.getNumberOfNullValue(newVal);
                         },
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -174,7 +167,7 @@ export default function (AB) {
                      hidden: true,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -188,7 +181,7 @@ export default function (AB) {
                      labelWidth: uiConfig.labelWidthCheckbox,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -206,7 +199,7 @@ export default function (AB) {
                      },
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -219,7 +212,7 @@ export default function (AB) {
                      name: "validationRules",
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                           UIClass.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -266,10 +259,6 @@ export default function (AB) {
             }
          }
 
-         applicationLoad(appID) {
-            this.currentApplicationID = appID;
-         }
-
          clearEditor() {
             console.error("!!! Depreciated! call clear() instead.");
             this.clear();
@@ -307,14 +296,6 @@ export default function (AB) {
             // hide warning message of null data
             $$(ids.numberOfNull).hide();
 */
-         }
-
-         get currentApplication() {
-            return this.AB.applicationByID(this.currentApplicationID);
-         }
-
-         get currentObject() {
-            return this.AB.objectByID(this.currentObjectID);
          }
 
          /**
@@ -403,10 +384,6 @@ export default function (AB) {
 
          markInvalid(name, message) {
             $$(this.ids.component).markInvalid(name, message);
-         }
-
-         objectLoad(objectID) {
-            this.currentObjectID = objectID;
          }
 
          /**

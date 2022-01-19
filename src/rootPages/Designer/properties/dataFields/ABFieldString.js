@@ -7,16 +7,13 @@ import FFieldClass from "./ABField";
 
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
 
    var ABField = FFieldClass(AB);
+   var L = ABField.L();
 
    class ABFieldStringProperty extends ABField {
       constructor() {
-         var base = "properties_abfield_string";
-         super(base, {
+         super("properties_abfield_string", {
             default: "",
             supportMultilingual: "",
          });

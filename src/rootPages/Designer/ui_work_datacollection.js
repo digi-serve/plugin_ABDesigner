@@ -4,22 +4,18 @@
  * Display the DataCollection Tab UI:
  *
  */
-
+import UI_Class from "./ui_class";
 import UI_Work_DataCollection_List from "./ui_work_datacollection_list";
 import UI_Work_DataCollection_Workspace from "./ui_work_datacollection_workspace";
 
 export default function (AB) {
-   const DataCollection_List = UI_Work_DataCollection_List(AB);
-   const DataCollection_Workspace = UI_Work_DataCollection_Workspace(AB);
-
-   class UI_Work_DataCollection extends AB.ClassUI {
+   const UIClass = UI_Class(AB);
+   class UI_Work_DataCollection extends UIClass {
       constructor() {
          super("ui_work_datacollection");
 
-         this.CurrentApplication = null;
-         this.DataCollectionList = new DataCollection_List();
-         this.DataCollectionWorkspace =
-            new DataCollection_Workspace(/** default settings */);
+         this.DataCollectionList = UI_Work_DataCollection_List(AB);
+         this.DataCollectionWorkspace = UI_Work_DataCollection_Workspace(AB);
       }
 
       ui() {
@@ -49,13 +45,11 @@ export default function (AB) {
 
       /**
        * @function applicationLoad
-       *
-       * Initialize the Query Workspace with the given ABApplication.
-       *
+       * Initialize the Datacollection Workspace with the given ABApplication.
        * @param {ABApplication} application
        */
       applicationLoad(application) {
-         this.CurrentApplication = application;
+         super.applicationLoad(application);
 
          this.DataCollectionWorkspace.clearWorkspace();
          this.DataCollectionList.applicationLoad(application);
@@ -72,11 +66,10 @@ export default function (AB) {
 
          // this.DataCollectionList.busy();
 
-         if (this.CurrentApplication) {
-            this.DataCollectionWorkspace.applicationLoad(
-               this.CurrentApplication
-            );
-            this.DataCollectionList.applicationLoad(this.CurrentApplication);
+         var app = this.CurrentApplication;
+         if (app) {
+            this.DataCollectionWorkspace.applicationLoad(app);
+            this.DataCollectionList.applicationLoad(app);
          }
          this.DataCollectionList.ready();
       }
@@ -87,5 +80,5 @@ export default function (AB) {
       }
    }
 
-   return UI_Work_DataCollection;
+   return new UI_Work_DataCollection();
 }

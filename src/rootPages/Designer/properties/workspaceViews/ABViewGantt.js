@@ -24,20 +24,21 @@ var defaultValues = {
    notes: "none", // id of a ABFieldString, ABFieldLongText
 };
 
-export default function (AB, ibase) {
-   let L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+import UI_Class from "../../ui_class";
 
-   class ABObjectWorkspaceViewGantt extends AB.ClassUI {
+export default function (AB, ibase) {
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
+
+   class ABObjectWorkspaceViewGantt extends UIClass {
       constructor(idBase) {
-         super({
-            title: `${idBase}_popupGanttTitle`,
-            startDate: `${idBase}_popupGanttStartDate`,
-            endDate: `${idBase}_popupGanttEndDate`,
-            duration: `${idBase}_popupGanttDuration`,
-            progress: `${idBase}_popupGanttProgress`,
-            notes: `${idBase}_popupGanttNotes`,
+         super(idBase, {
+            title: "",
+            startDate: "",
+            endDate: "",
+            duration: "",
+            progress: "",
+            notes: "",
          });
       }
 

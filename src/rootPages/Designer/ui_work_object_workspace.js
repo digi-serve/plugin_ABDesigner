@@ -3,7 +3,7 @@
  *
  * Manage the Object Workspace area.
  */
-
+import UI_Class from "./ui_class";
 // const ABWorkspaceKanBan = require("./ab_work_object_workspace_kanban");
 // const ABWorkspaceGantt = require("./ab_work_object_workspace_gantt");
 
@@ -30,14 +30,13 @@ import FWorkspaceTrack from "./ui_work_object_workspace_popupTrack";
 
 export default function (AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    var Datatable = FWorkspaceDatatable(AB);
    var Track = FWorkspaceTrack(AB);
 
-   class UIWorkObjectWorkspace extends AB.ClassUI {
+   class UIWorkObjectWorkspace extends UIClass {
       /**
        * @param {object} App
        * @param {string} idBase
@@ -54,39 +53,37 @@ export default function (AB, init_settings) {
        * 							}
        */
       constructor(settings = {}) {
-         var base = "abd_work_object_workspace";
+         super("abd_work_object_workspace", {
+            // component: `${base}_component`,
 
-         super({
-            component: `${base}_component`,
+            buttonAddField: "",
+            buttonDeleteSelected: "",
+            buttonExport: "",
+            buttonImport: "",
+            buttonFieldsVisible: "",
+            buttonFilter: "",
+            buttonFrozen: "",
+            buttonLabel: "",
+            buttonMassUpdate: "",
+            buttonRowNew: "",
+            buttonSort: "",
 
-            buttonAddField: `${base}_buttonAddField`,
-            buttonDeleteSelected: `${base}_deleteSelected`,
-            buttonExport: `${base}_buttonExport`,
-            buttonImport: `${base}_buttonImport`,
-            buttonFieldsVisible: `${base}_buttonFieldsVisible`,
-            buttonFilter: `${base}_buttonFilter`,
-            buttonFrozen: `${base}_buttonFrozen`,
-            buttonLabel: `${base}_buttonLabel`,
-            buttonMassUpdate: `${base}_buttonMassUpdate`,
-            buttonRowNew: `${base}_buttonRowNew`,
-            buttonSort: `${base}_buttonSort`,
+            listIndex: "",
+            buttonIndex: "",
 
-            listIndex: `${base}_listIndex`,
-            buttonIndex: `${base}_buttonIndex`,
+            datatable: "",
+            error: "",
+            error_msg: "",
 
-            datatable: `${base}_datatable`,
-            error: `${base}_error`,
-            error_msg: `${base}_error_msg`,
-
-            viewMenu: `${base}_viewMenu`,
-            viewMenuButton: `${base}_viewMenuButton`,
-            viewMenuNewView: `${base}_viewMenuNewView`,
+            viewMenu: "",
+            viewMenuButton: "",
+            viewMenuNewView: "",
 
             // Toolbar:
-            toolbar: `${base}_toolbar`,
+            toolbar: "",
 
-            noSelection: `${base}_noSelection`,
-            selectedObject: `${base}_selectedObject`,
+            noSelection: "",
+            selectedObject: "",
          });
 
          // default settings
@@ -190,9 +187,6 @@ export default function (AB, init_settings) {
          // {ABDataCollection}
          // An instance of an ABDataCollection to manage the data we are displaying
          // in our workspace.
-
-         this.CurrentApplicationID = null;
-         // {string} the ABApplication.id of the current application
 
          this.CurrentObjectID = null;
          // {string} the ABObject.id of the current Object we are editing.
@@ -675,7 +669,7 @@ export default function (AB, init_settings) {
        *        The current ABApplication we are working with.
        */
       applicationLoad(application) {
-         this.CurrentApplicationID = application?.id;
+         super.applicationLoad(application);
          this.PopupNewDataFieldComponent.applicationLoad(application);
 
          // this.CurrentDatacollection.application = CurrentApplication;
@@ -895,10 +889,10 @@ export default function (AB, init_settings) {
                                  }
                               }
 
-                              var application = this.AB.applicationByID(
-                                 this.CurrentApplicationID
+                              checkPages(
+                                 this.CurrentApplication.pages(),
+                                 (err) => {}
                               );
-                              checkPages(application.pages(), (err) => {});
                            })
                            .catch((err) => {
                               if (err && err.message) {
@@ -1206,9 +1200,10 @@ export default function (AB, init_settings) {
          $$(this.ids.selectedObject).show();
 
          this.CurrentObjectID = objectID;
+         var object = this.AB.objectByID(objectID);
 
          // get current view from object
-         this.workspaceViews.objectLoad(objectID);
+         this.workspaceViews.objectLoad(object);
          var currentView = this.workspaceViews.getCurrentView();
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
@@ -1235,7 +1230,6 @@ export default function (AB, init_settings) {
          //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).enable();
          // }
 
-         var object = this.AB.objectByID(objectID);
          this.CurrentDatacollection.datasource = object;
 
          Datatable.objectLoad(object);

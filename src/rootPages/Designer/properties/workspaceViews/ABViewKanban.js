@@ -20,17 +20,18 @@ var defaultValues = {
    ownerField: null,
 };
 
-export default function (AB, ibase) {
-   let L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+import UI_Class from "../../ui_class";
 
-   class ABViewKanban extends AB.ClassUI {
+export default function (AB, ibase) {
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
+
+   class ABViewKanban extends UIClass {
       constructor(idBase) {
-         super({
-            vGroupInput: `${idBase}_popupAddViewVGroup`,
-            hGroupInput: `${idBase}_popupAddViewHGroup`,
-            ownerInput: `${idBase}_popupAddViewOwner`,
+         super(idBase, {
+            vGroupInput: "",
+            hGroupInput: "",
+            ownerInput: "",
          });
       }
 
