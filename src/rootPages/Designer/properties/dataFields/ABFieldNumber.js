@@ -18,9 +18,15 @@ export default function (AB) {
             decimalOptions: "",
             typeDecimalPlaces: "",
             typeRounding: "",
-            validate: "",
+            validation: "",
             validateMinimum: "",
             validateMaximum: "",
+
+            defaultCheckbox: '',
+            validateView: '',
+            typeDecimals: '',
+            typeFormat: '',
+            typeThousands: ''
          });
       }
 
@@ -28,138 +34,137 @@ export default function (AB) {
          var FC = this.FieldClass();
          var ids = this.ids;
          return super.ui([
-            // {
-            //    view: "text",
-            //    name:'textDefault',
-            //    labelWidth: App.config.labelWidthXLarge,
-            //    placeholder: L('ab.dataField.string.default', '*Default text')
-            // },
-            // {
-            //    view: "checkbox",
-            //    id: ids.allowRequired,
-            //    name: "allowRequired",
-            //    labelRight: L("ab.dataField.number.required", "*Required"),
-            //    disallowEdit: true,
-            //    labelWidth: 0,
-            //    on: {
-            //       onChange: (newVal, oldVal) => {
-            //          // when require number, then should have default value
-            //          if (newVal && !$$(ids.default).getValue()) {
-            //             $$(ids.default).setValue('0');
-            //          }
-            //       }
-            //    }
-            // },
             {
-               view: "text",
-               label: L("Default"),
-               labelWidth: uiConfig.labelWidthXLarge,
-               id: ids.default,
-               name: "default",
-               placeholder: L("Enter default value"),
-               labelPosition: "top",
-               on: {
-                  onChange: function (newVal, oldVal) {
-                     // Validate number
-                     if (!new RegExp("^[0-9.]*$").test(newVal)) {
-                        // $$(componentIds.default).setValue(oldVal);
-                        this.setValue(oldVal);
-                     }
-                     // when require number, then should have default value
-                     // else if ($$(ids.allowRequired).getValue() && !newVal) {
-                     //    this.setValue('0');
-                     // }
+               cols: [
+                  {
+                     view: "label",
+                     label: L("<span>Default Value: </span>"),
+                     align: "right",
+                     width: 100
                   },
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
-                  },
-               },
-            },
-            {
-               view: "richselect",
-               name: "typeFormat",
-               label: L("Format"),
-               value: "none",
-               labelWidth: uiConfig.labelWidthXLarge,
-               options: FC.formatList(),
-               on: {
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
-                  },
-               },
-            },
-            {
-               view: "richselect",
-               name: "typeDecimals",
-               disallowEdit: true,
-               label: L("Decimals"),
-               value: "none",
-               labelWidth: uiConfig.labelWidthXLarge,
-               options: FC.delimiterList(),
-               on: {
-                  onChange: function (newValue /*, oldValue */) {
-                     if (newValue == "none") {
-                        $$(ids.decimalOptions).hide();
-                        $$(ids.typeDecimalPlaces).disable();
-                        $$(ids.typeRounding).disable();
-                        $$(ids.typeDecimalPlaces).hide();
-                        $$(ids.typeRounding).hide();
-                     } else {
-                        $$(ids.typeDecimalPlaces).enable();
-                        $$(ids.typeRounding).enable();
-                        $$(ids.typeDecimalPlaces).show();
-                        $$(ids.typeRounding).show();
-                        $$(ids.decimalOptions).show();
+                  {
+                     id: ids.defaultCheckbox,
+                     view: "checkbox",
+                     width: 30,
+                     value: 0,
+                     on: {
+                        onChange: (newv) => {
+                           this.checkboxDefaultValue(newv);
+                        },
+                        onAfterRender: () => {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        }
                      }
                   },
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
+                  {
+                     id: ids.default,
+                     view: "text",
+                     name: "default",
+                     placeholder: L("Enter default value"),
+                     disabled: true,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     on: {
+                        onChange: (newVal, oldVal) => {
+                           this.numValidation(newVal, oldVal, ids.default)
+                        },
+                        onAfterRender: () => {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  }
+               ]
+            },
+            {
+               cols: [
+                  {
+                     view: "label",
+                     label: L("<span>Format: </span>"),
+                     align: "right",
+                     width: 100
                   },
-               },
+                  {
+                     id: ids.typeFormat,
+                     view: "richselect",
+                     name: "typeFormat",
+                     value: "none",
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     options: FC.formatList(),
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     }
+                  }
+               ]  
+            },
+            {
+               cols: [
+                  {
+                     view: "label",
+                     label: L("<span>Decimals: </span>"),
+                     align: "right",
+                     width: 100
+                  },
+                  {
+                     id: ids.typeDecimals,
+                     view: "segmented",
+                     name: "typeDecimals",
+                     disallowEdit: true,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     value: "none",
+                     options: FC.delimiterList(),
+                     value: "none",
+                     on: {
+                        onChange: (newVal /*, oldVal */) => {
+                           this.segmentedDecimals(newVal)
+                        },
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  }
+               ]
             },
             {
                // show these options as sub optionsof our "typeDecimals"
                id: ids.decimalOptions,
-               cols: [
-                  { width: 20 },
+               hidden: true,
+               disabled: true,
+               rows: [
                   {
-                     rows: [
+                     cols: [
+                        { width: 20 },
                         {
-                           view: "richselect",
+                           view: "label",
+                           label: L("<span>Places: </span>"),
+                           align: "right",
+                           width: 100
+                        },
+                        {
                            id: ids.typeDecimalPlaces,
-                           name: "typeDecimalPlaces",
+                           view: "counter",
                            disallowEdit: true,
-                           label: L("Places"),
-                           value: "none",
-                           labelWidth: uiConfig.labelWidthXLarge,
-                           disabled: true,
-                           hidden: true,
-                           options: [
-                              { id: "none", value: "0" },
-                              { id: 1, value: "1" },
-                              { id: 2, value: "2" },
-                              { id: 3, value: "3" },
-                              { id: 4, value: "4" },
-                              { id: 5, value: "5" },
-                              { id: 10, value: "10" },
-                           ],
+                           name: "typeDecimalPlaces",
+                           width: 102,
                            on: {
                               onAfterRender() {
                                  AB.ClassUI.CYPRESS_REF(this);
                               },
                            },
                         },
-
+                        { width: 20 },
                         {
-                           view: "richselect",
+                           view: "label",
+                           label: L("<span>Rounding: </span>"),
+                           align: "right",
+                           width: 100
+                        },
+                        {
                            id: ids.typeRounding,
+                           view: "richselect",
                            name: "typeRounding",
-                           label: L("Rounding"),
                            value: "none",
-                           labelWidth: uiConfig.labelWidthXLarge,
                            vertical: true,
-                           disabled: true,
-                           hidden: true,
                            options: [
                               { id: "none", value: L("Default") },
                               {
@@ -177,95 +182,155 @@ export default function (AB) {
                               },
                            },
                         },
-                     ],
+                     ]
                   },
-               ],
+               ]
             },
-
             {
-               view: "richselect",
-               name: "typeThousands",
-               label: L("Thousands"),
-               value: "none",
-               labelWidth: uiConfig.labelWidthXLarge,
-               vertical: true,
-               options: FC.delimiterList(),
-               on: {
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
+               cols: [
+                  {
+                     view: "label",
+                     label: L("<span>Thousands: </span>"),
+                     align: "right",
+                     width: 100
                   },
-               },
-            },
-
-            {
-               view: "checkbox",
-               id: ids.validate,
-               name: "validation",
-               labelWidth: uiConfig.labelWidthCheckbox,
-               labelRight: L("Validation"),
-               on: {
-                  onChange: function (newVal) {
-                     if (newVal) {
-                        $$(ids.validateMinimum).enable();
-                        $$(ids.validateMaximum).enable();
-                        $$(ids.validateMinimum).show();
-                        $$(ids.validateMaximum).show();
-                     } else {
-                        $$(ids.validateMinimum).disable();
-                        $$(ids.validateMaximum).disable();
-                        $$(ids.validateMinimum).hide();
-                        $$(ids.validateMaximum).hide();
+                  {
+                     id: ids.typeThousands,
+                     view: "segmented",
+                     name: "typeThousands",
+                     value: "none",
+                     options: FC.delimiterList(),
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        }
                      }
-                  },
-
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
-                  },
-               },
+                  }
+               ]
             },
             {
-               view: "text",
-               id: ids.validateMinimum,
-               name: "validateMinimum",
-               label: L("Minimum"),
-               labelWidth: uiConfig.labelWidthXLarge,
-               disabled: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("<span>Validation: </span>"),
+                     align: "right",
+                     width: 100
+                  },
+                  {
+                     view: "switch",
+                     id: ids.validation,
+                     name: "validation",
+                     value: 0,
+                     width: 55,
+                     on: {
+                        onChange: (newVal) => {
+                           this.switchValidation(newVal);
+                        },
+      
+                        onAfterRender: () => {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     }
+                  }
+               ]
+            },
+            {
+               id: ids.validateView,
                hidden: true,
-               on: {
-                  onChange: function (newVal, oldVal) {
-                     // Validate number
-                     if (!new RegExp("^[0-9.]*$").test(newVal)) {
-                        $$(ids.validateMinimum).setValue(oldVal || "");
-                     }
+               disabld: true,
+               rows: [
+                  {
+                     cols: [
+                        { width: 20 },
+                        {
+                           view: "label",
+                           label: L("<span>Minimum: </span>"),
+                           align: "right",
+                           width: 100
+                        },
+                        {
+                           view: "text",
+                           id: ids.validateMinimum,
+                           name: "validateMinimum",
+                           placeholder: L("Minimum Number"),
+                           on: {
+                              onChange: (newVal, oldVal) => {
+                                 this.numValidation(newVal, oldVal, ids.validateMinimum)
+                              },
+      
+                              onAfterRender: () => {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ]
                   },
-
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
-                  },
-               },
-            },
-            {
-               view: "text",
-               id: ids.validateMaximum,
-               name: "validateMaximum",
-               label: L("Maximum"),
-               labelWidth: uiConfig.labelWidthXLarge,
-               disabled: true,
-               hidden: true,
-               on: {
-                  onChange: function (newVal, oldVal) {
-                     // Validate number
-                     if (!new RegExp("^[0-9.]*$").test(newVal)) {
-                        $$(ids.validateMaximum).setValue(oldVal || "");
-                     }
-                  },
-
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
-                  },
-               },
-            },
+                  {
+                     cols: [
+                        { width: 20 },
+                        {
+                           view: "label",
+                           label: L("<span>Maximum: </span>"),
+                           align: "right",
+                           width: 100
+                        },
+                        {
+                           view: "text",
+                           id: ids.validateMaximum,
+                           name: "validateMaximum",
+                           placeholder: L("Maximum Number"),
+                           on: {
+                              onChange: (newVal, oldVal) => {
+                                 this.numValidation(newVal, oldVal, ids.validateMaximum)
+                              },
+            
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ]
+                  }
+               ]
+            }
          ]);
+      }
+
+      numValidation(newVal, oldVal, id) {
+         // Validate number
+         if (!new RegExp("^[0-9.]*$").test(newVal)) {
+            $$(id).setValue(oldVal || "");
+         }
+      }
+
+      checkboxDefaultValue(state) {
+         if(state == 0) {
+            $$(this.ids.default).disable();
+            $$(this.ids.default).setValue('');
+         }
+         else {
+            $$(this.ids.default).enable();
+         }
+      }
+
+      segmentedDecimals(val) {
+         if (val == "none") {
+            $$(this.ids.decimalOptions).disable();
+            $$(this.ids.decimalOptions).hide();
+         } else {
+            $$(this.ids.decimalOptions).enable();
+            $$(this.ids.decimalOptions).show();
+         }
+      }
+
+      switchValidation(state) {
+         if (state) {
+            $$(this.ids.validateView).enable();
+            $$(this.ids.validateView).show();
+         } else {
+            $$(this.ids.validateView).disable();
+            $$(this.ids.validateView).hide();
+         }
       }
 
       /**
@@ -366,26 +431,28 @@ export default function (AB) {
          var ids = this.ids;
          super.populate(field);
 
-         if (field.settings.validation) {
-            $$(ids.validateMinimum).enable();
-            $$(ids.validateMaximum).enable();
+         if (field.settings.default === '') {
+            $$(ids.defaultCheckbox).setValue(0);
          } else {
-            $$(ids.validateMinimum).disable();
-            $$(ids.validateMaximum).disable();
+            $$(ids.defaultCheckbox).setValue(1);
          }
 
-         if (field.settings.typeDecimals == "none") {
-            $$(ids.decimalOptions).hide();
-            $$(ids.typeDecimalPlaces).disable();
-            $$(ids.typeRounding).disable();
-            $$(ids.typeDecimalPlaces).hide();
-            $$(ids.typeRounding).hide();
+         if (field.settings.validation === 0) {
+            $$(ids.validateView).hide()
          } else {
-            $$(ids.typeDecimalPlaces).enable();
-            $$(ids.typeRounding).enable();
-            $$(ids.typeDecimalPlaces).show();
-            $$(ids.typeRounding).show();
+            $$(ids.validateView).show()
+         }
+
+         if (field.settings.typeDecimals === "none") {
+            $$(ids.decimalOptions).hide();
+            $$(ids.decimalOptions).disable();
+         } else {
+            $$(ids.decimalOptions).enable();
             $$(ids.decimalOptions).show();
+            $$(ids.typeDecimalPlaces).enable();
+            $$(ids.typeDecimalPlaces).show();
+            $$(ids.typeRounding).enable();
+            $$(ids.typeRounding).show();
          }
       }
    }
