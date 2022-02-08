@@ -287,7 +287,7 @@ export default function (AB) {
                ],
             });
             $$(Filter.ids.save).hide();
-            Filter.fieldsLoad(this.object.fields()); // Should This Be this.CurrentObject ?
+            Filter.fieldsLoad(this.CurrentObject.fields());
             if (settings && settings.rules) Filter.setValue(settings.rules);
          }
 
@@ -338,7 +338,7 @@ export default function (AB) {
             var FieldClass = this.FieldClass();
             if (!FieldClass) {
                console.error(
-                  "!!! ABFieldStringProperty: could not find FieldClass[string]"
+                  "!!! ABFieldStringProperty: could not find FieldClass[]"
                );
                return null;
             }

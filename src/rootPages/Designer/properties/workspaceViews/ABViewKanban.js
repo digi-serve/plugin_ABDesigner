@@ -2,22 +2,15 @@
 //
 // Manages the settings for a KanBan View in the Object Workspace
 
-// const ABObjectWorkspaceView = require("./ABObjectWorkspaceView");
-// const ABObjectWorkspaceViewComponent = require("./ABObjectWorkspaceViewComponent");
-
-// const ABPopupNewDataField = require("../../../ABDesigner/ab_work_object_workspace_popupNewDataField");
-
-// const ABFieldConnect = require("../dataFields/ABFieldConnect");
-// const ABFieldList = require("../dataFields/ABFieldList");
-// const ABFieldUser = require("../dataFields/ABFieldUser");
-
 var defaultValues = {
    name: "Default Kanban",
-   filterConditions: [], // array of filters to apply to the data table
-   sortFields: [],
-   verticalGroupingField: null,
-   horizontalGroupingField: null,
-   ownerField: null,
+   // filterConditions: [], // array of filters to apply to the data table
+   // sortFields: [],
+   settings: {
+      verticalGroupingField: null,
+      horizontalGroupingField: null,
+      ownerField: null,
+   },
 };
 
 import UI_Class from "../../ui_class";
@@ -26,6 +19,10 @@ export default function (AB, ibase) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
+   const ABFieldConnect = AB.Class.ABFieldManager.fieldByKey("connectObject");
+   const ABFieldList = AB.Class.ABFieldManager.fieldByKey("list");
+   const ABFieldUser = AB.Class.ABFieldManager.fieldByKey("user");
+
    class ABViewKanban extends UIClass {
       constructor(idBase) {
          super(idBase, {
@@ -33,6 +30,19 @@ export default function (AB, ibase) {
             hGroupInput: "",
             ownerInput: "",
          });
+
+         this.on("field.added", (field) => {
+            // refresh our droplists with the new field.
+            this.refreshOptions(this._object, this._view);
+            if (this._autoSelectInput) {
+               $$(this._autoSelectInput)?.setValue(field.id);
+            }
+         });
+
+         this._autoSelectInput = null;
+         // {string}
+         // contains the webix.id of the input that should be auto selected
+         // if we receive a "field.add" event;
       }
 
       /**
@@ -133,30 +143,6 @@ export default function (AB, ibase) {
 
       ui() {
          let ids = this.ids;
-
-         // let labels = {
-         //    common: App.labels,
-         //    component: {
-         //       vGroup: L("ab.add_view.kanban.vGroup", "*Vertical Grouping"),
-         //       hGroup: L("ab.add_view.kanban.hGroup", "*Horizontal Grouping"),
-         //       owner: L("ab.add_view.kanban.owner", "*Card Owner"),
-         //       groupingPlaceholder: L(
-         //          "ab.add_view.kanban.grouping_placeholder",
-         //          "*Select a field"
-         //       ),
-         //       ownerPlaceholder: L(
-         //          "ab.add_view.kanban.owner_placeholder",
-         //          "*Select a user field"
-         //       ),
-         //       noneOption: L("ab.add_view.kanban.none_option", "*None"),
-         //    },
-         // };
-
-         // var PopupNewDataFieldComponent = new ABPopupNewDataField(
-         //    AB,
-         //    idBase + "_kanban"
-         // );
-
          return {
             batch: "kanban",
             rows: [
@@ -189,10 +175,8 @@ export default function (AB, ibase) {
                         label: "",
                         width: 20,
                         click: () => {
-                           PopupNewDataFieldComponent.show(
-                              null,
-                              ABFieldList.defaults().key
-                           );
+                           this._autoSelectInput = ids.vGroupInput;
+                           this.emit("new.field", ABFieldList.defaults().key);
                         },
                      },
                   ],
@@ -233,10 +217,8 @@ export default function (AB, ibase) {
                         label: "",
                         width: 20,
                         click: () => {
-                           PopupNewDataFieldComponent.show(
-                              null,
-                              ABFieldList.defaults().key
-                           );
+                           this._autoSelectInput = ids.hGroupInput;
+                           this.emit("new.field", ABFieldList.defaults().key);
                         },
                      },
                   ],
@@ -262,8 +244,9 @@ export default function (AB, ibase) {
                         label: "",
                         width: 20,
                         click: () => {
-                           PopupNewDataFieldComponent.show(
-                              null,
+                           this._autoSelectInput = ids.ownerInput;
+                           this.emit(
+                              "new.field",
                               ABFieldConnect.defaults().key
                            );
                         },
@@ -275,17 +258,9 @@ export default function (AB, ibase) {
       }
 
       init(object, view) {
+         this._object = object;
+         this._view = view;
          this.refreshOptions(object, view);
-
-         // PopupNewDataFieldComponent.applicationLoad(object.application);
-         // PopupNewDataFieldComponent.objectLoad(object);
-         // PopupNewDataFieldComponent.init({
-         //    onSave: () => {
-         //       // be notified when a new Field is created & saved
-
-         //       this.refreshOptions(object, view);
-         //    },
-         // });
       }
 
       values() {
@@ -305,51 +280,32 @@ export default function (AB, ibase) {
        * into this object instance.
        * @param {json} data  the persisted data
        */
-      // fromObj(data) {
-      //    super.fromObj(data);
+      fromSettings(data) {
+         // super.fromObj(data);
 
-      //    for (var v in defaultValues) {
-      //       this[v] = data[v] || defaultValues[v];
-      //    }
+         for (var v in defaultValues) {
+            this[v] = data[v] || defaultValues[v];
+         }
 
-      //    this.type = ABObjectWorkspaceViewKanban.type();
-      // }
+         this.type = this.type();
+         this.key = this.type();
+      }
 
       /**
        * @method toObj()
        * compile our current state into a {json} object
        * that can be persisted.
        */
-      // toObj() {
-      //    var obj = super.toObj();
+      toSettings() {
+         var obj = {}; // super.toObj();
 
-      //    for (var v in defaultValues) {
-      //       obj[v] = this[v];
-      //    }
+         for (var v in defaultValues) {
+            obj[v] = this[v] || defaultValues[v];
+         }
 
-      //    obj.type = ABObjectWorkspaceViewKanban.type();
-      //    return obj;
-      // }
-
-      getHorizontalGroupingField() {
-         let viewCollection = this.object, // Should use another name property ?
-            object = viewCollection.object;
-
-         return object.fieldByID(this.horizontalGroupingField);
-      }
-
-      getVerticalGroupingField() {
-         let viewCollection = this.object, // Should use another name property ?
-            object = viewCollection.object;
-
-         return object.fieldByID(this.verticalGroupingField);
-      }
-
-      getOwnerField() {
-         let viewCollection = this.object, // Should use another name property ?
-            object = viewCollection.object;
-
-         return object.fieldByID(this.ownerField);
+         obj.key = this.type();
+         obj.type = this.type();
+         return obj;
       }
    }
 

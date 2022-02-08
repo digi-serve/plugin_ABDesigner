@@ -12,7 +12,8 @@
 //
 //
 import UI_Class from "./ui_class";
-import ABWorkspaceDatatable from "./ui_work_object_workspace_view_grid";
+import WorkspaceDatatable from "./ui_work_object_workspace_view_grid";
+import WorkspaceKanban from "./ui_work_object_workspace_view_kanban";
 
 import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
 import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
@@ -22,7 +23,8 @@ export default function (AB) {
    const UIClass = UI_Class(AB);
    // var L = UIClass.L();
 
-   const Datatable = ABWorkspaceDatatable(AB);
+   const Datatable = WorkspaceDatatable(AB);
+   const Kanban = WorkspaceKanban(AB);
 
    // Gather a list of the various View Properties
    const ViewGanttProperties = FViewGanttProperties(AB);
@@ -36,6 +38,7 @@ export default function (AB) {
 
    var hashViewComponents = {};
    hashViewComponents[ViewGridProperties.type()] = Datatable;
+   hashViewComponents[ViewKanbanProperties.type()] = Kanban;
 
    const defaultAttributes = {
       currentViewID: undefined,

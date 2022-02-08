@@ -274,7 +274,7 @@ export default function (AB) {
 
          // make sure all the Property components refer to this ABObject
          for (var menuName in this._componentHash) {
-            this._componentHash[menuName]?.objectLoad(this.CurrentObjectID);
+            this._componentHash[menuName]?.objectLoad(object);
          }
       }
 
@@ -580,7 +580,7 @@ export default function (AB) {
       }
 
       modeEdit(field) {
-         if (this._currentEditor) this._currentEditor.hide();
+         this._currentEditor?.hide();
          var ids = this.ids;
 
          // switch to this field's editor:
@@ -599,8 +599,8 @@ export default function (AB) {
          var elements = this._currentEditor.ui()?.elements;
          if (elements) {
             var disableElem = (elem) => {
-               if (elem.disallowEdit && $$(elem.id) && $$(elem.id).disable) {
-                  $$(elem.id).disable();
+               if (elem.disallowEdit) {
+                  $$(elem.id)?.disable?.();
                }
             };
 
@@ -652,8 +652,8 @@ export default function (AB) {
          var elements = this._currentEditor.ui()?.elements;
          if (elements) {
             var enableElem = (elem) => {
-               if (elem.disallowEdit && $$(elem.id) && $$(elem.id).enable) {
-                  $$(elem.id).enable();
+               if (elem.disallowEdit) {
+                  $$(elem.id)?.enable?.();
                }
             };
 
@@ -682,9 +682,11 @@ export default function (AB) {
        * @function show()
        *
        * Show this component.
-       * @param {ABField} field    the ABField to edit.  If not provided, then
-       *                           this is an ADD operation.
-       * @param {string} fieldKey  allow only this field type
+       * @param {ABField} field
+       *        the ABField to edit.  If not provided, then this is an ADD
+       *        operation.
+       * @param {string} fieldKey
+       *        allow only this field type
        */
       show(field, fieldKey) {
          this._editField = field;

@@ -4,7 +4,6 @@
  * Manage the Object Workspace area.
  */
 import UI_Class from "./ui_class";
-// const ABWorkspaceKanBan = require("./ab_work_object_workspace_kanban");
 // const ABWorkspaceGantt = require("./ab_work_object_workspace_gantt");
 
 // const ABWorkspaceIndex = require("./ab_work_object_workspace_index");
@@ -25,6 +24,7 @@ import FPopupViewSettings from "./ui_work_object_workspace_popupViewSettings";
 import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 
 import FWorkspaceDatatable from "./ui_work_object_workspace_view_grid";
+import FWorkspaceKanban from "./ui_work_object_workspace_view_kanban";
 
 import FWorkspaceTrack from "./ui_work_object_workspace_popupTrack";
 
@@ -34,6 +34,8 @@ export default function (AB, init_settings) {
    var L = UIClass.L();
 
    var Datatable = FWorkspaceDatatable(AB);
+   var Kanban = FWorkspaceKanban(AB);
+
    var Track = FWorkspaceTrack(AB);
 
    class UIWorkObjectWorkspace extends UIClass {
@@ -97,6 +99,7 @@ export default function (AB, init_settings) {
          // this.settings = settings;
 
          this.workspaceViews = FWorkspaceViews(AB);
+
          this.hashViews = {};
          // {hash}  { view.id : webix_component }
          // a hash of the live workspace view components
@@ -127,8 +130,8 @@ export default function (AB, init_settings) {
             object.save();
          });
 
-         // var KanBan = new ABWorkspaceKanBan(base);
-         // this.hashViews["kanban"] = KanBan;
+         // The Kanban Object View.
+         this.hashViews["kanban"] = Kanban;
 
          // var Gantt = new ABWorkspaceGantt(base);
          // this.hashViews["gantt"] = Gantt;
@@ -181,6 +184,9 @@ export default function (AB, init_settings) {
          // });
 
          this.PopupViewSettingsComponent = FPopupViewSettings(AB);
+         this.PopupViewSettingsComponent.on("new.field", (key) => {
+            this.PopupNewDataFieldComponent.show(null, key);
+         });
 
          // create ABViewDataCollection
          this.CurrentDatacollection = null;
@@ -556,7 +562,8 @@ export default function (AB, init_settings) {
                            {
                               view: "multiview",
                               cells: [
-                                 Datatable.ui() /*, Gantt.ui(), KanBan.ui() */,
+                                 Datatable.ui(),
+                                 Kanban.ui() /*, Gantt.ui() */,
                               ],
                            },
                            // this.settings.isInsertable
@@ -593,14 +600,10 @@ export default function (AB, init_settings) {
          allInits.push(this.workspaceViews.init(AB));
 
          allInits.push(Datatable.init(AB));
+         allInits.push(Kanban.init(AB));
+
          allInits.push(Track.init(AB));
 
-         // Datatable.init({
-         //    onEditorMenu: _logic.callbackHeaderEditorMenu,
-         //    onColumnOrderChange: _logic.callbackColumnOrderChange,
-         //    onCheckboxChecked: _logic.callbackCheckboxChecked,
-         // });
-         // KanBan.init();
          // Gantt.init();
 
          this.CurrentDatacollection = this.AB.datacollectionNew({});
@@ -609,7 +612,7 @@ export default function (AB, init_settings) {
          allInits.push(this.PopupCustomIndex.init(AB));
 
          Datatable.datacollectionLoad(this.CurrentDatacollection);
-         // KanBan.datacollectionLoad(this.CurrentDatacollection);
+         Kanban.datacollectionLoad(this.CurrentDatacollection);
          // Gantt.datacollectionLoad(this.CurrentDatacollection);
 
          allInits.push(this.PopupHeaderEditMenu.init(AB));
@@ -636,6 +639,7 @@ export default function (AB, init_settings) {
          allInits.push(this.PopupNewDataFieldComponent.init(AB));
          this.PopupNewDataFieldComponent.on("save", (...params) => {
             this.callbackAddFields(...params);
+            this.PopupViewSettingsComponent.emit("field.added", params[0]);
          });
 
          // // ?? what is this for ??
@@ -863,11 +867,13 @@ export default function (AB, init_settings) {
                   ]),
                   callback: (isOK) => {
                      if (isOK) {
+                        this.busy();
                         field
                            .destroy()
                            .then(() => {
+                              this.ready();
                               this.refreshView();
-                              _logic.loadData();
+                              this.loadData();
 
                               // recursive fn to remove any form/detail fields related to this field
                               function checkPages(list, cb) {
@@ -895,6 +901,7 @@ export default function (AB, init_settings) {
                               );
                            })
                            .catch((err) => {
+                              this.ready();
                               if (err && err.message) {
                                  webix.alert({
                                     type: "alert-error",
@@ -913,6 +920,10 @@ export default function (AB, init_settings) {
                });
                break;
          }
+      }
+
+      busy() {
+         $$(this.ids.component)?.showProgress?.({ type: "icon" });
       }
 
       /**
@@ -1059,6 +1070,10 @@ export default function (AB, init_settings) {
             $$(ids.buttonSort).define("badge", sortFields.length || null);
             $$(ids.buttonSort).refresh();
          }
+      }
+
+      ready() {
+         $$(this.ids.component)?.hideProgress?.();
       }
 
       /**
@@ -1233,7 +1248,7 @@ export default function (AB, init_settings) {
          this.CurrentDatacollection.datasource = object;
 
          Datatable.objectLoad(object);
-         // KanBan.objectLoad(object);
+         Kanban.objectLoad(object);
          // Gantt.objectLoad(object);
 
          this.PopupNewDataFieldComponent.objectLoad(object);
