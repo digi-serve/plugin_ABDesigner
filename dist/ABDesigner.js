@@ -11483,13 +11483,22 @@ __webpack_require__.r(__webpack_exports__);
       // }
 
       refreshView() {
+         var ids = this.ids;
          var currentView = this.workspaceViews.getCurrentView();
-         Datatable.refreshHeader(
-            currentView.hiddenFields,
-            currentView.filterConditions,
-            currentView.sortFields,
-            currentView.frozenColumnID
-         );
+         switch (currentView.type) {
+            case "grid":
+               Datatable.refreshHeader(
+                  currentView.hiddenFields,
+                  currentView.filterConditions,
+                  currentView.sortFields,
+                  currentView.frozenColumnID
+               );
+               break;
+
+            case "kanban":
+               Kanban.show(currentView);
+               break;
+         }
       }
 
       /**
@@ -11674,6 +11683,7 @@ __webpack_require__.r(__webpack_exports__);
       async callbackViewUpdated(view) {
          await this.workspaceViews.viewUpdate(view);
          this.refreshWorkspaceViewMenu();
+         this.refreshView();
       }
 
       /**
@@ -12136,6 +12146,20 @@ __webpack_require__.r(__webpack_exports__);
       refreshToolBarView() {
          var ids = this.ids;
 
+         var currentView = this.workspaceViews.getCurrentView();
+         switch (currentView.type) {
+            case "grid":
+               $$(ids.buttonFieldsVisible).show();
+               $$(ids.buttonFrozen).show();
+               $$(ids.buttonSort).show();
+               break;
+            case "kanban":
+               $$(ids.buttonFieldsVisible).hide();
+               $$(ids.buttonFrozen).hide();
+               $$(ids.buttonSort).hide();
+               break;
+         }
+
          // get badge counts for server side components
          this.getBadgeHiddenFields();
          this.getBadgeFrozenColumn();
@@ -12145,7 +12169,6 @@ __webpack_require__.r(__webpack_exports__);
          // $$(ids.component).setValue(ids.selectedObject);
          $$(ids.selectedObject).show(true, false);
 
-         var object = this.AB.objectByID();
          // disable add fields into the object
          if (this.CurrentObject.isExternal || this.CurrentObject.isImported) {
             $$(ids.buttonAddField).disable();
@@ -15597,6 +15620,8 @@ __webpack_require__.r(__webpack_exports__);
          if (this._view) {
             $$(ids.nameInput).setValue(this._view.name);
             $$(ids.typeInput).setValue(this._view.type);
+            // NOTE: the $$(ids.typeInput).onChange() will trigger
+            // the selected view's refresh.
          }
          // Default value
          else {
@@ -15749,7 +15774,7 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
       }
 
-      defaultSettings() {
+      defaultSettings(data) {
          // Pull the ABViewGrid definitions
          var defaultGridSettings = ViewGridProperties.toSettings();
          defaultGridSettings.label = L(defaultGridSettings.name);
@@ -15758,7 +15783,7 @@ __webpack_require__.r(__webpack_exports__);
             this._mockApp
          );
          var defaultGrid = defaultGridView.toObj();
-         defaultGrid.id = AB.jobID();
+         defaultGrid.id = data?.id ?? AB.jobID();
 
          // For our ABDesigner Object workspace, these settings are
          // enabled:
@@ -15861,8 +15886,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       viewNew(data) {
-         var defaults = this.defaultSettings();
-         defaults.name = data.name;
+         var defaults = this.defaultSettings(data);
+         Object.keys(data).forEach((k) => {
+            defaults[k] = data[k];
+         });
 
          return defaults;
       }
@@ -16027,7 +16054,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       defaultSettings(data) {
-         debugger;
          // Pull the ABViewGrid definitions
          var defaultSettings = ViewKanbanProperties.toSettings();
 
@@ -16042,7 +16068,7 @@ __webpack_require__.r(__webpack_exports__);
             this._mockApp
          );
          var defaultKanban = defaultView.toObj();
-         defaultKanban.id = AB.jobID();
+         defaultKanban.id = data.id ?? AB.jobID();
          /*
          // For our ABDesigner Object workspace, these settings are
          // enabled:
@@ -16135,7 +16161,9 @@ __webpack_require__.r(__webpack_exports__);
        */
       viewNew(data) {
          var defaults = this.defaultSettings(data);
-         defaults.name = data.name;
+         Object.keys(data).forEach((k) => {
+            defaults[k] = data[k];
+         });
 
          return defaults;
       }
@@ -16443,9 +16471,36 @@ __webpack_require__.r(__webpack_exports__);
          await this.AB.Storage.set("workspaceviews", this._settings);
       }
 
-      async viewUpdate(view) {
-         var indexToReplace = this._views.indexOf(view);
-         this._views.splice(indexToReplace, 1, view);
+      /**
+       * @method viewUpdate()
+       * replace an existing view definition with the newly provided one.
+       * NOTE: our view.component might be changed as well, so we regenerate
+       * that.
+       * @param {obj} view
+       *        The key=>value hash of the updated WorkspaceView.
+       * @return {Promise}
+       */
+      async viewUpdate(data) {
+         // generate a new view from the provided data;
+         var ViewType = hashViewComponents[data.type];
+         if (!ViewType) return;
+
+         // remove the .component so it gets regenerated:
+         delete data.component;
+
+         var view = ViewType.viewNew(data);
+
+         // NOTE: [].splice() isn't a good candidate to use here as
+         // view is a newly created object each time.
+         var _newViews = [];
+         this._views.forEach((v) => {
+            if (v.id != view.id) {
+               _newViews.push(v);
+               return;
+            }
+            _newViews.push(view);
+         });
+         this._views = _newViews;
 
          await this.save();
       }

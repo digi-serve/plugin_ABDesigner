@@ -50,7 +50,7 @@ export default function (AB) {
          this.AB = AB;
       }
 
-      defaultSettings() {
+      defaultSettings(data) {
          // Pull the ABViewGrid definitions
          var defaultGridSettings = ViewGridProperties.toSettings();
          defaultGridSettings.label = L(defaultGridSettings.name);
@@ -59,7 +59,7 @@ export default function (AB) {
             this._mockApp
          );
          var defaultGrid = defaultGridView.toObj();
-         defaultGrid.id = AB.jobID();
+         defaultGrid.id = data?.id ?? AB.jobID();
 
          // For our ABDesigner Object workspace, these settings are
          // enabled:
@@ -162,8 +162,10 @@ export default function (AB) {
       }
 
       viewNew(data) {
-         var defaults = this.defaultSettings();
-         defaults.name = data.name;
+         var defaults = this.defaultSettings(data);
+         Object.keys(data).forEach((k) => {
+            defaults[k] = data[k];
+         });
 
          return defaults;
       }

@@ -779,13 +779,22 @@ export default function (AB, init_settings) {
       // }
 
       refreshView() {
+         var ids = this.ids;
          var currentView = this.workspaceViews.getCurrentView();
-         Datatable.refreshHeader(
-            currentView.hiddenFields,
-            currentView.filterConditions,
-            currentView.sortFields,
-            currentView.frozenColumnID
-         );
+         switch (currentView.type) {
+            case "grid":
+               Datatable.refreshHeader(
+                  currentView.hiddenFields,
+                  currentView.filterConditions,
+                  currentView.sortFields,
+                  currentView.frozenColumnID
+               );
+               break;
+
+            case "kanban":
+               Kanban.show(currentView);
+               break;
+         }
       }
 
       /**
@@ -970,6 +979,7 @@ export default function (AB, init_settings) {
       async callbackViewUpdated(view) {
          await this.workspaceViews.viewUpdate(view);
          this.refreshWorkspaceViewMenu();
+         this.refreshView();
       }
 
       /**
@@ -1432,6 +1442,20 @@ export default function (AB, init_settings) {
       refreshToolBarView() {
          var ids = this.ids;
 
+         var currentView = this.workspaceViews.getCurrentView();
+         switch (currentView.type) {
+            case "grid":
+               $$(ids.buttonFieldsVisible).show();
+               $$(ids.buttonFrozen).show();
+               $$(ids.buttonSort).show();
+               break;
+            case "kanban":
+               $$(ids.buttonFieldsVisible).hide();
+               $$(ids.buttonFrozen).hide();
+               $$(ids.buttonSort).hide();
+               break;
+         }
+
          // get badge counts for server side components
          this.getBadgeHiddenFields();
          this.getBadgeFrozenColumn();
@@ -1441,7 +1465,6 @@ export default function (AB, init_settings) {
          // $$(ids.component).setValue(ids.selectedObject);
          $$(ids.selectedObject).show(true, false);
 
-         var object = this.AB.objectByID();
          // disable add fields into the object
          if (this.CurrentObject.isExternal || this.CurrentObject.isImported) {
             $$(ids.buttonAddField).disable();

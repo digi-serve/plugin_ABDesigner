@@ -220,6 +220,8 @@ export default function (AB) {
          if (this._view) {
             $$(ids.nameInput).setValue(this._view.name);
             $$(ids.typeInput).setValue(this._view.type);
+            // NOTE: the $$(ids.typeInput).onChange() will trigger
+            // the selected view's refresh.
          }
          // Default value
          else {

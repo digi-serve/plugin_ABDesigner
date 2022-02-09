@@ -51,7 +51,6 @@ export default function (AB) {
       }
 
       defaultSettings(data) {
-         debugger;
          // Pull the ABViewGrid definitions
          var defaultSettings = ViewKanbanProperties.toSettings();
 
@@ -66,7 +65,7 @@ export default function (AB) {
             this._mockApp
          );
          var defaultKanban = defaultView.toObj();
-         defaultKanban.id = AB.jobID();
+         defaultKanban.id = data.id ?? AB.jobID();
          /*
          // For our ABDesigner Object workspace, these settings are
          // enabled:
@@ -159,7 +158,9 @@ export default function (AB) {
        */
       viewNew(data) {
          var defaults = this.defaultSettings(data);
-         defaults.name = data.name;
+         Object.keys(data).forEach((k) => {
+            defaults[k] = data[k];
+         });
 
          return defaults;
       }
