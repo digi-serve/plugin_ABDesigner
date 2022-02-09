@@ -231,7 +231,7 @@ var myClass = null;
                      cols: [
                         {
                            view: "label",
-                           label: L("<span>Field Name: </span>"),
+                           label: L("Field Name:") + ' ',
                            align: "left",
                            width: 86.88
                         },
@@ -261,7 +261,7 @@ var myClass = null;
                            view: "button",
                            id: ids.buttonCog,
                            css: "webix_transparent",
-                           label: L("<span class=\"webix_icon_btn\" style=\"margin: 0px;\"><i class=\"nomargin fa fa-cog\"></i></span>"),
+                           label: "<span class=\"webix_icon_btn\" style=\"margin: 0px;\"><i class=\"nomargin fa fa-cog\"></i></span>",
                            width: 40,
                            on: {
                               onItemClick: () => {
@@ -278,7 +278,7 @@ var myClass = null;
                      cols: [
                         {
                            view: "label",
-                           label: L("<span>Show icon: </span>"),
+                           label: L("Show icon:") + ' ',
                            align: "left",
                            width: 75.47
                         },
@@ -297,7 +297,7 @@ var myClass = null;
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Required: </span>"),
+                           label: L("Required:") + ' ',
                            align: "left",
                            width: 66.28
                         },
@@ -337,7 +337,7 @@ var myClass = null;
                         },
                         {
                            view: "label",
-                           label: L("<span>Unique: </span>"),
+                           label: L("Unique:") + ' ',
                            align: "left",
                            width: 58.84
                         },
@@ -392,7 +392,7 @@ var myClass = null;
                      cols: [
                         {
                            view: "label",
-                           label: L("<span>Custom Settings: </span>"),
+                           label: L("Custom Settings:") + ' ',
                            align: "left",
                            width: 200
                         },
@@ -462,7 +462,7 @@ var myClass = null;
                      {
                         view: "label",
                         align: "center",
-                        label: "<span>Edit field name</span>"
+                        label: L("Edit field name")
                      }
                   ]
                },
@@ -474,7 +474,7 @@ var myClass = null;
                         cols: [
                            {
                               view: "label",
-                              label: "<span>Database Label: </span>",
+                              label: L("Database Label:") + ' ',
                               align: "right",
                               width: 125
                            },
@@ -496,7 +496,7 @@ var myClass = null;
                            {},
                            {
                               view: "button",
-                              value: "Cancel",
+                              value: L("Cancel"),
                               css: "webix_danger",
                               width: 100,
                               on: {
@@ -511,7 +511,7 @@ var myClass = null;
                            },
                            {
                               view: "button",
-                              value: "Submit",
+                              value: L("Submit"),
                               css: "webix_primary",
                               width: 100,
                               on: {
@@ -548,11 +548,11 @@ var myClass = null;
                            {
                               view: "label",
                               align: "center",
-                              label: "<span>Field Validation</span>"
+                              label: L("Field Validation")
                            },
                            {
                               view: "button",
-                              label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>"),
+                              label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>",
                               css: "webix_transparent",
                               width: 40,
                               click: () => {
@@ -623,7 +623,7 @@ var myClass = null;
             if (FC) {
                $$(this.ids.fieldDescription).define(
                   "label",
-                  L(`*${FC.defaults().description}`)
+                  '*' + L(FC.defaults().description)
                );
             } else {
                $$(this.ids.fieldDescription).hide();
@@ -716,7 +716,6 @@ var myClass = null;
                         $$(ids.addValidation).refresh();
                      },
                      on: {
-
                         onAfterRender: function() {
                            UIClass.CYPRESS_REF(this);
                         },
@@ -1732,7 +1731,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Default Value: </span>"),
+                     label: L("Default Value:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -1772,7 +1771,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Format: </span>"),
+                     label: L("Format:" + ' '),
                      align: "right",
                      width: 100
                   },
@@ -1795,7 +1794,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Decimals: </span>"),
+                     label: L("Decimals:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -1830,7 +1829,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Places: </span>"),
+                           label: L("Places:") + ' ',
                            align: "right",
                            width: 100
                         },
@@ -1849,7 +1848,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Rounding: </span>"),
+                           label: L("Rounding:") + ' ',
                            align: "right",
                            width: 100
                         },
@@ -1884,7 +1883,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Thousands: </span>"),
+                     label: L("Thousands:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -1906,7 +1905,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Validation: </span>"),
+                     label: L("Validation:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -1938,7 +1937,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Minimum: </span>"),
+                           label: L("Minimum:") + ' ',
                            align: "right",
                            width: 100
                         },
@@ -1964,7 +1963,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Maximum: </span>"),
+                           label: L("Maximum:") + ' ',
                            align: "right",
                            width: 100
                         },
@@ -2226,7 +2225,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Default Value: </span>"),
+                     label: L("Default Value:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -13989,7 +13988,7 @@ __webpack_require__.r(__webpack_exports__);
                      view: "label",
                      id: ids.title,
                      align: "center",
-                     label: L("<span>Choose Field-Type</span>"),
+                     label: L("Choose Field-Type"),
                      css: "modal_title"
                   },
                   {
@@ -13997,7 +13996,7 @@ __webpack_require__.r(__webpack_exports__);
                        {
                            view: "button",
                            id: ids.buttonMaximize,
-                           label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-expand\"></i></span>"),
+                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-expand\"></i></span>",
                            css: "webix_transparent",
                            width: 40,
                            click: () => {
@@ -14007,7 +14006,7 @@ __webpack_require__.r(__webpack_exports__);
                        {
                            view: "button",
                            id: ids.buttonMinimize,
-                           label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-compress\"></i></span>"),
+                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-compress\"></i></span>",
                            hidden: true,
                            css: "webix_transparent",
                            width: 40,
@@ -14017,7 +14016,7 @@ __webpack_require__.r(__webpack_exports__);
                        },
                        {
                            view: "button",
-                           label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>"),
+                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>",
                            css: "webix_transparent",
                            width: 40,
                            click: () => {
@@ -14045,7 +14044,7 @@ __webpack_require__.r(__webpack_exports__);
                         {
                            view: "search",
                            id: ids.searchBar,
-                           placeholder: "Search by title...",
+                           placeholder: L("Search by title..."),
                            align: "center",
                            on: {
                               onTimedKeyPress: () => {
@@ -14059,7 +14058,7 @@ __webpack_require__.r(__webpack_exports__);
                            type: {
                               width: 87.5,
                               height: 87.5,
-                              template: "<button type=\"button\" class=\"webix_button webix_img_btn_top\" style=\"text-align: center;\"><span style=\"font-size: 50px;\"><i class=\"#icon#\"></i><br></span><span style=\"font-size: 12px;\">#labelNickName#</span></button>",
+                              template: "<button type=\"button\" class=\"webix_button webix_img_btn_top\" style=\"text-align: center;\"><span style=\"font-size: 50px;\"><i class=\"#icon#\"></i><br></span><span style=\"font-size: 12px;\">#label#</span></button>",
                               css: "webix_transparent"
                            },
                            data: [],
@@ -14098,7 +14097,7 @@ __webpack_require__.r(__webpack_exports__);
                               { fillspace: true },
                               {
                                  view: "button",
-                                 value: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-arrow-left fa-sm\"></i></span><span class\"text\">Back</span>"),
+                                 value: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-arrow-left fa-sm\"></i></span><span class\"text\">" + L("Back") + "</span>",
                                  id: ids.buttonBack,
                                  css: "ab-cancel-button",
                                  autowidth: true,
@@ -14111,7 +14110,7 @@ __webpack_require__.r(__webpack_exports__);
                                  view: "button",
                                  css: "webix_primary",
                                  id: ids.buttonSave,
-                                 label: L("<span class=\"text\">Create</span>"),
+                                 label: "<span class=\"text\">" + L("Create") + "</span>",
                                  autowidth: true,
                                  type: "form",
                                  css: "webix_primary",
@@ -14125,7 +14124,6 @@ __webpack_require__.r(__webpack_exports__);
                         { height: 17 }
                      ]
                   },
-                  // { height: 17},
                ]
             },
             on: {
@@ -14170,7 +14168,7 @@ __webpack_require__.r(__webpack_exports__);
 
             // add a submenu for the fields multilingual key
             // this.submenus.push({ id: menuName, value: L(menuName) });
-            this.submenus.push({ id: menuName, icon: `nomargin fa fa-${icon}`,  labelNickName: L(menuName), label: L(menuName)});
+            this.submenus.push({ id: menuName, icon: `nomargin fa fa-${icon}`, label: L(menuName)});
 
             // Add the Field's definition editor here:
             if (!this.defaultEditorComponent) {
@@ -14622,7 +14620,7 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.fieldSetting).show();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L(`<span>Create Field: ${name}</span>`));
+         $$(this.ids.title).setValue(L("Create Field:") + " " + name);
 
          // note, the submenu returns the Field.menuName() values.
          // we use that to lookup the Field here:
@@ -14679,13 +14677,13 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.buttonBack).show();
 
          // set title name to "Choose Field-Type"
-         $$(this.ids.title).setValue(L(`<span>Choose Field-Type</span>`));
+         $$(this.ids.title).setValue(L("Choose Field-Type"));
 
          // hide form editor
          $$(this.ids.fieldSetting).hide();
 
          // change button text to 'Create'
-         $$(this.ids.buttonSave).define("label", L("<span class=\"text\">Create</span>"));
+         $$(this.ids.buttonSave).define("label", L("Create"));
          $$(this.ids.buttonSave).refresh();
       }
 
@@ -14699,13 +14697,13 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.buttonBack).hide();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L(`<span>Create Field: ${fieldTypeName}</span>`));
+         $$(this.ids.title).setValue(L(`Create Field: ${fieldTypeName}`));
 
          // show form editor
          $$(this.ids.fieldSetting).show();
 
          // change button text to 'save'
-         $$(this.ids.buttonSave).define("label", L("<span class=\"text\">Save</span>"));
+         $$(this.ids.buttonSave).define("label", L("Save"));
          $$(this.ids.buttonSave).refresh();
       }
 

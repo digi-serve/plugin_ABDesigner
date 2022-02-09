@@ -93,7 +93,7 @@ export default function (AB) {
                      view: "label",
                      id: ids.title,
                      align: "center",
-                     label: L("<span>Choose Field-Type</span>"),
+                     label: L("Choose Field-Type"),
                      css: "modal_title"
                   },
                   {
@@ -101,7 +101,7 @@ export default function (AB) {
                        {
                            view: "button",
                            id: ids.buttonMaximize,
-                           label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-expand\"></i></span>"),
+                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-expand\"></i></span>",
                            css: "webix_transparent",
                            width: 40,
                            click: () => {
@@ -111,7 +111,7 @@ export default function (AB) {
                        {
                            view: "button",
                            id: ids.buttonMinimize,
-                           label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-compress\"></i></span>"),
+                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-compress\"></i></span>",
                            hidden: true,
                            css: "webix_transparent",
                            width: 40,
@@ -121,7 +121,7 @@ export default function (AB) {
                        },
                        {
                            view: "button",
-                           label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>"),
+                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>",
                            css: "webix_transparent",
                            width: 40,
                            click: () => {
@@ -149,7 +149,7 @@ export default function (AB) {
                         {
                            view: "search",
                            id: ids.searchBar,
-                           placeholder: "Search by title...",
+                           placeholder: L("Search by title..."),
                            align: "center",
                            on: {
                               onTimedKeyPress: () => {
@@ -163,7 +163,7 @@ export default function (AB) {
                            type: {
                               width: 87.5,
                               height: 87.5,
-                              template: "<button type=\"button\" class=\"webix_button webix_img_btn_top\" style=\"text-align: center;\"><span style=\"font-size: 50px;\"><i class=\"#icon#\"></i><br></span><span style=\"font-size: 12px;\">#labelNickName#</span></button>",
+                              template: "<button type=\"button\" class=\"webix_button webix_img_btn_top\" style=\"text-align: center;\"><span style=\"font-size: 50px;\"><i class=\"#icon#\"></i><br></span><span style=\"font-size: 12px;\">#label#</span></button>",
                               css: "webix_transparent"
                            },
                            data: [],
@@ -202,7 +202,7 @@ export default function (AB) {
                               { fillspace: true },
                               {
                                  view: "button",
-                                 value: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-arrow-left fa-sm\"></i></span><span class\"text\">Back</span>"),
+                                 value: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-arrow-left fa-sm\"></i></span><span class\"text\">" + L("Back") + "</span>",
                                  id: ids.buttonBack,
                                  css: "ab-cancel-button",
                                  autowidth: true,
@@ -215,7 +215,7 @@ export default function (AB) {
                                  view: "button",
                                  css: "webix_primary",
                                  id: ids.buttonSave,
-                                 label: L("<span class=\"text\">Create</span>"),
+                                 label: "<span class=\"text\">" + L("Create") + "</span>",
                                  autowidth: true,
                                  type: "form",
                                  css: "webix_primary",
@@ -229,7 +229,6 @@ export default function (AB) {
                         { height: 17 }
                      ]
                   },
-                  // { height: 17},
                ]
             },
             on: {
@@ -274,7 +273,7 @@ export default function (AB) {
 
             // add a submenu for the fields multilingual key
             // this.submenus.push({ id: menuName, value: L(menuName) });
-            this.submenus.push({ id: menuName, icon: `nomargin fa fa-${icon}`,  labelNickName: L(menuName), label: L(menuName)});
+            this.submenus.push({ id: menuName, icon: `nomargin fa fa-${icon}`, label: L(menuName)});
 
             // Add the Field's definition editor here:
             if (!this.defaultEditorComponent) {
@@ -726,7 +725,7 @@ export default function (AB) {
          $$(this.ids.fieldSetting).show();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L(`<span>Create Field: ${name}</span>`));
+         $$(this.ids.title).setValue(L("Create Field:") + " " + name);
 
          // note, the submenu returns the Field.menuName() values.
          // we use that to lookup the Field here:
@@ -783,13 +782,13 @@ export default function (AB) {
          $$(this.ids.buttonBack).show();
 
          // set title name to "Choose Field-Type"
-         $$(this.ids.title).setValue(L(`<span>Choose Field-Type</span>`));
+         $$(this.ids.title).setValue(L("Choose Field-Type"));
 
          // hide form editor
          $$(this.ids.fieldSetting).hide();
 
          // change button text to 'Create'
-         $$(this.ids.buttonSave).define("label", L("<span class=\"text\">Create</span>"));
+         $$(this.ids.buttonSave).define("label", L("Create"));
          $$(this.ids.buttonSave).refresh();
       }
 
@@ -803,13 +802,13 @@ export default function (AB) {
          $$(this.ids.buttonBack).hide();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L(`<span>Create Field: ${fieldTypeName}</span>`));
+         $$(this.ids.title).setValue(L(`Create Field: ${fieldTypeName}`));
 
          // show form editor
          $$(this.ids.fieldSetting).show();
 
          // change button text to 'save'
-         $$(this.ids.buttonSave).define("label", L("<span class=\"text\">Save</span>"));
+         $$(this.ids.buttonSave).define("label", L("Save"));
          $$(this.ids.buttonSave).refresh();
       }
 

@@ -38,7 +38,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Default Value: </span>"),
+                     label: L("Default Value:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -78,7 +78,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Format: </span>"),
+                     label: L("Format:" + ' '),
                      align: "right",
                      width: 100
                   },
@@ -101,7 +101,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Decimals: </span>"),
+                     label: L("Decimals:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -136,7 +136,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Places: </span>"),
+                           label: L("Places:") + ' ',
                            align: "right",
                            width: 100
                         },
@@ -155,7 +155,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Rounding: </span>"),
+                           label: L("Rounding:") + ' ',
                            align: "right",
                            width: 100
                         },
@@ -190,7 +190,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Thousands: </span>"),
+                     label: L("Thousands:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -212,7 +212,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("<span>Validation: </span>"),
+                     label: L("Validation:") + ' ',
                      align: "right",
                      width: 100
                   },
@@ -244,7 +244,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Minimum: </span>"),
+                           label: L("Minimum:") + ' ',
                            align: "right",
                            width: 100
                         },
@@ -270,7 +270,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Maximum: </span>"),
+                           label: L("Maximum:") + ' ',
                            align: "right",
                            width: 100
                         },

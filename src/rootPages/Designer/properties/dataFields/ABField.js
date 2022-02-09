@@ -75,7 +75,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("<span>Field Name: </span>"),
+                           label: L("Field Name:") + ' ',
                            align: "left",
                            width: 86.88
                         },
@@ -105,7 +105,7 @@ export default function (AB) {
                            view: "button",
                            id: ids.buttonCog,
                            css: "webix_transparent",
-                           label: L("<span class=\"webix_icon_btn\" style=\"margin: 0px;\"><i class=\"nomargin fa fa-cog\"></i></span>"),
+                           label: "<span class=\"webix_icon_btn\" style=\"margin: 0px;\"><i class=\"nomargin fa fa-cog\"></i></span>",
                            width: 40,
                            on: {
                               onItemClick: () => {
@@ -122,7 +122,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("<span>Show icon: </span>"),
+                           label: L("Show icon:") + ' ',
                            align: "left",
                            width: 75.47
                         },
@@ -141,7 +141,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("<span>Required: </span>"),
+                           label: L("Required:") + ' ',
                            align: "left",
                            width: 66.28
                         },
@@ -181,7 +181,7 @@ export default function (AB) {
                         },
                         {
                            view: "label",
-                           label: L("<span>Unique: </span>"),
+                           label: L("Unique:") + ' ',
                            align: "left",
                            width: 58.84
                         },
@@ -236,7 +236,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("<span>Custom Settings: </span>"),
+                           label: L("Custom Settings:") + ' ',
                            align: "left",
                            width: 200
                         },
@@ -306,7 +306,7 @@ export default function (AB) {
                      {
                         view: "label",
                         align: "center",
-                        label: "<span>Edit field name</span>"
+                        label: L("Edit field name")
                      }
                   ]
                },
@@ -318,7 +318,7 @@ export default function (AB) {
                         cols: [
                            {
                               view: "label",
-                              label: "<span>Database Label: </span>",
+                              label: L("Database Label:") + ' ',
                               align: "right",
                               width: 125
                            },
@@ -340,7 +340,7 @@ export default function (AB) {
                            {},
                            {
                               view: "button",
-                              value: "Cancel",
+                              value: L("Cancel"),
                               css: "webix_danger",
                               width: 100,
                               on: {
@@ -355,7 +355,7 @@ export default function (AB) {
                            },
                            {
                               view: "button",
-                              value: "Submit",
+                              value: L("Submit"),
                               css: "webix_primary",
                               width: 100,
                               on: {
@@ -392,11 +392,11 @@ export default function (AB) {
                            {
                               view: "label",
                               align: "center",
-                              label: "<span>Field Validation</span>"
+                              label: L("Field Validation")
                            },
                            {
                               view: "button",
-                              label: L("<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>"),
+                              label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>",
                               css: "webix_transparent",
                               width: 40,
                               click: () => {
@@ -467,7 +467,7 @@ export default function (AB) {
             if (FC) {
                $$(this.ids.fieldDescription).define(
                   "label",
-                  L(`*${FC.defaults().description}`)
+                  '*' + L(FC.defaults().description)
                );
             } else {
                $$(this.ids.fieldDescription).hide();
@@ -560,7 +560,6 @@ export default function (AB) {
                         $$(ids.addValidation).refresh();
                      },
                      on: {
-
                         onAfterRender: function() {
                            UIClass.CYPRESS_REF(this);
                         },
