@@ -802,7 +802,7 @@ export default function (AB) {
          $$(this.ids.buttonBack).hide();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L(`Create Field: ${fieldTypeName}`));
+         $$(this.ids.title).setValue(L("Create Field:") + ' ' + fieldTypeName);
 
          // show form editor
          $$(this.ids.fieldSetting).show();
