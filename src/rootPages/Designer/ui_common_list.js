@@ -20,12 +20,12 @@ export default function (AB, options) {
          // attributes.idBase = attributes.idBase || "ui_common_list";
          var base = attributes.idBase || "ui_common_list";
          super(base, {
-            listSetting: '',
-            list: '',
-            searchText: '',
-            sort: '',
-            group: '',
-            buttonNew: '',
+            listSetting: "",
+            list: "",
+            searchText: "",
+            sort: "",
+            group: "",
+            buttonNew: "",
          });
 
          this.idBase = base;

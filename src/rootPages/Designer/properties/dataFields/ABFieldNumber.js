@@ -22,11 +22,11 @@ export default function (AB) {
             validateMinimum: "",
             validateMaximum: "",
 
-            defaultCheckbox: '',
-            validateView: '',
-            typeDecimals: '',
-            typeFormat: '',
-            typeThousands: ''
+            defaultCheckbox: "",
+            validateView: "",
+            typeDecimals: "",
+            typeFormat: "",
+            typeThousands: "",
          });
       }
 
@@ -38,9 +38,9 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + ' ',
+                     label: L("Default Value:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.defaultCheckbox,
@@ -53,8 +53,8 @@ export default function (AB) {
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
-                        }
-                     }
+                        },
+                     },
                   },
                   {
                      id: ids.default,
@@ -65,22 +65,22 @@ export default function (AB) {
                      labelWidth: uiConfig.labelWidthXLarge,
                      on: {
                         onChange: (newVal, oldVal) => {
-                           this.numValidation(newVal, oldVal, ids.default)
+                           this.numValidation(newVal, oldVal, ids.default);
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
                      },
-                  }
-               ]
+                  },
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Format:" + ' '),
+                     label: L("Format:" + " "),
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.typeFormat,
@@ -93,17 +93,17 @@ export default function (AB) {
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
-                     }
-                  }
-               ]  
+                     },
+                  },
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Decimals:") + ' ',
+                     label: L("Decimals:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.typeDecimals,
@@ -113,17 +113,16 @@ export default function (AB) {
                      labelWidth: uiConfig.labelWidthXLarge,
                      value: "none",
                      options: FC.delimiterList(),
-                     value: "none",
                      on: {
                         onChange: (newVal /*, oldVal */) => {
-                           this.segmentedDecimals(newVal)
+                           this.segmentedDecimals(newVal);
                         },
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
                      },
-                  }
-               ]
+                  },
+               ],
             },
             {
                // show these options as sub optionsof our "typeDecimals"
@@ -136,9 +135,9 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Places:") + ' ',
+                           label: L("Places:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            id: ids.typeDecimalPlaces,
@@ -155,9 +154,9 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Rounding:") + ' ',
+                           label: L("Rounding:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            id: ids.typeRounding,
@@ -182,17 +181,17 @@ export default function (AB) {
                               },
                            },
                         },
-                     ]
+                     ],
                   },
-               ]
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Thousands:") + ' ',
+                     label: L("Thousands:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.typeThousands,
@@ -203,18 +202,18 @@ export default function (AB) {
                      on: {
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
-                        }
-                     }
-                  }
-               ]
+                        },
+                     },
+                  },
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Validation:") + ' ',
+                     label: L("Validation:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      view: "switch",
@@ -226,13 +225,13 @@ export default function (AB) {
                         onChange: (newVal) => {
                            this.switchValidation(newVal);
                         },
-      
+
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
-                     }
-                  }
-               ]
+                     },
+                  },
+               ],
             },
             {
                id: ids.validateView,
@@ -244,9 +243,9 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Minimum:") + ' ',
+                           label: L("Minimum:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            view: "text",
@@ -255,24 +254,28 @@ export default function (AB) {
                            placeholder: L("Minimum Number"),
                            on: {
                               onChange: (newVal, oldVal) => {
-                                 this.numValidation(newVal, oldVal, ids.validateMinimum)
+                                 this.numValidation(
+                                    newVal,
+                                    oldVal,
+                                    ids.validateMinimum
+                                 );
                               },
-      
+
                               onAfterRender: () => {
                                  AB.ClassUI.CYPRESS_REF(this);
                               },
                            },
                         },
-                     ]
+                     ],
                   },
                   {
                      cols: [
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Maximum:") + ' ',
+                           label: L("Maximum:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            view: "text",
@@ -281,18 +284,22 @@ export default function (AB) {
                            placeholder: L("Maximum Number"),
                            on: {
                               onChange: (newVal, oldVal) => {
-                                 this.numValidation(newVal, oldVal, ids.validateMaximum)
+                                 this.numValidation(
+                                    newVal,
+                                    oldVal,
+                                    ids.validateMaximum
+                                 );
                               },
-            
+
                               onAfterRender() {
                                  AB.ClassUI.CYPRESS_REF(this);
                               },
                            },
                         },
-                     ]
-                  }
-               ]
-            }
+                     ],
+                  },
+               ],
+            },
          ]);
       }
 
@@ -304,11 +311,10 @@ export default function (AB) {
       }
 
       checkboxDefaultValue(state) {
-         if(state == 0) {
+         if (state == 0) {
             $$(this.ids.default).disable();
-            $$(this.ids.default).setValue('');
-         }
-         else {
+            $$(this.ids.default).setValue("");
+         } else {
             $$(this.ids.default).enable();
          }
       }
@@ -431,16 +437,16 @@ export default function (AB) {
          var ids = this.ids;
          super.populate(field);
 
-         if (field.settings.default === '') {
+         if (field.settings.default === "") {
             $$(ids.defaultCheckbox).setValue(0);
          } else {
             $$(ids.defaultCheckbox).setValue(1);
          }
 
          if (field.settings.validation === 0) {
-            $$(ids.validateView).hide()
+            $$(ids.validateView).hide();
          } else {
-            $$(ids.validateView).show()
+            $$(ids.validateView).show();
          }
 
          if (field.settings.typeDecimals === "none") {

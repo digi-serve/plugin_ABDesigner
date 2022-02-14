@@ -2218,11 +2218,11 @@ __webpack_require__.r(__webpack_exports__);
             validateMinimum: "",
             validateMaximum: "",
 
-            defaultCheckbox: '',
-            validateView: '',
-            typeDecimals: '',
-            typeFormat: '',
-            typeThousands: ''
+            defaultCheckbox: "",
+            validateView: "",
+            typeDecimals: "",
+            typeFormat: "",
+            typeThousands: "",
          });
       }
 
@@ -2234,9 +2234,9 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + ' ',
+                     label: L("Default Value:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.defaultCheckbox,
@@ -2249,8 +2249,8 @@ __webpack_require__.r(__webpack_exports__);
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
-                        }
-                     }
+                        },
+                     },
                   },
                   {
                      id: ids.default,
@@ -2261,22 +2261,22 @@ __webpack_require__.r(__webpack_exports__);
                      labelWidth: uiConfig.labelWidthXLarge,
                      on: {
                         onChange: (newVal, oldVal) => {
-                           this.numValidation(newVal, oldVal, ids.default)
+                           this.numValidation(newVal, oldVal, ids.default);
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
                      },
-                  }
-               ]
+                  },
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Format:" + ' '),
+                     label: L("Format:" + " "),
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.typeFormat,
@@ -2289,17 +2289,17 @@ __webpack_require__.r(__webpack_exports__);
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
-                     }
-                  }
-               ]  
+                     },
+                  },
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Decimals:") + ' ',
+                     label: L("Decimals:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.typeDecimals,
@@ -2309,17 +2309,16 @@ __webpack_require__.r(__webpack_exports__);
                      labelWidth: uiConfig.labelWidthXLarge,
                      value: "none",
                      options: FC.delimiterList(),
-                     value: "none",
                      on: {
                         onChange: (newVal /*, oldVal */) => {
-                           this.segmentedDecimals(newVal)
+                           this.segmentedDecimals(newVal);
                         },
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
                      },
-                  }
-               ]
+                  },
+               ],
             },
             {
                // show these options as sub optionsof our "typeDecimals"
@@ -2332,9 +2331,9 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Places:") + ' ',
+                           label: L("Places:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            id: ids.typeDecimalPlaces,
@@ -2351,9 +2350,9 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Rounding:") + ' ',
+                           label: L("Rounding:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            id: ids.typeRounding,
@@ -2378,17 +2377,17 @@ __webpack_require__.r(__webpack_exports__);
                               },
                            },
                         },
-                     ]
+                     ],
                   },
-               ]
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Thousands:") + ' ',
+                     label: L("Thousands:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.typeThousands,
@@ -2399,18 +2398,18 @@ __webpack_require__.r(__webpack_exports__);
                      on: {
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
-                        }
-                     }
-                  }
-               ]
+                        },
+                     },
+                  },
+               ],
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Validation:") + ' ',
+                     label: L("Validation:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      view: "switch",
@@ -2422,13 +2421,13 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: (newVal) => {
                            this.switchValidation(newVal);
                         },
-      
+
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
                         },
-                     }
-                  }
-               ]
+                     },
+                  },
+               ],
             },
             {
                id: ids.validateView,
@@ -2440,9 +2439,9 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Minimum:") + ' ',
+                           label: L("Minimum:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            view: "text",
@@ -2451,24 +2450,28 @@ __webpack_require__.r(__webpack_exports__);
                            placeholder: L("Minimum Number"),
                            on: {
                               onChange: (newVal, oldVal) => {
-                                 this.numValidation(newVal, oldVal, ids.validateMinimum)
+                                 this.numValidation(
+                                    newVal,
+                                    oldVal,
+                                    ids.validateMinimum
+                                 );
                               },
-      
+
                               onAfterRender: () => {
                                  AB.ClassUI.CYPRESS_REF(this);
                               },
                            },
                         },
-                     ]
+                     ],
                   },
                   {
                      cols: [
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Maximum:") + ' ',
+                           label: L("Maximum:") + " ",
                            align: "right",
-                           width: 100
+                           width: 100,
                         },
                         {
                            view: "text",
@@ -2477,18 +2480,22 @@ __webpack_require__.r(__webpack_exports__);
                            placeholder: L("Maximum Number"),
                            on: {
                               onChange: (newVal, oldVal) => {
-                                 this.numValidation(newVal, oldVal, ids.validateMaximum)
+                                 this.numValidation(
+                                    newVal,
+                                    oldVal,
+                                    ids.validateMaximum
+                                 );
                               },
-            
+
                               onAfterRender() {
                                  AB.ClassUI.CYPRESS_REF(this);
                               },
                            },
                         },
-                     ]
-                  }
-               ]
-            }
+                     ],
+                  },
+               ],
+            },
          ]);
       }
 
@@ -2500,11 +2507,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       checkboxDefaultValue(state) {
-         if(state == 0) {
+         if (state == 0) {
             $$(this.ids.default).disable();
-            $$(this.ids.default).setValue('');
-         }
-         else {
+            $$(this.ids.default).setValue("");
+         } else {
             $$(this.ids.default).enable();
          }
       }
@@ -2627,16 +2633,16 @@ __webpack_require__.r(__webpack_exports__);
          var ids = this.ids;
          super.populate(field);
 
-         if (field.settings.default === '') {
+         if (field.settings.default === "") {
             $$(ids.defaultCheckbox).setValue(0);
          } else {
             $$(ids.defaultCheckbox).setValue(1);
          }
 
          if (field.settings.validation === 0) {
-            $$(ids.validateView).hide()
+            $$(ids.validateView).hide();
          } else {
-            $$(ids.validateView).show()
+            $$(ids.validateView).show();
          }
 
          if (field.settings.typeDecimals === "none") {
@@ -2690,7 +2696,7 @@ __webpack_require__.r(__webpack_exports__);
             default: "",
             supportMultilingual: "",
 
-            defaultCheckbox: '',
+            defaultCheckbox: "",
          });
       }
 
@@ -2728,9 +2734,9 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + ' ',
+                     label: L("Default Value:") + " ",
                      align: "right",
-                     width: 100
+                     width: 100,
                   },
                   {
                      id: ids.defaultCheckbox,
@@ -2743,8 +2749,8 @@ __webpack_require__.r(__webpack_exports__);
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
-                        }
-                     }
+                        },
+                     },
                   },
                   {
                      view: "text",
@@ -2759,7 +2765,7 @@ __webpack_require__.r(__webpack_exports__);
                         },
                      },
                   },
-               ]
+               ],
             },
             {
                view: "checkbox",
@@ -2779,11 +2785,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       checkboxDefaultValue(state) {
-         if(state === 0) {
+         if (state === 0) {
             $$(this.ids.default).disable();
-            $$(this.ids.default).setValue('');
-         }
-         else {
+            $$(this.ids.default).setValue("");
+         } else {
             $$(this.ids.default).enable();
          }
       }
@@ -2802,7 +2807,7 @@ __webpack_require__.r(__webpack_exports__);
          var ids = this.ids;
          super.populate(field);
 
-         if (field.settings.default === '') {
+         if (field.settings.default === "") {
             $$(ids.defaultCheckbox).setValue(0);
          } else {
             $$(ids.defaultCheckbox).setValue(1);
@@ -6949,12 +6954,12 @@ __webpack_require__.r(__webpack_exports__);
          // attributes.idBase = attributes.idBase || "ui_common_list";
          var base = attributes.idBase || "ui_common_list";
          super(base, {
-            listSetting: '',
-            list: '',
-            searchText: '',
-            sort: '',
-            group: '',
-            buttonNew: '',
+            listSetting: "",
+            list: "",
+            searchText: "",
+            sort: "",
+            group: "",
+            buttonNew: "",
          });
 
          this.idBase = base;
