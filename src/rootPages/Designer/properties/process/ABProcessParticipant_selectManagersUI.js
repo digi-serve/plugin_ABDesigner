@@ -109,9 +109,11 @@ export default function (AB) {
                               // set data-cy for original field to track clicks to open option list
                               UIClass.CYPRESS_REF(this.getNode(), ids.role);
                            },
-                           onChange: function (/* newVal, oldVal */) {
+                           onChange: (/* newVal, oldVal */) => {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
-                              $$("combo1").getList().callEvent("onAfterRender");
+                              $$(this.ids.role)
+                                 .getList()
+                                 .callEvent("onAfterRender");
                            },
                         },
                      },
@@ -187,9 +189,11 @@ export default function (AB) {
                               // set data-cy for original field to track clicks to open option list
                               UIClass.CYPRESS_REF(this.getNode(), ids.account);
                            },
-                           onChange: function (/* newVal, oldVal */) {
+                           onChange: (/* newVal, oldVal */) => {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
-                              $$("combo1").getList().callEvent("onAfterRender");
+                              $$(this.ids.account)
+                                 .getList()
+                                 .callEvent("onAfterRender");
                            },
                         },
                      },

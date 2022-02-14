@@ -2944,9 +2944,11 @@ __webpack_require__.r(__webpack_exports__);
                               // set data-cy for original field to track clicks to open option list
                               UIClass.CYPRESS_REF(this.getNode(), ids.role);
                            },
-                           onChange: function (/* newVal, oldVal */) {
+                           onChange: (/* newVal, oldVal */) => {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
-                              $$("combo1").getList().callEvent("onAfterRender");
+                              $$(this.ids.role)
+                                 .getList()
+                                 .callEvent("onAfterRender");
                            },
                         },
                      },
@@ -3022,9 +3024,11 @@ __webpack_require__.r(__webpack_exports__);
                               // set data-cy for original field to track clicks to open option list
                               UIClass.CYPRESS_REF(this.getNode(), ids.account);
                            },
-                           onChange: function (/* newVal, oldVal */) {
+                           onChange: (/* newVal, oldVal */) => {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
-                              $$("combo1").getList().callEvent("onAfterRender");
+                              $$(this.ids.account)
+                                 .getList()
+                                 .callEvent("onAfterRender");
                            },
                         },
                      },
@@ -4900,6 +4904,11 @@ __webpack_require__.r(__webpack_exports__);
                this.show();
             },
          };
+      }
+
+      /* mimic ABPage.getUserAccess() */
+      getUserAccess() {
+         return 2;
       }
 
       ui() {
@@ -14327,12 +14336,6 @@ __webpack_require__.r(__webpack_exports__);
       constructor() {
          super("ui_work_object_workspace_popupImport");
 
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
-
          this.popup = null;
          // {ABViewCSVImporter}
          // an instance of our ABViewCSVImporter widget that we use to display
@@ -14347,10 +14350,7 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
 
          var defaultSettings = ViewProperties.toSettings();
-         var defaultView = this._mockApp.viewNew(
-            defaultSettings,
-            this._mockApp
-         );
+         var defaultView = this.AB.viewNewDetatched(defaultSettings);
 
          this.popup = defaultView.component();
          this.popup.init(AB);
@@ -16354,12 +16354,6 @@ __webpack_require__.r(__webpack_exports__);
    class UI_Work_Object_Workspace_View_Grid extends UIClass {
       constructor() {
          super("ui_work_object_workspace_view_grid");
-
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
       }
 
       // Our webix UI definition:
@@ -16388,10 +16382,7 @@ __webpack_require__.r(__webpack_exports__);
          // Pull the ABViewGrid definitions
          var defaultGridSettings = ViewGridProperties.toSettings();
          defaultGridSettings.label = L(defaultGridSettings.name);
-         var defaultGridView = this._mockApp.viewNew(
-            defaultGridSettings,
-            this._mockApp
-         );
+         var defaultGridView = this.AB.viewNewDetatched(defaultGridSettings);
          var defaultGrid = defaultGridView.toObj();
          defaultGrid.id = data?.id ?? AB.jobID();
 
@@ -16450,11 +16441,7 @@ __webpack_require__.r(__webpack_exports__);
       async viewLoad(view) {
          this.currentViewDef = view;
 
-         this.currentView = this._mockApp.viewNew(
-            view.component,
-            this._mockApp,
-            null
-         );
+         this.currentView = this.AB.viewNewDetatched(view.component);
          var component = this.currentView.component();
 
          // OK, a ABViewGrid component wont display the grid unless there
@@ -16633,12 +16620,6 @@ __webpack_require__.r(__webpack_exports__);
    class UI_Work_Object_Workspace_View_Kanban extends UIClass {
       constructor() {
          super("ui_work_object_workspace_view_kanban");
-
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
       }
 
       // Our webix UI definition:
@@ -16672,28 +16653,40 @@ __webpack_require__.r(__webpack_exports__);
             defaultSettings.settings[d] = data[d];
          });
 
+         // TODO: include a text label formatter in the editor for
+         // the Kanban view.  then pull the data.textTemplate into
+         // defaultSettings.settings.textTemplate
+         //
+         // Until then, just make a default view with each Object
+         // field: value:
          defaultSettings.label = L(defaultSettings.name);
-         var defaultView = this._mockApp.viewNew(
-            defaultSettings,
-            this._mockApp
+
+         var textView = this.AB.viewNewDetatched({ key: "text" });
+
+         var CurrentObject = this.CurrentObject;
+         var labelData = CurrentObject.labelFormat;
+         if (!labelData && CurrentObject.fields().length > 0) {
+            var defaultFields = CurrentObject.fields((f) =>
+               f.fieldUseAsLabel()
+            );
+            defaultFields.forEach((f) => {
+               labelData = `${labelData}<br>${f.label}: {${textView.fieldKey(
+                  f
+               )}}`;
+            });
+         }
+
+         defaultSettings.settings.textTemplate = labelData;
+
+         // show all the fields in our Side Edit Form
+         defaultSettings.settings.editFields = CurrentObject.fields().map(
+            (f) => f.id
          );
+
+         var defaultView = this.AB.viewNewDetatched(defaultSettings);
          var defaultKanban = defaultView.toObj();
          defaultKanban.id = data.id ?? AB.jobID();
-         /*
-         // For our ABDesigner Object workspace, these settings are
-         // enabled:
-         ["isEditable", "massUpdate", "allowDelete", "trackView"].forEach(
-            (k) => {
-               defaultKanban.settings[k] = 1;
-            }
-         );
-         defaultKanban.settings.padding = 0;
-         defaultKanban.settings.showToolbar = 0;
-         defaultKanban.settings.gridFilter = {
-            filterOption: 0,
-            isGlobalToolbar: 0,
-         };
-*/
+
          return {
             id: defaultKanban.id,
             isDefaultView: false,
@@ -16735,11 +16728,7 @@ __webpack_require__.r(__webpack_exports__);
       async viewLoad(view) {
          this.currentViewDef = view;
 
-         this.currentView = this._mockApp.viewNew(
-            view.component,
-            this._mockApp,
-            null
-         );
+         this.currentView = this.AB.viewNewDetatched(view.component);
          var component = this.currentView.component();
 
          // OK, a ABViewGrid component wont display the grid unless there
@@ -16946,16 +16935,14 @@ __webpack_require__.r(__webpack_exports__);
          // {hash} { ABObject.id  : {collection} }
          // The data structure we are using to manage the different
          // Views for each of our ABObjects.
-
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
       }
 
       async init(AB) {
          this.AB = AB;
+
+         Object.keys(hashViewComponents).forEach((k) => {
+            hashViewComponents[k].init(AB);
+         });
 
          // load in the stored View data.
          this._settings = (await this.AB.Storage.get("workspaceviews")) || {};
@@ -16967,6 +16954,10 @@ __webpack_require__.r(__webpack_exports__);
             this._settings[this.CurrentObjectID] = this.toObj();
          }
          super.objectLoad(object);
+
+         Object.keys(hashViewComponents).forEach((k) => {
+            hashViewComponents[k].objectLoad(object);
+         });
 
          this.fromObj(this._settings[this.CurrentObjectID]);
       }

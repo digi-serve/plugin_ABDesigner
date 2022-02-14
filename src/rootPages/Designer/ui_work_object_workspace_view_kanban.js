@@ -20,12 +20,6 @@ export default function (AB) {
    class UI_Work_Object_Workspace_View_Kanban extends UIClass {
       constructor() {
          super("ui_work_object_workspace_view_kanban");
-
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
       }
 
       // Our webix UI definition:
@@ -59,28 +53,40 @@ export default function (AB) {
             defaultSettings.settings[d] = data[d];
          });
 
+         // TODO: include a text label formatter in the editor for
+         // the Kanban view.  then pull the data.textTemplate into
+         // defaultSettings.settings.textTemplate
+         //
+         // Until then, just make a default view with each Object
+         // field: value:
          defaultSettings.label = L(defaultSettings.name);
-         var defaultView = this._mockApp.viewNew(
-            defaultSettings,
-            this._mockApp
+
+         var textView = this.AB.viewNewDetatched({ key: "text" });
+
+         var CurrentObject = this.CurrentObject;
+         var labelData = CurrentObject.labelFormat;
+         if (!labelData && CurrentObject.fields().length > 0) {
+            var defaultFields = CurrentObject.fields((f) =>
+               f.fieldUseAsLabel()
+            );
+            defaultFields.forEach((f) => {
+               labelData = `${labelData}<br>${f.label}: {${textView.fieldKey(
+                  f
+               )}}`;
+            });
+         }
+
+         defaultSettings.settings.textTemplate = labelData;
+
+         // show all the fields in our Side Edit Form
+         defaultSettings.settings.editFields = CurrentObject.fields().map(
+            (f) => f.id
          );
+
+         var defaultView = this.AB.viewNewDetatched(defaultSettings);
          var defaultKanban = defaultView.toObj();
          defaultKanban.id = data.id ?? AB.jobID();
-         /*
-         // For our ABDesigner Object workspace, these settings are
-         // enabled:
-         ["isEditable", "massUpdate", "allowDelete", "trackView"].forEach(
-            (k) => {
-               defaultKanban.settings[k] = 1;
-            }
-         );
-         defaultKanban.settings.padding = 0;
-         defaultKanban.settings.showToolbar = 0;
-         defaultKanban.settings.gridFilter = {
-            filterOption: 0,
-            isGlobalToolbar: 0,
-         };
-*/
+
          return {
             id: defaultKanban.id,
             isDefaultView: false,
@@ -122,11 +128,7 @@ export default function (AB) {
       async viewLoad(view) {
          this.currentViewDef = view;
 
-         this.currentView = this._mockApp.viewNew(
-            view.component,
-            this._mockApp,
-            null
-         );
+         this.currentView = this.AB.viewNewDetatched(view.component);
          var component = this.currentView.component();
 
          // OK, a ABViewGrid component wont display the grid unless there

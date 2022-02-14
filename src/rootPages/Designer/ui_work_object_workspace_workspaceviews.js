@@ -56,16 +56,14 @@ export default function (AB) {
          // {hash} { ABObject.id  : {collection} }
          // The data structure we are using to manage the different
          // Views for each of our ABObjects.
-
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
       }
 
       async init(AB) {
          this.AB = AB;
+
+         Object.keys(hashViewComponents).forEach((k) => {
+            hashViewComponents[k].init(AB);
+         });
 
          // load in the stored View data.
          this._settings = (await this.AB.Storage.get("workspaceviews")) || {};
@@ -77,6 +75,10 @@ export default function (AB) {
             this._settings[this.CurrentObjectID] = this.toObj();
          }
          super.objectLoad(object);
+
+         Object.keys(hashViewComponents).forEach((k) => {
+            hashViewComponents[k].objectLoad(object);
+         });
 
          this.fromObj(this._settings[this.CurrentObjectID]);
       }

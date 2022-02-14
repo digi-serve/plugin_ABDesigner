@@ -52,6 +52,11 @@ export default function (AB) {
          };
       }
 
+      /* mimic ABPage.getUserAccess() */
+      getUserAccess() {
+         return 2;
+      }
+
       ui() {
          return {
             id: this.ids.component,

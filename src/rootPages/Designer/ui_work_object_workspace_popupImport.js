@@ -16,12 +16,6 @@ export default function (AB) {
       constructor() {
          super("ui_work_object_workspace_popupImport");
 
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
-
          this.popup = null;
          // {ABViewCSVImporter}
          // an instance of our ABViewCSVImporter widget that we use to display
@@ -36,10 +30,7 @@ export default function (AB) {
          this.AB = AB;
 
          var defaultSettings = ViewProperties.toSettings();
-         var defaultView = this._mockApp.viewNew(
-            defaultSettings,
-            this._mockApp
-         );
+         var defaultView = this.AB.viewNewDetatched(defaultSettings);
 
          this.popup = defaultView.component();
          this.popup.init(AB);
