@@ -11,6 +11,7 @@ export default function (AB) {
    [
       require("./dataFields/ABFieldConnect"),
       require("./dataFields/ABFieldNumber"),
+      require("./dataFields/ABFieldList"),
       require("./dataFields/ABFieldString"),
    ].forEach((F) => {
       var Klass = F.default(AB);

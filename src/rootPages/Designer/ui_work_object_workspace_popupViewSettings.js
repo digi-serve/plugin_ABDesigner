@@ -31,7 +31,14 @@ export default function (AB) {
          // {Grid/kanban/Gantt} the current UI View type we are displaying
 
          this.comKanban = FormABViewKanBan(AB, `${base}_kanban`);
+         this.comKanban.on("new.field", (key) => {
+            this.emit("new.field", key);
+         });
          this.comGantt = FormABViewGantt(AB, `${base}_gantt`);
+
+         this.on("field.added", (field) => {
+            this.comKanban.emit("field.added", field);
+         });
       }
 
       ui() {
@@ -213,6 +220,8 @@ export default function (AB) {
          if (this._view) {
             $$(ids.nameInput).setValue(this._view.name);
             $$(ids.typeInput).setValue(this._view.type);
+            // NOTE: the $$(ids.typeInput).onChange() will trigger
+            // the selected view's refresh.
          }
          // Default value
          else {

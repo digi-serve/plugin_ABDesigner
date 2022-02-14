@@ -12,7 +12,8 @@
 //
 //
 import UI_Class from "./ui_class";
-import ABWorkspaceDatatable from "./ui_work_object_workspace_view_grid";
+import WorkspaceDatatable from "./ui_work_object_workspace_view_grid";
+import WorkspaceKanban from "./ui_work_object_workspace_view_kanban";
 
 import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
 import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
@@ -22,7 +23,8 @@ export default function (AB) {
    const UIClass = UI_Class(AB);
    // var L = UIClass.L();
 
-   const Datatable = ABWorkspaceDatatable(AB);
+   const Datatable = WorkspaceDatatable(AB);
+   const Kanban = WorkspaceKanban(AB);
 
    // Gather a list of the various View Properties
    const ViewGanttProperties = FViewGanttProperties(AB);
@@ -36,6 +38,7 @@ export default function (AB) {
 
    var hashViewComponents = {};
    hashViewComponents[ViewGridProperties.type()] = Datatable;
+   hashViewComponents[ViewKanbanProperties.type()] = Kanban;
 
    const defaultAttributes = {
       currentViewID: undefined,
@@ -188,9 +191,36 @@ export default function (AB) {
          await this.AB.Storage.set("workspaceviews", this._settings);
       }
 
-      async viewUpdate(view) {
-         var indexToReplace = this._views.indexOf(view);
-         this._views.splice(indexToReplace, 1, view);
+      /**
+       * @method viewUpdate()
+       * replace an existing view definition with the newly provided one.
+       * NOTE: our view.component might be changed as well, so we regenerate
+       * that.
+       * @param {obj} view
+       *        The key=>value hash of the updated WorkspaceView.
+       * @return {Promise}
+       */
+      async viewUpdate(data) {
+         // generate a new view from the provided data;
+         var ViewType = hashViewComponents[data.type];
+         if (!ViewType) return;
+
+         // remove the .component so it gets regenerated:
+         delete data.component;
+
+         var view = ViewType.viewNew(data);
+
+         // NOTE: [].splice() isn't a good candidate to use here as
+         // view is a newly created object each time.
+         var _newViews = [];
+         this._views.forEach((v) => {
+            if (v.id != view.id) {
+               _newViews.push(v);
+               return;
+            }
+            _newViews.push(view);
+         });
+         this._views = _newViews;
 
          await this.save();
       }

@@ -38,11 +38,11 @@ export default function (AB) {
                shorthand: "",
                validationRules: "",
 
-               buttonCog: '',
-               editFieldName: '',
-               editFieldNameForm: '',
-               filterView: '',
-               uniqueView: ''
+               buttonCog: "",
+               editFieldName: "",
+               editFieldNameForm: "",
+               filterView: "",
+               uniqueView: "",
             };
 
             Object.keys(ids).forEach((k) => {
@@ -75,9 +75,9 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Field Name:") + ' ',
+                           label: L("Field Name:") + " ",
                            align: "left",
-                           width: 86.88
+                           width: 86.88,
                         },
                         {
                            name: "columnName",
@@ -90,41 +90,41 @@ export default function (AB) {
                                  // update field label default when appropriate
                                  this.textFieldName(val);
                               },
-                              onAfterRender: function() {
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
                               },
-                           }
+                           },
                         },
                         {
                            view: "text",
                            id: ids.label,
                            name: "label",
-                           hidden: true
+                           hidden: true,
                         },
                         {
                            view: "button",
                            id: ids.buttonCog,
                            css: "webix_transparent",
-                           label: "<span class=\"webix_icon_btn\" style=\"margin: 0px;\"><i class=\"nomargin fa fa-cog\"></i></span>",
+                           label: '<span class="webix_icon_btn" style="margin: 0px;"><i class="nomargin fa fa-cog"></i></span>',
                            width: 40,
                            on: {
                               onItemClick: () => {
                                  this.buttonCog();
                               },
-                              onAfterRender: function() {
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
-                     ]
+                     ],
                   },
                   {
                      cols: [
                         {
                            view: "label",
-                           label: L("Show icon:") + ' ',
+                           label: L("Show icon:") + " ",
                            align: "left",
-                           width: 75.47
+                           width: 75.47,
                         },
                         {
                            view: "switch",
@@ -133,17 +133,17 @@ export default function (AB) {
                            value: 1,
                            width: 55,
                            on: {
-                              onAfterRender: function() {
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
-                              }
-                           }
+                              },
+                           },
                         },
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Required:") + ' ',
+                           label: L("Required:") + " ",
                            align: "left",
-                           width: 66.28
+                           width: 66.28,
                         },
                         {
                            view: "switch",
@@ -155,15 +155,15 @@ export default function (AB) {
                            on: {
                               onChange: (newVal, oldVal) => {
                                  this.requiredOnChange(newVal, oldVal, ids);
-      
+
                                  // If check require on edit field, then show warning message
                                  this.getNumberOfNullValue(newVal);
                               },
 
-                              onAfterRender: function() {
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
-                              }
-                           }
+                              },
+                           },
                         },
                         { width: 20 },
                         // warning message: number of null value rows
@@ -174,16 +174,16 @@ export default function (AB) {
                            label: "",
                            hidden: true,
                            on: {
-                              onAfterRender: function() {
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
                         {
                            view: "label",
-                           label: L("Unique:") + ' ',
+                           label: L("Unique:") + " ",
                            align: "left",
-                           width: 58.84
+                           width: 58.84,
                         },
                         {
                            view: "switch",
@@ -194,7 +194,7 @@ export default function (AB) {
                            value: 0,
                            width: 55,
                            on: {
-                              onAfterRender: function() {
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
                               },
                            },
@@ -210,13 +210,13 @@ export default function (AB) {
                               onItemClick: () => {
                                  $$(ids.filterView).adjust();
                               },
-      
-                              onAfterRender: function() {
+
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
-                     ]
+                     ],
                   },
 
                   // have a hidden field to contain the validationRules
@@ -236,9 +236,9 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Custom Settings:") + ' ',
+                           label: L("Custom Settings:") + " ",
                            align: "left",
-                           width: 200
+                           width: 200,
                         },
                         {},
                         {
@@ -247,30 +247,30 @@ export default function (AB) {
                            label: L("Description"), // Field.description,
                            align: "right",
                            on: {
-                              onAfterRender: function() {
+                              onAfterRender: function () {
                                  UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
-                     ]
+                     ],
                   },
                   {
                      id: ids.uniqueView,
                      view: "scrollview",
                      borderless: true,
-                     scroll:"y",
+                     scroll: "y",
                      css: {
-                        "background": "#ddd"
+                        background: "#ddd",
                      },
                      body: {
                         padding: {
                            top: 25,
                            bottom: 25,
                            left: 25,
-                           right: 25
+                           right: 25,
                         },
                         // Add our passed in elements:
-                        rows: elements.map(e => {
+                        rows: elements.map((e) => {
                            // passed in elements might not have their .id
                            // set, but have a .name. Let's default id =
                            if (!e.id && e.name) {
@@ -279,10 +279,10 @@ export default function (AB) {
                               }
                               e.id = this.ids[e.name];
                            }
-         
+
                            return e;
-                        })
-                     }
+                        }),
+                     },
                   },
                ],
                rules: {
@@ -306,9 +306,9 @@ export default function (AB) {
                      {
                         view: "label",
                         align: "center",
-                        label: L("Edit field name")
-                     }
-                  ]
+                        label: L("Edit field name"),
+                     },
+                  ],
                },
                body: {
                   view: "form",
@@ -318,21 +318,21 @@ export default function (AB) {
                         cols: [
                            {
                               view: "label",
-                              label: L("Database Label:") + ' ',
+                              label: L("Database Label:") + " ",
                               align: "right",
-                              width: 125
+                              width: 125,
                            },
                            {
-                              view:"text",
+                              view: "text",
                               name: "label",
                               placeholder: L("Database Label"),
                               on: {
-                                 onAfterRender: function() {
+                                 onAfterRender: function () {
                                     UIClass.CYPRESS_REF(this);
                                  },
-                              }
+                              },
                            },
-                           { width: 30 }
+                           { width: 30 },
                         ],
                      },
                      {
@@ -348,10 +348,10 @@ export default function (AB) {
                                     this.buttonEditFieldNameButtonCancel();
                                  },
 
-                                 onAfterRender: function() {
+                                 onAfterRender: function () {
                                     UIClass.CYPRESS_REF(this);
-                                 }
-                              }
+                                 },
+                              },
                            },
                            {
                               view: "button",
@@ -363,16 +363,16 @@ export default function (AB) {
                                     this.buttonEditFieldNameButtonSubmit();
                                  },
 
-                                 onAfterRender: function() {
+                                 onAfterRender: function () {
                                     UIClass.CYPRESS_REF(this);
-                                 }
-                              }
+                                 },
+                              },
                            },
-                           { width: 30 }
-                        ]
-                     }
-                  ]
-               }
+                           { width: 30 },
+                        ],
+                     },
+                  ],
+               },
             });
 
             webix.ui({
@@ -392,11 +392,11 @@ export default function (AB) {
                            {
                               view: "label",
                               align: "center",
-                              label: L("Field Validation")
+                              label: L("Field Validation"),
                            },
                            {
                               view: "button",
-                              label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>",
+                              label: '<span class="webix_icon"><i class="nomargin fa fa-times"></i></span>',
                               css: "webix_transparent",
                               width: 40,
                               click: () => {
@@ -406,9 +406,9 @@ export default function (AB) {
                                  onAfterRender: () => {
                                     UIClass.CYPRESS_REF(this);
                                  },
-                              }
-                           }
-                        ]
+                              },
+                           },
+                        ],
                      },
                      {
                         cols: [
@@ -420,10 +420,10 @@ export default function (AB) {
                                  onItemClick: () => {
                                     this.addValidation();
                                  },
-                                 onAfterRender: function() {
+                                 onAfterRender: function () {
                                     UIClass.CYPRESS_REF(this);
-                                 }
-                              }
+                                 },
+                              },
                            },
                            {
                               view: "button",
@@ -433,28 +433,28 @@ export default function (AB) {
                                  onItemClick: () => {
                                     this.filterViewDeleteAllValidation();
                                  },
-                                 onAfterRender: function() {
+                                 onAfterRender: function () {
                                     UIClass.CYPRESS_REF(this);
-                                 }
-                              }
-                           }
-                        ]
+                                 },
+                              },
+                           },
+                        ],
                      },
                      {
                         view: "scrollview",
-                        scroll:"y",
+                        scroll: "y",
                         body: {
                            id: ids.filterComplex,
                            rows: [],
                         },
-                     }
+                     },
                   ],
                },
                on: {
                   onViewResize: () => {
                      $$(ids.filterView).show();
                   },
-               }
+               },
             });
 
             return _ui;
@@ -467,7 +467,7 @@ export default function (AB) {
             if (FC) {
                $$(this.ids.fieldDescription).define(
                   "label",
-                  '*' + L(FC.defaults().description)
+                  "*" + L(FC.defaults().description)
                );
             } else {
                $$(this.ids.fieldDescription).hide();
@@ -483,11 +483,11 @@ export default function (AB) {
          }
 
          buttonCog() {
-            if(this.isValid()) {
+            if (this.isValid()) {
                const latestVals = this.formValues();
 
                $$(this.ids.editFieldNameForm).setValues({
-                  label: latestVals.label
+                  label: latestVals.label,
                });
 
                $$(this.ids.editFieldName).show();
@@ -495,10 +495,10 @@ export default function (AB) {
          }
 
          buttonEditFieldNameButtonCancel() {
-            const previousVal = $$(this.ids.component).getValues()
+            const previousVal = $$(this.ids.component).getValues();
 
             $$(this.ids.editFieldNameForm).setValues({
-               label: previousVal.label
+               label: previousVal.label,
             });
             $$(this.ids.editFieldName).hide();
          }
@@ -507,7 +507,8 @@ export default function (AB) {
             const latestVals = this.formValues();
             const valLabel = $$(this.ids.editFieldNameForm).getValues().label;
 
-            latestVals.label = valLabel !== '' ? valLabel: latestVals.columnName;
+            latestVals.label =
+               valLabel !== "" ? valLabel : latestVals.columnName;
             $$(this.ids.component).setValues(latestVals);
             $$(this.ids.editFieldName).hide();
          }
@@ -544,10 +545,10 @@ export default function (AB) {
                      icon: "fa fa-trash",
                      type: "icon",
                      autowidth: true,
-                     click: function() {
+                     click: function () {
                         var $viewCond = this.getParentView();
                         $$(ids.filterComplex).removeView($viewCond);
-                        
+
                         // reset the validation rules UI
                         const filterViews = $$(ids.filterComplex).queryView(
                            {
@@ -556,14 +557,17 @@ export default function (AB) {
                            },
                            "all"
                         );
-                        $$(ids.addValidation).define("badge", filterViews.length !== 0 ? filterViews.length: null);
+                        $$(ids.addValidation).define(
+                           "badge",
+                           filterViews.length !== 0 ? filterViews.length : null
+                        );
                         $$(ids.addValidation).refresh();
                      },
                      on: {
-                        onAfterRender: function() {
+                        onAfterRender: function () {
                            UIClass.CYPRESS_REF(this);
                         },
-                     }
+                     },
                   },
                ],
             });
@@ -571,7 +575,7 @@ export default function (AB) {
             this.resetDefaultValidation();
 
             $$(Filter.ids.save).hide();
-            Filter.fieldsLoad(this.CurrentObject.fields()); // Should This Be this.CurrentObject ?
+            Filter.fieldsLoad(this.CurrentObject.fields());
             if (settings && settings.rules) Filter.setValue(settings.rules);
          }
 
@@ -622,7 +626,7 @@ export default function (AB) {
 
          resetDefaultValidation() {
             const ids = this.ids;
-            
+
             // reset the validation rules UI
             const filterViews = $$(ids.filterComplex).queryView(
                {
@@ -631,7 +635,10 @@ export default function (AB) {
                },
                "all"
             );
-            $$(ids.addValidation).define("badge", filterViews.length !== 0 ? filterViews.length: null);
+            $$(ids.addValidation).define(
+               "badge",
+               filterViews.length !== 0 ? filterViews.length : null
+            );
             $$(ids.addValidation).refresh();
          }
 
@@ -646,7 +653,7 @@ export default function (AB) {
             var FieldClass = this.FieldClass();
             if (!FieldClass) {
                console.error(
-                  "!!! ABFieldStringProperty: could not find FieldClass[string]"
+                  "!!! ABFieldStringProperty: could not find FieldClass[]"
                );
                return null;
             }
@@ -789,7 +796,7 @@ export default function (AB) {
          isValid() {
             var ids = this.ids;
             var isValid = $$(ids.component).validate(),
-            colName = this.formValues()["columnName"];
+               colName = this.formValues()["columnName"];
 
             setTimeout(() => {
                $$(ids.component).clearValidation();
@@ -887,7 +894,10 @@ export default function (AB) {
                (rules || []).forEach((settings) => {
                   field.addValidation(ids, settings);
                });
-               $$(ids.addValidation).define("badge", rules.length !== 0 ? rules.length: null);
+               $$(ids.addValidation).define(
+                  "badge",
+                  rules.length !== 0 ? rules.length : null
+               );
                $$(ids.addValidation).refresh();
             }
          }

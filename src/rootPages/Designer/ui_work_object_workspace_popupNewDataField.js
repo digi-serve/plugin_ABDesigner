@@ -10,7 +10,7 @@ import FPropertyManager from "./properties/PropertyManager";
 // const ABFieldManager = require("../AppBuilder/core/ABFieldManager");
 
 export default function (AB) {
-   const uiConfig = AB.Config.uiSettings();
+   // const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
@@ -26,14 +26,14 @@ export default function (AB) {
             buttonSave: "",
             buttonCancel: "",
 
-            title: '',
-            buttonMaximize: '',
-            buttonMinimize: '',
-            chooseFieldType: '',
-            searchBar: '',
-            fieldSetting: '',
-            submission: '',
-            buttonBack: ''
+            title: "",
+            buttonMaximize: "",
+            buttonMinimize: "",
+            chooseFieldType: "",
+            searchBar: "",
+            fieldSetting: "",
+            submission: "",
+            buttonBack: "",
          });
 
          // var _objectHash = {}; // 'name' => ABFieldXXX object
@@ -70,7 +70,7 @@ export default function (AB) {
          // The ABField we are currently EDITING. If we are Adding a new field
          // this is null.
       }
-      
+
       ui() {
          var ids = this.ids;
 
@@ -94,34 +94,34 @@ export default function (AB) {
                      id: ids.title,
                      align: "center",
                      label: L("Choose Field-Type"),
-                     css: "modal_title"
+                     css: "modal_title",
                   },
                   {
                      cols: [
-                       {
+                        {
                            view: "button",
                            id: ids.buttonMaximize,
-                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-expand\"></i></span>",
+                           label: '<span class="webix_icon"><i class="nomargin fa fa-expand"></i></span>',
                            css: "webix_transparent",
                            width: 40,
                            click: () => {
                               this.buttonMaximize();
-                           }
-                       },
-                       {
+                           },
+                        },
+                        {
                            view: "button",
                            id: ids.buttonMinimize,
-                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-compress\"></i></span>",
+                           label: '<span class="webix_icon"><i class="nomargin fa fa-compress"></i></span>',
                            hidden: true,
                            css: "webix_transparent",
                            width: 40,
                            click: () => {
                               this.buttonMinimize();
-                           }
-                       },
-                       {
+                           },
+                        },
+                        {
                            view: "button",
-                           label: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-times\"></i></span>",
+                           label: '<span class="webix_icon"><i class="nomargin fa fa-times"></i></span>',
                            css: "webix_transparent",
                            width: 40,
                            click: () => {
@@ -131,10 +131,10 @@ export default function (AB) {
                               onAfterRender() {
                                  UIClass.CYPRESS_REF(this);
                               },
-                           }
-                        }
-                     ]
-                  }
+                           },
+                        },
+                     ],
+                  },
                ],
             },
             // ready: function () {
@@ -154,8 +154,8 @@ export default function (AB) {
                            on: {
                               onTimedKeyPress: () => {
                                  this.searchBar();
-                              }
-                           }
+                              },
+                           },
                         },
                         {
                            view: "dataview",
@@ -163,17 +163,18 @@ export default function (AB) {
                            type: {
                               width: 87.5,
                               height: 87.5,
-                              template: "<button type=\"button\" class=\"webix_button webix_img_btn_top\" style=\"text-align: center;\"><span style=\"font-size: 50px;\"><i class=\"#icon#\"></i><br></span><span style=\"font-size: 12px;\">#label#</span></button>",
-                              css: "webix_transparent"
+                              template:
+                                 '<button type="button" class="webix_button webix_img_btn_top" style="text-align: center;"><span style="font-size: 50px;"><i class="#icon#"></i><br></span><span style="font-size: 12px;">#label#</span></button>',
+                              css: "webix_transparent",
                            },
                            data: [],
                            datatype: "json",
                            select: 1,
-                           click: (id/* , ev, node */) => {
+                           click: (id /* , ev, node */) => {
                               this.onClick(id);
                            },
-                        }
-                     ]
+                        },
+                     ],
                   },
                   {
                      id: ids.fieldSetting,
@@ -202,11 +203,13 @@ export default function (AB) {
                               { fillspace: true },
                               {
                                  view: "button",
-                                 value: "<span class=\"webix_icon\"><i class=\"nomargin fa fa-arrow-left fa-sm\"></i></span><span class\"text\">" + L("Back") + "</span>",
+                                 value:
+                                    '<span class="webix_icon"><i class="nomargin fa fa-arrow-left fa-sm"></i></span><span class"text">' +
+                                    L("Back") +
+                                    "</span>",
                                  id: ids.buttonBack,
-                                 css: "ab-cancel-button",
+                                 css: "ab-cancel-button webix_transparent icon_back_btn",
                                  autowidth: true,
-                                 css: "webix_transparent icon_back_btn",
                                  click: () => {
                                     this.buttonBack();
                                  },
@@ -215,21 +218,23 @@ export default function (AB) {
                                  view: "button",
                                  css: "webix_primary",
                                  id: ids.buttonSave,
-                                 label: "<span class=\"text\">" + L("Create") + "</span>",
+                                 label:
+                                    '<span class="text">' +
+                                    L("Create") +
+                                    "</span>",
                                  autowidth: true,
                                  type: "form",
-                                 css: "webix_primary",
                                  click: () => {
                                     this.buttonSave();
                                  },
                               },
-                              { width: 17 }
+                              { width: 17 },
                            ],
                         },
-                        { height: 17 }
-                     ]
+                        { height: 17 },
+                     ],
                   },
-               ]
+               ],
             },
             on: {
                //onBeforeShow: function () {
@@ -273,7 +278,11 @@ export default function (AB) {
 
             // add a submenu for the fields multilingual key
             // this.submenus.push({ id: menuName, value: L(menuName) });
-            this.submenus.push({ id: menuName, icon: `nomargin fa fa-${icon}`, label: L(menuName)});
+            this.submenus.push({
+               id: menuName,
+               icon: `nomargin fa fa-${icon}`,
+               label: L(menuName),
+            });
 
             // Add the Field's definition editor here:
             if (!this.defaultEditorComponent) {
@@ -324,7 +333,7 @@ export default function (AB) {
       applicationLoad(application) {
          // _currentApplication = application;
          super.applicationLoad(application);
-         
+
          // make sure all the Property components refer to this ABApplication
          for (var menuName in this._componentHash) {
             this._componentHash[menuName]?.applicationLoad(application);
@@ -342,7 +351,7 @@ export default function (AB) {
 
       buttonCancel() {
          // set the search bar to '' by default.
-         $$(this.ids.searchBar).setValue('');
+         $$(this.ids.searchBar).setValue("");
          this.searchBar();
 
          this.buttonBack();
@@ -367,7 +376,9 @@ export default function (AB) {
 
       searchBar() {
          const value = $$(this.ids.searchBar).getValue().toLowerCase();
-         $$(this.ids.types).filter(obj => obj.label.toLowerCase().indexOf(value)!= -1);
+         $$(this.ids.types).filter(
+            (obj) => obj.label.toLowerCase().indexOf(value) != -1
+         );
       }
 
       buttonBack() {
@@ -635,7 +646,7 @@ export default function (AB) {
          //      });
          // }
 
-         this.buttonCancel
+         this.buttonCancel;
       }
 
       hide() {
@@ -673,7 +684,7 @@ export default function (AB) {
       }
 
       modeEdit(field) {
-         if (this._currentEditor) this._currentEditor.hide();
+         this._currentEditor?.hide();
 
          // switch to this field's editor:
          // hide the rest
@@ -691,8 +702,8 @@ export default function (AB) {
          var elements = this._currentEditor.ui()?.elements;
          if (elements) {
             var disableElem = (elem) => {
-               if (elem.disallowEdit && $$(elem.id) && $$(elem.id).disable) {
-                  $$(elem.id).disable();
+               if (elem.disallowEdit) {
+                  $$(elem.id)?.disable?.();
                }
             };
 
@@ -746,8 +757,8 @@ export default function (AB) {
          var elements = this._currentEditor.ui()?.elements;
          if (elements) {
             var enableElem = (elem) => {
-               if (elem.disallowEdit && $$(elem.id) && $$(elem.id).enable) {
-                  $$(elem.id).enable();
+               if (elem.disallowEdit) {
+                  $$(elem.id)?.enable?.();
                }
             };
 
@@ -775,7 +786,7 @@ export default function (AB) {
       addPopup() {
          this.buttonMinimize();
 
-          // show the ability to switch data types
+         // show the ability to switch data types
          $$(this.ids.chooseFieldType).show();
 
          // show button "Back"
@@ -797,12 +808,12 @@ export default function (AB) {
 
          // hide the ability to switch data types
          $$(this.ids.chooseFieldType).hide();
-         
+
          // hide button "Back"
          $$(this.ids.buttonBack).hide();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L("Create Field:") + ' ' + fieldTypeName);
+         $$(this.ids.title).setValue(L("Create Field:") + " " + fieldTypeName);
 
          // show form editor
          $$(this.ids.fieldSetting).show();
@@ -816,9 +827,11 @@ export default function (AB) {
        * @function show()
        *
        * Show this component.
-       * @param {ABField} field    the ABField to edit.  If not provided, then
-       *                           this is an ADD operation.
-       * @param {string} fieldKey  allow only this field type
+       * @param {ABField} field
+       *        the ABField to edit.  If not provided, then this is an ADD
+       *        operation.
+       * @param {string} fieldKey
+       *        allow only this field type
        */
       show(field, fieldKey) {
          this._editField = field;

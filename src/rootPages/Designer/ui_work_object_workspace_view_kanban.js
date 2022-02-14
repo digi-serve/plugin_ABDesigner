@@ -1,25 +1,25 @@
 /*
- * ui_work_object_workspace_view_grid
+ * ui_work_object_workspace_view_kanban
  *
- * Display an instance of a Grid type of Workspace View in our area.
+ * Display an instance of a Kanban type of Workspace View in our area.
  *
  * This generic webix container will be given an instace of a workspace
- * view definition (Grid), and then create an instance of an ABViewGrid
+ * view definition (Kanban), and then create an instance of an ABViewKanban
  * widget to display.
  *
  */
 import UI_Class from "./ui_class";
-import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
+import FViewKanbanProperties from "./properties/workspaceViews/ABViewKanban";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   const ViewGridProperties = FViewGridProperties(AB);
+   const ViewKanbanProperties = FViewKanbanProperties(AB);
 
-   class UI_Work_Object_Workspace_View_Grid extends UIClass {
+   class UI_Work_Object_Workspace_View_Kanban extends UIClass {
       constructor() {
-         super("ui_work_object_workspace_view_grid");
+         super("ui_work_object_workspace_view_kanban");
 
          this._mockApp = AB.applicationNew({});
          // {ABApplication}
@@ -38,7 +38,7 @@ export default function (AB) {
                {},
                {
                   view: "label",
-                  label: "Impressive View -> Grid",
+                  label: "Impressive View -> Kanban",
                },
                {},
             ],
@@ -52,60 +52,66 @@ export default function (AB) {
 
       defaultSettings(data) {
          // Pull the ABViewGrid definitions
-         var defaultGridSettings = ViewGridProperties.toSettings();
-         defaultGridSettings.label = L(defaultGridSettings.name);
-         var defaultGridView = this._mockApp.viewNew(
-            defaultGridSettings,
+         var defaultSettings = ViewKanbanProperties.toSettings();
+
+         // transfer our specific field settings
+         Object.keys(defaultSettings.settings).forEach((d) => {
+            defaultSettings.settings[d] = data[d];
+         });
+
+         defaultSettings.label = L(defaultSettings.name);
+         var defaultView = this._mockApp.viewNew(
+            defaultSettings,
             this._mockApp
          );
-         var defaultGrid = defaultGridView.toObj();
-         defaultGrid.id = data?.id ?? AB.jobID();
-
+         var defaultKanban = defaultView.toObj();
+         defaultKanban.id = data.id ?? AB.jobID();
+         /*
          // For our ABDesigner Object workspace, these settings are
          // enabled:
          ["isEditable", "massUpdate", "allowDelete", "trackView"].forEach(
             (k) => {
-               defaultGrid.settings[k] = 1;
+               defaultKanban.settings[k] = 1;
             }
          );
-         defaultGrid.settings.padding = 0;
-         defaultGrid.settings.showToolbar = 0;
-         defaultGrid.settings.gridFilter = {
+         defaultKanban.settings.padding = 0;
+         defaultKanban.settings.showToolbar = 0;
+         defaultKanban.settings.gridFilter = {
             filterOption: 0,
             isGlobalToolbar: 0,
          };
-
+*/
          return {
-            id: defaultGrid.id,
+            id: defaultKanban.id,
             isDefaultView: false,
-            type: defaultGrid.type,
-            icon: defaultGrid.icon,
+            type: defaultKanban.type,
+            icon: defaultKanban.icon,
 
-            name: "Default Grid",
+            name: "Default Kanban",
             sortFields: [], // array of columns with their sort configurations
             filterConditions: [], // array of filters to apply to the data table
             frozenColumnID: "", // id of column you want to stop freezing
             hiddenFields: [], // array of [ids] to add hidden:true to
 
-            component: defaultGrid,
+            component: defaultKanban,
          };
       }
 
-      getColumnIndex(id) {
-         return this._currentComponent.getColumnIndex(id);
-      }
+      // getColumnIndex(id) {
+      //    return this._currentComponent.getColumnIndex(id);
+      // }
 
       datacollectionLoad(dc) {
          this.datacollection = dc;
       }
 
-      get $grid() {
-         return this._currentComponent?.getDataTable();
-      }
+      // get $grid() {
+      //    return this._currentComponent?.getDataTable();
+      // }
 
-      ready() {
-         this.ListComponent.ready();
-      }
+      // ready() {
+      //    this.ListComponent.ready();
+      // }
 
       async show(view) {
          await this.viewLoad(view);
@@ -128,7 +134,7 @@ export default function (AB) {
          // but calling .datacollectionLoad() doesn't actually load the data
          // unless there is the UI available.
          // So ... do this to register the datacollection
-         component.datacollectionLoad(this.datacollection);
+         // component.datacollectionLoad(this.datacollection);
 
          var ui = component.ui();
          ui.id = this.ids.component;
@@ -138,29 +144,18 @@ export default function (AB) {
          // Now call .datacollectionLoad() again to actually load the data.
          component.datacollectionLoad(this.datacollection);
 
-         component.on("column.header.clicked", (node, EditField) => {
-            this.emit("column.header.clicked", node, EditField);
-         });
-
-         component.on("object.track", (currentObject, id) => {
-            this.emit("object.track", currentObject, id);
-         });
-
-         component.on("selection", () => {
-            this.emit("selection");
-         });
-
-         component.on("selection.cleared", () => {
-            this.emit("selection.cleared");
-         });
-
-         component.on("column.order", (fieldOrder) => {
-            this.emit("column.order", fieldOrder);
-         });
+         component.show();
 
          this._currentComponent = component;
       }
 
+      /**
+       * @method viewNew()
+       * return a new workspace view definition with an ABViewKanban
+       * based upon the provided default data (gathered from our workspaceView)
+       * @param {obj} data
+       *        The configuration information for this ABView.
+       */
       viewNew(data) {
          var defaults = this.defaultSettings(data);
          Object.keys(data).forEach((k) => {
@@ -170,13 +165,13 @@ export default function (AB) {
          return defaults;
       }
 
-      deleteSelected($view) {
-         return this._currentComponent.toolbarDeleteSelected($view);
-      }
+      // deleteSelected($view) {
+      //    return this._currentComponent.toolbarDeleteSelected($view);
+      // }
 
-      massUpdate($view) {
-         return this._currentComponent.toolbarMassUpdate($view);
-      }
+      // massUpdate($view) {
+      //    return this._currentComponent.toolbarMassUpdate($view);
+      // }
 
       /**
        * @method refreshHeader()
@@ -201,32 +196,31 @@ export default function (AB) {
        * @param {string} frozenColumnID
        *        the ABField.columnName of the column that we have frozen.
        */
-      refreshHeader(
-         /* fields,*/ hiddenFields = [],
-         filters,
-         sorts,
-         frozenColumnID
-      ) {
-         var object = this.CurrentObject;
-         var columnHeaders = object.columnHeaders(true, true, [], [], []);
+      // refreshHeader(
+      //    /* fields,*/ hiddenFields = [],
+      //    filters,
+      //    sorts,
+      //    frozenColumnID
+      // ) {
+      //    var object = this.CurrentObject;
+      //    var columnHeaders = object.columnHeaders(true, true, [], [], []);
 
-         // this calculation is done in the ABViewGridComponent.refreshHeader():
-         // columnHeaders.forEach((h) => {
-         //    if (hiddenFields.indexOf(h.id) > -1) {
-         //       h.hidden = true;
-         //    }
-         // });
-         if (this._currentComponent) {
-            this._currentComponent.columnConfig(columnHeaders);
+      //    // this calculation is done in the ABViewGridComponent.refreshHeader():
+      //    // columnHeaders.forEach((h) => {
+      //    //    if (hiddenFields.indexOf(h.id) > -1) {
+      //    //       h.hidden = true;
+      //    //    }
+      //    // });
 
-            this._currentComponent.settings.hiddenFields = hiddenFields;
-            this._currentComponent.settings.filterConditions = filters;
-            this._currentComponent.settings.sortFields = sorts;
-            this._currentComponent.settings.frozenColumnID = frozenColumnID;
+      //    this._currentComponent.columnConfig(columnHeaders);
 
-            this._currentComponent.refreshHeader(true);
-         }
-      }
+      //    this._currentComponent.settings.hiddenFields = hiddenFields;
+      //    this._currentComponent.settings.filterConditions = filters;
+      //    this._currentComponent.settings.sortFields = sorts;
+      //    this._currentComponent.settings.frozenColumnID = frozenColumnID;
+
+      //    this._currentComponent.refreshHeader(true);
+      // }
 
       /**
        * @function rowAdd()
@@ -258,5 +252,5 @@ export default function (AB) {
       }
       */
    }
-   return new UI_Work_Object_Workspace_View_Grid();
+   return new UI_Work_Object_Workspace_View_Kanban();
 }
