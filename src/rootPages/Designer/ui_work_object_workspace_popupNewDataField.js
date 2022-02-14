@@ -10,7 +10,7 @@ import FPropertyManager from "./properties/PropertyManager";
 // const ABFieldManager = require("../AppBuilder/core/ABFieldManager");
 
 export default function (AB) {
-   const uiConfig = AB.Config.uiSettings();
+   // const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
@@ -25,6 +25,15 @@ export default function (AB) {
             editDefinitions: "",
             buttonSave: "",
             buttonCancel: "",
+
+            title: "",
+            buttonMaximize: "",
+            buttonMinimize: "",
+            chooseFieldType: "",
+            searchBar: "",
+            fieldSetting: "",
+            submission: "",
+            buttonBack: "",
          });
 
          // var _objectHash = {}; // 'name' => ABFieldXXX object
@@ -72,31 +81,59 @@ export default function (AB) {
             id: ids.component,
             resize: true,
             modal: true,
-            height: 500,
-            width: 700,
+            boarderless: true,
+            height: 503,
+            width: 692,
             head: {
                view: "toolbar",
                css: "webix_dark",
-               cols: [
+               paddingX: 2,
+               elements: [
                   {
                      view: "label",
-                     label: L("Add new field"),
-                     css: "modal_title",
+                     id: ids.title,
                      align: "center",
+                     label: L("Choose Field-Type"),
+                     css: "modal_title",
                   },
                   {
-                     view: "button",
-                     autowidth: true,
-                     type: "icon",
-                     icon: "nomargin fa fa-times",
-                     click: () => {
-                        this.buttonCancel();
-                     },
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
+                     cols: [
+                        {
+                           view: "button",
+                           id: ids.buttonMaximize,
+                           label: '<span class="webix_icon"><i class="nomargin fa fa-expand"></i></span>',
+                           css: "webix_transparent",
+                           width: 40,
+                           click: () => {
+                              this.buttonMaximize();
+                           },
                         },
-                     },
+                        {
+                           view: "button",
+                           id: ids.buttonMinimize,
+                           label: '<span class="webix_icon"><i class="nomargin fa fa-compress"></i></span>',
+                           hidden: true,
+                           css: "webix_transparent",
+                           width: 40,
+                           click: () => {
+                              this.buttonMinimize();
+                           },
+                        },
+                        {
+                           view: "button",
+                           label: '<span class="webix_icon"><i class="nomargin fa fa-times"></i></span>',
+                           css: "webix_transparent",
+                           width: 40,
+                           click: () => {
+                              this.buttonCancel();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 UIClass.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ],
                   },
                ],
             },
@@ -104,76 +141,100 @@ export default function (AB) {
             //  console.error('ready() called!!!')
             //  _logic.resetState();
             // },
-
             body: {
-               view: "scrollview",
-               scroll: "y",
-               css: "ab-add-fields-popup",
-               borderless: true,
-               body: {
-                  type: "form",
-                  rows: [
-                     {
-                        view: "richselect",
-                        id: ids.types,
-                        label: L("Field type"),
-                        labelWidth: uiConfig.labelWidthLarge,
-                        options: [
-                           //We will add these later
-                           { id: "temporary", view: "temporary" },
-                        ],
-                        on: {
-                           onChange: (id /* , ev, node */) => {
-                              this.onChange(id);
+               rows: [
+                  {
+                     id: ids.chooseFieldType,
+                     rows: [
+                        {
+                           view: "search",
+                           id: ids.searchBar,
+                           placeholder: L("Search by title..."),
+                           align: "center",
+                           on: {
+                              onTimedKeyPress: () => {
+                                 this.searchBar();
+                              },
                            },
                         },
-                     },
-                     {
-                        height: 10,
-                        type: "line",
-                     },
-                     {
-                        view: "multiview",
-                        id: ids.editDefinitions,
-                        padding: 0,
-                        // NOTE: can't leave this an empty [].
-                        // We redefine this value later.
-                        cells: [
-                           {
-                              id: "del_me",
-                              view: "label",
-                              label: L("edit definition here"),
+                        {
+                           view: "dataview",
+                           id: ids.types,
+                           type: {
+                              width: 87.5,
+                              height: 87.5,
+                              template:
+                                 '<button type="button" class="webix_button webix_img_btn_top" style="text-align: center;"><span style="font-size: 50px;"><i class="#icon#"></i><br></span><span style="font-size: 12px;">#label#</span></button>',
+                              css: "webix_transparent",
                            },
-                        ],
-                     },
-                     { height: 10 },
-                     {
-                        cols: [
-                           { fillspace: true },
-                           {
-                              view: "button",
-                              value: L("Cancel"),
-                              css: "ab-cancel-button",
-                              autowidth: true,
-                              click: () => {
-                                 this.buttonCancel();
+                           data: [],
+                           datatype: "json",
+                           select: 1,
+                           click: (id /* , ev, node */) => {
+                              this.onClick(id);
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     id: ids.fieldSetting,
+                     minWidth: 692,
+                     maxWidth: 3840,
+                     maxHeight: 2160,
+                     hidden: true,
+                     rows: [
+                        {
+                           view: "multiview",
+                           id: ids.editDefinitions,
+                           padding: 0,
+                           // NOTE: can't leave this an empty [].
+                           // We redefine this value later.
+                           cells: [
+                              {
+                                 id: "del_me",
+                                 view: "label",
+                                 label: L("edit definition here"),
                               },
-                           },
-                           {
-                              view: "button",
-                              css: "webix_primary",
-                              id: ids.buttonSave,
-                              label: L("Add Column"),
-                              autowidth: true,
-                              type: "form",
-                              click: () => {
-                                 this.buttonSave();
+                           ],
+                        },
+                        {
+                           id: ids.submission,
+                           cols: [
+                              { fillspace: true },
+                              {
+                                 view: "button",
+                                 value:
+                                    '<span class="webix_icon"><i class="nomargin fa fa-arrow-left fa-sm"></i></span><span class"text">' +
+                                    L("Back") +
+                                    "</span>",
+                                 id: ids.buttonBack,
+                                 css: "ab-cancel-button webix_transparent icon_back_btn",
+                                 autowidth: true,
+                                 click: () => {
+                                    this.buttonBack();
+                                 },
                               },
-                           },
-                        ],
-                     },
-                  ],
-               },
+                              {
+                                 view: "button",
+                                 css: "webix_primary",
+                                 id: ids.buttonSave,
+                                 label:
+                                    '<span class="text">' +
+                                    L("Create") +
+                                    "</span>",
+                                 autowidth: true,
+                                 type: "form",
+                                 click: () => {
+                                    this.buttonSave();
+                                 },
+                              },
+                              { width: 17 },
+                           ],
+                        },
+                        { height: 17 },
+                     ],
+                  },
+               ],
             },
             on: {
                //onBeforeShow: function () {
@@ -213,8 +274,15 @@ export default function (AB) {
             var menuName = F.defaults().menuName;
             var key = F.defaults().key;
 
+            const icon = F.defaults().icon;
+
             // add a submenu for the fields multilingual key
-            this.submenus.push({ id: menuName, value: L(menuName) });
+            // this.submenus.push({ id: menuName, value: L(menuName) });
+            this.submenus.push({
+               id: menuName,
+               icon: `nomargin fa fa-${icon}`,
+               label: L(menuName),
+            });
 
             // Add the Field's definition editor here:
             if (!this.defaultEditorComponent) {
@@ -234,7 +302,9 @@ export default function (AB) {
          //  value: labels.component.chooseType,
          //  submenu: submenus
          // })
-         $$(ids.types).define("options", this.submenus);
+         // $$(ids.types).define("options", this.submenus);
+         // $$(ids.types).refresh();
+         $$(ids.types).define("data", this.submenus);
          $$(ids.types).refresh();
 
          // now remove the 'del_me' definition editor placeholder.
@@ -251,7 +321,7 @@ export default function (AB) {
          this._currentEditor = this.defaultEditorComponent;
 
          // set the richselect to the first option by default.
-         $$(ids.types).setValue(this.submenus[0].id);
+         // $$(ids.types).setValue(this.submenus[0].id);
 
          // $$(ids.editDefinitions).show();
 
@@ -262,6 +332,7 @@ export default function (AB) {
 
       applicationLoad(application) {
          // _currentApplication = application;
+         super.applicationLoad(application);
 
          // make sure all the Property components refer to this ABApplication
          for (var menuName in this._componentHash) {
@@ -279,15 +350,46 @@ export default function (AB) {
       }
 
       buttonCancel() {
+         // set the search bar to '' by default.
+         $$(this.ids.searchBar).setValue("");
+         this.searchBar();
+
+         this.buttonBack();
+
+         // hide this popup.
+         $$(this.ids.component).hide();
+      }
+
+      buttonMaximize() {
+         $$(this.ids.buttonMaximize).hide();
+         $$(this.ids.buttonMinimize).show();
+
+         webix.fullscreen.set(this.ids.component);
+      }
+
+      buttonMinimize() {
+         $$(this.ids.buttonMinimize).hide();
+         $$(this.ids.buttonMaximize).show();
+
+         webix.fullscreen.exit();
+      }
+
+      searchBar() {
+         const value = $$(this.ids.searchBar).getValue().toLowerCase();
+         $$(this.ids.types).filter(
+            (obj) => obj.label.toLowerCase().indexOf(value) != -1
+         );
+      }
+
+      buttonBack() {
          this.resetState();
+
+         this.addPopup();
 
          // clear all editors:
          for (var c in this._componentHash) {
             this._componentHash[c].clear();
          }
-
-         // hide this popup.
-         $$(this.ids.component).hide();
       }
 
       async buttonSave() {
@@ -543,6 +645,8 @@ export default function (AB) {
          //          base.hide();
          //      });
          // }
+
+         this.buttonCancel;
       }
 
       hide() {
@@ -565,23 +669,22 @@ export default function (AB) {
             if (!connectField) return;
             var connectMenuName = connectField.defaults().menuName;
             $$(ids.types).setValue(connectMenuName);
-            $$(ids.types).disable();
+            $$(ids.chooseFieldType).disable();
          }
          // show the ability to switch data types
          else {
-            $$(ids.types).enable();
+            $$(ids.chooseFieldType).enable();
          }
 
-         $$(ids.types).show();
-
          // change button text to 'add'
-         $$(ids.buttonSave).define("label", L("Add Column"));
-         $$(ids.buttonSave).refresh();
+         // $$(ids.buttonSave).define("label", L("Add Column"));
+
+         // add mode UI
+         this.addPopup();
       }
 
       modeEdit(field) {
          this._currentEditor?.hide();
-         var ids = this.ids;
 
          // switch to this field's editor:
          // hide the rest
@@ -617,13 +720,7 @@ export default function (AB) {
             //    }
             // });
          }
-
-         // hide the ability to switch data types
-         $$(ids.types).hide();
-
-         // change button text to 'save'
-         $$(ids.buttonSave).define("label", L("Save"));
-         $$(ids.buttonSave).refresh();
+         this.editPopup(field.defaults.menuName);
       }
 
       /**
@@ -632,14 +729,22 @@ export default function (AB) {
        *
        * @param {string} name  the menuName() of the submenu that was selected.
        */
-      onChange(name) {
+
+      onClick(name) {
+         // show Field Type popup
+         $$(this.ids.chooseFieldType).hide();
+         $$(this.ids.fieldSetting).show();
+
+         // set title name by each field type
+         $$(this.ids.title).setValue(L("Create Field:") + " " + name);
+
          // note, the submenu returns the Field.menuName() values.
          // we use that to lookup the Field here:
          var editor = this._componentHash[name];
          if (editor) {
             editor.show();
             this._currentEditor = editor;
-            $$(this.ids.types).blur();
+            // $$(this.ids.types).blur();
          } else {
             // most likely they clicked on the menu button itself.
             // do nothing.
@@ -675,7 +780,47 @@ export default function (AB) {
          this._currentEditor = this.defaultEditorComponent;
 
          // set the richselect to the first option by default.
-         $$(this.ids.types).setValue(this.submenus[0].id);
+         // $$(this.ids.types).setValue(this.submenus[0].id);
+      }
+
+      addPopup() {
+         this.buttonMinimize();
+
+         // show the ability to switch data types
+         $$(this.ids.chooseFieldType).show();
+
+         // show button "Back"
+         $$(this.ids.buttonBack).show();
+
+         // set title name to "Choose Field-Type"
+         $$(this.ids.title).setValue(L("Choose Field-Type"));
+
+         // hide form editor
+         $$(this.ids.fieldSetting).hide();
+
+         // change button text to 'Create'
+         $$(this.ids.buttonSave).define("label", L("Create"));
+         $$(this.ids.buttonSave).refresh();
+      }
+
+      editPopup(fieldTypeName) {
+         this.buttonMinimize();
+
+         // hide the ability to switch data types
+         $$(this.ids.chooseFieldType).hide();
+
+         // hide button "Back"
+         $$(this.ids.buttonBack).hide();
+
+         // set title name by each field type
+         $$(this.ids.title).setValue(L("Create Field:") + " " + fieldTypeName);
+
+         // show form editor
+         $$(this.ids.fieldSetting).show();
+
+         // change button text to 'save'
+         $$(this.ids.buttonSave).define("label", L("Save"));
+         $$(this.ids.buttonSave).refresh();
       }
 
       /**

@@ -19,14 +19,13 @@ export default function (AB, options) {
       constructor(attributes) {
          // attributes.idBase = attributes.idBase || "ui_common_list";
          var base = attributes.idBase || "ui_common_list";
-         super({
-            component: base,
-            listSetting: `${base}_listsetting`,
-            list: `${base}_editlist`,
-            searchText: `${base}_searchText`,
-            sort: `${base}_sort`,
-            group: `${base}_group`,
-            buttonNew: `${base}_buttonNew`,
+         super(base, {
+            listSetting: "",
+            list: "",
+            searchText: "",
+            sort: "",
+            group: "",
+            buttonNew: "",
          });
 
          this.idBase = base;
