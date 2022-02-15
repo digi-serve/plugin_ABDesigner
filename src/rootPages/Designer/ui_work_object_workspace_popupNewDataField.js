@@ -693,6 +693,7 @@ export default function (AB) {
                this._componentsByType[c].show(false, false);
                this._componentsByType[c].populate(field);
                this._currentEditor = this._componentsByType[c];
+               this._currentEditor["modeEdit"] = true;
             } else {
                this._componentsByType[c].hide();
             }
@@ -813,7 +814,7 @@ export default function (AB) {
          $$(this.ids.buttonBack).hide();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L("Create Field:") + " " + fieldTypeName);
+         $$(this.ids.title).setValue(L("Edit Field:") + " " + fieldTypeName);
 
          // show form editor
          $$(this.ids.fieldSetting).show();
