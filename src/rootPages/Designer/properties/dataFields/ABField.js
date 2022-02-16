@@ -41,6 +41,7 @@ export default function (AB) {
                buttonCog: "",
                editFieldName: "",
                editFieldNameForm: "",
+               editFieldNameFormDatabaseColumn: "",
                filterView: "",
                uniqueView: "",
             };
@@ -80,8 +81,8 @@ export default function (AB) {
                            width: 86.88,
                         },
                         {
-                           name: "columnName",
-                           id: ids.columnName,
+                           name: "label",
+                           id: ids.label,
                            view: "text",
                            placeholder: L("Database field name"),
                            fillspace: true,
@@ -97,8 +98,8 @@ export default function (AB) {
                         },
                         {
                            view: "text",
-                           id: ids.label,
-                           name: "label",
+                           id: ids.columnName,
+                           name: "columnName",
                            hidden: true,
                         },
                         {
@@ -286,6 +287,7 @@ export default function (AB) {
                   },
                ],
                rules: {
+                  label: webix.rules.isNotEmpty,
                   columnName: webix.rules.isNotEmpty,
                },
             };
@@ -318,14 +320,15 @@ export default function (AB) {
                         cols: [
                            {
                               view: "label",
-                              label: L("Database Label:") + " ",
+                              label: L("Database Column:") + " ",
                               align: "right",
                               width: 125,
                            },
                            {
                               view: "text",
-                              name: "label",
-                              placeholder: L("Database Label"),
+                              id: ids.editFieldNameFormDatabaseColumn,
+                              name: "columnName",
+                              placeholder: L("Database Column"),
                               on: {
                                  onAfterRender: function () {
                                     UIClass.CYPRESS_REF(this);
@@ -477,8 +480,11 @@ export default function (AB) {
          textFieldName(val) {
             const latestVals = this.formValues();
 
-            latestVals.columnName = val;
-            latestVals.label = val;
+            if (!this.modeEdit) {
+               latestVals.label = val;
+               latestVals.columnName = latestVals.label;
+            } else latestVals.label = val;
+
             $$(this.ids.component).setValues(latestVals);
          }
 
@@ -487,8 +493,12 @@ export default function (AB) {
                const latestVals = this.formValues();
 
                $$(this.ids.editFieldNameForm).setValues({
-                  label: latestVals.label,
+                  columnName: latestVals.columnName,
                });
+
+               if (this.modeEdit)
+                  $$(this.ids.editFieldNameFormDatabaseColumn).disable();
+               else $$(this.ids.editFieldNameFormDatabaseColumn).enable();
 
                $$(this.ids.editFieldName).show();
             }
@@ -498,17 +508,18 @@ export default function (AB) {
             const previousVal = $$(this.ids.component).getValues();
 
             $$(this.ids.editFieldNameForm).setValues({
-               label: previousVal.label,
+               columnName: previousVal.columnName,
             });
             $$(this.ids.editFieldName).hide();
          }
 
          buttonEditFieldNameButtonSubmit() {
             const latestVals = this.formValues();
-            const valLabel = $$(this.ids.editFieldNameForm).getValues().label;
+            const valColumnName = $$(this.ids.editFieldNameForm).getValues()
+               .columnName;
 
-            latestVals.label =
-               valLabel !== "" ? valLabel : latestVals.columnName;
+            latestVals.columnName =
+               valColumnName !== "" ? valColumnName : latestVals.columnName;
             $$(this.ids.component).setValues(latestVals);
             $$(this.ids.editFieldName).hide();
          }
