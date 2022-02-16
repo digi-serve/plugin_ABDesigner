@@ -83,7 +83,7 @@ export default function (AB) {
             modal: true,
             boarderless: true,
             height: 503,
-            width: 692,
+            width: 700,
             head: {
                view: "toolbar",
                css: "webix_dark",

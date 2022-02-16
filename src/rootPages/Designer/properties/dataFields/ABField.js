@@ -81,7 +81,7 @@ export default function (AB) {
                            width: 86.88,
                         },
                         {
-                           name: "columnName",
+                           name: "label",
                            id: ids.label,
                            view: "text",
                            placeholder: L("Database field name"),
