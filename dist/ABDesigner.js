@@ -117,10 +117,25 @@ __webpack_require__.r(__webpack_exports__);
    // {array}
    // All the ABField Property Inerfaces available.
    [
+      __webpack_require__(/*! ./dataFields/ABFieldAutoIndex */ "./src/rootPages/Designer/properties/dataFields/ABFieldAutoIndex.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldBoolean */ "./src/rootPages/Designer/properties/dataFields/ABFieldBoolean.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldCalculate */ "./src/rootPages/Designer/properties/dataFields/ABFieldCalculate.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldCombine */ "./src/rootPages/Designer/properties/dataFields/ABFieldCombine.js"),
       __webpack_require__(/*! ./dataFields/ABFieldConnect */ "./src/rootPages/Designer/properties/dataFields/ABFieldConnect.js"),
-      __webpack_require__(/*! ./dataFields/ABFieldNumber */ "./src/rootPages/Designer/properties/dataFields/ABFieldNumber.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldDate */ "./src/rootPages/Designer/properties/dataFields/ABFieldDate.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldDateTime */ "./src/rootPages/Designer/properties/dataFields/ABFieldDateTime.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldEmail */ "./src/rootPages/Designer/properties/dataFields/ABFieldEmail.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldFile */ "./src/rootPages/Designer/properties/dataFields/ABFieldFile.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldFormula */ "./src/rootPages/Designer/properties/dataFields/ABFieldFormula.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldImage */ "./src/rootPages/Designer/properties/dataFields/ABFieldImage.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldJson */ "./src/rootPages/Designer/properties/dataFields/ABFieldJson.js"),
       __webpack_require__(/*! ./dataFields/ABFieldList */ "./src/rootPages/Designer/properties/dataFields/ABFieldList.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldLongText */ "./src/rootPages/Designer/properties/dataFields/ABFieldLongText.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldNumber */ "./src/rootPages/Designer/properties/dataFields/ABFieldNumber.js"),
       __webpack_require__(/*! ./dataFields/ABFieldString */ "./src/rootPages/Designer/properties/dataFields/ABFieldString.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldTextFormula */ "./src/rootPages/Designer/properties/dataFields/ABFieldTextFormula.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldTree */ "./src/rootPages/Designer/properties/dataFields/ABFieldTree.js"),
+      __webpack_require__(/*! ./dataFields/ABFieldUser */ "./src/rootPages/Designer/properties/dataFields/ABFieldUser.js"),
    ].forEach((F) => {
       var Klass = F.default(AB);
       Fields.push(new Klass());
@@ -198,6 +213,7 @@ var myClass = null;
                buttonCog: "",
                editFieldName: "",
                editFieldNameForm: "",
+               editFieldNameFormDatabaseColumn: "",
                filterView: "",
                uniqueView: "",
             };
@@ -237,8 +253,8 @@ var myClass = null;
                            width: 86.88,
                         },
                         {
-                           name: "columnName",
-                           id: ids.columnName,
+                           name: "label",
+                           id: ids.label,
                            view: "text",
                            placeholder: L("Database field name"),
                            fillspace: true,
@@ -254,8 +270,8 @@ var myClass = null;
                         },
                         {
                            view: "text",
-                           id: ids.label,
-                           name: "label",
+                           id: ids.columnName,
+                           name: "columnName",
                            hidden: true,
                         },
                         {
@@ -443,6 +459,7 @@ var myClass = null;
                   },
                ],
                rules: {
+                  label: webix.rules.isNotEmpty,
                   columnName: webix.rules.isNotEmpty,
                },
             };
@@ -475,14 +492,15 @@ var myClass = null;
                         cols: [
                            {
                               view: "label",
-                              label: L("Database Label:") + " ",
+                              label: L("Database Column:") + " ",
                               align: "right",
                               width: 125,
                            },
                            {
                               view: "text",
-                              name: "label",
-                              placeholder: L("Database Label"),
+                              id: ids.editFieldNameFormDatabaseColumn,
+                              name: "columnName",
+                              placeholder: L("Database Column"),
                               on: {
                                  onAfterRender: function () {
                                     UIClass.CYPRESS_REF(this);
@@ -634,8 +652,11 @@ var myClass = null;
          textFieldName(val) {
             const latestVals = this.formValues();
 
-            latestVals.columnName = val;
-            latestVals.label = val;
+            if (!this.modeEdit) {
+               latestVals.label = val;
+               latestVals.columnName = latestVals.label;
+            } else latestVals.label = val;
+
             $$(this.ids.component).setValues(latestVals);
          }
 
@@ -644,8 +665,12 @@ var myClass = null;
                const latestVals = this.formValues();
 
                $$(this.ids.editFieldNameForm).setValues({
-                  label: latestVals.label,
+                  columnName: latestVals.columnName,
                });
+
+               if (this.modeEdit)
+                  $$(this.ids.editFieldNameFormDatabaseColumn).disable();
+               else $$(this.ids.editFieldNameFormDatabaseColumn).enable();
 
                $$(this.ids.editFieldName).show();
             }
@@ -655,17 +680,18 @@ var myClass = null;
             const previousVal = $$(this.ids.component).getValues();
 
             $$(this.ids.editFieldNameForm).setValues({
-               label: previousVal.label,
+               columnName: previousVal.columnName,
             });
             $$(this.ids.editFieldName).hide();
          }
 
          buttonEditFieldNameButtonSubmit() {
             const latestVals = this.formValues();
-            const valLabel = $$(this.ids.editFieldNameForm).getValues().label;
+            const valColumnName = $$(this.ids.editFieldNameForm).getValues()
+               .columnName;
 
-            latestVals.label =
-               valLabel !== "" ? valLabel : latestVals.columnName;
+            latestVals.columnName =
+               valColumnName !== "" ? valColumnName : latestVals.columnName;
             $$(this.ids.component).setValues(latestVals);
             $$(this.ids.editFieldName).hide();
          }
@@ -1114,6 +1140,748 @@ var myClass = null;
    return myClass;
 }
 
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldAutoIndex.js":
+/*!**************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldAutoIndex.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldAutoIndex
+ * A Property manager for our ABFieldAutoIndex.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const uiConfig = AB.Config.uiSettings();
+
+   var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = ABField.L();
+
+   class ABFieldAutoIndexProperty extends ABField {
+      constructor() {
+         super("properties_abfield_autoindex", {
+            prefix: "",
+            delimiter: "",
+            displayLength: "",
+            previewText: "",
+            // currentIndex: 'currentIndex',
+         });
+      }
+
+      ui() {
+         const ids = this.ids;
+         const FC = this.FieldClass();
+
+         return super.ui([
+            {
+               id: ids.prefix,
+               view: "text",
+               name: "prefix",
+               labelWidth: uiConfig.labelWidthLarge,
+               label: L("Prefix"),
+               placeholder: L("US"),
+               on: {
+                  onChange: () => {
+                     this.previewChange();
+                  },
+               },
+            },
+            {
+               id: ids.delimiter,
+               view: "richselect",
+               name: "delimiter",
+               labelWidth: uiConfig.labelWidthLarge,
+               label: L("Delimiter"),
+               value: "dash",
+               options: FC.delimiterList(),
+               on: {
+                  onChange: () => {
+                     this.previewChange();
+                  },
+               },
+            },
+            {
+               id: ids.displayLength,
+               view: "counter",
+               name: "displayLength",
+               labelWidth: uiConfig.labelWidthLarge,
+               label: L("Length"),
+               step: 1,
+               value: 4,
+               min: 1,
+               max: 10,
+               on: {
+                  onChange: () => {
+                     this.previewChange();
+                  },
+               },
+            },
+            {
+               id: ids.previewText,
+               view: "text",
+               name: "previewText",
+               labelWidth: uiConfig.labelWidthLarge,
+               label: L("Preview"),
+               value: "-0000",
+               disabled: true,
+            },
+            // {
+            // 	id: ids.currentIndex,
+            // 	view: "text",
+            // 	name: 'currentIndex',
+            // 	value: 0,
+            // 	hidden: true
+            // }
+            // {
+            // 	view: "checkbox",
+            // 	name:'supportMultilingual',
+            // 	labelRight: L('ab.dataField.string.supportMultilingual', '*Support multilingual'),
+            // 	labelWidth: uiConfig.labelWidthCheckbox,
+            // 	value: true
+            // }
+         ]);
+      }
+
+      previewChange() {
+         const ids = this.ids;
+         const FC = this.FieldClass();
+
+         const previewResult = FC.setValueToIndex(
+            $$(ids.prefix).getValue(),
+            $$(ids.delimiter).getValue(),
+            $$(ids.displayLength).getValue(),
+            0
+         );
+         $$(ids.previewText).setValue(previewResult);
+      }
+
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("AutoIndex");
+      }
+
+      isValid() {
+         var validator = super.isValid();
+   
+         // validator.addError('columnName', L('ab.validation.object.name.unique', 'Field columnName must be unique (#name# already used in this Application)').replace('#name#', this.name) );
+   
+         return validator;
+      }
+
+      populate(field) {
+         super.populate(field);
+
+         this.previewChange();
+      }
+   }
+   return ABFieldAutoIndexProperty;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldBoolean.js":
+/*!************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldBoolean.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldBoolean
+ * A Property manager for our ABFieldBoolean.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldBoolean extends ABField {
+        constructor() {
+            super("properties_abfield_boolean", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([
+                {
+                    name: "default",
+                    view: "checkbox",
+                    label: L("Default"),
+                    labelPosition: "left",
+                    labelWidth: 70,
+                    labelRight: L("Uncheck"),
+                    css: "webix_table_checkbox",
+                    on: {
+                        onChange: function (newVal, oldVal) {
+                            let checkLabel = L("Check");
+                            let uncheckLabel = L("Uncheck");
+        
+                            this.define("labelRight", newVal ? checkLabel : uncheckLabel);
+                            this.refresh();
+                        },
+                    },
+                },
+            ]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("boolean");
+        }
+
+        isValid() {
+            var validator = super.isValid();
+        
+            // validator.addError('columnName', L('ab.validation.object.name.unique', 'Field columnName must be unique (#name# already used in this Application)').replace('#name#', this.name) );
+        
+            return validator;
+        }
+    }
+
+    return ABFieldBoolean;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldCalculate.js":
+/*!**************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldCalculate.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldCalculate
+ * A Property manager for our ABFieldCalculate.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldCalculate extends ABField {
+        constructor() {
+            super("properties_abfield_calculate", {
+                formula: "",
+
+                fieldPopup: "",
+                fieldList: "",
+
+                numberOperatorPopup: "",
+
+                dateOperatorPopup: "",
+                dateFieldList: "",
+
+                decimalPlaces: "",
+            });
+        }
+
+        ui() {
+            const ids = this.ids;
+            
+            const delimiterList = [
+                { id: "none", value: L("None") },
+                {
+                    id: "comma",
+                    value: L("Comma"),
+                    sign: ",",
+                },
+                {
+                    id: "period",
+                    value: L("Period"),
+                    sign: ".",
+                },
+                {
+                    id: "space",
+                    value: L("Space"),
+                    sign: " ",
+                },
+            ];
+
+            // field popup
+            webix.ui({
+                id: ids.fieldPopup,
+                view: "popup",
+                hidden: true,
+                width: 200,
+                body: {
+                    id: ids.fieldList,
+                    view: "list",
+                    data: [],
+                    template: this.itemTemplate,
+                    on: {
+                        onItemClick: function (id, e, node) {
+                            var component = this.getItem(id),
+                                message = "{" + component.columnName + "}";
+
+                            // field.logic.insertEquation(message);
+
+                            $$(ids.fieldPopup).hide();
+                        },
+                    },
+                },
+                on: {
+                    onBeforeShow: () => {
+                        // refresh field list
+                        $$(ids.fieldList).clearAll();
+                        $$(ids.fieldList).parse(this.getNumberFields());
+                    },
+                },
+            });
+
+            webix.ui({
+                id: ids.numberOperatorPopup,
+                view: "popup",
+                hidden: true,
+                width: 200,
+                body: {
+                    view: "list",
+                    template: this.itemTemplate,
+                    data: [
+                        {
+                            label: L("+ Adds"),
+                            symbol: "+",
+                        },
+                        {
+                            label: L("- Subtracts"),
+                            symbol: "-",
+                        },
+                        {
+                            label: L("* Multiples"),
+                            symbol: "*",
+                        },
+                        {
+                            label: L("/ Divides"),
+                            symbol: "/",
+                        },
+                        {
+                            label: L("( Open Bracket"),
+                            symbol: "(",
+                        },
+                        {
+                            label: L(") Closed Bracket"),
+                            symbol: ")",
+                        },
+                    ],
+                    on: {
+                        onItemClick: function (id, e, node) {
+                            var component = this.getItem(id);
+        
+                            field.logic.insertEquation(component.symbol);
+        
+                            $$(ids.numberOperatorPopup).hide();
+                        },
+                    },
+                },
+            });
+
+            webix.ui({
+                id: ids.dateOperatorPopup,
+                view: "popup",
+                hidden: true,
+                width: 280,
+                data: [],
+                body: {
+                    id: ids.dateFieldList,
+                    view: "list",
+                    template: this.itemTemplate,
+                    data: [],
+                    on: {
+                        onItemClick: function (id, e, node) {
+                            var component = this.getItem(id);
+        
+                            field.logic.insertEquation(component.function);
+        
+                            $$(ids.dateOperatorPopup).hide();
+                        },
+                    },
+                },
+                on: {
+                    onBeforeShow: () => {
+                        // refresh field list
+                        $$(ids.dateFieldList).clearAll();
+                        $$(ids.dateFieldList).parse(this.getDateFields());
+                    },
+                },
+            });
+
+            return super.ui([
+                {
+                    id: ids.formula,
+                    name: "formula",
+                    view: "textarea",
+                    label: L("Equation"),
+                    labelPosition: "top",
+                    height: 150,
+                },
+                {
+                    rows: [
+                        {
+                            cols: [
+                            {
+                                view: "button",
+                                type: "icon",
+                                css: "webix_primary",
+                                icon: "fa fa-hashtag",
+                                label: L("Number Fields"),
+                                width: 185,
+                                click: function () {
+                                    // show popup
+                                    $$(ids.fieldPopup).show(this.$view);
+                                },
+                            },
+                            {
+                                view: "button",
+                                type: "icon",
+                                css: "webix_primary",
+                                icon: "fa fa-calendar",
+                                label: L("Date Fields"),
+                                click: function () {
+                                    // show popup
+                                    $$(ids.dateOperatorPopup).show(this.$view);
+                                },
+                            },
+                            ],
+                        },
+        
+                        {
+                            cols: [
+                            {
+                                view: "button",
+                                css: "webix_primary",
+                                type: "icon",
+                                icon: "fa fa-hashtag",
+                                label: L("Number Operators"),
+                                width: 185,
+                                click: function () {
+                                    // show popup
+                                    $$(ids.numberOperatorPopup).show(this.$view);
+                                },
+                            },
+                            {},
+                            ],
+                        },
+        
+                        {
+                            view: "richselect",
+                            name: "decimalSign",
+                            label: L("Decimals"),
+                            value: "none",
+                            labelWidth: this.AB.UISettings.config().labelWidthXLarge,
+                            options: delimiterList,
+                            on: {
+                            onChange: function (newValue, oldValue) {
+                                if (newValue == "none") {
+                                    $$(ids.decimalPlaces).disable();
+                                } else {
+                                    $$(ids.decimalPlaces).enable();
+                                }
+                            },
+                            },
+                        },
+        
+                        {
+                            view: "richselect",
+                            id: ids.decimalPlaces,
+                            name: "decimalPlaces",
+                            label: L("Places"),
+                            value: "none",
+                            labelWidth: this.AB.UISettings.config().labelWidthXLarge,
+                            disabled: true,
+                            options: [
+                            { id: "none", value: "0" },
+                            { id: 1, value: "1" },
+                            { id: 2, value: "2" },
+                            { id: 3, value: "3" },
+                            { id: 4, value: "4" },
+                            { id: 5, value: "5" },
+                            { id: 10, value: "10" },
+                            ],
+                        },
+                    ],
+                },
+            ]);
+        }
+
+        objectLoad(object) {
+            this.CurrentObject = object;
+        }
+
+        getNumberFields() {
+            if (this.CurrentObject)
+            return this.CurrentObject.fields(
+                (f) =>
+                    f.key == "number" ||
+                    f.key == "calculate" ||
+                    f.key == "formula"
+            );
+            else return [];
+        }
+
+        getDateFields() {
+            if (this.CurrentObject) {
+            const options = [];
+
+            options.push({
+                label: L("Convert minutes to hours (Format: hours.minutes)"),
+                function: "MINUTE_TO_HOUR()",
+            });
+
+            /** CURRENT DATE */
+            options.push({
+                label: L("Year of [{0}]", ["Current"]),
+                function: "YEAR(CURRENT)",
+            });
+
+            options.push({
+                label: L("Month of [{0}]", ["Current"]),
+                function: "MONTH(CURRENT)",
+            });
+
+            options.push({
+                label: L("Day of [{0}]", ["Current"]),
+                function: "DAY(CURRENT)",
+            });
+
+            options.push({
+                label: L("Get days of [{0}] (since January 1, 1970)", [
+                    "Current",
+                ]),
+                function: "DATE(CURRENT)",
+            });
+
+            options.push({
+                label: L("Get hours of [{0}] (since January 1, 1970)", [
+                    "Current",
+                ]),
+                function: "HOUR(CURRENT)",
+            });
+
+            options.push({
+                label: L("Get minutes of [{0}] (since January 1, 1970)", [
+                    "Current",
+                ]),
+                function: "MINUTE(CURRENT)",
+            });
+
+            /** DATE FIELDS */
+            this.CurrentObject.fields(
+                (f) => f.key == "date"
+            ).forEach((f) => {
+                options.push({
+                    label: L("Calculate age from [{0}]", [f.label]),
+                    function: `AGE({${f.columnName}})`,
+                });
+
+                options.push({
+                    label: L("Year of [{0}]", [f.label]),
+                    function: `YEAR({${f.columnName}})`,
+                });
+
+                options.push({
+                    label: L("Month of [{0}]", [f.label]),
+                    function: `MONTH({${f.columnName}})`,
+                });
+
+                options.push({
+                    label: L("Day of [{0}]", [f.label]),
+                    function: `DAY({${f.columnName}})`,
+                });
+
+                options.push({
+                    label: L("Get days of [${0}] (since January 1, 1970)", [
+                        f.label,
+                    ]),
+                    function: `DATE({${f.columnName}})`,
+                });
+
+                options.push({
+                    label: L("Get hours of [${0}] (since January 1, 1970)", [
+                        f.label,
+                    ]),
+                    function: `HOUR({${f.columnName}})`,
+                });
+
+                options.push({
+                    label: L("Get minutes of [${0}] (since January 1, 1970)", [
+                        f.label,
+                    ]),
+                    function: `MINUTE({${f.columnName}})`,
+                });
+            });
+
+            return options;
+            } else return [];
+        }
+
+        itemTemplate(item) {
+            let template = "";
+
+            if (item.icon) {
+                template += `<i class="fa fa-${item.icon}" aria-hidden="true"></i> `;
+            }
+
+            if (item.label) {
+                template += item.label;
+            }
+
+            return template;
+        }
+
+        insertEquation(message) {
+            var formula = $$(ids.formula).getValue();
+
+            $$(ids.formula).setValue(formula + message);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("calculate");
+        }
+
+        isValid () {
+            const ids = this.ids
+            const FC = this.FieldClass();
+
+            let isValid = super.isValid();
+
+            $$(ids.component).markInvalid("formula", false);
+
+            const formula = $$(ids.formula).getValue();
+
+            try {
+                FC.convertToJs(
+                    this.CurrentObject,
+                    formula,
+                    {}
+                );
+
+                // correct
+                isValid = true;
+            } catch (err) {
+                $$(ids.component).markInvalid("formula", "");
+
+                // incorrect
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // populate(field) {
+        //     var ids = this.ids;
+        //     super.populate(field);
+
+        //     this.previewChange();
+        // }
+    }
+
+    return ABFieldCalculate;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldCombine.js":
+/*!************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldCombine.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldCombine
+ * A Property manager for our ABFieldCombine.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldCombine extends ABField {
+        constructor() {
+            super("properties_abfield_combine", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("combined");
+        }
+    }
+
+    return ABFieldCombine;
+}
 
 /***/ }),
 
@@ -1690,6 +2458,384 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldDate.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldDate.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldDate
+ * A Property manager for our ABFieldDate.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldDate extends ABField {
+        constructor() {
+            super("properties_abfield_date", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("date");
+        }
+    }
+
+    return ABFieldDate;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldDateTime.js":
+/*!*************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldDateTime.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldDateTime
+ * A Property manager for our ABFieldDateTime.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldDateTime extends ABField {
+        constructor() {
+            super("properties_abfield_datetime", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("datetime");
+        }
+    }
+
+    return ABFieldDateTime;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldEmail.js":
+/*!**********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldEmail.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldEmail
+ * A Property manager for our ABFieldEmail.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldEmail extends ABField {
+        constructor() {
+            super("properties_abfield_email", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("email");
+        }
+    }
+
+    return ABFieldEmail;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldFile.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldFile.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldFile
+ * A Property manager for our ABFieldFile.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldFile extends ABField {
+        constructor() {
+            super("properties_abfield_file", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("file");
+        }
+    }
+
+    return ABFieldFile;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldFormula.js":
+/*!************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldFormula.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldFormula
+ * A Property manager for our ABFieldFormula.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldFormula extends ABField {
+        constructor() {
+            super("properties_abfield_formula", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("formula");
+        }
+    }
+
+    return ABFieldFormula;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldImage.js":
+/*!**********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldImage.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldImage
+ * A Property manager for our ABFieldImage.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldImage extends ABField {
+        constructor() {
+            super("properties_abfield_image", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("image");
+        }
+    }
+
+    return ABFieldImage;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldJson.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldJson.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldJson
+ * A Property manager for our ABFieldJson.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldJson extends ABField {
+        constructor() {
+            super("properties_abfield_json", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("json");
+        }
+    }
+
+    return ABFieldJson;
+}
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/properties/dataFields/ABFieldList.js":
 /*!*********************************************************************!*\
   !*** ./src/rootPages/Designer/properties/dataFields/ABFieldList.js ***!
@@ -2179,6 +3325,60 @@ __webpack_require__.r(__webpack_exports__);
    return ABFieldListProperty;
 }
 
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldLongText.js":
+/*!*************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldLongText.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldLongText
+ * A Property manager for our ABFieldLongText.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldLongText extends ABField {
+        constructor() {
+            super("properties_abfield_longtext", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("LongText");
+        }
+    }
+
+    return ABFieldLongText;
+}
 
 /***/ }),
 
@@ -2818,6 +4018,168 @@ __webpack_require__.r(__webpack_exports__);
    return ABFieldStringProperty;
 }
 
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldTextFormula.js":
+/*!****************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldTextFormula.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldTextFormula
+ * A Property manager for our ABFieldTextFormula.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldTextFormula extends ABField {
+        constructor() {
+            super("properties_abfield_textformula", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("TextFormula");
+        }
+    }
+
+    return ABFieldTextFormula;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldTree.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldTree.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldTree
+ * A Property manager for our ABFieldTree.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldTree extends ABField {
+        constructor() {
+            super("properties_abfield_tree", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("tree");
+        }
+    }
+
+    return ABFieldTree;
+}
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/dataFields/ABFieldUser.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/dataFields/ABFieldUser.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABField */ "./src/rootPages/Designer/properties/dataFields/ABField.js");
+/*
+ * ABFieldUser
+ * A Property manager for our ABFieldUser.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+    const uiConfig = AB.Config.uiSettings();
+
+    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = ABField.L();
+
+    class ABFieldUser extends ABField {
+        constructor() {
+            super("properties_abfield_user", {
+            });
+        }
+
+        ui() {
+            const FC = this.FieldClass();
+            const ids = this.ids;
+   
+            return super.ui([]);
+        }
+
+        /**
+         * @method FieldClass()
+         * Call our Parent's _FieldClass() helper with the proper key to return
+         * the ABFieldXXX class represented by this Property Editor.
+         * @return {ABFieldXXX Class}
+         */
+        FieldClass() {
+            return super._FieldClass("user");
+        }
+    }
+
+    return ABFieldUser;
+}
 
 /***/ }),
 
@@ -14481,7 +15843,7 @@ __webpack_require__.r(__webpack_exports__);
             modal: true,
             boarderless: true,
             height: 503,
-            width: 692,
+            width: 700,
             head: {
                view: "toolbar",
                css: "webix_dark",
@@ -15091,6 +16453,7 @@ __webpack_require__.r(__webpack_exports__);
                this._componentsByType[c].show(false, false);
                this._componentsByType[c].populate(field);
                this._currentEditor = this._componentsByType[c];
+               this._currentEditor["modeEdit"] = true;
             } else {
                this._componentsByType[c].hide();
             }
@@ -15211,7 +16574,7 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.buttonBack).hide();
 
          // set title name by each field type
-         $$(this.ids.title).setValue(L("Create Field:") + " " + fieldTypeName);
+         $$(this.ids.title).setValue(L("Edit Field:") + " " + fieldTypeName);
 
          // show form editor
          $$(this.ids.fieldSetting).show();
