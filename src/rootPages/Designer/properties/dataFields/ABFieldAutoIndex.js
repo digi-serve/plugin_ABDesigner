@@ -8,8 +8,8 @@ import FFieldClass from "./ABField";
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = FFieldClass(AB);
-   var L = ABField.L();
+   const ABField = FFieldClass(AB);
+   const L = ABField.L();
 
    class ABFieldAutoIndexProperty extends ABField {
       constructor() {
@@ -120,11 +120,11 @@ export default function (AB) {
       }
 
       isValid() {
-         var validator = super.isValid();
-   
+         const isValid = super.isValid();
+
          // validator.addError('columnName', L('ab.validation.object.name.unique', 'Field columnName must be unique (#name# already used in this Application)').replace('#name#', this.name) );
-   
-         return validator;
+
+         return isValid;
       }
 
       populate(field) {
