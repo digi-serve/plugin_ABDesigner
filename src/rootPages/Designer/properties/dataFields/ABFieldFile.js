@@ -69,7 +69,7 @@ export default function (AB) {
 
       clear() {
          const ids = this.ids;
-console.log("ssss")
+
          super.clear();
          $$(ids.fileSize).setValue(0);
          $$(ids.fileType).setValue("");
