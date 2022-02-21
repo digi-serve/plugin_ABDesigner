@@ -176,7 +176,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-var myClass = null;
+let myClass = null;
 // {singleton}
 // we will want to call this factory fn() repeatedly in our imports,
 // but we only want to define 1 Class reference.
@@ -185,7 +185,7 @@ var myClass = null;
    if (!myClass) {
       const uiConfig = AB.Config.uiSettings();
       const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-      var L = UIClass.L();
+      const L = UIClass.L();
 
       myClass = class ABFieldProperty extends UIClass {
          constructor(base = "properties_abfield", ids = {}) {
@@ -194,7 +194,7 @@ var myClass = null;
             // this is provided by the Sub Class and has the keys
             // unique to the Sub Class' interface elements.
 
-            var common = {
+            const common = {
                // component: `${base}_component`,
 
                // the common property fields
@@ -235,10 +235,10 @@ var myClass = null;
          }
 
          ui(elements = []) {
-            var ids = this.ids;
+            const ids = this.ids;
 
-            var FC = this.FieldClass();
-            var _ui = {
+            const FC = this.FieldClass();
+            const _ui = {
                view: "form",
                id: ids.component,
                borderless: true,
@@ -638,7 +638,7 @@ var myClass = null;
          async init(AB) {
             this.AB = AB;
 
-            var FC = this.FieldClass();
+            const FC = this.FieldClass();
             if (FC) {
                $$(this.ids.fieldDescription).define(
                   "label",
@@ -697,8 +697,8 @@ var myClass = null;
          }
 
          addValidation(settings) {
-            var ids = this.ids;
-            var Filter = new this.AB.Class.FilterComplex(
+            const ids = this.ids;
+            const Filter = new this.AB.Class.FilterComplex(
                this.AB._App,
                "field_validation_rules",
                this.AB
@@ -729,7 +729,7 @@ var myClass = null;
                      type: "icon",
                      autowidth: true,
                      click: function () {
-                        var $viewCond = this.getParentView();
+                        const $viewCond = this.getParentView();
                         $$(ids.filterComplex).removeView($viewCond);
 
                         // reset the validation rules UI
@@ -766,7 +766,7 @@ var myClass = null;
             const ids = this.ids;
 
             // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
+            const filterViews = $$(ids.filterComplex).queryView(
                {
                   view: "form",
                   css: "abValidationForm",
@@ -789,13 +789,13 @@ var myClass = null;
          }
 
          clear() {
-            var ids = this.ids;
+            const ids = this.ids;
             this._CurrentField = null;
 
-            var defaultValues = this.defaultValues();
+            const defaultValues = this.defaultValues();
 
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
+            for (const f in defaultValues) {
+               const component = $$(ids[f]);
                if (component) component.setValue(defaultValues[f]);
             }
 
@@ -833,7 +833,7 @@ var myClass = null;
           * @return {obj}
           */
          defaults() {
-            var FieldClass = this.FieldClass();
+            const FieldClass = this.FieldClass();
             if (!FieldClass) {
                console.error(
                   "!!! ABFieldStringProperty: could not find FieldClass[]"
@@ -844,7 +844,7 @@ var myClass = null;
          }
 
          defaultValues() {
-            var values = {
+            const values = {
                label: "",
                columnName: "",
                showIcon: 1,
@@ -853,9 +853,9 @@ var myClass = null;
                validationRules: "",
             };
 
-            var FieldClass = this.FieldClass();
+            const FieldClass = this.FieldClass();
             if (FieldClass) {
-               var fcValues = FieldClass.defaultValues();
+               const fcValues = FieldClass.defaultValues();
                Object.keys(fcValues).forEach((k) => {
                   if (typeof values[k] == "undefined") {
                      values[k] = fcValues[k];
@@ -926,7 +926,7 @@ var myClass = null;
          }
 
          async getNumberOfNullValue(isRequired) {
-            var ids = this.ids;
+            const ids = this.ids;
             if (
                isRequired &&
                this._CurrentField &&
@@ -937,7 +937,7 @@ var myClass = null;
 
                // get count number
                try {
-                  var data = await this._CurrentField.object.model().count({
+                  const data = await this._CurrentField.object.model().count({
                      where: {
                         glue: "and",
                         rules: [
@@ -977,8 +977,8 @@ var myClass = null;
           * @return {bool}
           */
          isValid() {
-            var ids = this.ids;
-            var isValid = $$(ids.component).validate(),
+            const ids = this.ids;
+            let isValid = $$(ids.component).validate(),
                colName = this.formValues()["columnName"];
 
             setTimeout(() => {
@@ -986,7 +986,7 @@ var myClass = null;
             }, 500);
 
             // validate reserve column names
-            var FC = this.FieldClass();
+            const FC = this.FieldClass();
             if (!FC) {
                this.AB.notify.developer(
                   new Error("Unable to resolve FieldClass"),
@@ -1005,7 +1005,7 @@ var myClass = null;
 
             // columnName should not be in use by other fields on this object
             // get All fields with matching colName
-            var fieldColName = this.CurrentObject?.fields(
+            let fieldColName = this.CurrentObject?.fields(
                (f) => f.columnName == colName
             );
             // ignore current edit field
@@ -1039,7 +1039,7 @@ var myClass = null;
           *        The ABFieldXXX instance that we are editing the settings for.
           */
          populate(field) {
-            var ids = this.ids;
+            const ids = this.ids;
             this._CurrentField = field;
 
             // these columns are located on the base ABField object
@@ -1061,7 +1061,7 @@ var myClass = null;
             $$(ids.unique).setValue(field.settings.unique);
 
             if (field.settings && field.settings.validationRules) {
-               var rules = field.settings.validationRules;
+               let rules = field.settings.validationRules;
                if (typeof rules == "string") {
                   try {
                      rules = JSON.parse(rules);
@@ -1101,23 +1101,23 @@ var myClass = null;
           * @return {obj}
           */
          values() {
-            var ids = this.ids;
+            const ids = this.ids;
 
-            var settings = $$(ids.component).getValues();
+            const settings = $$(ids.component).getValues();
             if ($$(ids.filterComplex)) {
-               var validationRules = [];
-               var forms = $$(ids.filterComplex).queryView(
+               const validationRules = [];
+               const forms = $$(ids.filterComplex).queryView(
                   { view: "form", css: "abValidationForm" },
                   "all"
                );
                forms.forEach((form) => {
-                  var rules = form
+                  const rules = form
                      .queryView({ view: "querybuilder" })
                      .getValue();
-                  var invalidMessage = form
+                  const invalidMessage = form
                      .queryView({ name: "invalidMessage" })
                      .getValue();
-                  var validationObj = {
+                  const validationObj = {
                      invalidMessage: invalidMessage,
                      rules: rules,
                   };
@@ -1126,10 +1126,10 @@ var myClass = null;
                settings.validationRules = JSON.stringify(validationRules);
             }
 
-            var FC = this.FieldClass();
+            const FC = this.FieldClass();
 
             // convert flat settings into our ABField value format:
-            var values = FC.editorValues(settings);
+            const values = FC.editorValues(settings);
 
             values.key = FC.defaults().key;
 
@@ -1165,8 +1165,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
    class ABFieldAutoIndexProperty extends ABField {
       constructor() {
@@ -1276,14 +1276,6 @@ __webpack_require__.r(__webpack_exports__);
          return super._FieldClass("AutoIndex");
       }
 
-      isValid() {
-         var validator = super.isValid();
-   
-         // validator.addError('columnName', L('ab.validation.object.name.unique', 'Field columnName must be unique (#name# already used in this Application)').replace('#name#', this.name) );
-   
-         return validator;
-      }
-
       populate(field) {
          super.populate(field);
 
@@ -1316,63 +1308,52 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldBoolean extends ABField {
+      constructor() {
+         super("properties_abfield_boolean", {});
+      }
 
-    class ABFieldBoolean extends ABField {
-        constructor() {
-            super("properties_abfield_boolean", {
-            });
-        }
+      ui() {
+         return super.ui([
+            {
+               name: "default",
+               view: "checkbox",
+               label: L("Default"),
+               labelPosition: "left",
+               labelWidth: 70,
+               labelRight: L("Uncheck"),
+               css: "webix_table_checkbox",
+               on: {
+                  onChange: function (newVal) {
+                     let checkLabel = L("Check");
+                     let uncheckLabel = L("Uncheck");
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([
-                {
-                    name: "default",
-                    view: "checkbox",
-                    label: L("Default"),
-                    labelPosition: "left",
-                    labelWidth: 70,
-                    labelRight: L("Uncheck"),
-                    css: "webix_table_checkbox",
-                    on: {
-                        onChange: function (newVal, oldVal) {
-                            let checkLabel = L("Check");
-                            let uncheckLabel = L("Uncheck");
-        
-                            this.define("labelRight", newVal ? checkLabel : uncheckLabel);
-                            this.refresh();
-                        },
-                    },
-                },
-            ]);
-        }
+                     this.define(
+                        "labelRight",
+                        newVal ? checkLabel : uncheckLabel
+                     );
+                     this.refresh();
+                  },
+               },
+            },
+         ]);
+      }
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("boolean");
-        }
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("boolean");
+      }
+   }
 
-        isValid() {
-            var validator = super.isValid();
-        
-            // validator.addError('columnName', L('ab.validation.object.name.unique', 'Field columnName must be unique (#name# already used in this Application)').replace('#name#', this.name) );
-        
-            return validator;
-        }
-    }
-
-    return ABFieldBoolean;
+   return ABFieldBoolean;
 }
 
 
@@ -1398,434 +1379,422 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldCalculate extends ABField {
+      constructor() {
+         super("properties_abfield_calculate", {
+            formula: "",
 
-    class ABFieldCalculate extends ABField {
-        constructor() {
-            super("properties_abfield_calculate", {
-                formula: "",
+            fieldPopup: "",
+            fieldList: "",
 
-                fieldPopup: "",
-                fieldList: "",
+            numberOperatorPopup: "",
+            numberOperatorPopupList: "",
 
-                numberOperatorPopup: "",
+            dateOperatorPopup: "",
+            dateFieldList: "",
 
-                dateOperatorPopup: "",
-                dateFieldList: "",
+            decimalPlaces: "",
+         });
+      }
 
-                decimalPlaces: "",
-            });
-        }
+      ui() {
+         const ids = this.ids;
 
-        ui() {
-            const ids = this.ids;
-            
-            const delimiterList = [
-                { id: "none", value: L("None") },
-                {
-                    id: "comma",
-                    value: L("Comma"),
-                    sign: ",",
-                },
-                {
-                    id: "period",
-                    value: L("Period"),
-                    sign: ".",
-                },
-                {
-                    id: "space",
-                    value: L("Space"),
-                    sign: " ",
-                },
-            ];
+         const delimiterList = [
+            { id: "none", value: L("None") },
+            {
+               id: "comma",
+               value: L("Comma"),
+               sign: ",",
+            },
+            {
+               id: "period",
+               value: L("Period"),
+               sign: ".",
+            },
+            {
+               id: "space",
+               value: L("Space"),
+               sign: " ",
+            },
+         ];
 
-            // field popup
-            webix.ui({
-                id: ids.fieldPopup,
-                view: "popup",
-                hidden: true,
-                width: 200,
-                body: {
-                    id: ids.fieldList,
-                    view: "list",
-                    data: [],
-                    template: this.itemTemplate,
-                    on: {
-                        onItemClick: function (id, e, node) {
-                            var component = this.getItem(id),
-                                message = "{" + component.columnName + "}";
+         // field popup
+         webix.ui({
+            id: ids.fieldPopup,
+            view: "popup",
+            hidden: true,
+            width: 200,
+            body: {
+               id: ids.fieldList,
+               view: "list",
+               data: [],
+               template: this.itemTemplate,
+               on: {
+                  onItemClick: (id) => {
+                     const component = $$(ids.fieldList).getItem(id);
+                     const message = "{" + component.columnName + "}";
 
-                            // field.logic.insertEquation(message);
+                     this.insertEquation(message);
 
-                            $$(ids.fieldPopup).hide();
-                        },
-                    },
-                },
-                on: {
-                    onBeforeShow: () => {
-                        // refresh field list
-                        $$(ids.fieldList).clearAll();
-                        $$(ids.fieldList).parse(this.getNumberFields());
-                    },
-                },
-            });
+                     $$(ids.fieldPopup).hide();
+                  },
+               },
+            },
+            on: {
+               onBeforeShow: () => {
+                  // refresh field list
+                  $$(ids.fieldList).clearAll();
+                  $$(ids.fieldList).parse(this.getNumberFields());
+               },
+            },
+         });
 
-            webix.ui({
-                id: ids.numberOperatorPopup,
-                view: "popup",
-                hidden: true,
-                width: 200,
-                body: {
-                    view: "list",
-                    template: this.itemTemplate,
-                    data: [
+         webix.ui({
+            id: ids.numberOperatorPopup,
+            view: "popup",
+            hidden: true,
+            width: 200,
+            body: {
+               id: ids.numberOperatorPopupList,
+               view: "list",
+               template: this.itemTemplate,
+               data: [
+                  {
+                     label: L("+ Adds"),
+                     symbol: "+",
+                  },
+                  {
+                     label: L("- Subtracts"),
+                     symbol: "-",
+                  },
+                  {
+                     label: L("* Multiples"),
+                     symbol: "*",
+                  },
+                  {
+                     label: L("/ Divides"),
+                     symbol: "/",
+                  },
+                  {
+                     label: L("( Open Bracket"),
+                     symbol: "(",
+                  },
+                  {
+                     label: L(") Closed Bracket"),
+                     symbol: ")",
+                  },
+               ],
+               on: {
+                  onItemClick: (id) => {
+                     const component = $$(ids.numberOperatorPopupList).getItem(
+                        id
+                     );
+
+                     this.insertEquation(component.symbol);
+
+                     $$(ids.numberOperatorPopup).hide();
+                  },
+               },
+            },
+         });
+
+         webix.ui({
+            id: ids.dateOperatorPopup,
+            view: "popup",
+            hidden: true,
+            width: 280,
+            data: [],
+            body: {
+               id: ids.dateFieldList,
+               view: "list",
+               template: this.itemTemplate,
+               data: [],
+               on: {
+                  onItemClick: (id) => {
+                     const component = $$(ids.dateFieldList).getItem(id);
+
+                     this.insertEquation(component.function);
+
+                     $$(ids.dateOperatorPopup).hide();
+                  },
+               },
+            },
+            on: {
+               onBeforeShow: () => {
+                  // refresh field list
+                  $$(ids.dateFieldList).clearAll();
+                  $$(ids.dateFieldList).parse(this.getDateFields());
+               },
+            },
+         });
+
+         return super.ui([
+            {
+               id: ids.formula,
+               name: "formula",
+               view: "textarea",
+               label: L("Equation"),
+               labelPosition: "top",
+               height: 150,
+            },
+            {
+               rows: [
+                  {
+                     cols: [
                         {
-                            label: L("+ Adds"),
-                            symbol: "+",
+                           view: "button",
+                           type: "icon",
+                           css: "webix_primary",
+                           icon: "fa fa-hashtag",
+                           label: L("Number Fields"),
+                           width: 185,
+                           click: function () {
+                              // show popup
+                              $$(ids.fieldPopup).show(this.$view);
+                           },
                         },
                         {
-                            label: L("- Subtracts"),
-                            symbol: "-",
+                           view: "button",
+                           type: "icon",
+                           css: "webix_primary",
+                           icon: "fa fa-calendar",
+                           label: L("Date Fields"),
+                           click: function () {
+                              // show popup
+                              $$(ids.dateOperatorPopup).show(this.$view);
+                           },
                         },
-                        {
-                            label: L("* Multiples"),
-                            symbol: "*",
-                        },
-                        {
-                            label: L("/ Divides"),
-                            symbol: "/",
-                        },
-                        {
-                            label: L("( Open Bracket"),
-                            symbol: "(",
-                        },
-                        {
-                            label: L(") Closed Bracket"),
-                            symbol: ")",
-                        },
-                    ],
-                    on: {
-                        onItemClick: function (id, e, node) {
-                            var component = this.getItem(id);
-        
-                            field.logic.insertEquation(component.symbol);
-        
-                            $$(ids.numberOperatorPopup).hide();
-                        },
-                    },
-                },
-            });
+                     ],
+                  },
 
-            webix.ui({
-                id: ids.dateOperatorPopup,
-                view: "popup",
-                hidden: true,
-                width: 280,
-                data: [],
-                body: {
-                    id: ids.dateFieldList,
-                    view: "list",
-                    template: this.itemTemplate,
-                    data: [],
-                    on: {
-                        onItemClick: function (id, e, node) {
-                            var component = this.getItem(id);
-        
-                            field.logic.insertEquation(component.function);
-        
-                            $$(ids.dateOperatorPopup).hide();
+                  {
+                     cols: [
+                        {
+                           view: "button",
+                           css: "webix_primary",
+                           type: "icon",
+                           icon: "fa fa-hashtag",
+                           label: L("Number Operators"),
+                           width: 185,
+                           click: function () {
+                              // show popup
+                              $$(ids.numberOperatorPopup).show(this.$view);
+                           },
                         },
-                    },
-                },
-                on: {
-                    onBeforeShow: () => {
-                        // refresh field list
-                        $$(ids.dateFieldList).clearAll();
-                        $$(ids.dateFieldList).parse(this.getDateFields());
-                    },
-                },
-            });
+                        {},
+                     ],
+                  },
 
-            return super.ui([
-                {
-                    id: ids.formula,
-                    name: "formula",
-                    view: "textarea",
-                    label: L("Equation"),
-                    labelPosition: "top",
-                    height: 150,
-                },
-                {
-                    rows: [
-                        {
-                            cols: [
-                            {
-                                view: "button",
-                                type: "icon",
-                                css: "webix_primary",
-                                icon: "fa fa-hashtag",
-                                label: L("Number Fields"),
-                                width: 185,
-                                click: function () {
-                                    // show popup
-                                    $$(ids.fieldPopup).show(this.$view);
-                                },
-                            },
-                            {
-                                view: "button",
-                                type: "icon",
-                                css: "webix_primary",
-                                icon: "fa fa-calendar",
-                                label: L("Date Fields"),
-                                click: function () {
-                                    // show popup
-                                    $$(ids.dateOperatorPopup).show(this.$view);
-                                },
-                            },
-                            ],
+                  {
+                     view: "richselect",
+                     name: "decimalSign",
+                     label: L("Decimals"),
+                     value: "none",
+                     labelWidth: this.AB.UISettings.config().labelWidthXLarge,
+                     options: delimiterList,
+                     on: {
+                        onChange: function (newValue) {
+                           if (newValue == "none") {
+                              $$(ids.decimalPlaces).disable();
+                           } else {
+                              $$(ids.decimalPlaces).enable();
+                           }
                         },
-        
-                        {
-                            cols: [
-                            {
-                                view: "button",
-                                css: "webix_primary",
-                                type: "icon",
-                                icon: "fa fa-hashtag",
-                                label: L("Number Operators"),
-                                width: 185,
-                                click: function () {
-                                    // show popup
-                                    $$(ids.numberOperatorPopup).show(this.$view);
-                                },
-                            },
-                            {},
-                            ],
-                        },
-        
-                        {
-                            view: "richselect",
-                            name: "decimalSign",
-                            label: L("Decimals"),
-                            value: "none",
-                            labelWidth: this.AB.UISettings.config().labelWidthXLarge,
-                            options: delimiterList,
-                            on: {
-                            onChange: function (newValue, oldValue) {
-                                if (newValue == "none") {
-                                    $$(ids.decimalPlaces).disable();
-                                } else {
-                                    $$(ids.decimalPlaces).enable();
-                                }
-                            },
-                            },
-                        },
-        
-                        {
-                            view: "richselect",
-                            id: ids.decimalPlaces,
-                            name: "decimalPlaces",
-                            label: L("Places"),
-                            value: "none",
-                            labelWidth: this.AB.UISettings.config().labelWidthXLarge,
-                            disabled: true,
-                            options: [
-                            { id: "none", value: "0" },
-                            { id: 1, value: "1" },
-                            { id: 2, value: "2" },
-                            { id: 3, value: "3" },
-                            { id: 4, value: "4" },
-                            { id: 5, value: "5" },
-                            { id: 10, value: "10" },
-                            ],
-                        },
-                    ],
-                },
-            ]);
-        }
+                     },
+                  },
 
-        objectLoad(object) {
-            this.CurrentObject = object;
-        }
+                  {
+                     view: "richselect",
+                     id: ids.decimalPlaces,
+                     name: "decimalPlaces",
+                     label: L("Places"),
+                     value: "none",
+                     labelWidth: this.AB.UISettings.config().labelWidthXLarge,
+                     disabled: true,
+                     options: [
+                        { id: "none", value: "0" },
+                        { id: 1, value: "1" },
+                        { id: 2, value: "2" },
+                        { id: 3, value: "3" },
+                        { id: 4, value: "4" },
+                        { id: 5, value: "5" },
+                        { id: 10, value: "10" },
+                     ],
+                  },
+               ],
+            },
+         ]);
+      }
 
-        getNumberFields() {
-            if (this.CurrentObject)
+      getNumberFields() {
+         if (this.CurrentObject)
             return this.CurrentObject.fields(
-                (f) =>
-                    f.key == "number" ||
-                    f.key == "calculate" ||
-                    f.key == "formula"
+               (f) =>
+                  f.key == "number" ||
+                  f.key == "calculate" ||
+                  f.key == "formula"
             );
-            else return [];
-        }
+         else return [];
+      }
 
-        getDateFields() {
-            if (this.CurrentObject) {
+      getDateFields() {
+         if (this.CurrentObject) {
             const options = [];
 
             options.push({
-                label: L("Convert minutes to hours (Format: hours.minutes)"),
-                function: "MINUTE_TO_HOUR()",
+               label: L("Convert minutes to hours (Format: hours.minutes)"),
+               function: "MINUTE_TO_HOUR()",
             });
 
             /** CURRENT DATE */
             options.push({
-                label: L("Year of [{0}]", ["Current"]),
-                function: "YEAR(CURRENT)",
+               label: L("Year of [{0}]", ["Current"]),
+               function: "YEAR(CURRENT)",
             });
 
             options.push({
-                label: L("Month of [{0}]", ["Current"]),
-                function: "MONTH(CURRENT)",
+               label: L("Month of [{0}]", ["Current"]),
+               function: "MONTH(CURRENT)",
             });
 
             options.push({
-                label: L("Day of [{0}]", ["Current"]),
-                function: "DAY(CURRENT)",
+               label: L("Day of [{0}]", ["Current"]),
+               function: "DAY(CURRENT)",
             });
 
             options.push({
-                label: L("Get days of [{0}] (since January 1, 1970)", [
-                    "Current",
-                ]),
-                function: "DATE(CURRENT)",
+               label: L("Get days of [{0}] (since January 1, 1970)", [
+                  "Current",
+               ]),
+               function: "DATE(CURRENT)",
             });
 
             options.push({
-                label: L("Get hours of [{0}] (since January 1, 1970)", [
-                    "Current",
-                ]),
-                function: "HOUR(CURRENT)",
+               label: L("Get hours of [{0}] (since January 1, 1970)", [
+                  "Current",
+               ]),
+               function: "HOUR(CURRENT)",
             });
 
             options.push({
-                label: L("Get minutes of [{0}] (since January 1, 1970)", [
-                    "Current",
-                ]),
-                function: "MINUTE(CURRENT)",
+               label: L("Get minutes of [{0}] (since January 1, 1970)", [
+                  "Current",
+               ]),
+               function: "MINUTE(CURRENT)",
             });
 
             /** DATE FIELDS */
-            this.CurrentObject.fields(
-                (f) => f.key == "date"
-            ).forEach((f) => {
-                options.push({
-                    label: L("Calculate age from [{0}]", [f.label]),
-                    function: `AGE({${f.columnName}})`,
-                });
+            this.CurrentObject.fields((f) => f.key == "date").forEach((f) => {
+               options.push({
+                  label: L("Calculate age from [{0}]", [f.label]),
+                  function: `AGE({${f.columnName}})`,
+               });
 
-                options.push({
-                    label: L("Year of [{0}]", [f.label]),
-                    function: `YEAR({${f.columnName}})`,
-                });
+               options.push({
+                  label: L("Year of [{0}]", [f.label]),
+                  function: `YEAR({${f.columnName}})`,
+               });
 
-                options.push({
-                    label: L("Month of [{0}]", [f.label]),
-                    function: `MONTH({${f.columnName}})`,
-                });
+               options.push({
+                  label: L("Month of [{0}]", [f.label]),
+                  function: `MONTH({${f.columnName}})`,
+               });
 
-                options.push({
-                    label: L("Day of [{0}]", [f.label]),
-                    function: `DAY({${f.columnName}})`,
-                });
+               options.push({
+                  label: L("Day of [{0}]", [f.label]),
+                  function: `DAY({${f.columnName}})`,
+               });
 
-                options.push({
-                    label: L("Get days of [${0}] (since January 1, 1970)", [
-                        f.label,
-                    ]),
-                    function: `DATE({${f.columnName}})`,
-                });
+               options.push({
+                  label: L("Get days of [${0}] (since January 1, 1970)", [
+                     f.label,
+                  ]),
+                  function: `DATE({${f.columnName}})`,
+               });
 
-                options.push({
-                    label: L("Get hours of [${0}] (since January 1, 1970)", [
-                        f.label,
-                    ]),
-                    function: `HOUR({${f.columnName}})`,
-                });
+               options.push({
+                  label: L("Get hours of [${0}] (since January 1, 1970)", [
+                     f.label,
+                  ]),
+                  function: `HOUR({${f.columnName}})`,
+               });
 
-                options.push({
-                    label: L("Get minutes of [${0}] (since January 1, 1970)", [
-                        f.label,
-                    ]),
-                    function: `MINUTE({${f.columnName}})`,
-                });
+               options.push({
+                  label: L("Get minutes of [${0}] (since January 1, 1970)", [
+                     f.label,
+                  ]),
+                  function: `MINUTE({${f.columnName}})`,
+               });
             });
 
             return options;
-            } else return [];
-        }
+         } else return [];
+      }
 
-        itemTemplate(item) {
-            let template = "";
+      itemTemplate(item) {
+         let template = "";
 
-            if (item.icon) {
-                template += `<i class="fa fa-${item.icon}" aria-hidden="true"></i> `;
-            }
+         if (item.icon) {
+            template += `<i class="fa fa-${item.icon}" aria-hidden="true"></i> `;
+         }
 
-            if (item.label) {
-                template += item.label;
-            }
+         if (item.label) {
+            template += item.label;
+         }
 
-            return template;
-        }
+         return template;
+      }
 
-        insertEquation(message) {
-            var formula = $$(ids.formula).getValue();
+      insertEquation(message) {
+         const ids = this.ids;
+         const formula = $$(ids.formula).getValue();
 
-            $$(ids.formula).setValue(formula + message);
-        }
+         $$(ids.formula).setValue(formula + message);
+      }
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("calculate");
-        }
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("calculate");
+      }
 
-        isValid () {
-            const ids = this.ids
-            const FC = this.FieldClass();
+      isValid() {
+         const ids = this.ids;
+         const FC = this.FieldClass();
 
-            let isValid = super.isValid();
+         let isValid = super.isValid();
 
+         if (isValid) {
             $$(ids.component).markInvalid("formula", false);
 
             const formula = $$(ids.formula).getValue();
 
             try {
-                FC.convertToJs(
-                    this.CurrentObject,
-                    formula,
-                    {}
-                );
+               FC.convertToJs(this.CurrentObject, formula, {});
 
-                // correct
-                isValid = true;
+               // correct
+               isValid = true;
             } catch (err) {
-                $$(ids.component).markInvalid("formula", "");
+               $$(ids.component).markInvalid("formula", "");
 
-                // incorrect
-                isValid = false;
+               // incorrect
+               isValid = false;
             }
+         }
 
-            return isValid;
-        }
+         return isValid;
+      }
+   }
 
-        // populate(field) {
-        //     var ids = this.ids;
-        //     super.populate(field);
-
-        //     this.previewChange();
-        // }
-    }
-
-    return ABFieldCalculate;
+   return ABFieldCalculate;
 }
 
 
@@ -1851,37 +1820,104 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const uiConfig = AB.Config.uiSettings();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    class ABFieldCombine extends ABField {
-        constructor() {
-            super("properties_abfield_combine", {
-            });
-        }
+   class ABFieldCombine extends ABField {
+      constructor() {
+         super("properties_abfield_combine", {
+            combinedFields: "",
+         });
+      }
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+      ui() {
+         const ids = this.ids;
+         const FC = this.FieldClass();
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("combined");
-        }
-    }
+         return super.ui([
+            {
+               id: ids.combinedFields,
+               name: "combinedFields",
+               view: "multicombo",
+               label: L("Combined Fields"),
+               labelWidth: uiConfig.labelWidthXLarge,
+               disallowEdit: true,
+               options: [],
+            },
+            {
+               view: "richselect",
+               name: "delimiter",
+               label: L("Delimiter"),
+               value: FC.defaultValues().delimiter,
+               labelWidth: uiConfig.labelWidthXLarge,
+               disallowEdit: true,
+               options: [
+                  { id: "plus", value: L("Plus ( + )") },
+                  { id: "dash", value: L("Dash ( - )") },
+                  { id: "period", value: L("Period ( . )") },
+                  { id: "space", value: L("Space ( )") },
+               ],
+            },
+         ]);
+      }
 
-    return ABFieldCombine;
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("combined");
+      }
+
+      show() {
+         const ids = this.ids;
+
+         let fields = this.CurrentObject.fields((f) => {
+            return (
+               f.key == "string" ||
+               f.key == "LongText" ||
+               f.key == "number" ||
+               f.key == "date" ||
+               f.key == "datetime" ||
+               f.key == "boolean" ||
+               f.key == "list" ||
+               f.key == "email" ||
+               f.key == "user" ||
+               f.key == "AutoIndex" ||
+               f.key == "combined" ||
+               (f.isConnection &&
+                  // 1:M
+                  ((f.settings.linkType == "one" &&
+                     f.settings.linkViaType == "many") ||
+                     // 1:1 isSource = true
+                     (f.settings.linkType == "one" &&
+                        f.settings.linkViaType == "one" &&
+                        f.settings.isSource)))
+            );
+         }).map((f) => {
+            return {
+               id: f.id,
+               value: f.label,
+            };
+         });
+
+         super.show();
+
+         let $combinedFields = $$(ids.combinedFields);
+         if ($combinedFields) {
+            $combinedFields.define("options", fields);
+            $combinedFields.refresh();
+         }
+      }
+   }
+
+   return ABFieldCombine;
 }
+
 
 /***/ }),
 
@@ -1907,8 +1943,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
    class ABFieldConnectProperty extends ABField {
       constructor() {
@@ -1935,8 +1971,8 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ui() {
-         var FC = this.FieldClass();
-         var ids = this.ids;
+         const FC = this.FieldClass();
+         const ids = this.ids;
          return super.ui([
             {
                view: "richselect",
@@ -2128,11 +2164,11 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       isValid() {
-         var ids = this.ids;
-         var isValid = super.isValid();
+         const ids = this.ids;
+         let isValid = super.isValid();
 
          // validate require select linked object
-         var selectedObjId = $$(ids.linkObject).getValue();
+         const selectedObjId = $$(ids.linkObject).getValue();
          if (!selectedObjId) {
             this.markInvalid("linkObject", L("Select an object"));
             // webix.html.addCss($$(ids.linkObject).$view, "webix_invalid");
@@ -2146,7 +2182,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       // populate(field) {
-      //    var ids = this.ids;
+      //    const ids = this.ids;
       //    super.populate(field);
       // }
 
@@ -2173,7 +2209,7 @@ __webpack_require__.r(__webpack_exports__);
          super.show();
 
          this.populateSelect(false);
-         var ids = this.ids;
+         const ids = this.ids;
 
          // show current object name
          $$(ids.fieldLink).setValue(
@@ -2193,7 +2229,7 @@ __webpack_require__.r(__webpack_exports__);
       ////
 
       checkCustomFK() {
-         var ids = this.ids;
+         const ids = this.ids;
          $$(ids.indexField).hide();
          $$(ids.indexField2).hide();
 
@@ -2256,9 +2292,9 @@ __webpack_require__.r(__webpack_exports__);
        *        a task was complete. This is that callback.
        */
       populateSelect(/* populate, callback */) {
-         var options = [];
+         const options = [];
          // if an ABApplication is set then load in the related objects
-         var application = this.CurrentApplication;
+         const application = this.CurrentApplication;
          if (application) {
             application.objectsIncluded().forEach((o) => {
                options.push({ id: o.id, value: o.label });
@@ -2277,8 +2313,8 @@ __webpack_require__.r(__webpack_exports__);
             return 0;
          });
 
-         var ids = this.ids;
-         var $linkObject = $$(ids.linkObject);
+         const ids = this.ids;
+         const $linkObject = $$(ids.linkObject);
          $linkObject.define("options", options);
          $linkObject.refresh();
          /*
@@ -2286,11 +2322,11 @@ __webpack_require__.r(__webpack_exports__);
          if (populate != null && populate == true) {
             $linkObject.setValue(options[options.length - 1].id);
             $linkObject.refresh();
-            var selectedObj = $linkObject
+            const selectedObj = $linkObject
                .getList()
                .getItem(options[options.length - 1].id);
             if (selectedObj) {
-               var selectedObjLabel = selectedObj.value;
+               const selectedObjLabel = selectedObj.value;
                $$(ids.fieldLinkVia).setValue(
                   L("<b>{0}</b> entry.", [selectedObjLabel])
                );
@@ -2324,7 +2360,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       selectObjectTo(newValue, oldValue) {
-         var ids = this.ids;
+         const ids = this.ids;
 
          if (!newValue) {
             $$(ids.link1).hide();
@@ -2349,7 +2385,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       updateCustomIndex() {
-         var ids = this.ids;
+         const ids = this.ids;
          let linkObjectId = $$(ids.linkObject).getValue();
          let linkType = $$(ids.linkType).getValue();
          let linkViaType = $$(ids.linkViaType).getValue();
@@ -2478,37 +2514,451 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldDate extends ABField {
+      constructor() {
+         super("properties_abfield_date", {
+            default: "",
+            currentToDefault: "",
 
-    class ABFieldDate extends ABField {
-        constructor() {
-            super("properties_abfield_date", {
-            });
-        }
+            dateDisplay: "",
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+            dateFormat: "",
+            defaultDate: "",
+            defaultDateValue: "",
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("date");
-        }
-    }
+            // validation
+            validateCondition: "",
+            validateRange: "",
+            validateRangeUnit: "",
+            validateRangeBefore: "",
+            validateRangeAfter: "",
+            validateRangeBeforeLabel: "",
+            validateRangeAfterLabel: "",
 
-    return ABFieldDate;
+            validateStartDate: "",
+            validateEndDate: "",
+         });
+      }
+
+      ui() {
+         const ids = this.ids;
+
+         return super.ui([
+            {
+               view: "richselect",
+               name: "dateFormat",
+               id: ids.dateFormat,
+               label: L("Date Format"),
+               labelWidth: 110,
+               value: 2,
+               options: [
+                  { id: 2, value: "dd/mm/yyyy" },
+                  { id: 3, value: "mm/dd/yyyy" },
+                  { id: 4, value: "M D, yyyy" },
+                  { id: 5, value: "D M, yyyy" },
+               ],
+               on: {
+                  onChange: () => {
+                     this.refreshDateValue();
+                  },
+               },
+            },
+            {
+               cols: [
+                  {
+                     view: "richselect",
+                     name: "defaultDate",
+                     id: ids.defaultDate,
+                     label: L("Default"),
+                     labelWidth: 110,
+                     value: 1,
+                     options: [
+                        { id: 1, value: L("None") },
+                        {
+                           id: 2,
+                           value: L("Current Date"),
+                        },
+                        {
+                           id: 3,
+                           value: L("Specific Date"),
+                        },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.defaultDateChange();
+                        },
+                     },
+                  },
+                  {
+                     view: "datepicker",
+                     name: "defaultDateValue",
+                     id: ids.defaultDateValue,
+                     gravity: 0.5,
+                     disabled: true,
+                  },
+               ],
+            },
+            // Validator
+            {
+               view: "label",
+               label: L("Validation criteria:"),
+               css: "ab-text-bold",
+            },
+            {
+               id: ids.validateCondition,
+               view: "select",
+               name: "validateCondition",
+               label: L("Condition"),
+               labelWidth: 100,
+               value: "none",
+               options: [
+                  { id: "none", value: L("None") },
+                  {
+                     id: "dateRange",
+                     value: L("Range"),
+                  },
+                  {
+                     id: "between",
+                     value: L("Between"),
+                  },
+                  {
+                     id: "notBetween",
+                     value: L("Not between"),
+                  },
+                  {
+                     id: "=",
+                     value: L("Equal to"),
+                  },
+                  {
+                     id: "<>",
+                     value: L("Not equal to"),
+                  },
+                  {
+                     id: ">",
+                     value: L("Greater than"),
+                  },
+                  {
+                     id: "<",
+                     value: L("Less than"),
+                  },
+                  {
+                     id: ">=",
+                     value: L("Greater than or Equal to"),
+                  },
+                  {
+                     id: "<=",
+                     value: L("Less than or Equal to"),
+                  },
+               ],
+               on: {
+                  onChange: (newVal) => {
+                     switch (newVal) {
+                        case "none":
+                           $$(ids.validateRange).hide();
+                           $$(ids.validateStartDate).hide();
+                           $$(ids.validateEndDate).hide();
+                           break;
+                        case "dateRange":
+                           $$(ids.validateRange).show();
+                           $$(ids.validateStartDate).hide();
+                           $$(ids.validateEndDate).hide();
+                           break;
+                        case "between":
+                        case "notBetween":
+                           $$(ids.validateRange).hide();
+                           $$(ids.validateStartDate).define(
+                              "label",
+                              "Start Date"
+                           );
+                           $$(ids.validateStartDate).refresh();
+                           $$(ids.validateStartDate).show();
+                           $$(ids.validateEndDate).show();
+                           break;
+                        case "=":
+                        case "<>":
+                        case ">":
+                        case "<":
+                        case ">=":
+                        case "<=":
+                           $$(ids.validateRange).hide();
+                           $$(ids.validateStartDate).define("label", "Date");
+                           $$(ids.validateStartDate).refresh();
+                           $$(ids.validateStartDate).show();
+                           $$(ids.validateEndDate).hide();
+                           break;
+                     }
+                  },
+               },
+            },
+            {
+               id: ids.validateRange,
+               hidden: true,
+               rows: [
+                  {
+                     id: ids.validateRangeUnit,
+                     view: "select",
+                     name: "validateRangeUnit",
+                     label: L("Unit"),
+                     labelWidth: 100,
+                     options: [
+                        {
+                           id: "days",
+                           value: L("Days"),
+                        },
+                        {
+                           id: "months",
+                           value: L("Months"),
+                        },
+                        {
+                           id: "years",
+                           value: L("Years"),
+                        },
+                     ],
+                     on: {
+                        onChange: () => {
+                           $$(ids.validateRangeBeforeLabel).refresh();
+                           $$(ids.validateRangeAfterLabel).refresh();
+                        },
+                     },
+                  },
+                  {
+                     cols: [
+                        {
+                           id: ids.validateRangeBeforeLabel,
+                           view: "template",
+                           align: "left",
+                           width: 140,
+                           borderless: true,
+                           template: () => {
+                              let unit = $$(ids.validateRangeUnit).getValue(),
+                                 selectedUnit = $$(
+                                    ids.validateRangeUnit
+                                 ).config.options.filter(
+                                    (opt) => opt.id == unit
+                                 )[0];
+
+                              const beforeLabel = `${L("Before")} ${$$(
+                                 ids.validateRangeBefore
+                              ).getValue()} ${selectedUnit.value}`;
+
+                              return beforeLabel;
+                           },
+                        },
+                        {
+                           view: "label",
+                           label: "",
+                           align: "center",
+                           width: 1,
+                        },
+                        {
+                           id: ids.validateRangeAfterLabel,
+                           view: "template",
+                           align: "right",
+                           borderless: true,
+                           template: () => {
+                              let unit = $$(ids.validateRangeUnit).getValue(),
+                                 selectedUnit = $$(
+                                    ids.validateRangeUnit
+                                 ).config.options.filter(
+                                    (opt) => opt.id == unit
+                                 )[0];
+
+                              const afterLabel = `${L("After")} ${$$(
+                                 ids.validateRangeAfter
+                              ).getValue()} ${selectedUnit.value}`;
+
+                              return afterLabel;
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     cols: [
+                        {
+                           id: ids.validateRangeBefore,
+                           view: "slider",
+                           name: "validateRangeBefore",
+                           on: {
+                              onChange: () => {
+                                 $$(ids.validateRangeBeforeLabel).refresh();
+                              },
+                           },
+                        },
+                        {
+                           id: ids.validateRangeAfter,
+                           view: "slider",
+                           name: "validateRangeAfter",
+                           on: {
+                              onChange: () => {
+                                 $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+            {
+               id: ids.validateStartDate,
+               name: "validateStartDate",
+               view: "datepicker",
+               label: L("Start Date"),
+               labelWidth: 100,
+               hidden: true,
+            },
+            {
+               id: ids.validateEndDate,
+               name: "validateEndDate",
+               view: "datepicker",
+               label: L("End Date"),
+               labelWidth: 100,
+               hidden: true,
+            },
+         ]);
+      }
+
+      defaultDateChange() {
+         const ids = this.ids;
+
+         const defaultDateValue = $$(ids.defaultDate).getValue();
+         const defaultDate = parseInt(defaultDateValue);
+         switch (defaultDate) {
+            case 1:
+               {
+                  $$(ids.defaultDateValue).disable();
+                  $$(ids.defaultDateValue).setValue();
+               }
+               break;
+            case 2:
+               {
+                  $$(ids.defaultDateValue).enable();
+                  $$(ids.defaultDateValue).setValue(new Date());
+                  this.refreshDateValue();
+               }
+               break;
+            case 3:
+               {
+                  $$(ids.defaultDateValue).enable();
+                  $$(ids.defaultDateValue).setValue();
+               }
+               break;
+            default:
+               {
+                  $$(ids.defaultDateValue).disable();
+                  $$(ids.defaultDateValue).setValue(new Date());
+               }
+               break;
+         }
+      }
+
+      refreshDateValue() {
+         const ids = this.ids;
+
+         const defaultFormatValue = $$(ids.dateFormat).getValue();
+         const dateFormat = parseInt(defaultFormatValue);
+
+         let formatString = "";
+         switch (dateFormat) {
+            //Ignore Date
+            case (1, 2):
+               {
+                  formatString = "%d/%m/%Y";
+               }
+               break;
+            //mm/dd/yyyy
+            case 3:
+               {
+                  formatString = "%m/%d/%Y";
+               }
+               break;
+            //M D, yyyy
+            case 4:
+               {
+                  formatString = "%M %d, %Y";
+               }
+               break;
+            //D M, yyyy
+            case 5:
+               {
+                  formatString = "%d %M, %Y";
+               }
+               break;
+            default:
+               {
+                  formatString = "%d/%m/%Y";
+               }
+               break;
+         }
+
+         $$(ids.defaultDateValue).define("format", formatString);
+         $$(ids.defaultDateValue).refresh();
+      }
+
+      defaultTimeChange() {
+         const ids = this.ids;
+
+         console.log("defaultTimeChange");
+         const dateFormat = parseInt($$(ids.defaultTime).getValue());
+         switch (dateFormat) {
+            case 1:
+               {
+                  $$(ids.defaultTimeValue).disable();
+                  $$(ids.defaultTimeValue).setValue();
+               }
+               break;
+            case 2:
+               {
+                  $$(ids.defaultTimeValue).enable();
+                  $$(ids.defaultTimeValue).setValue(new Date());
+               }
+               break;
+            case 3:
+               {
+                  $$(ids.defaultTimeValue).enable();
+                  $$(ids.defaultTimeValue).setValue();
+               }
+               break;
+            default:
+               {
+                  $$(ids.defaultTimeValue).disable();
+                  $$(ids.defaultTimeValue).setValue();
+               }
+               break;
+         }
+      }
+
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("date");
+      }
+
+      populate(field) {
+         const ids = this.ids;
+
+         super.populate(field);
+         $$(ids.defaultDateValue).setValue(
+            new Date(field.settings.defaultDateValue)
+         );
+      }
+
+      show() {
+         // dateDisplayRefresh();
+         this.refreshDateValue();
+         super.show();
+      }
+   }
+
+   return ABFieldDate;
 }
+
 
 /***/ }),
 
@@ -2532,37 +2982,551 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldDateTime extends ABField {
+      constructor() {
+         super("properties_abfield_datetime", {
+            default: "",
+            currentToDefault: "",
 
-    class ABFieldDateTime extends ABField {
-        constructor() {
-            super("properties_abfield_datetime", {
-            });
-        }
+            dateDisplay: "",
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+            dateFormat: "",
+            defaultDate: "",
+            defaultDateValue: "",
+            timeFormat: "",
+            defaultTime: "",
+            defaultTimeValue: "",
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("datetime");
-        }
-    }
+            // validation
+            validateCondition: "",
+            validateRange: "",
+            validateRangeUnit: "",
+            validateRangeBefore: "",
+            validateRangeAfter: "",
+            validateRangeBeforeLabel: "",
+            validateRangeAfterLabel: "",
 
-    return ABFieldDateTime;
+            validateStartDate: "",
+            validateEndDate: "",
+         });
+      }
+
+      ui() {
+         const ids = this.ids;
+
+         return super.ui([
+            {
+               view: "richselect",
+               name: "dateFormat",
+               id: ids.dateFormat,
+               label: L("Date Format"),
+               labelWidth: 110,
+               value: 1,
+               options: [
+                  {
+                     id: 1,
+                     value: L("Ignore Date"),
+                  },
+                  { id: 2, value: "dd/mm/yyyy" },
+                  { id: 3, value: "mm/dd/yyyy" },
+                  { id: 4, value: "M D, yyyy" },
+                  { id: 5, value: "D M, yyyy" },
+               ],
+               on: {
+                  onChange: () => {
+                     this.refreshDateValue();
+                  },
+               },
+            },
+            {
+               cols: [
+                  {
+                     view: "richselect",
+                     name: "defaultDate",
+                     id: ids.defaultDate,
+                     label: L("Default"),
+                     labelWidth: 110,
+                     value: 1,
+                     options: [
+                        { id: 1, value: L("None") },
+                        {
+                           id: 2,
+                           value: L("Current Date"),
+                        },
+                        {
+                           id: 3,
+                           value: L("Specific Date"),
+                        },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.defaultDateChange();
+                        },
+                     },
+                  },
+                  {
+                     view: "datepicker",
+                     name: "defaultDateValue",
+                     id: ids.defaultDateValue,
+                     gravity: 0.5,
+                     disabled: true,
+                  },
+               ],
+            },
+            // Validator
+            {
+               view: "label",
+               label: L("Validation criteria:"),
+               css: "ab-text-bold",
+            },
+            {
+               id: ids.validateCondition,
+               view: "select",
+               name: "validateCondition",
+               label: L("Condition"),
+               labelWidth: 100,
+               value: "none",
+               options: [
+                  { id: "none", value: L("None") },
+                  {
+                     id: "dateRange",
+                     value: L("Range"),
+                  },
+                  {
+                     id: "between",
+                     value: L("Between"),
+                  },
+                  {
+                     id: "notBetween",
+                     value: L("Not between"),
+                  },
+                  {
+                     id: "=",
+                     value: L("Equal to"),
+                  },
+                  {
+                     id: "<>",
+                     value: L("Not equal to"),
+                  },
+                  {
+                     id: ">",
+                     value: L("Greater than"),
+                  },
+                  {
+                     id: "<",
+                     value: L("Less than"),
+                  },
+                  {
+                     id: ">=",
+                     value: L("Greater than or Equal to"),
+                  },
+                  {
+                     id: "<=",
+                     value: L("Less than or Equal to"),
+                  },
+               ],
+               on: {
+                  onChange: (newVal) => {
+                     switch (newVal) {
+                        case "none":
+                           $$(ids.validateRange).hide();
+                           $$(ids.validateStartDate).hide();
+                           $$(ids.validateEndDate).hide();
+                           break;
+                        case "dateRange":
+                           $$(ids.validateRange).show();
+                           $$(ids.validateStartDate).hide();
+                           $$(ids.validateEndDate).hide();
+                           break;
+                        case "between":
+                        case "notBetween":
+                           $$(ids.validateRange).hide();
+                           $$(ids.validateStartDate).define(
+                              "label",
+                              "Start Date"
+                           );
+                           $$(ids.validateStartDate).refresh();
+                           $$(ids.validateStartDate).show();
+                           $$(ids.validateEndDate).show();
+                           break;
+                        case "=":
+                        case "<>":
+                        case ">":
+                        case "<":
+                        case ">=":
+                        case "<=":
+                           $$(ids.validateRange).hide();
+                           $$(ids.validateStartDate).define("label", "Date");
+                           $$(ids.validateStartDate).refresh();
+                           $$(ids.validateStartDate).show();
+                           $$(ids.validateEndDate).hide();
+                           break;
+                     }
+                  },
+               },
+            },
+            {
+               id: ids.validateRange,
+               hidden: true,
+               rows: [
+                  {
+                     id: ids.validateRangeUnit,
+                     view: "select",
+                     name: "validateRangeUnit",
+                     label: L("Unit"),
+                     labelWidth: 100,
+                     options: [
+                        {
+                           id: "days",
+                           value: L("Days"),
+                        },
+                        {
+                           id: "months",
+                           value: L("Months"),
+                        },
+                        {
+                           id: "years",
+                           value: L("Years"),
+                        },
+                     ],
+                     on: {
+                        onChange: () => {
+                           $$(ids.validateRangeBeforeLabel).refresh();
+                           $$(ids.validateRangeAfterLabel).refresh();
+                        },
+                     },
+                  },
+                  {
+                     cols: [
+                        {
+                           id: ids.validateRangeBeforeLabel,
+                           view: "template",
+                           align: "left",
+                           width: 140,
+                           borderless: true,
+                           template: () => {
+                              let unit = $$(ids.validateRangeUnit).getValue(),
+                                 selectedUnit = $$(
+                                    ids.validateRangeUnit
+                                 ).config.options.filter(
+                                    (opt) => opt.id == unit
+                                 )[0];
+
+                              const beforeLabel = `${L("Before")} ${$$(
+                                 ids.validateRangeBefore
+                              ).getValue()} ${selectedUnit.value}`;
+
+                              return beforeLabel;
+                           },
+                        },
+                        {
+                           view: "label",
+                           label: "",
+                           align: "center",
+                           width: 1,
+                        },
+                        {
+                           id: ids.validateRangeAfterLabel,
+                           view: "template",
+                           align: "right",
+                           borderless: true,
+                           template: () => {
+                              let unit = $$(ids.validateRangeUnit).getValue(),
+                                 selectedUnit = $$(
+                                    ids.validateRangeUnit
+                                 ).config.options.filter(
+                                    (opt) => opt.id == unit
+                                 )[0];
+
+                              const afterLabel = `${L("After")} ${$$(
+                                 ids.validateRangeAfter
+                              ).getValue()} ${selectedUnit.value}`;
+
+                              return afterLabel;
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     cols: [
+                        {
+                           id: ids.validateRangeBefore,
+                           view: "slider",
+                           name: "validateRangeBefore",
+                           on: {
+                              onChange: () => {
+                                 $$(ids.validateRangeBeforeLabel).refresh();
+                              },
+                           },
+                        },
+                        {
+                           id: ids.validateRangeAfter,
+                           view: "slider",
+                           name: "validateRangeAfter",
+                           on: {
+                              onChange: () => {
+                                 $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+            {
+               id: ids.validateStartDate,
+               name: "validateStartDate",
+               view: "datepicker",
+               label: L("Start Date"),
+               labelWidth: 100,
+               hidden: true,
+            },
+            {
+               id: ids.validateEndDate,
+               name: "validateEndDate",
+               view: "datepicker",
+               label: L("End Date"),
+               labelWidth: 100,
+               hidden: true,
+            },
+            {
+               view: "richselect",
+               name: "timeFormat",
+               id: ids.timeFormat,
+               label: L("Time Format"),
+               labelWidth: 110,
+               value: 2,
+               options: [
+                  // {
+                  //    id: 1,
+                  //    value: L("ab.dataField.datetime.ignoreTime", "*Ignore Time")
+                  // },
+                  { id: 2, value: "HH:MM AM/PM" },
+                  { id: 3, value: "HH:MM (military)" },
+               ],
+               on: {
+                  onChange: () => {
+                     this.refreshTimevalue();
+                  },
+               },
+            },
+            {
+               cols: [
+                  {
+                     view: "richselect",
+                     name: "defaultTime",
+                     id: ids.defaultTime,
+                     label: L("Default Time"),
+                     labelWidth: 110,
+                     value: 1,
+                     options: [
+                        { id: 1, value: L("None") },
+                        {
+                           id: 2,
+                           value: L("Current Time"),
+                        },
+                        {
+                           id: 3,
+                           value: L("Specific Time"),
+                        },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.defaultTimeChange();
+                        },
+                     },
+                  },
+                  {
+                     view: "datepicker",
+                     name: "defaultTimeValue",
+                     type: "time",
+                     id: ids.defaultTimeValue,
+                     gravity: 0.5,
+                     disabled: true,
+                  },
+               ],
+            },
+         ]);
+      }
+
+      defaultDateChange() {
+         const ids = this.ids;
+
+         const defaultDateValue = $$(ids.defaultDate).getValue();
+         const defaultDate = parseInt(defaultDateValue);
+         switch (defaultDate) {
+            case 1:
+               {
+                  $$(ids.defaultDateValue).disable();
+                  $$(ids.defaultDateValue).setValue();
+               }
+               break;
+            case 2:
+               {
+                  $$(ids.defaultDateValue).enable();
+                  $$(ids.defaultDateValue).setValue(new Date());
+                  this.refreshDateValue();
+               }
+               break;
+            case 3:
+               {
+                  $$(ids.defaultDateValue).enable();
+                  $$(ids.defaultDateValue).setValue();
+               }
+               break;
+            default:
+               {
+                  $$(ids.defaultDateValue).disable();
+                  $$(ids.defaultDateValue).setValue(new Date());
+               }
+               break;
+         }
+      }
+
+      refreshDateValue() {
+         const ids = this.ids;
+
+         const defaultFormatValue = $$(ids.dateFormat).getValue();
+         const dateFormat = parseInt(defaultFormatValue);
+
+         let formatString = "";
+         switch (dateFormat) {
+            //Ignore Date
+            case (1, 2):
+               {
+                  formatString = "%d/%m/%Y";
+               }
+               break;
+            //mm/dd/yyyy
+            case 3:
+               {
+                  formatString = "%m/%d/%Y";
+               }
+               break;
+            //M D, yyyy
+            case 4:
+               {
+                  formatString = "%M %d, %Y";
+               }
+               break;
+            //D M, yyyy
+            case 5:
+               {
+                  formatString = "%d %M, %Y";
+               }
+               break;
+            default:
+               {
+                  formatString = "%d/%m/%Y";
+               }
+               break;
+         }
+
+         $$(ids.defaultDateValue).define("format", formatString);
+         $$(ids.defaultDateValue).refresh();
+      }
+
+      defaultTimeChange() {
+         const ids = this.ids;
+
+         const dateFormat = parseInt($$(ids.defaultTime).getValue());
+
+         switch (dateFormat) {
+            case 1:
+               {
+                  $$(ids.defaultTimeValue).disable();
+                  $$(ids.defaultTimeValue).setValue();
+               }
+               break;
+            case 2:
+               {
+                  $$(ids.defaultTimeValue).enable();
+                  $$(ids.defaultTimeValue).setValue(new Date());
+               }
+               break;
+            case 3:
+               {
+                  $$(ids.defaultTimeValue).enable();
+                  $$(ids.defaultTimeValue).setValue();
+               }
+               break;
+            default:
+               {
+                  $$(ids.defaultTimeValue).disable();
+                  $$(ids.defaultTimeValue).setValue();
+               }
+               break;
+         }
+         this.refreshTimevalue();
+      }
+
+      refreshTimevalue() {
+         const ids = this.ids;
+
+         const timeFormat = parseInt($$(ids.timeFormat).getValue());
+
+         let formatString = "";
+         switch (timeFormat) {
+            //HH:MM AM/PM
+            case 2:
+               {
+                  formatString = "%h:%i %A";
+               }
+               break;
+            //HH:MM (military)
+            case 3:
+               {
+                  formatString = "%H:%i";
+               }
+               break;
+            default:
+               {
+                  formatString = "%h:%i %A";
+               }
+               break;
+         }
+
+         $$(ids.defaultTimeValue).define("format", formatString);
+         $$(ids.defaultTimeValue).refresh();
+      }
+
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("datetime");
+      }
+
+      populate(field) {
+         const ids = this.ids;
+
+         super.populate(field);
+
+         $$(ids.defaultDateValue).setValue(
+            new Date(field.settings.defaultDateValue)
+         );
+         $$(ids.defaultTimeValue).setValue(
+            new Date(field.settings.defaultTimeValue)
+         );
+      }
+
+      show() {
+         // dateDisplayRefresh();
+         this.refreshDateValue();
+         this.refreshTimevalue();
+         super.show();
+      }
+   }
+
+   return ABFieldDateTime;
 }
+
 
 /***/ }),
 
@@ -2586,37 +3550,69 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const uiConfig = AB.Config.uiSettings();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    class ABFieldEmail extends ABField {
-        constructor() {
-            super("properties_abfield_email", {
-            });
-        }
+   class ABFieldEmail extends ABField {
+      constructor() {
+         super("properties_abfield_email", {
+            default: "",
+         });
+      }
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+      ui() {
+         const ids = this.ids;
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("email");
-        }
-    }
+         return super.ui([
+            {
+               view: "text",
+               id: ids.default,
+               name: "default",
+               labelWidth: uiConfig.labelWidthXLarge,
+               label: L("Default"),
+               placeholder: L("Enter default value"),
+            },
+         ]);
+      }
 
-    return ABFieldEmail;
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("email");
+      }
+
+      isValid() {
+         const ids = this.ids;
+         let isValid = super.isValid();
+
+         $$(ids.component).clearValidation();
+
+         const isRequired = $$(ids.required).getValue();
+         const emailDefault = $$(ids.default).getValue();
+
+         if (isRequired || emailDefault) {
+            if (!webix.rules.isEmail(emailDefault)) {
+               $$(ids.component).markInvalid(
+                  "default",
+                  L("*This email is invalid")
+               );
+               isValid = false;
+            } else isValid = true;
+         } else isValid = true;
+
+         return isValid;
+      }
+   }
+
+   return ABFieldEmail;
 }
+
 
 /***/ }),
 
@@ -2640,37 +3636,89 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldFile extends ABField {
+      constructor() {
+         super("properties_abfield_file", {
+            fileSize: "",
+            fileType: "",
+         });
+      }
 
-    class ABFieldFile extends ABField {
-        constructor() {
-            super("properties_abfield_file", {
-            });
-        }
+      ui() {
+         const ids = this.ids;
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+         return super.ui([
+            {
+               cols: [
+                  {
+                     view: "checkbox",
+                     name: "limitFileSize",
+                     labelRight: L("Size (MB)"),
+                     width: 120,
+                     labelWidth: 0,
+                     value: 1,
+                     click: function () {
+                        if (this.getValue()) $$(ids.fileSize).enable();
+                        else $$(ids.fileSize).disable();
+                     },
+                  },
+                  {
+                     view: "counter",
+                     name: "fileSize",
+                     id: ids.fileSize,
+                  },
+               ],
+            },
+            {
+               cols: [
+                  {
+                     view: "checkbox",
+                     name: "limitFileType",
+                     labelRight: L("Type"),
+                     width: 120,
+                     labelWidth: 0,
+                     value: 1,
+                     click: function () {
+                        if (this.getValue()) $$(ids.fileType).enable();
+                        else $$(ids.fileType).disable();
+                     },
+                  },
+                  {
+                     view: "text",
+                     name: "fileType",
+                     placeholder: L("txt,rtf,doc,docx,..."),
+                     id: ids.fileType,
+                  },
+               ],
+            },
+         ]);
+      }
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("file");
-        }
-    }
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("file");
+      }
 
-    return ABFieldFile;
+      clear() {
+         const ids = this.ids;
+
+         super.clear();
+         $$(ids.fileSize).setValue(0);
+         $$(ids.fileType).setValue("");
+      }
+   }
+
+   return ABFieldFile;
 }
+
 
 /***/ }),
 
@@ -2694,37 +3742,192 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const uiConfig = AB.Config.uiSettings();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    class ABFieldFormula extends ABField {
-        constructor() {
-            super("properties_abfield_formula", {
+   class ABFieldFormula extends ABField {
+      constructor() {
+         super("properties_abfield_formula", {
+            field: "",
+            fieldList: "",
+         });
+      }
+
+      ui() {
+         const App = AB._App;
+         const FC = this.FieldClass();
+         const ids = this.ids;
+
+         this.rowFilter = FC.rowFilter(App, ids.component, AB);
+
+         return super.ui([
+            {
+               view: "richselect",
+               name: "type",
+               label: L("Type"),
+               labelWidth: uiConfig.labelWidthMedium,
+               value: "sum",
+               options: [
+                  { id: "sum", value: L("Sum") },
+                  { id: "max", value: L("Max") },
+                  { id: "min", value: L("Min") },
+                  {
+                     id: "average",
+                     value: L("Average"),
+                  },
+                  {
+                     id: "count",
+                     value: L("Count"),
+                  },
+               ],
+            },
+            {
+               id: ids.field,
+               view: "richselect",
+               name: "field",
+               label: L("Field"),
+               labelWidth: uiConfig.labelWidthMedium,
+               options: {
+                  view: "suggest",
+                  body: {
+                     id: ids.fieldList,
+                     view: "list",
+                     template: this.itemTemplate,
+                     data: [],
+                  },
+               },
+               on: {
+                  onChange: () => {
+                     this.refreshFilter();
+                  },
+               },
+            },
+            this.rowFilter.ui,
+         ]);
+      }
+
+      getFieldList() {
+         const options = [];
+
+         const connectFields = this.CurrentObject.connectFields();
+         connectFields.forEach((f) => {
+            const objLink = f.datasourceLink;
+
+            objLink.fields().forEach((fLink) => {
+               // pull 'number' and 'calculate' fields from link objects
+               // if (fLink.key == "number" || fLink.key == "calculate") {
+               // NOTE: calculate fields does not support in queries
+               if (fLink.key == "number") {
+                  // NOTE: calculate fields does not support in queries
+                  options.push({
+                     // UUID:UUID
+                     id: `${f.id}:${fLink.id}`,
+                     field: f,
+                     fieldLink: fLink,
+                  });
+               }
             });
-        }
+         });
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+         return options;
+      }
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("formula");
-        }
-    }
+      itemTemplate(opt) {
+         return `[${opt.field.label}] ${opt.fieldLink.object.label} -> <i class="fa fa-${opt.fieldLink.icon}" aria-hidden="true"></i><b>${opt.fieldLink.label}</b>`;
+      }
 
-    return ABFieldFormula;
+      getSelectedField() {
+         const ids = this.ids;
+
+         const selectedId = $$(ids.field).getValue(); // fieldId:fieldLinkId
+         const selectedField = $$(ids.field)
+            .getList()
+            .data.find({ id: selectedId })[0];
+
+         return selectedField;
+      }
+
+      refreshFilter() {
+         const selectedField = this.getSelectedField();
+         if (
+            selectedField &&
+            selectedField.fieldLink &&
+            selectedField.fieldLink.object
+         ) {
+            // ABFieldFormulaComponent.rowFilter.applicationLoad(
+            //    selectedField.fieldLink.object.application
+            // );
+            this.rowFilter.fieldsLoad(selectedField.fieldLink.object.fields());
+            // ABFieldFormulaComponent.rowFilter.setValue({});
+         } else {
+            // ABFieldFormulaComponent.rowFilter.applicationLoad(null);
+            this.rowFilter.fieldsLoad([]);
+            // ABFieldFormulaComponent.rowFilter.setValue({});
+         }
+      }
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("formula");
+      }
+
+      populate(field) {
+         const ids = this.ids;
+
+         super.populate(field);
+
+         if (field.settings.field) {
+            const selectedId = `${field.settings.field}:${field.settings.fieldLink}`;
+            $$(ids.field).setValue(selectedId || "");
+         } else {
+            $$(ids.field).setValue("");
+         }
+
+         this.refreshFilter();
+         this.rowFilter.setValue(field.settings.where || {});
+      }
+
+      show() {
+         const ids = this.ids;
+         const list = this.getFieldList();
+
+         $$(ids.fieldList).clearAll();
+         $$(ids.fieldList).parse(list);
+         super.show();
+      }
+
+      values() {
+         const ids = this.ids;
+         const settings = $$(ids.component).getValues();
+         const selectedField = this.getSelectedField();
+
+         if (selectedField) {
+            settings.field = selectedField.field.id;
+            settings.fieldLink = selectedField.fieldLink.id;
+            settings.object = selectedField.fieldLink.object.id;
+         } else {
+            settings.field = "";
+            settings.fieldLink = "";
+            settings.object = "";
+         }
+
+         settings.where = this.rowFilter.getValue();
+
+         $$(ids.component).setValues(settings);
+
+         return super.values();
+      }
+   }
+
+   return ABFieldFormula;
 }
+
 
 /***/ }),
 
@@ -2748,37 +3951,293 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldImage extends ABField {
+      constructor() {
+         super("properties_abfield_image", {
+            imageWidth: "",
+            imageHeight: "",
+            defaultImageUrl: "",
 
-    class ABFieldImage extends ABField {
-        constructor() {
-            super("properties_abfield_image", {
+            useWidth: "",
+            useHeight: "",
+            useDefaultImage: "",
+         });
+      }
+
+      ui() {
+         const ids = this.ids;
+
+         return super.ui([
+            {
+               cols: [
+                  {
+                     id: ids.useWidth,
+                     view: "checkbox",
+                     name: "useWidth",
+                     labelRight: L("Width"),
+                     width: 80,
+                     labelWidth: 0,
+                     value: 1,
+                     click: function () {
+                        if (this.getValue()) $$(ids.imageWidth).enable();
+                        else $$(ids.imageWidth).disable();
+                     },
+                  },
+                  {
+                     view: "text",
+                     name: "imageWidth",
+                     id: ids.imageWidth,
+                  },
+               ],
+            },
+            {
+               cols: [
+                  {
+                     id: ids.useHeight,
+                     view: "checkbox",
+                     name: "useHeight",
+                     // id:componentIds.useHeight,
+                     labelRight: L("Height"),
+                     width: 80,
+                     labelWidth: 0,
+                     value: 1,
+                     click: function () {
+                        if (this.getValue()) $$(ids.imageHeight).enable();
+                        else $$(ids.imageHeight).disable();
+                     },
+                  },
+                  {
+                     view: "text",
+                     name: "imageHeight",
+                     id: ids.imageHeight,
+                  },
+               ],
+            },
+            {
+               cols: [
+                  {
+                     id: ids.useDefaultImage,
+                     view: "checkbox",
+                     name: "useDefaultImage",
+                     labelRight: L("Default image"),
+                     width: 200,
+                     labelWidth: 0,
+                     value: 0,
+                     click: function () {
+                        if (this.getValue()) $$(ids.defaultImageUrl).enable();
+                        else $$(ids.defaultImageUrl).disable();
+                     },
+                  },
+
+                  {
+                     view: "uploader",
+                     id: ids.defaultImageUrl,
+                     template:
+                        '<div class="default-image-holder">' +
+                        '<div class="image-data-field-icon">' +
+                        '<i class="fa fa-picture-o fa-2x"></i>' +
+                        `<div>${L("Drag and drop or click here")}</div>` +
+                        "</div>" +
+                        '<div class="image-data-field-image" style="display:none;">' +
+                        '<a style="" class="ab-delete-photo" href="javascript:void(0);"><i class="fa fa-times delete-image" style="display:none;"></i></a>' +
+                        "</div>" +
+                        "</div>",
+                     apiOnly: true,
+                     inputName: "file",
+                     multiple: false,
+                     disabled: true,
+                     name: "defaultImageUrl",
+                     height: 150,
+                     width: 100,
+                     on: {
+                        // when a file is added to the uploader
+                        onBeforeFileAdd: function (item) {
+                           // verify file type
+                           const acceptableTypes = [
+                              "jpg",
+                              "jpeg",
+                              "bmp",
+                              "png",
+                              "gif",
+                           ];
+                           const type = item.type.toLowerCase();
+                           if (acceptableTypes.indexOf(type) == -1) {
+                              //// TODO: multilingual
+                              webix.message(
+                                 "Only [" +
+                                    acceptableTypes.join(", ") +
+                                    "] images are supported"
+                              );
+                              return false;
+                           }
+                        },
+
+                        // if an error was returned
+                        onFileUploadError: function (item, response) {
+                           AB.notify.developer(
+                              new Error("Error loading image"),
+                              {
+                                 message: "Error loading image",
+                                 response,
+                              }
+                           );
+                        },
+                     },
+                  },
+               ],
+            },
+         ]);
+      }
+
+      urlImage(id) {
+         return `/file/${id}`;
+      }
+
+      urlUpload(isWebix = true) {
+         return `/file/upload/${this.CurrentObjectID}/${this._CurrentField}/${
+            isWebix ? "1" : "0"
+         }`;
+      }
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("image");
+      }
+
+      populate(field) {
+         const ids = this.ids;
+         const uploader = $$(ids.defaultImageUrl);
+         const value = field.settings.defaultImageUrl;
+         const isUseDefaultImage = field.settings.useDefaultImage;
+
+         super.populate(field);
+
+         if (field.settings.useDefaultImage) {
+            uploader.enable();
+         }
+
+         if (value && isUseDefaultImage) {
+            //Show default image
+            uploader.attachEvent("onAfterRender", function () {
+               const parentContainer = uploader.$view.querySelector(
+                  ".default-image-holder"
+               );
+               parentContainer.querySelector(
+                  ".image-data-field-icon"
+               ).style.display = "none";
+
+               const image = parentContainer.querySelector(
+                  ".image-data-field-image"
+               );
+               image.style.display = "";
+               image.style.backgroundImage = `url('/file/${value}')`;
+               image.setAttribute("image-uuid", value);
+
+               parentContainer.querySelector(".delete-image").style.display =
+                  "table-cell";
             });
-        }
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+            uploader.$view.addEventListener("click", (e) => {
+               if (e.target.className.indexOf("delete-image") > -1) {
+                  const parentContainer = uploader.$view.querySelector(
+                     ".default-image-holder"
+                  );
+                  parentContainer.querySelector(
+                     ".image-data-field-icon"
+                  ).style.display = "";
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("image");
-        }
-    }
+                  const image = parentContainer.querySelector(
+                     ".image-data-field-image"
+                  );
+                  image.style.display = "none";
+                  image.style.backgroundImage = "";
+                  image.setAttribute("image-uuid", "");
 
-    return ABFieldImage;
+                  parentContainer.querySelector(".delete-image").style.display =
+                     "none";
+               }
+            });
+         }
+      }
+
+      show() {
+         const ids = this.ids;
+         const url = this.urlUpload(true);
+
+         const uploader = $$(ids.defaultImageUrl);
+         uploader.config.upload = url;
+         uploader.attachEvent("onFileUpload", function (file, response) {
+            $$(ids.defaultImageUrl).setValue(response.data.uuid);
+
+            const parentContainer = uploader.$view.querySelector(
+               ".default-image-holder"
+            );
+            parentContainer.querySelector(
+               ".image-data-field-icon"
+            ).style.display = "none";
+
+            const image = parentContainer.querySelector(
+               ".image-data-field-image"
+            );
+            image.style.display = "";
+            image.style.backgroundImage = `url('${this.urlImage(
+               response.data.uuid
+            )}')`;
+
+            image.setAttribute("image-uuid", response.data.uuid);
+
+            parentContainer.querySelector(".delete-image").style.display =
+               "table-cell";
+         });
+         uploader.attachEvent("onAfterRender", function () {
+            const parentContainer = uploader.$view.querySelector(
+               ".default-image-holder"
+            );
+            parentContainer.querySelector(
+               ".image-data-field-icon"
+            ).style.display = "";
+
+            const image = parentContainer.querySelector(
+               ".image-data-field-image"
+            );
+            image.style.display = "none";
+            image.style.backgroundImage = "";
+            image.setAttribute("image-uuid", "");
+
+            parentContainer.querySelector(".delete-image").style.display =
+               "none";
+         });
+         uploader.addDropZone(uploader.$view);
+         uploader.render();
+
+         super.show();
+      }
+
+      clear() {
+         const ids = this.ids;
+
+         super.clear();
+
+         $$(ids.useWidth).setValue(0);
+         $$(ids.useHeight).setValue(0);
+         $$(ids.useDefaultImage).setValue(0);
+
+         $$(ids.imageWidth).setValue("");
+         $$(ids.imageHeight).setValue("");
+         $$(ids.defaultImageUrl).setValue("");
+      }
+   }
+
+   return ABFieldImage;
 }
+
 
 /***/ }),
 
@@ -2802,37 +4261,31 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldJson extends ABField {
+      constructor() {
+         super("properties_abfield_json", {});
+      }
 
-    class ABFieldJson extends ABField {
-        constructor() {
-            super("properties_abfield_json", {
-            });
-        }
+      ui() {
+         return super.ui([]);
+      }
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("json");
+      }
+   }
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("json");
-        }
-    }
-
-    return ABFieldJson;
+   return ABFieldJson;
 }
+
 
 /***/ }),
 
@@ -2858,8 +4311,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    // const uiConfig = AB.Config.uiSettings();
 
-   var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
    const ABFieldSelectivity = AB.Class.ABFieldManager.fieldByKey("selectivity");
 
@@ -2898,7 +4351,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          return super.ui([
             {
@@ -2959,9 +4412,11 @@ __webpack_require__.r(__webpack_exports__);
                   "ab-new-field-remove": (e, itemId /*, trg */) => {
                      // Remove option item
                      // check that item is in saved data already
-                     var matches = (this._originalOptions || []).filter((x) => {
-                        return x.id == itemId;
-                     })[0];
+                     const matches = (this._originalOptions || []).filter(
+                        (x) => {
+                           return x.id == itemId;
+                        }
+                     )[0];
                      if (matches) {
                         // Ask the user if they want to remove option
                         webix
@@ -3014,7 +4469,9 @@ __webpack_require__.r(__webpack_exports__);
                               top: 150,
                               on: {
                                  onSelect: (hex) => {
-                                    var vals = $$(ids.options).getItem(itemID);
+                                    const vals = $$(ids.options).getItem(
+                                       itemID
+                                    );
                                     vals.hex = hex;
                                     $$(ids.options).updateItem(itemID, vals);
                                     $$(ids.colorboard).hide();
@@ -3094,7 +4551,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       clear() {
-         var ids = this.ids;
+         const ids = this.ids;
          $$(ids.isMultiple).setValue(0);
          $$(ids.hasColors).setValue(0);
          $$(ids.options).clearAll();
@@ -3102,7 +4559,7 @@ __webpack_require__.r(__webpack_exports__);
          $$(ids.default).define("options", []);
          $$(ids.default).setValue(this.FieldClass()?.defaultValues()?.default);
 
-         var domNode = $$(ids.multipleDefault).$view.querySelector(
+         const domNode = $$(ids.multipleDefault).$view.querySelector(
             ".list-data-values"
          );
          if (domNode && domNode.selectivity) {
@@ -3121,18 +4578,18 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       getNextHex() {
-         var usedColors = [];
+         const usedColors = [];
          $$(this.ids.options)?.data.each(function (item) {
             usedColors.push(item.hex);
          });
-         var allColors = [];
+         const allColors = [];
          this.colors.forEach((c) => {
             c?.forEach?.((j) => {
                allColors.push(j);
             });
          });
-         var newHex = "#3498db";
-         for (var i = 0; i < allColors.length; i++) {
+         let newHex = "#3498db";
+         for (let i = 0; i < allColors.length; i++) {
             if (usedColors.indexOf(allColors[i]) == -1) {
                newHex = allColors[i];
                break;
@@ -3164,7 +4621,7 @@ __webpack_require__.r(__webpack_exports__);
                };
             });
          }
-         var $opts = $$(this.ids.options);
+         const $opts = $$(this.ids.options);
          $opts.parse(opts);
          $opts.refresh();
 
@@ -3174,7 +4631,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       toggleColorControl(value) {
-         var colorPickers = $$(this.ids.options)?.$view.querySelectorAll(
+         const colorPickers = $$(this.ids.options)?.$view.querySelectorAll(
             ".ab-color-picker"
          );
          colorPickers?.forEach(function (itm) {
@@ -3184,10 +4641,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       updateDefaultList() {
-         var ids = this.ids;
-         var settings = this._CurrentField?.settings;
+         const ids = this.ids;
+         const settings = this._CurrentField?.settings;
 
-         var optList = $$(ids.options)
+         const optList = $$(ids.options)
             .find({})
             .map(function (opt) {
                return {
@@ -3199,7 +4656,7 @@ __webpack_require__.r(__webpack_exports__);
 
          if ($$(ids.isMultiple).getValue()) {
             // Multiple default selector
-            var domNode = $$(ids.multipleDefault).$view.querySelector(
+            const domNode = $$(ids.multipleDefault).$view.querySelector(
                ".list-data-values"
             );
             if (!domNode) return false;
@@ -3276,9 +4733,9 @@ __webpack_require__.r(__webpack_exports__);
       // },
 
       values() {
-         var values = super.values();
+         const values = super.values();
 
-         var ids = this.ids;
+         const ids = this.ids;
 
          // Get options list from UI, then set them to settings
          values.settings.options = [];
@@ -3310,7 +4767,7 @@ __webpack_require__.r(__webpack_exports__);
 
          // Set multiple default value
          values.settings.multipleDefault = [];
-         var domNode = $$(ids.multipleDefault).$view.querySelector(
+         const domNode = $$(ids.multipleDefault).$view.querySelector(
             ".list-data-values"
          );
          if (domNode && domNode.selectivity) {
@@ -3348,37 +4805,98 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const uiConfig = AB.Config.uiSettings();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    class ABFieldLongText extends ABField {
-        constructor() {
-            super("properties_abfield_longtext", {
-            });
-        }
+   class ABFieldLongText extends ABField {
+      constructor() {
+         super("properties_abfield_longtext", {
+            default: "",
+            defaultCheckbox: "",
+         });
+      }
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+      ui() {
+         const ids = this.ids;
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("LongText");
-        }
-    }
+         return super.ui([
+            {
+               view: "layout",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default Value:") + " ",
+                     align: "right",
+                     width: 100,
+                  },
+                  {
+                     id: ids.defaultCheckbox,
+                     view: "checkbox",
+                     width: 30,
+                     value: 0,
+                     on: {
+                        onChange: (newv) => {
+                           this.checkboxDefaultValue(newv);
+                        },
+                     },
+                  },
+                  {
+                     id: ids.default,
+                     view: "text",
+                     name: "default",
+                     placeholder: L("Enter default value"),
+                     disabled: true,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                  },
+               ],
+            },
+            {
+               view: "checkbox",
+               name: "supportMultilingual",
+               disallowEdit: true,
+               labelRight: L("Support multilingual"),
+               labelWidth: uiConfig.labelWidthCheckbox,
+               value: false,
+            },
+         ]);
+      }
 
-    return ABFieldLongText;
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("LongText");
+      }
+
+      populate(field) {
+         super.populate(field);
+         const value = field.settings.default === "" ? 0 : 1;
+         $$(this.ids.defaultCheckbox).setValue(value);
+      }
+
+      show() {
+         super.show();
+         $$(this.ids.defaultCheckbox).setValue(0);
+      }
+
+      checkboxDefaultValue(state) {
+         if (state == 0) {
+            $$(this.ids.default).disable();
+            $$(this.ids.default).setValue("");
+         } else {
+            $$(this.ids.default).enable();
+         }
+      }
+   }
+
+   return ABFieldLongText;
 }
+
 
 /***/ }),
 
@@ -3404,8 +4922,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
    class ABFieldNumberProperty extends ABField {
       constructor() {
@@ -3427,8 +4945,8 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ui() {
-         var FC = this.FieldClass();
-         var ids = this.ids;
+         const FC = this.FieldClass();
+         const ids = this.ids;
          return super.ui([
             {
                cols: [
@@ -3746,18 +5264,18 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       isValid() {
-         var isValid = super.isValid();
+         let isValid = super.isValid();
 
-         var values = this.formValues();
+         const values = this.formValues();
 
-         var defaultValue = values["default"];
-         var fDefault = 0;
+         const defaultValue = values["default"];
+         let fDefault = 0;
          if (defaultValue !== "") {
             fDefault = parseFloat(defaultValue);
          }
 
          // if required then default value must be set:
-         var required = values["required"];
+         const required = values["required"];
          if (required) {
             if (defaultValue === "") {
                this.markInvalid(
@@ -3770,10 +5288,10 @@ __webpack_require__.r(__webpack_exports__);
 
          // Default Value must be within any min / max value set.
          if (values["validation"]) {
-            var minValue = values["validateMinimum"];
-            var maxValue = values["validateMaximum"];
-            var fmin = 0;
-            var fmax = 0;
+            const minValue = values["validateMinimum"];
+            const maxValue = values["validateMaximum"];
+            let fmin = 0;
+            let fmax = 0;
 
             if (minValue !== "") {
                fmin = parseFloat(minValue);
@@ -3830,7 +5348,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       populate(field) {
-         var ids = this.ids;
+         const ids = this.ids;
          super.populate(field);
 
          if (field.settings.default === "") {
@@ -3887,8 +5405,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
    class ABFieldStringProperty extends ABField {
       constructor() {
@@ -3901,7 +5419,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
          return super.ui([
             // {
             //    view: "text",
@@ -4004,7 +5522,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       populate(field) {
-         var ids = this.ids;
+         const ids = this.ids;
          super.populate(field);
 
          if (field.settings.default === "") {
@@ -4041,37 +5559,126 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const uiConfig = AB.Config.uiSettings();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    class ABFieldTextFormula extends ABField {
-        constructor() {
-            super("properties_abfield_textformula", {
+   class ABFieldTextFormula extends ABField {
+      constructor() {
+         super("properties_abfield_textformula", {
+            textFormula: "",
+            formulaSuggest: "",
+         });
+      }
+
+      ui() {
+         const ids = this.ids;
+
+         return super.ui([
+            {
+               view: "layout",
+               cols: [
+                  {
+                     id: ids.textFormula,
+                     view: "textarea",
+                     // label: L("Text Formula"),
+                     name: "textFormula",
+                     editor: "text",
+                     labelWidth: uiConfig.labelWidthLarge,
+                     placeholder: L("Text Formula"),
+                  },
+                  { view: "spacer", width: 15 },
+                  {
+                     view: "layout",
+                     rows: [
+                        { view: "spacer", height: 5 },
+                        {
+                           id: ids.formulaSuggest,
+                           name: "formulaSuggest",
+                           view: "dataview",
+                           xCount: 1,
+                           // yCount: 2.8,
+                           // hidden: true,
+                           select: true,
+                           type: {
+                              height: 30,
+                              width: 246,
+                           },
+                           template: "#value#",
+                           on: {
+                              onItemClick: (id) => {
+                                 const item = $$(ids.formulaSuggest).getItem(
+                                    id
+                                 );
+                                 const inputSuggestString =
+                                    item.type == "field"
+                                       ? "{" + item.value + "}"
+                                       : item.value;
+                                 $$(ids.textFormula).setValue(
+                                    $$(ids.textFormula).getValue() +
+                                       inputSuggestString
+                                 );
+                                 $$(ids.formulaSuggest).unselect();
+                              },
+                           },
+                        },
+                        { view: "spacer", height: 5 },
+                     ],
+                  },
+               ],
+            },
+         ]);
+      }
+
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("TextFormula");
+      }
+      show() {
+         super.show();
+         this.loadSuggestions();
+      }
+
+      populate(field) {
+         super.populate(field);
+         this.loadSuggestions();
+      }
+
+      loadSuggestions() {
+         const ids = this.ids;
+         const FC = this.FieldClass();
+         // Load the object's fields
+         const fields = this.CurrentObject.fields()
+            .filter((field) => {
+               return (
+                  field.key != "formula" &&
+                  field.key != "TextFormula" &&
+                  !field.isConnection
+               );
+            })
+            .map((field) => {
+               return {
+                  id: field.id,
+                  value: field.columnName,
+                  type: "field",
+               };
             });
-        }
+         // Add the common options
+         const formulaData = fields.concat(FC.getBuildInFunction());
+         $$(ids.formulaSuggest).clearAll();
+         $$(ids.formulaSuggest).parse(formulaData);
+      }
+   }
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
-
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("TextFormula");
-        }
-    }
-
-    return ABFieldTextFormula;
+   return ABFieldTextFormula;
 }
+
 
 /***/ }),
 
@@ -4095,37 +5702,127 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   class ABFieldTree extends ABField {
+      constructor() {
+         super("properties_abfield_tree", {
+            options: "",
+            popup: "",
+            tree: "",
+         });
+      }
 
-    class ABFieldTree extends ABField {
-        constructor() {
-            super("properties_abfield_tree", {
-            });
-        }
+      ui() {
+         const ids = this.ids;
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+         return super.ui([
+            {
+               view: "button",
+               type: "icon",
+               icon: "fa fa-plus",
+               height: 30,
+               click: () => {
+                  const itemId = webix.uid().toString();
+                  $$(ids.options).data.add({
+                     id: itemId,
+                     text: "",
+                  });
+                  $$(ids.options).openAll();
+                  $$(ids.options).config.height =
+                     $$(ids.options).count() * 28 + 18; // Number of pages plus 9px of padding top and bottom
+                  $$(ids.options).resize();
+                  $$(ids.options).edit(itemId);
+               },
+            },
+            {
+               id: ids.options,
+               name: "options",
+               // css: "padList",
+               css: { background: "transparent" },
+               view: this.AB.custom.edittree.view,
+               template:
+                  "<div style='position: relative;'><i class='ab-new-field-add fa fa-plus' style='position: relative; right: 0px;'></i> #text#<i class='ab-new-field-remove fa fa-remove' style='position: absolute; top: 7px; right: 7px;'></i></div>",
+               autoheight: true,
+               drag: true,
+               editor: "text",
+               editable: true,
+               editValue: "text",
+               onClick: {
+                  "ab-new-field-remove": (e, itemId) => {
+                     // Remove option item
+                     $$(ids.options).remove(itemId);
+                     $$(ids.options).config.height = 0;
+                     $$(ids.options).config.height =
+                        $$(ids.options).count() * 28 + 18;
+                     // stop the default click action for this item
+                     return false;
+                  },
+                  "ab-new-field-add": (e, thisId) => {
+                     // Add option item
+                     const itemId = webix.uid().toString();
+                     const parentId = thisId.toString();
+                     $$(ids.options).data.add(
+                        {
+                           id: itemId,
+                           text: "",
+                        },
+                        null,
+                        parentId
+                     );
+                     $$(ids.options).openAll();
+                     $$(ids.options).config.height =
+                        $$(ids.options).count() * 28 + 18; // Number of pages plus 9px of padding top and bottom
+                     $$(ids.options).resize();
+                     $$(ids.options).edit(itemId);
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("tree");
-        }
-    }
+                     // stop the default click action for this item
+                     return false;
+                  },
+               },
+            },
+         ]);
+      }
 
-    return ABFieldTree;
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("tree");
+      }
+
+      clear() {
+         const ids = this.ids;
+         $$(ids.options).clearAll();
+         $$(ids.options).config.height = 0;
+         $$(ids.options).resize();
+         $$(ids.options).refresh();
+      }
+
+      values() {
+         // Get options list from UI, then set them to settings
+         const values = super.values();
+         values.settings.options = $$(this.ids.options).serialize();
+         return values;
+      }
+
+      populate(field) {
+         const ids = this.ids;
+         $$(ids.options).clearAll();
+         $$(ids.options).parse(field.settings.options);
+         $$(ids.options).openAll();
+         $$(ids.options).config.height = $$(ids.options).count() * 28 + 18; // Number of pages plus 9px of padding top and bottom
+         $$(ids.options).resize();
+         $$(ids.options).refresh();
+      }
+   }
+
+   return ABFieldTree;
 }
+
 
 /***/ }),
 
@@ -4149,37 +5846,96 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-    const uiConfig = AB.Config.uiSettings();
+   const uiConfig = AB.Config.uiSettings();
 
-    var ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-    var L = ABField.L();
+   const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABField.L();
 
-    class ABFieldUser extends ABField {
-        constructor() {
-            super("properties_abfield_user", {
-            });
-        }
+   class ABFieldUser extends ABField {
+      constructor() {
+         super("properties_abfield_user", {
+            editable: "",
+            isMultiple: "",
+            isCurrentUser: "",
+            isShowProfileImage: "",
+            isShowUsername: "",
+         });
+      }
 
-        ui() {
-            const FC = this.FieldClass();
-            const ids = this.ids;
-   
-            return super.ui([]);
-        }
+      ui() {
+         // const FC = this.FieldClass();
+         const ids = this.ids;
 
-        /**
-         * @method FieldClass()
-         * Call our Parent's _FieldClass() helper with the proper key to return
-         * the ABFieldXXX class represented by this Property Editor.
-         * @return {ABFieldXXX Class}
-         */
-        FieldClass() {
-            return super._FieldClass("user");
-        }
-    }
+         return super.ui([
+            {
+               view: "checkbox",
+               name: "isMultiple",
+               id: ids.isMultiple,
+               disallowEdit: true,
+               labelRight: L("Allow multiple users"),
+               labelWidth: uiConfig.labelWidthCheckbox,
+            },
+            {
+               cols: [
+                  {
+                     view: "checkbox",
+                     name: "isCurrentUser",
+                     id: ids.isCurrentUser,
+                     labelRight: L("Default value as current user"),
+                     labelWidth: uiConfig.labelWidthCheckbox,
+                     on: {
+                        onChange: function (newValue /*, oldValue*/) {
+                           if (newValue == 0) {
+                              $$(ids.editable).setValue(1);
+                              $$(ids.editable).hide();
+                           } else {
+                              $$(ids.editable).setValue(1);
+                              $$(ids.editable).show();
+                           }
+                        },
+                     },
+                  },
+                  {
+                     view: "checkbox",
+                     name: "editable",
+                     hidden: true,
+                     id: ids.editable,
+                     labelRight: L("Editable"),
+                     labelWidth: uiConfig.labelWidthCheckbox,
+                  },
+               ],
+            },
+            {
+               view: "checkbox",
+               name: "isShowProfileImage",
+               id: ids.isShowProfileImage,
+               labelRight: L("Show Profile Image"),
+               labelWidth: uiConfig.labelWidthCheckbox,
+            },
+            {
+               view: "checkbox",
+               name: "isShowUsername",
+               id: ids.isShowUsername,
+               labelRight: L("Show Username"),
+               labelWidth: uiConfig.labelWidthCheckbox,
+            },
+         ]);
+      }
 
-    return ABFieldUser;
+      /**
+       * @method FieldClass()
+       * Call our Parent's _FieldClass() helper with the proper key to return
+       * the ABFieldXXX class represented by this Property Editor.
+       * @return {ABFieldXXX Class}
+       */
+      FieldClass() {
+         return super._FieldClass("user");
+      }
+   }
+
+   return ABFieldUser;
 }
+
 
 /***/ }),
 
@@ -15772,9 +17528,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
 
-   var PropertyManager = (0,_properties_PropertyManager__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const PropertyManager = (0,_properties_PropertyManager__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Object_Workspace_PopupNewDataField extends UIClass {
       //.extend(idBase, function(App) {
@@ -15796,7 +17552,7 @@ __webpack_require__.r(__webpack_exports__);
             buttonBack: "",
          });
 
-         // var _objectHash = {}; // 'name' => ABFieldXXX object
+         // const _objectHash = {}; // 'name' => ABFieldXXX object
          this._componentHash = {};
          // {hash} { ABFieldXXX.default().menuname : PropertyEditor }
          // A hash of all the available Field Property Editors, accessible by
@@ -15819,7 +17575,7 @@ __webpack_require__.r(__webpack_exports__);
          // {PropertyEditor}
          // the default editor.  Usually the first one loaded.
 
-         // var defaultEditorID = null; // the default editor id.
+         // const defaultEditorID = null; // the default editor id.
 
          this.submenus = [];
          // {array}
@@ -15832,7 +17588,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          // Our webix UI definition:
          return {
@@ -16012,18 +17768,18 @@ __webpack_require__.r(__webpack_exports__);
          if (AB) {
             this.AB = AB;
          }
-         var ids = this.ids;
+         const ids = this.ids;
 
          // initialize our components
          webix.ui(this.ui());
          webix.extend($$(ids.component), webix.ProgressBar);
 
-         var Fields = PropertyManager.fields(); // ABFieldManager.allFields();
+         const Fields = PropertyManager.fields(); // ABFieldManager.allFields();
 
          //// we need to load a submenu entry and an editor definition for each
          //// of our Fields
 
-         var newEditorList = {
+         const newEditorList = {
             view: "multiview",
             id: ids.editDefinitions,
             animate: false,
@@ -16031,8 +17787,8 @@ __webpack_require__.r(__webpack_exports__);
          };
 
          Fields.forEach((F) => {
-            var menuName = F.defaults().menuName;
-            var key = F.defaults().key;
+            const menuName = F.defaults().menuName;
+            const key = F.defaults().key;
 
             const icon = F.defaults().icon;
 
@@ -16057,7 +17813,7 @@ __webpack_require__.r(__webpack_exports__);
 
          // the submenu button has a placeholder we need to remove and update
          // with one that has all our submenus in it.
-         // var firstID = $$(ids.types).getFirstId();
+         // const firstID = $$(ids.types).getFirstId();
          // $$(ids.types).updateItem(firstID, {
          //  value: labels.component.chooseType,
          //  submenu: submenus
@@ -16095,7 +17851,7 @@ __webpack_require__.r(__webpack_exports__);
          super.applicationLoad(application);
 
          // make sure all the Property components refer to this ABApplication
-         for (var menuName in this._componentHash) {
+         for (const menuName in this._componentHash) {
             this._componentHash[menuName]?.applicationLoad(application);
          }
       }
@@ -16104,7 +17860,7 @@ __webpack_require__.r(__webpack_exports__);
          super.objectLoad(object);
 
          // make sure all the Property components refer to this ABObject
-         for (var menuName in this._componentHash) {
+         for (const menuName in this._componentHash) {
             this._componentHash[menuName]?.objectLoad(object);
          }
       }
@@ -16147,28 +17903,28 @@ __webpack_require__.r(__webpack_exports__);
          this.addPopup();
 
          // clear all editors:
-         for (var c in this._componentHash) {
+         for (const c in this._componentHash) {
             this._componentHash[c].clear();
          }
       }
 
       async buttonSave() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          $$(ids.buttonSave).disable();
          // show progress
          $$(ids.component).showProgress();
 
-         var editor = this._currentEditor;
+         const editor = this._currentEditor;
          if (editor) {
             // the editor can define some basic form validations.
             if (editor.isValid()) {
-               var vals = this.AB.cloneDeep(editor.values());
+               const vals = this.AB.cloneDeep(editor.values());
 
-               var field = null;
-               var oldData = null;
+               let field = null;
+               let oldData = null;
 
-               var linkCol;
+               let linkCol;
 
                // if this is an ADD operation, (_editField will be undefined)
                if (!this._editField) {
@@ -16176,7 +17932,7 @@ __webpack_require__.r(__webpack_exports__);
                   field = this.CurrentObject.fieldNew(vals);
 
                   // Provide a default width based on the column label
-                  var width = 20 + field.label.length * 10;
+                  let width = 20 + field.label.length * 10;
                   if (field.settings.showIcon) {
                      width = width + 20;
                   }
@@ -16191,7 +17947,7 @@ __webpack_require__.r(__webpack_exports__);
                      let rand = Math.floor(Math.random() * 1000);
                      field.settings.isSource = 1;
 
-                     var linkObject = field.datasourceLink;
+                     const linkObject = field.datasourceLink;
 
                      // 1:1, 1:M, M:1 should have same column name
                      let linkColumnName = field.columnName;
@@ -16243,7 +17999,7 @@ __webpack_require__.r(__webpack_exports__);
                   oldData = this._editField.toObj();
 
                   // update changed values to old data
-                  var updateValues = this.AB.cloneDeep(oldData);
+                  const updateValues = this.AB.cloneDeep(oldData);
                   for (let key in vals) {
                      // update each values of .settings
                      if (
@@ -16268,7 +18024,7 @@ __webpack_require__.r(__webpack_exports__);
                   field = this._editField;
                }
 
-               var validator = field.isValid();
+               const validator = field.isValid();
                if (validator.fail()) {
                   validator.updateForm($$(editor.ids.component));
                   // OP.Form.isValidationError(errors, $$(editor.ui.id));
@@ -16345,7 +18101,7 @@ __webpack_require__.r(__webpack_exports__);
                      //    $$(ids.buttonSave).enable();
                      //    $$(ids.component).hideProgress();
                      // } else {
-                     //    var errMsg = err.toString();
+                     //    const errMsg = err.toString();
                      //    if (err.message) {
                      //       errMsg = err.message;
                      //    }
@@ -16382,7 +18138,7 @@ __webpack_require__.r(__webpack_exports__);
          // }
 
          // // Validate duplicate field name
-         // var existsColumn = $.grep(dataTable.config.columns, function (c) { return c.id == fieldInfo.name.replace(/ /g, '_'); });
+         // const existsColumn = $.grep(dataTable.config.columns, function (c) { return c.id == fieldInfo.name.replace(/ /g, '_'); });
          // if (existsColumn && existsColumn.length > 0 && !data.editFieldId) {
          //  webix.alert({
          //      title: labels.add_fields.duplicateFieldTitle,
@@ -16417,17 +18173,17 @@ __webpack_require__.r(__webpack_exports__);
          // show default editor:
          this.defaultEditorComponent.show(false, false);
          this._currentEditor = this.defaultEditorComponent;
-         var ids = this.ids;
+         const ids = this.ids;
 
          // allow add the connect field only to import object
          if (this.CurrentObject.isImported) allowFieldKey = "connectObject";
 
          if (allowFieldKey) {
-            var connectField = PropertyManager.fields().filter(
+            const connectField = PropertyManager.fields().filter(
                (f) => f.defaults().key == allowFieldKey
             )[0];
             if (!connectField) return;
-            var connectMenuName = connectField.defaults().menuName;
+            const connectMenuName = connectField.defaults().menuName;
             $$(ids.types).setValue(connectMenuName);
             $$(ids.chooseFieldType).disable();
          }
@@ -16448,7 +18204,7 @@ __webpack_require__.r(__webpack_exports__);
 
          // switch to this field's editor:
          // hide the rest
-         for (var c in this._componentsByType) {
+         for (const c in this._componentsByType) {
             if (c == field.key) {
                this._componentsByType[c].show(false, false);
                this._componentsByType[c].populate(field);
@@ -16460,9 +18216,9 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          // disable elements that disallow to edit
-         var elements = this._currentEditor.ui()?.elements;
+         const elements = this._currentEditor.ui()?.elements;
          if (elements) {
-            var disableElem = (elem) => {
+            const disableElem = (elem) => {
                if (elem.disallowEdit) {
                   $$(elem.id)?.disable?.();
                }
@@ -16473,7 +18229,7 @@ __webpack_require__.r(__webpack_exports__);
             //    disableElem(elem);
 
             //    // disable elements are in rows/cols
-            //    var childElems = elem.cols || elem.rows;
+            //    const childElems = elem.cols || elem.rows;
             //    if (childElems && childElems.forEach) {
             //       childElems.forEach((childElem) => {
             //          disableElem(childElem);
@@ -16501,10 +18257,11 @@ __webpack_require__.r(__webpack_exports__);
 
          // note, the submenu returns the Field.menuName() values.
          // we use that to lookup the Field here:
-         var editor = this._componentHash[name];
+         const editor = this._componentHash[name];
          if (editor) {
             editor.show();
             this._currentEditor = editor;
+            this._currentEditor["modeEdit"] = false;
             // $$(this.ids.types).blur();
          } else {
             // most likely they clicked on the menu button itself.
@@ -16515,9 +18272,9 @@ __webpack_require__.r(__webpack_exports__);
 
       resetState() {
          // enable elements that disallow to edit
-         var elements = this._currentEditor.ui()?.elements;
+         const elements = this._currentEditor.ui()?.elements;
          if (elements) {
-            var enableElem = (elem) => {
+            const enableElem = (elem) => {
                if (elem.disallowEdit) {
                   $$(elem.id)?.enable?.();
                }
@@ -16528,7 +18285,7 @@ __webpack_require__.r(__webpack_exports__);
             //    enableElem(elem);
 
             //    // enable elements are in rows/cols
-            //    var childElems = elem.cols || elem.rows;
+            //    const childElems = elem.cols || elem.rows;
             //    if (childElems && childElems.forEach) {
             //       childElems.forEach((childElem) => {
             //          enableElem(childElem);
@@ -16611,9 +18368,9 @@ __webpack_require__.r(__webpack_exports__);
          // (functional tests don't do .hover very well)
          // so this routine is to enable .click() to show the submenu.
 
-         var ids = this.ids;
+         const ids = this.ids;
 
-         var subMenuId = $$(ids.types).config.data[0].submenu;
+         let subMenuId = $$(ids.types).config.data[0].submenu;
 
          // #HACK Sub-menu popup does not render on initial
          // Force it to render popup by use .getSubMenu()

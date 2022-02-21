@@ -6,8 +6,8 @@
 import FFieldClass from "./ABField";
 
 export default function (AB) {
-   var ABField = FFieldClass(AB);
-   var L = ABField.L();
+   const ABField = FFieldClass(AB);
+   const L = ABField.L();
 
    class ABFieldFile extends ABField {
       constructor() {
@@ -67,14 +67,6 @@ export default function (AB) {
          ]);
       }
 
-      clear() {
-         const ids = this.ids;
-
-         super.clear();
-         $$(ids.fileSize).setValue(0);
-         $$(ids.fileType).setValue("");
-      }
-
       /**
        * @method FieldClass()
        * Call our Parent's _FieldClass() helper with the proper key to return
@@ -83,6 +75,14 @@ export default function (AB) {
        */
       FieldClass() {
          return super._FieldClass("file");
+      }
+
+      clear() {
+         const ids = this.ids;
+
+         super.clear();
+         $$(ids.fileSize).setValue(0);
+         $$(ids.fileType).setValue("");
       }
    }
 

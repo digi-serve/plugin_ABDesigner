@@ -119,14 +119,6 @@ export default function (AB) {
          return super._FieldClass("AutoIndex");
       }
 
-      isValid() {
-         const isValid = super.isValid();
-
-         // validator.addError('columnName', L('ab.validation.object.name.unique', 'Field columnName must be unique (#name# already used in this Application)').replace('#name#', this.name) );
-
-         return isValid;
-      }
-
       populate(field) {
          super.populate(field);
 

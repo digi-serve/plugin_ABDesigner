@@ -8,8 +8,8 @@ import FFieldClass from "./ABField";
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = FFieldClass(AB);
-   var L = ABField.L();
+   const ABField = FFieldClass(AB);
+   const L = ABField.L();
 
    class ABFieldFormula extends ABField {
       constructor() {

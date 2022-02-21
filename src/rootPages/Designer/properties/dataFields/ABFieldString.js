@@ -8,8 +8,8 @@ import FFieldClass from "./ABField";
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = FFieldClass(AB);
-   var L = ABField.L();
+   const ABField = FFieldClass(AB);
+   const L = ABField.L();
 
    class ABFieldStringProperty extends ABField {
       constructor() {
@@ -22,7 +22,7 @@ export default function (AB) {
       }
 
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
          return super.ui([
             // {
             //    view: "text",
@@ -125,7 +125,7 @@ export default function (AB) {
       }
 
       populate(field) {
-         var ids = this.ids;
+         const ids = this.ids;
          super.populate(field);
 
          if (field.settings.default === "") {

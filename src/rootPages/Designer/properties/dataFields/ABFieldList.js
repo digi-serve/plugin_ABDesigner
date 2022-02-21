@@ -8,8 +8,8 @@ import FFieldClass from "./ABField";
 export default function (AB) {
    // const uiConfig = AB.Config.uiSettings();
 
-   var ABField = FFieldClass(AB);
-   var L = ABField.L();
+   const ABField = FFieldClass(AB);
+   const L = ABField.L();
 
    const ABFieldSelectivity = AB.Class.ABFieldManager.fieldByKey("selectivity");
 
@@ -48,7 +48,7 @@ export default function (AB) {
       }
 
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          return super.ui([
             {
@@ -109,9 +109,11 @@ export default function (AB) {
                   "ab-new-field-remove": (e, itemId /*, trg */) => {
                      // Remove option item
                      // check that item is in saved data already
-                     var matches = (this._originalOptions || []).filter((x) => {
-                        return x.id == itemId;
-                     })[0];
+                     const matches = (this._originalOptions || []).filter(
+                        (x) => {
+                           return x.id == itemId;
+                        }
+                     )[0];
                      if (matches) {
                         // Ask the user if they want to remove option
                         webix
@@ -164,7 +166,9 @@ export default function (AB) {
                               top: 150,
                               on: {
                                  onSelect: (hex) => {
-                                    var vals = $$(ids.options).getItem(itemID);
+                                    const vals = $$(ids.options).getItem(
+                                       itemID
+                                    );
                                     vals.hex = hex;
                                     $$(ids.options).updateItem(itemID, vals);
                                     $$(ids.colorboard).hide();
@@ -244,7 +248,7 @@ export default function (AB) {
       }
 
       clear() {
-         var ids = this.ids;
+         const ids = this.ids;
          $$(ids.isMultiple).setValue(0);
          $$(ids.hasColors).setValue(0);
          $$(ids.options).clearAll();
@@ -252,7 +256,7 @@ export default function (AB) {
          $$(ids.default).define("options", []);
          $$(ids.default).setValue(this.FieldClass()?.defaultValues()?.default);
 
-         var domNode = $$(ids.multipleDefault).$view.querySelector(
+         const domNode = $$(ids.multipleDefault).$view.querySelector(
             ".list-data-values"
          );
          if (domNode && domNode.selectivity) {
@@ -271,18 +275,18 @@ export default function (AB) {
       }
 
       getNextHex() {
-         var usedColors = [];
+         const usedColors = [];
          $$(this.ids.options)?.data.each(function (item) {
             usedColors.push(item.hex);
          });
-         var allColors = [];
+         const allColors = [];
          this.colors.forEach((c) => {
             c?.forEach?.((j) => {
                allColors.push(j);
             });
          });
-         var newHex = "#3498db";
-         for (var i = 0; i < allColors.length; i++) {
+         let newHex = "#3498db";
+         for (let i = 0; i < allColors.length; i++) {
             if (usedColors.indexOf(allColors[i]) == -1) {
                newHex = allColors[i];
                break;
@@ -314,7 +318,7 @@ export default function (AB) {
                };
             });
          }
-         var $opts = $$(this.ids.options);
+         const $opts = $$(this.ids.options);
          $opts.parse(opts);
          $opts.refresh();
 
@@ -324,7 +328,7 @@ export default function (AB) {
       }
 
       toggleColorControl(value) {
-         var colorPickers = $$(this.ids.options)?.$view.querySelectorAll(
+         const colorPickers = $$(this.ids.options)?.$view.querySelectorAll(
             ".ab-color-picker"
          );
          colorPickers?.forEach(function (itm) {
@@ -334,10 +338,10 @@ export default function (AB) {
       }
 
       updateDefaultList() {
-         var ids = this.ids;
-         var settings = this._CurrentField?.settings;
+         const ids = this.ids;
+         const settings = this._CurrentField?.settings;
 
-         var optList = $$(ids.options)
+         const optList = $$(ids.options)
             .find({})
             .map(function (opt) {
                return {
@@ -349,7 +353,7 @@ export default function (AB) {
 
          if ($$(ids.isMultiple).getValue()) {
             // Multiple default selector
-            var domNode = $$(ids.multipleDefault).$view.querySelector(
+            const domNode = $$(ids.multipleDefault).$view.querySelector(
                ".list-data-values"
             );
             if (!domNode) return false;
@@ -426,9 +430,9 @@ export default function (AB) {
       // },
 
       values() {
-         var values = super.values();
+         const values = super.values();
 
-         var ids = this.ids;
+         const ids = this.ids;
 
          // Get options list from UI, then set them to settings
          values.settings.options = [];
@@ -460,7 +464,7 @@ export default function (AB) {
 
          // Set multiple default value
          values.settings.multipleDefault = [];
-         var domNode = $$(ids.multipleDefault).$view.querySelector(
+         const domNode = $$(ids.multipleDefault).$view.querySelector(
             ".list-data-values"
          );
          if (domNode && domNode.selectivity) {
