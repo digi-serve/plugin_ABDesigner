@@ -28,45 +28,63 @@ export default function (AB) {
 
          return super.ui([
             {
-               view: "richselect",
-               name: "type",
-               label: L("Type"),
-               labelWidth: uiConfig.labelWidthMedium,
-               value: "sum",
-               options: [
-                  { id: "sum", value: L("Sum") },
-                  { id: "max", value: L("Max") },
-                  { id: "min", value: L("Min") },
+               cols: [
                   {
-                     id: "average",
-                     value: L("Average"),
+                     view: "label",
+                     label: L("Type") + ": ",
+                     align: "right",
+                     width: 40,
                   },
                   {
-                     id: "count",
-                     value: L("Count"),
+                     view: "richselect",
+                     name: "type",
+                     labelWidth: uiConfig.labelWidthMedium,
+                     value: "sum",
+                     options: [
+                        { id: "sum", value: L("Sum") },
+                        { id: "max", value: L("Max") },
+                        { id: "min", value: L("Min") },
+                        {
+                           id: "average",
+                           value: L("Average"),
+                        },
+                        {
+                           id: "count",
+                           value: L("Count"),
+                        },
+                     ],
                   },
                ],
             },
             {
-               id: ids.field,
-               view: "richselect",
-               name: "field",
-               label: L("Field"),
-               labelWidth: uiConfig.labelWidthMedium,
-               options: {
-                  view: "suggest",
-                  body: {
-                     id: ids.fieldList,
-                     view: "list",
-                     template: this.itemTemplate,
-                     data: [],
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Field") + ": ",
+                     align: "right",
+                     width: 40,
                   },
-               },
-               on: {
-                  onChange: () => {
-                     this.refreshFilter();
+                  {
+                     id: ids.field,
+                     view: "richselect",
+                     name: "field",
+                     labelWidth: uiConfig.labelWidthMedium,
+                     options: {
+                        view: "suggest",
+                        body: {
+                           id: ids.fieldList,
+                           view: "list",
+                           template: this.itemTemplate,
+                           data: [],
+                        },
+                     },
+                     on: {
+                        onChange: () => {
+                           this.refreshFilter();
+                        },
+                     },
                   },
-               },
+               ],
             },
             this.rowFilter.ui,
          ]);
