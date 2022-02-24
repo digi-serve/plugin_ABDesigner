@@ -161,12 +161,25 @@ export default function (AB) {
 
          return super.ui([
             {
-               id: ids.formula,
-               name: "formula",
-               view: "textarea",
-               label: L("Equation"),
-               labelPosition: "top",
-               height: 150,
+               rows: [
+                  {
+                     cols: [
+                        {
+                           view: "label",
+                           label: L("Equation") + ": ",
+                           align: "left",
+                           width: 75,
+                        },
+                        {},
+                     ],
+                  },
+                  {
+                     id: ids.formula,
+                     name: "formula",
+                     view: "textarea",
+                     height: 100,
+                  },
+               ],
             },
             {
                rows: [
@@ -197,7 +210,6 @@ export default function (AB) {
                         },
                      ],
                   },
-
                   {
                      cols: [
                         {
@@ -215,41 +227,46 @@ export default function (AB) {
                         {},
                      ],
                   },
-
                   {
-                     view: "richselect",
-                     name: "decimalSign",
-                     label: L("Decimals"),
-                     value: "none",
-                     labelWidth: this.AB.UISettings.config().labelWidthXLarge,
-                     options: delimiterList,
-                     on: {
-                        onChange: function (newValue) {
-                           if (newValue == "none") {
-                              $$(ids.decimalPlaces).disable();
-                           } else {
-                              $$(ids.decimalPlaces).enable();
-                           }
+                     cols: [
+                        {
+                           view: "label",
+                           label: L("Decimals") + ": ",
+                           align: "right",
+                           width: 66.63,
                         },
-                     },
-                  },
-
-                  {
-                     view: "richselect",
-                     id: ids.decimalPlaces,
-                     name: "decimalPlaces",
-                     label: L("Places"),
-                     value: "none",
-                     labelWidth: this.AB.UISettings.config().labelWidthXLarge,
-                     disabled: true,
-                     options: [
-                        { id: "none", value: "0" },
-                        { id: 1, value: "1" },
-                        { id: 2, value: "2" },
-                        { id: 3, value: "3" },
-                        { id: 4, value: "4" },
-                        { id: 5, value: "5" },
-                        { id: 10, value: "10" },
+                        {
+                           view: "richselect",
+                           name: "decimalSign",
+                           value: "none",
+                           options: delimiterList,
+                           on: {
+                              onChange: (newValue) => {
+                                 if (newValue == "none") {
+                                    $$(ids.decimalPlaces).disable();
+                                 } else {
+                                    $$(ids.decimalPlaces).enable();
+                                 }
+                              },
+                           },
+                        },
+                        {
+                           view: "label",
+                           label: L("Places") + ": ",
+                           align: "right",
+                           width: 66.63,
+                        },
+                        {
+                           id: ids.decimalPlaces,
+                           view: "counter",
+                           name: "decimalPlaces",
+                           step: 1,
+                           value: 1,
+                           min: 1,
+                           max: 10,
+                           disabled: true,
+                           width: 104,
+                        },
                      ],
                   },
                ],
