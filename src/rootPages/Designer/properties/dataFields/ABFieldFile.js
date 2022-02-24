@@ -24,12 +24,16 @@ export default function (AB) {
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Size (MB)") + ": ",
+                     align: "right",
+                     width: 75,
+                  },
+                  {
                      view: "checkbox",
                      name: "limitFileSize",
-                     labelRight: L("Size (MB)"),
-                     width: 120,
-                     labelWidth: 0,
                      value: 1,
+                     width: 30,
                      click: function () {
                         if (this.getValue()) $$(ids.fileSize).enable();
                         else $$(ids.fileSize).disable();
@@ -39,16 +43,22 @@ export default function (AB) {
                      view: "counter",
                      name: "fileSize",
                      id: ids.fileSize,
+                     width: 104,
                   },
                ],
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Type") + ": ",
+                     align: "right",
+                     width: 75,
+                  },
+                  {
                      view: "checkbox",
                      name: "limitFileType",
-                     labelRight: L("Type"),
-                     width: 120,
+                     width: 30,
                      labelWidth: 0,
                      value: 1,
                      click: function () {
@@ -57,10 +67,10 @@ export default function (AB) {
                      },
                   },
                   {
+                     id: ids.fileType,
                      view: "text",
                      name: "fileType",
                      placeholder: L("txt,rtf,doc,docx,..."),
-                     id: ids.fileType,
                   },
                ],
             },
