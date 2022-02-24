@@ -15,6 +15,7 @@ export default function (AB) {
       constructor() {
          super("properties_abfield_email", {
             default: "",
+            defaultCheckbox: "",
          });
       }
 
@@ -23,14 +24,52 @@ export default function (AB) {
 
          return super.ui([
             {
-               view: "text",
-               id: ids.default,
-               name: "default",
-               labelWidth: uiConfig.labelWidthXLarge,
-               label: L("Default"),
-               placeholder: L("Enter default value"),
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default Value") + ": ",
+                     align: "right",
+                     width: 100,
+                  },
+                  {
+                     id: ids.defaultCheckbox,
+                     view: "checkbox",
+                     width: 30,
+                     value: 0,
+                     on: {
+                        onChange: (newv) => {
+                           this.checkboxDefaultValue(newv);
+                        },
+                        onAfterRender: () => {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+                  {
+                     view: "text",
+                     id: ids.default,
+                     name: "default",
+                     placeholder: L("Enter default value"),
+                     disabled: true,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
             },
          ]);
+      }
+
+      checkboxDefaultValue(state) {
+         if (state === 0) {
+            $$(this.ids.default).disable();
+            $$(this.ids.default).setValue("");
+         } else {
+            $$(this.ids.default).enable();
+         }
       }
 
       /**
@@ -63,6 +102,17 @@ export default function (AB) {
          } else isValid = true;
 
          return isValid;
+      }
+
+      populate(field) {
+         const ids = this.ids;
+         super.populate(field);
+
+         if (field.settings.default === "") {
+            $$(ids.defaultCheckbox).setValue(0);
+         } else {
+            $$(ids.defaultCheckbox).setValue(1);
+         }
       }
    }
 
