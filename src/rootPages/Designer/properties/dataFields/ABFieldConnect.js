@@ -40,22 +40,31 @@ export default function (AB) {
          const ids = this.ids;
          return super.ui([
             {
-               view: "richselect",
-               label: L("Connected to:"),
-               id: ids.linkObject,
-               disallowEdit: true,
-               name: "linkObject",
-               labelWidth: uiConfig.labelWidthLarge,
-               placeholder: L("Select object"),
-               options: [],
-               // select: true,
-               // height: 140,
-               // template: "<div class='ab-new-connectObject-list-item'>#label#</div>",
-               on: {
-                  onChange: (newV, oldV) => {
-                     this.selectObjectTo(newV, oldV);
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Connected to") + ": ",
+                     align: "right",
+                     width: 94,
                   },
-               },
+                  {
+                     id: ids.linkObject,
+                     view: "richselect",
+                     disallowEdit: true,
+                     name: "linkObject",
+                     labelWidth: uiConfig.labelWidthLarge,
+                     placeholder: L("Select object"),
+                     options: [],
+                     // select: true,
+                     // height: 140,
+                     // template: "<div class='ab-new-connectObject-list-item'>#label#</div>",
+                     on: {
+                        onChange: (newV, oldV) => {
+                           this.selectObjectTo(newV, oldV);
+                        },
+                     },
+                  },
+               ],
             },
             /*
             // NOTE: leave out of v2 until someone asks for it back.
