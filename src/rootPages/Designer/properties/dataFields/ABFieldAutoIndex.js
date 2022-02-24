@@ -6,8 +6,6 @@
 import FFieldClass from "./ABField";
 
 export default function (AB) {
-   const uiConfig = AB.Config.uiSettings();
-
    const ABField = FFieldClass(AB);
    const L = ABField.L();
 
@@ -28,56 +26,89 @@ export default function (AB) {
 
          return super.ui([
             {
-               id: ids.prefix,
-               view: "text",
-               name: "prefix",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Prefix"),
-               placeholder: L("US"),
-               on: {
-                  onChange: () => {
-                     this.previewChange();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Prefix") + ": ",
+                     align: "right",
+                     width: 75,
                   },
-               },
+                  {
+                     id: ids.prefix,
+                     view: "text",
+                     name: "prefix",
+                     placeholder: L("Prefix"),
+                     on: {
+                        onTimedKeyPress: () => {
+                           this.previewChange();
+                        },
+                     },
+                  },
+               ],
             },
             {
-               id: ids.delimiter,
-               view: "richselect",
-               name: "delimiter",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Delimiter"),
-               value: "dash",
-               options: FC.delimiterList(),
-               on: {
-                  onChange: () => {
-                     this.previewChange();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Delimiter") + ": ",
+                     align: "right",
+                     width: 75,
                   },
-               },
+                  {
+                     id: ids.delimiter,
+                     view: "richselect",
+                     name: "delimiter",
+                     value: "none",
+                     options: FC.delimiterList(),
+                     on: {
+                        onChange: () => {
+                           this.previewChange();
+                        },
+                     },
+                  },
+               ],
             },
             {
-               id: ids.displayLength,
-               view: "counter",
-               name: "displayLength",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Length"),
-               step: 1,
-               value: 4,
-               min: 1,
-               max: 10,
-               on: {
-                  onChange: () => {
-                     this.previewChange();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Length") + ": ",
+                     align: "right",
+                     width: 75,
                   },
-               },
+                  {
+                     id: ids.displayLength,
+                     view: "counter",
+                     name: "displayLength",
+                     step: 1,
+                     value: 4,
+                     min: 1,
+                     max: 10,
+                     width: 104,
+                     on: {
+                        onChange: () => {
+                           this.previewChange();
+                        },
+                     },
+                  },
+               ],
             },
             {
-               id: ids.previewText,
-               view: "text",
-               name: "previewText",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Preview"),
-               value: "-0000",
-               disabled: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Preview") + ": ",
+                     align: "right",
+                     width: 75,
+                  },
+                  {
+                     id: ids.previewText,
+                     view: "text",
+                     name: "previewText",
+                     value: "0000",
+                     disabled: true,
+                  },
+               ],
             },
             // {
             // 	id: ids.currentIndex,
@@ -106,6 +137,7 @@ export default function (AB) {
             $$(ids.displayLength).getValue(),
             0
          );
+
          $$(ids.previewText).setValue(previewResult);
       }
 
