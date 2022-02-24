@@ -24,26 +24,44 @@ export default function (AB) {
 
          return super.ui([
             {
-               id: ids.combinedFields,
-               name: "combinedFields",
-               view: "multicombo",
-               label: L("Combined Fields"),
-               labelWidth: uiConfig.labelWidthXLarge,
-               disallowEdit: true,
-               options: [],
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Combined Fields") + ": ",
+                     align: "right",
+                     width: 125,
+                  },
+                  {
+                     id: ids.combinedFields,
+                     name: "combinedFields",
+                     view: "multicombo",
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     disallowEdit: true,
+                     options: [],
+                  },
+               ],
             },
             {
-               view: "richselect",
-               name: "delimiter",
-               label: L("Delimiter"),
-               value: FC.defaultValues().delimiter,
-               labelWidth: uiConfig.labelWidthXLarge,
-               disallowEdit: true,
-               options: [
-                  { id: "plus", value: L("Plus ( + )") },
-                  { id: "dash", value: L("Dash ( - )") },
-                  { id: "period", value: L("Period ( . )") },
-                  { id: "space", value: L("Space ( )") },
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Delimiter") + ": ",
+                     align: "right",
+                     width: 125,
+                  },
+                  {
+                     view: "richselect",
+                     name: "delimiter",
+                     value: FC.defaultValues().delimiter,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     disallowEdit: true,
+                     options: [
+                        { id: "plus", value: L("Plus ( + )") },
+                        { id: "dash", value: L("Dash ( - )") },
+                        { id: "period", value: L("Period ( . )") },
+                        { id: "space", value: L("Space ( )") },
+                     ],
+                  },
                ],
             },
          ]);
