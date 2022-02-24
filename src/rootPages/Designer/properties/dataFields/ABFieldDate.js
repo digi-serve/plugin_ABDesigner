@@ -30,8 +30,9 @@ export default function (AB) {
             validateRangeBeforeLabel: "",
             validateRangeAfterLabel: "",
 
-            validateStartDate: "",
-            validateEndDate: "",
+            validateStartDateContainer: "",
+            validateStartDateContainerLabel: "",
+            validateEndDateContainer: "",
          });
       }
 
@@ -40,32 +41,44 @@ export default function (AB) {
 
          return super.ui([
             {
-               view: "richselect",
-               name: "dateFormat",
-               id: ids.dateFormat,
-               label: L("Date Format"),
-               labelWidth: 110,
-               value: 2,
-               options: [
-                  { id: 2, value: "dd/mm/yyyy" },
-                  { id: 3, value: "mm/dd/yyyy" },
-                  { id: 4, value: "M D, yyyy" },
-                  { id: 5, value: "D M, yyyy" },
-               ],
-               on: {
-                  onChange: () => {
-                     this.refreshDateValue();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Date Format") + ": ",
+                     align: "right",
+                     width: 88,
                   },
-               },
+                  {
+                     view: "richselect",
+                     name: "dateFormat",
+                     id: ids.dateFormat,
+                     value: 2,
+                     options: [
+                        { id: 2, value: "dd/mm/yyyy" },
+                        { id: 3, value: "mm/dd/yyyy" },
+                        { id: 4, value: "M D, yyyy" },
+                        { id: 5, value: "D M, yyyy" },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.refreshDateValue();
+                        },
+                     },
+                  },
+               ],
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Default") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
                      view: "richselect",
                      name: "defaultDate",
                      id: ids.defaultDate,
-                     label: L("Default"),
-                     labelWidth: 110,
                      value: 1,
                      options: [
                         { id: 1, value: L("None") },
@@ -96,125 +109,150 @@ export default function (AB) {
             // Validator
             {
                view: "label",
-               label: L("Validation criteria:"),
+               label: L("Validation criteria") + ": ",
+               width: 123,
                css: "ab-text-bold",
             },
             {
-               id: ids.validateCondition,
-               view: "select",
-               name: "validateCondition",
-               label: L("Condition"),
-               labelWidth: 100,
-               value: "none",
-               options: [
-                  { id: "none", value: L("None") },
+               cols: [
                   {
-                     id: "dateRange",
-                     value: L("Range"),
+                     view: "label",
+                     label: L("Condition") + ": ",
+                     align: "right",
+                     width: 88,
+                     css: "ab-text-bold",
                   },
                   {
-                     id: "between",
-                     value: L("Between"),
-                  },
-                  {
-                     id: "notBetween",
-                     value: L("Not between"),
-                  },
-                  {
-                     id: "=",
-                     value: L("Equal to"),
-                  },
-                  {
-                     id: "<>",
-                     value: L("Not equal to"),
-                  },
-                  {
-                     id: ">",
-                     value: L("Greater than"),
-                  },
-                  {
-                     id: "<",
-                     value: L("Less than"),
-                  },
-                  {
-                     id: ">=",
-                     value: L("Greater than or Equal to"),
-                  },
-                  {
-                     id: "<=",
-                     value: L("Less than or Equal to"),
+                     id: ids.validateCondition,
+                     view: "select",
+                     name: "validateCondition",
+                     value: "none",
+                     options: [
+                        { id: "none", value: L("None") },
+                        {
+                           id: "dateRange",
+                           value: L("Range"),
+                        },
+                        {
+                           id: "between",
+                           value: L("Between"),
+                        },
+                        {
+                           id: "notBetween",
+                           value: L("Not between"),
+                        },
+                        {
+                           id: "=",
+                           value: L("Equal to"),
+                        },
+                        {
+                           id: "<>",
+                           value: L("Not equal to"),
+                        },
+                        {
+                           id: ">",
+                           value: L("Greater than"),
+                        },
+                        {
+                           id: "<",
+                           value: L("Less than"),
+                        },
+                        {
+                           id: ">=",
+                           value: L("Greater than or Equal to"),
+                        },
+                        {
+                           id: "<=",
+                           value: L("Less than or Equal to"),
+                        },
+                     ],
+                     on: {
+                        onChange: (newVal) => {
+                           switch (newVal) {
+                              case "none":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainer).hide();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                              case "dateRange":
+                                 $$(ids.validateRange).show();
+                                 $$(ids.validateStartDateContainer).hide();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                              case "between":
+                              case "notBetween":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainerLabel).define(
+                                    "label",
+                                    L("Start Date") + ": "
+                                 );
+                                 $$(
+                                    ids.validateStartDateContainerLabel
+                                 ).refresh();
+                                 $$(ids.validateStartDateContainer).show();
+                                 $$(ids.validateEndDateContainer).show();
+                                 break;
+                              case "=":
+                              case "<>":
+                              case ">":
+                              case "<":
+                              case ">=":
+                              case "<=":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainerLabel).define(
+                                    "label",
+                                    L("Date") + ": "
+                                 );
+                                 $$(
+                                    ids.validateStartDateContainerLabel
+                                 ).refresh();
+                                 $$(ids.validateStartDateContainer).show();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                           }
+                        },
+                     },
                   },
                ],
-               on: {
-                  onChange: (newVal) => {
-                     switch (newVal) {
-                        case "none":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).hide();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                        case "dateRange":
-                           $$(ids.validateRange).show();
-                           $$(ids.validateStartDate).hide();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                        case "between":
-                        case "notBetween":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).define(
-                              "label",
-                              "Start Date"
-                           );
-                           $$(ids.validateStartDate).refresh();
-                           $$(ids.validateStartDate).show();
-                           $$(ids.validateEndDate).show();
-                           break;
-                        case "=":
-                        case "<>":
-                        case ">":
-                        case "<":
-                        case ">=":
-                        case "<=":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).define("label", "Date");
-                           $$(ids.validateStartDate).refresh();
-                           $$(ids.validateStartDate).show();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                     }
-                  },
-               },
             },
             {
                id: ids.validateRange,
                hidden: true,
                rows: [
                   {
-                     id: ids.validateRangeUnit,
-                     view: "select",
-                     name: "validateRangeUnit",
-                     label: L("Unit"),
-                     labelWidth: 100,
-                     options: [
+                     cols: [
                         {
-                           id: "days",
-                           value: L("Days"),
+                           view: "label",
+                           label: L("Unit") + ": ",
+                           align: "right",
+                           width: 88,
                         },
                         {
-                           id: "months",
-                           value: L("Months"),
-                        },
-                        {
-                           id: "years",
-                           value: L("Years"),
+                           id: ids.validateRangeUnit,
+                           view: "select",
+                           name: "validateRangeUnit",
+                           options: [
+                              {
+                                 id: "days",
+                                 value: L("Days"),
+                              },
+                              {
+                                 id: "months",
+                                 value: L("Months"),
+                              },
+                              {
+                                 id: "years",
+                                 value: L("Years"),
+                              },
+                           ],
+                           on: {
+                              onChange: () => {
+                                 $$(ids.validateRangeBeforeLabel).refresh();
+                                 $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                           },
                         },
                      ],
-                     on: {
-                        onChange: () => {
-                           $$(ids.validateRangeBeforeLabel).refresh();
-                           $$(ids.validateRangeAfterLabel).refresh();
-                        },
-                     },
                   },
                   {
                      cols: [
@@ -294,20 +332,37 @@ export default function (AB) {
                ],
             },
             {
-               id: ids.validateStartDate,
-               name: "validateStartDate",
-               view: "datepicker",
-               label: L("Start Date"),
-               labelWidth: 100,
+               id: ids.validateStartDateContainer,
                hidden: true,
+               cols: [
+                  {
+                     id: ids.validateStartDateContainerLabel,
+                     view: "label",
+                     label: L("Start Date") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
+                     name: "validateStartDate",
+                     view: "datepicker",
+                  },
+               ],
             },
             {
-               id: ids.validateEndDate,
-               name: "validateEndDate",
-               view: "datepicker",
-               label: L("End Date"),
-               labelWidth: 100,
+               id: ids.validateEndDateContainer,
                hidden: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("End Date") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
+                     name: "validateEndDate",
+                     view: "datepicker",
+                  },
+               ],
             },
          ]);
       }
