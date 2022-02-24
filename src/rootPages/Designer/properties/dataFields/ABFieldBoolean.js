@@ -11,31 +11,45 @@ export default function (AB) {
 
    class ABFieldBoolean extends ABField {
       constructor() {
-         super("properties_abfield_boolean", {});
+         super("properties_abfield_boolean", {
+            checkBoxLabel: "",
+         });
       }
 
       ui() {
+         const ids = this.ids;
          return super.ui([
             {
-               name: "default",
-               view: "checkbox",
-               label: L("Default"),
-               labelPosition: "left",
-               labelWidth: 70,
-               labelRight: L("Uncheck"),
-               css: "webix_table_checkbox",
-               on: {
-                  onChange: function (newVal) {
-                     let checkLabel = L("Check");
-                     let uncheckLabel = L("Uncheck");
-
-                     this.define(
-                        "labelRight",
-                        newVal ? checkLabel : uncheckLabel
-                     );
-                     this.refresh();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default") + ": ",
+                     align: "right",
+                     width: 65,
                   },
-               },
+                  {
+                     name: "default",
+                     view: "checkbox",
+                     css: "webix_table_checkbox",
+                     width: 30,
+                     on: {
+                        onChange: (newVal) => {
+                           let checkLabel = L("Check");
+                           let uncheckLabel = L("Uncheck");
+
+                           $$(ids.checkBoxLabel).setValue(
+                              newVal ? checkLabel : uncheckLabel
+                           );
+                        },
+                     },
+                  },
+                  {
+                     id: ids.checkBoxLabel,
+                     view: "label",
+                     label: L("Uncheck"),
+                     width: 60,
+                  },
+               ],
             },
          ]);
       }
