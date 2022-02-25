@@ -90,7 +90,7 @@ export default function (AB) {
             },
             {
                view: "label",
-               label: `<b>${L("Options")}</b>`,
+               label: `<b>${L("Options")}</b>: `,
             },
             {
                id: ids.options,
@@ -219,11 +219,19 @@ export default function (AB) {
                },
             },
             {
-               id: ids.default,
-               placeholder: L("Select Default"),
-               name: "default",
-               view: "richselect",
-               label: L("Default"),
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default") + ": ",
+                     width: 55,
+                  },
+                  {
+                     id: ids.default,
+                     placeholder: L("Select Default"),
+                     name: "default",
+                     view: "richselect",
+                  },
+               ],
             },
             {
                id: ids.multipleDefault,
