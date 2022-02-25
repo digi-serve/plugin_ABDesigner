@@ -14,6 +14,7 @@ export default function (AB) {
          super("properties_abfield_image", {
             imageWidth: "",
             imageHeight: "",
+            imageContainer: "",
             defaultImageUrl: "",
 
             useWidth: "",
@@ -29,12 +30,16 @@ export default function (AB) {
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Width") + ": ",
+                     align: "right",
+                     width: 60,
+                  },
+                  {
                      id: ids.useWidth,
                      view: "checkbox",
                      name: "useWidth",
-                     labelRight: L("Width"),
-                     width: 80,
-                     labelWidth: 0,
+                     width: 30,
                      value: 1,
                      click: function () {
                         if (this.getValue()) $$(ids.imageWidth).enable();
@@ -42,22 +47,25 @@ export default function (AB) {
                      },
                   },
                   {
+                     id: ids.imageWidth,
                      view: "text",
                      name: "imageWidth",
-                     id: ids.imageWidth,
                   },
                ],
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Height") + ": ",
+                     align: "right",
+                     width: 60,
+                  },
+                  {
                      id: ids.useHeight,
                      view: "checkbox",
                      name: "useHeight",
-                     // id:componentIds.useHeight,
-                     labelRight: L("Height"),
-                     width: 80,
-                     labelWidth: 0,
+                     width: 30,
                      value: 1,
                      click: function () {
                         if (this.getValue()) $$(ids.imageHeight).enable();
@@ -74,39 +82,51 @@ export default function (AB) {
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Default image") + ": ",
+                     align: "right",
+                     width: 100,
+                  },
+                  {
                      id: ids.useDefaultImage,
                      view: "checkbox",
                      name: "useDefaultImage",
-                     labelRight: L("Default image"),
-                     width: 200,
-                     labelWidth: 0,
                      value: 0,
                      click: function () {
-                        if (this.getValue()) $$(ids.defaultImageUrl).enable();
-                        else $$(ids.defaultImageUrl).disable();
+                        if (this.getValue()) $$(ids.imageContainer).enable();
+                        else $$(ids.imageContainer).disable();
                      },
                   },
-
+               ],
+            },
+            {
+               id: ids.imageContainer,
+               disabled: true,
+               cols: [
+                  {},
                   {
                      view: "uploader",
                      id: ids.defaultImageUrl,
                      template:
+                        '<div style="text-align:center; font-size: 30px;">' +
                         '<div class="default-image-holder">' +
                         '<div class="image-data-field-icon">' +
                         '<i class="fa fa-picture-o fa-2x"></i>' +
-                        `<div>${L("Drag and drop or click here")}</div>` +
+                        `<div style="font-size: 15px;">${L(
+                           "Drag and drop or click here"
+                        )}</div>` +
                         "</div>" +
                         '<div class="image-data-field-image" style="display:none;">' +
                         '<a style="" class="ab-delete-photo" href="javascript:void(0);"><i class="fa fa-times delete-image" style="display:none;"></i></a>' +
+                        "</div>" +
                         "</div>" +
                         "</div>",
                      apiOnly: true,
                      inputName: "file",
                      multiple: false,
-                     disabled: true,
                      name: "defaultImageUrl",
-                     height: 150,
-                     width: 100,
+                     height: 105,
+                     width: 150,
                      on: {
                         // when a file is added to the uploader
                         onBeforeFileAdd: function (item) {
@@ -129,7 +149,6 @@ export default function (AB) {
                               return false;
                            }
                         },
-
                         // if an error was returned
                         onFileUploadError: function (item, response) {
                            AB.notify.developer(
@@ -142,6 +161,7 @@ export default function (AB) {
                         },
                      },
                   },
+                  {},
                ],
             },
          ]);
@@ -175,7 +195,7 @@ export default function (AB) {
          super.populate(field);
 
          if (field.settings.useDefaultImage) {
-            uploader.enable();
+            $$(ids.imageContainer).enable();
          }
 
          if (value && isUseDefaultImage) {
