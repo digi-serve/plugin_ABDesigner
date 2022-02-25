@@ -1163,8 +1163,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const uiConfig = AB.Config.uiSettings();
-
    const ABField = (0,_ABField__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const L = ABField.L();
 
@@ -1185,56 +1183,89 @@ __webpack_require__.r(__webpack_exports__);
 
          return super.ui([
             {
-               id: ids.prefix,
-               view: "text",
-               name: "prefix",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Prefix"),
-               placeholder: L("US"),
-               on: {
-                  onChange: () => {
-                     this.previewChange();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Prefix") + ": ",
+                     align: "right",
+                     width: 75,
                   },
-               },
+                  {
+                     id: ids.prefix,
+                     view: "text",
+                     name: "prefix",
+                     placeholder: L("Prefix"),
+                     on: {
+                        onTimedKeyPress: () => {
+                           this.previewChange();
+                        },
+                     },
+                  },
+               ],
             },
             {
-               id: ids.delimiter,
-               view: "richselect",
-               name: "delimiter",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Delimiter"),
-               value: "dash",
-               options: FC.delimiterList(),
-               on: {
-                  onChange: () => {
-                     this.previewChange();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Delimiter") + ": ",
+                     align: "right",
+                     width: 75,
                   },
-               },
+                  {
+                     id: ids.delimiter,
+                     view: "richselect",
+                     name: "delimiter",
+                     value: "none",
+                     options: FC.delimiterList(),
+                     on: {
+                        onChange: () => {
+                           this.previewChange();
+                        },
+                     },
+                  },
+               ],
             },
             {
-               id: ids.displayLength,
-               view: "counter",
-               name: "displayLength",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Length"),
-               step: 1,
-               value: 4,
-               min: 1,
-               max: 10,
-               on: {
-                  onChange: () => {
-                     this.previewChange();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Length") + ": ",
+                     align: "right",
+                     width: 75,
                   },
-               },
+                  {
+                     id: ids.displayLength,
+                     view: "counter",
+                     name: "displayLength",
+                     step: 1,
+                     value: 4,
+                     min: 1,
+                     max: 10,
+                     width: 104,
+                     on: {
+                        onChange: () => {
+                           this.previewChange();
+                        },
+                     },
+                  },
+               ],
             },
             {
-               id: ids.previewText,
-               view: "text",
-               name: "previewText",
-               labelWidth: uiConfig.labelWidthLarge,
-               label: L("Preview"),
-               value: "-0000",
-               disabled: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Preview") + ": ",
+                     align: "right",
+                     width: 75,
+                  },
+                  {
+                     id: ids.previewText,
+                     view: "text",
+                     name: "previewText",
+                     value: "0000",
+                     disabled: true,
+                  },
+               ],
             },
             // {
             // 	id: ids.currentIndex,
@@ -1263,6 +1294,7 @@ __webpack_require__.r(__webpack_exports__);
             $$(ids.displayLength).getValue(),
             0
          );
+
          $$(ids.previewText).setValue(previewResult);
       }
 
@@ -1313,31 +1345,47 @@ __webpack_require__.r(__webpack_exports__);
 
    class ABFieldBoolean extends ABField {
       constructor() {
-         super("properties_abfield_boolean", {});
+         super("properties_abfield_boolean", {
+            checkBoxLabel: "",
+            default: "",
+         });
       }
 
       ui() {
+         const ids = this.ids;
          return super.ui([
             {
-               name: "default",
-               view: "checkbox",
-               label: L("Default"),
-               labelPosition: "left",
-               labelWidth: 70,
-               labelRight: L("Uncheck"),
-               css: "webix_table_checkbox",
-               on: {
-                  onChange: function (newVal) {
-                     let checkLabel = L("Check");
-                     let uncheckLabel = L("Uncheck");
-
-                     this.define(
-                        "labelRight",
-                        newVal ? checkLabel : uncheckLabel
-                     );
-                     this.refresh();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default") + ": ",
+                     align: "right",
+                     width: 65,
                   },
-               },
+                  {
+                     id: ids.default,
+                     name: "default",
+                     view: "checkbox",
+                     css: "webix_table_checkbox",
+                     width: 30,
+                     on: {
+                        onChange: (newVal) => {
+                           let checkLabel = L("Check");
+                           let uncheckLabel = L("Uncheck");
+
+                           $$(ids.checkBoxLabel).setValue(
+                              newVal ? checkLabel : uncheckLabel
+                           );
+                        },
+                     },
+                  },
+                  {
+                     id: ids.checkBoxLabel,
+                     view: "label",
+                     label: L("Uncheck"),
+                     width: 60,
+                  },
+               ],
             },
          ]);
       }
@@ -1396,6 +1444,7 @@ __webpack_require__.r(__webpack_exports__);
             dateOperatorPopup: "",
             dateFieldList: "",
 
+            decimalSign: "",
             decimalPlaces: "",
          });
       }
@@ -1534,12 +1583,25 @@ __webpack_require__.r(__webpack_exports__);
 
          return super.ui([
             {
-               id: ids.formula,
-               name: "formula",
-               view: "textarea",
-               label: L("Equation"),
-               labelPosition: "top",
-               height: 150,
+               rows: [
+                  {
+                     cols: [
+                        {
+                           view: "label",
+                           label: L("Equation") + ": ",
+                           align: "left",
+                           width: 75,
+                        },
+                        {},
+                     ],
+                  },
+                  {
+                     id: ids.formula,
+                     name: "formula",
+                     view: "textarea",
+                     height: 100,
+                  },
+               ],
             },
             {
                rows: [
@@ -1570,7 +1632,6 @@ __webpack_require__.r(__webpack_exports__);
                         },
                      ],
                   },
-
                   {
                      cols: [
                         {
@@ -1588,41 +1649,47 @@ __webpack_require__.r(__webpack_exports__);
                         {},
                      ],
                   },
-
                   {
-                     view: "richselect",
-                     name: "decimalSign",
-                     label: L("Decimals"),
-                     value: "none",
-                     labelWidth: this.AB.UISettings.config().labelWidthXLarge,
-                     options: delimiterList,
-                     on: {
-                        onChange: function (newValue) {
-                           if (newValue == "none") {
-                              $$(ids.decimalPlaces).disable();
-                           } else {
-                              $$(ids.decimalPlaces).enable();
-                           }
+                     cols: [
+                        {
+                           view: "label",
+                           label: L("Decimals") + ": ",
+                           align: "right",
+                           width: 66.63,
                         },
-                     },
-                  },
-
-                  {
-                     view: "richselect",
-                     id: ids.decimalPlaces,
-                     name: "decimalPlaces",
-                     label: L("Places"),
-                     value: "none",
-                     labelWidth: this.AB.UISettings.config().labelWidthXLarge,
-                     disabled: true,
-                     options: [
-                        { id: "none", value: "0" },
-                        { id: 1, value: "1" },
-                        { id: 2, value: "2" },
-                        { id: 3, value: "3" },
-                        { id: 4, value: "4" },
-                        { id: 5, value: "5" },
-                        { id: 10, value: "10" },
+                        {
+                           id: ids.decimalSign,
+                           view: "richselect",
+                           name: "decimalSign",
+                           value: "none",
+                           options: delimiterList,
+                           on: {
+                              onChange: (newValue) => {
+                                 if (newValue == "none") {
+                                    $$(ids.decimalPlaces).disable();
+                                 } else {
+                                    $$(ids.decimalPlaces).enable();
+                                 }
+                              },
+                           },
+                        },
+                        {
+                           view: "label",
+                           label: L("Places") + ": ",
+                           align: "right",
+                           width: 66.63,
+                        },
+                        {
+                           id: ids.decimalPlaces,
+                           view: "counter",
+                           name: "decimalPlaces",
+                           step: 1,
+                           value: 1,
+                           min: 1,
+                           max: 10,
+                           disabled: true,
+                           width: 104,
+                        },
                      ],
                   },
                ],
@@ -1829,6 +1896,7 @@ __webpack_require__.r(__webpack_exports__);
       constructor() {
          super("properties_abfield_combine", {
             combinedFields: "",
+            delimiter: "plus",
          });
       }
 
@@ -1838,26 +1906,45 @@ __webpack_require__.r(__webpack_exports__);
 
          return super.ui([
             {
-               id: ids.combinedFields,
-               name: "combinedFields",
-               view: "multicombo",
-               label: L("Combined Fields"),
-               labelWidth: uiConfig.labelWidthXLarge,
-               disallowEdit: true,
-               options: [],
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Combined Fields") + ": ",
+                     align: "right",
+                     width: 125,
+                  },
+                  {
+                     id: ids.combinedFields,
+                     name: "combinedFields",
+                     view: "multicombo",
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     disallowEdit: true,
+                     options: [],
+                  },
+               ],
             },
             {
-               view: "richselect",
-               name: "delimiter",
-               label: L("Delimiter"),
-               value: FC.defaultValues().delimiter,
-               labelWidth: uiConfig.labelWidthXLarge,
-               disallowEdit: true,
-               options: [
-                  { id: "plus", value: L("Plus ( + )") },
-                  { id: "dash", value: L("Dash ( - )") },
-                  { id: "period", value: L("Period ( . )") },
-                  { id: "space", value: L("Space ( )") },
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Delimiter") + ": ",
+                     align: "right",
+                     width: 125,
+                  },
+                  {
+                     id: ids.delimiter,
+                     view: "richselect",
+                     name: "delimiter",
+                     value: FC.defaultValues().delimiter,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     disallowEdit: true,
+                     options: [
+                        { id: "plus", value: L("Plus ( + )") },
+                        { id: "dash", value: L("Dash ( - )") },
+                        { id: "period", value: L("Period ( . )") },
+                        { id: "space", value: L("Space ( )") },
+                     ],
+                  },
                ],
             },
          ]);
@@ -1975,22 +2062,31 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
          return super.ui([
             {
-               view: "richselect",
-               label: L("Connected to:"),
-               id: ids.linkObject,
-               disallowEdit: true,
-               name: "linkObject",
-               labelWidth: uiConfig.labelWidthLarge,
-               placeholder: L("Select object"),
-               options: [],
-               // select: true,
-               // height: 140,
-               // template: "<div class='ab-new-connectObject-list-item'>#label#</div>",
-               on: {
-                  onChange: (newV, oldV) => {
-                     this.selectObjectTo(newV, oldV);
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Connected to") + ": ",
+                     align: "right",
+                     width: 94,
                   },
-               },
+                  {
+                     id: ids.linkObject,
+                     view: "richselect",
+                     disallowEdit: true,
+                     name: "linkObject",
+                     labelWidth: uiConfig.labelWidthLarge,
+                     placeholder: L("Select object"),
+                     options: [],
+                     // select: true,
+                     // height: 140,
+                     // template: "<div class='ab-new-connectObject-list-item'>#label#</div>",
+                     on: {
+                        onChange: (newV, oldV) => {
+                           this.selectObjectTo(newV, oldV);
+                        },
+                     },
+                  },
+               ],
             },
             /*
             // NOTE: leave out of v2 until someone asks for it back.
@@ -2538,8 +2634,9 @@ __webpack_require__.r(__webpack_exports__);
             validateRangeBeforeLabel: "",
             validateRangeAfterLabel: "",
 
-            validateStartDate: "",
-            validateEndDate: "",
+            validateStartDateContainer: "",
+            validateStartDateContainerLabel: "",
+            validateEndDateContainer: "",
          });
       }
 
@@ -2548,32 +2645,44 @@ __webpack_require__.r(__webpack_exports__);
 
          return super.ui([
             {
-               view: "richselect",
-               name: "dateFormat",
-               id: ids.dateFormat,
-               label: L("Date Format"),
-               labelWidth: 110,
-               value: 2,
-               options: [
-                  { id: 2, value: "dd/mm/yyyy" },
-                  { id: 3, value: "mm/dd/yyyy" },
-                  { id: 4, value: "M D, yyyy" },
-                  { id: 5, value: "D M, yyyy" },
-               ],
-               on: {
-                  onChange: () => {
-                     this.refreshDateValue();
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Date Format") + ": ",
+                     align: "right",
+                     width: 88,
                   },
-               },
+                  {
+                     view: "richselect",
+                     name: "dateFormat",
+                     id: ids.dateFormat,
+                     value: 2,
+                     options: [
+                        { id: 2, value: "dd/mm/yyyy" },
+                        { id: 3, value: "mm/dd/yyyy" },
+                        { id: 4, value: "M D, yyyy" },
+                        { id: 5, value: "D M, yyyy" },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.refreshDateValue();
+                        },
+                     },
+                  },
+               ],
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Default") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
                      view: "richselect",
                      name: "defaultDate",
                      id: ids.defaultDate,
-                     label: L("Default"),
-                     labelWidth: 110,
                      value: 1,
                      options: [
                         { id: 1, value: L("None") },
@@ -2604,125 +2713,150 @@ __webpack_require__.r(__webpack_exports__);
             // Validator
             {
                view: "label",
-               label: L("Validation criteria:"),
+               label: L("Validation criteria") + ": ",
+               width: 123,
                css: "ab-text-bold",
             },
             {
-               id: ids.validateCondition,
-               view: "select",
-               name: "validateCondition",
-               label: L("Condition"),
-               labelWidth: 100,
-               value: "none",
-               options: [
-                  { id: "none", value: L("None") },
+               cols: [
                   {
-                     id: "dateRange",
-                     value: L("Range"),
+                     view: "label",
+                     label: L("Condition") + ": ",
+                     align: "right",
+                     width: 88,
+                     css: "ab-text-bold",
                   },
                   {
-                     id: "between",
-                     value: L("Between"),
-                  },
-                  {
-                     id: "notBetween",
-                     value: L("Not between"),
-                  },
-                  {
-                     id: "=",
-                     value: L("Equal to"),
-                  },
-                  {
-                     id: "<>",
-                     value: L("Not equal to"),
-                  },
-                  {
-                     id: ">",
-                     value: L("Greater than"),
-                  },
-                  {
-                     id: "<",
-                     value: L("Less than"),
-                  },
-                  {
-                     id: ">=",
-                     value: L("Greater than or Equal to"),
-                  },
-                  {
-                     id: "<=",
-                     value: L("Less than or Equal to"),
+                     id: ids.validateCondition,
+                     view: "select",
+                     name: "validateCondition",
+                     value: "none",
+                     options: [
+                        { id: "none", value: L("None") },
+                        {
+                           id: "dateRange",
+                           value: L("Range"),
+                        },
+                        {
+                           id: "between",
+                           value: L("Between"),
+                        },
+                        {
+                           id: "notBetween",
+                           value: L("Not between"),
+                        },
+                        {
+                           id: "=",
+                           value: L("Equal to"),
+                        },
+                        {
+                           id: "<>",
+                           value: L("Not equal to"),
+                        },
+                        {
+                           id: ">",
+                           value: L("Greater than"),
+                        },
+                        {
+                           id: "<",
+                           value: L("Less than"),
+                        },
+                        {
+                           id: ">=",
+                           value: L("Greater than or Equal to"),
+                        },
+                        {
+                           id: "<=",
+                           value: L("Less than or Equal to"),
+                        },
+                     ],
+                     on: {
+                        onChange: (newVal) => {
+                           switch (newVal) {
+                              case "none":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainer).hide();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                              case "dateRange":
+                                 $$(ids.validateRange).show();
+                                 $$(ids.validateStartDateContainer).hide();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                              case "between":
+                              case "notBetween":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainerLabel).define(
+                                    "label",
+                                    L("Start Date") + ": "
+                                 );
+                                 $$(
+                                    ids.validateStartDateContainerLabel
+                                 ).refresh();
+                                 $$(ids.validateStartDateContainer).show();
+                                 $$(ids.validateEndDateContainer).show();
+                                 break;
+                              case "=":
+                              case "<>":
+                              case ">":
+                              case "<":
+                              case ">=":
+                              case "<=":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainerLabel).define(
+                                    "label",
+                                    L("Date") + ": "
+                                 );
+                                 $$(
+                                    ids.validateStartDateContainerLabel
+                                 ).refresh();
+                                 $$(ids.validateStartDateContainer).show();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                           }
+                        },
+                     },
                   },
                ],
-               on: {
-                  onChange: (newVal) => {
-                     switch (newVal) {
-                        case "none":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).hide();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                        case "dateRange":
-                           $$(ids.validateRange).show();
-                           $$(ids.validateStartDate).hide();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                        case "between":
-                        case "notBetween":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).define(
-                              "label",
-                              "Start Date"
-                           );
-                           $$(ids.validateStartDate).refresh();
-                           $$(ids.validateStartDate).show();
-                           $$(ids.validateEndDate).show();
-                           break;
-                        case "=":
-                        case "<>":
-                        case ">":
-                        case "<":
-                        case ">=":
-                        case "<=":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).define("label", "Date");
-                           $$(ids.validateStartDate).refresh();
-                           $$(ids.validateStartDate).show();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                     }
-                  },
-               },
             },
             {
                id: ids.validateRange,
                hidden: true,
                rows: [
                   {
-                     id: ids.validateRangeUnit,
-                     view: "select",
-                     name: "validateRangeUnit",
-                     label: L("Unit"),
-                     labelWidth: 100,
-                     options: [
+                     cols: [
                         {
-                           id: "days",
-                           value: L("Days"),
+                           view: "label",
+                           label: L("Unit") + ": ",
+                           align: "right",
+                           width: 88,
                         },
                         {
-                           id: "months",
-                           value: L("Months"),
-                        },
-                        {
-                           id: "years",
-                           value: L("Years"),
+                           id: ids.validateRangeUnit,
+                           view: "select",
+                           name: "validateRangeUnit",
+                           options: [
+                              {
+                                 id: "days",
+                                 value: L("Days"),
+                              },
+                              {
+                                 id: "months",
+                                 value: L("Months"),
+                              },
+                              {
+                                 id: "years",
+                                 value: L("Years"),
+                              },
+                           ],
+                           on: {
+                              onChange: () => {
+                                 $$(ids.validateRangeBeforeLabel).refresh();
+                                 $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                           },
                         },
                      ],
-                     on: {
-                        onChange: () => {
-                           $$(ids.validateRangeBeforeLabel).refresh();
-                           $$(ids.validateRangeAfterLabel).refresh();
-                        },
-                     },
                   },
                   {
                      cols: [
@@ -2802,20 +2936,37 @@ __webpack_require__.r(__webpack_exports__);
                ],
             },
             {
-               id: ids.validateStartDate,
-               name: "validateStartDate",
-               view: "datepicker",
-               label: L("Start Date"),
-               labelWidth: 100,
+               id: ids.validateStartDateContainer,
                hidden: true,
+               cols: [
+                  {
+                     id: ids.validateStartDateContainerLabel,
+                     view: "label",
+                     label: L("Start Date") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
+                     name: "validateStartDate",
+                     view: "datepicker",
+                  },
+               ],
             },
             {
-               id: ids.validateEndDate,
-               name: "validateEndDate",
-               view: "datepicker",
-               label: L("End Date"),
-               labelWidth: 100,
+               id: ids.validateEndDateContainer,
                hidden: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("End Date") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
+                     name: "validateEndDate",
+                     view: "datepicker",
+                  },
+               ],
             },
          ]);
       }
@@ -3009,8 +3160,9 @@ __webpack_require__.r(__webpack_exports__);
             validateRangeBeforeLabel: "",
             validateRangeAfterLabel: "",
 
-            validateStartDate: "",
-            validateEndDate: "",
+            validateStartDateContainer: "",
+            validateStartDateContainerLabel: "",
+            validateEndDateContainer: "",
          });
       }
 
@@ -3019,36 +3171,53 @@ __webpack_require__.r(__webpack_exports__);
 
          return super.ui([
             {
-               view: "richselect",
-               name: "dateFormat",
-               id: ids.dateFormat,
-               label: L("Date Format"),
-               labelWidth: 110,
-               value: 1,
-               options: [
-                  {
-                     id: 1,
-                     value: L("Ignore Date"),
-                  },
-                  { id: 2, value: "dd/mm/yyyy" },
-                  { id: 3, value: "mm/dd/yyyy" },
-                  { id: 4, value: "M D, yyyy" },
-                  { id: 5, value: "D M, yyyy" },
-               ],
-               on: {
-                  onChange: () => {
-                     this.refreshDateValue();
-                  },
-               },
+               view: "label",
+               label: L("Date") + ": ",
+               align: "left",
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Format") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
+                     id: ids.dateFormat,
+                     view: "richselect",
+                     name: "dateFormat",
+                     value: 1,
+                     options: [
+                        {
+                           id: 1,
+                           value: L("Ignore Date"),
+                        },
+                        { id: 2, value: "dd/mm/yyyy" },
+                        { id: 3, value: "mm/dd/yyyy" },
+                        { id: 4, value: "M D, yyyy" },
+                        { id: 5, value: "D M, yyyy" },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.refreshDateValue();
+                        },
+                     },
+                  },
+               ],
+            },
+            {
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
                      view: "richselect",
                      name: "defaultDate",
                      id: ids.defaultDate,
-                     label: L("Default"),
-                     labelWidth: 110,
                      value: 1,
                      options: [
                         { id: 1, value: L("None") },
@@ -3079,125 +3248,150 @@ __webpack_require__.r(__webpack_exports__);
             // Validator
             {
                view: "label",
-               label: L("Validation criteria:"),
+               label: L("Validation criteria") + ": ",
+               width: 123,
                css: "ab-text-bold",
             },
             {
-               id: ids.validateCondition,
-               view: "select",
-               name: "validateCondition",
-               label: L("Condition"),
-               labelWidth: 100,
-               value: "none",
-               options: [
-                  { id: "none", value: L("None") },
+               cols: [
                   {
-                     id: "dateRange",
-                     value: L("Range"),
+                     view: "label",
+                     label: L("Condition") + ": ",
+                     align: "right",
+                     width: 88,
+                     css: "ab-text-bold",
                   },
                   {
-                     id: "between",
-                     value: L("Between"),
-                  },
-                  {
-                     id: "notBetween",
-                     value: L("Not between"),
-                  },
-                  {
-                     id: "=",
-                     value: L("Equal to"),
-                  },
-                  {
-                     id: "<>",
-                     value: L("Not equal to"),
-                  },
-                  {
-                     id: ">",
-                     value: L("Greater than"),
-                  },
-                  {
-                     id: "<",
-                     value: L("Less than"),
-                  },
-                  {
-                     id: ">=",
-                     value: L("Greater than or Equal to"),
-                  },
-                  {
-                     id: "<=",
-                     value: L("Less than or Equal to"),
+                     id: ids.validateCondition,
+                     view: "select",
+                     name: "validateCondition",
+                     value: "none",
+                     options: [
+                        { id: "none", value: L("None") },
+                        {
+                           id: "dateRange",
+                           value: L("Range"),
+                        },
+                        {
+                           id: "between",
+                           value: L("Between"),
+                        },
+                        {
+                           id: "notBetween",
+                           value: L("Not between"),
+                        },
+                        {
+                           id: "=",
+                           value: L("Equal to"),
+                        },
+                        {
+                           id: "<>",
+                           value: L("Not equal to"),
+                        },
+                        {
+                           id: ">",
+                           value: L("Greater than"),
+                        },
+                        {
+                           id: "<",
+                           value: L("Less than"),
+                        },
+                        {
+                           id: ">=",
+                           value: L("Greater than or Equal to"),
+                        },
+                        {
+                           id: "<=",
+                           value: L("Less than or Equal to"),
+                        },
+                     ],
+                     on: {
+                        onChange: (newVal) => {
+                           switch (newVal) {
+                              case "none":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainer).hide();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                              case "dateRange":
+                                 $$(ids.validateRange).show();
+                                 $$(ids.validateStartDateContainer).hide();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                              case "between":
+                              case "notBetween":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainerLabel).define(
+                                    "label",
+                                    L("Start Date") + ": "
+                                 );
+                                 $$(
+                                    ids.validateStartDateContainerLabel
+                                 ).refresh();
+                                 $$(ids.validateStartDateContainer).show();
+                                 $$(ids.validateEndDateContainer).show();
+                                 break;
+                              case "=":
+                              case "<>":
+                              case ">":
+                              case "<":
+                              case ">=":
+                              case "<=":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainerLabel).define(
+                                    "label",
+                                    L("Date") + ": "
+                                 );
+                                 $$(
+                                    ids.validateStartDateContainerLabel
+                                 ).refresh();
+                                 $$(ids.validateStartDateContainer).show();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                           }
+                        },
+                     },
                   },
                ],
-               on: {
-                  onChange: (newVal) => {
-                     switch (newVal) {
-                        case "none":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).hide();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                        case "dateRange":
-                           $$(ids.validateRange).show();
-                           $$(ids.validateStartDate).hide();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                        case "between":
-                        case "notBetween":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).define(
-                              "label",
-                              "Start Date"
-                           );
-                           $$(ids.validateStartDate).refresh();
-                           $$(ids.validateStartDate).show();
-                           $$(ids.validateEndDate).show();
-                           break;
-                        case "=":
-                        case "<>":
-                        case ">":
-                        case "<":
-                        case ">=":
-                        case "<=":
-                           $$(ids.validateRange).hide();
-                           $$(ids.validateStartDate).define("label", "Date");
-                           $$(ids.validateStartDate).refresh();
-                           $$(ids.validateStartDate).show();
-                           $$(ids.validateEndDate).hide();
-                           break;
-                     }
-                  },
-               },
             },
             {
                id: ids.validateRange,
                hidden: true,
                rows: [
                   {
-                     id: ids.validateRangeUnit,
-                     view: "select",
-                     name: "validateRangeUnit",
-                     label: L("Unit"),
-                     labelWidth: 100,
-                     options: [
+                     cols: [
                         {
-                           id: "days",
-                           value: L("Days"),
+                           view: "label",
+                           label: L("Unit") + ": ",
+                           align: "right",
+                           width: 88,
                         },
                         {
-                           id: "months",
-                           value: L("Months"),
-                        },
-                        {
-                           id: "years",
-                           value: L("Years"),
+                           id: ids.validateRangeUnit,
+                           view: "select",
+                           name: "validateRangeUnit",
+                           options: [
+                              {
+                                 id: "days",
+                                 value: L("Days"),
+                              },
+                              {
+                                 id: "months",
+                                 value: L("Months"),
+                              },
+                              {
+                                 id: "years",
+                                 value: L("Years"),
+                              },
+                           ],
+                           on: {
+                              onChange: () => {
+                                 $$(ids.validateRangeBeforeLabel).refresh();
+                                 $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                           },
                         },
                      ],
-                     on: {
-                        onChange: () => {
-                           $$(ids.validateRangeBeforeLabel).refresh();
-                           $$(ids.validateRangeAfterLabel).refresh();
-                        },
-                     },
                   },
                   {
                      cols: [
@@ -3277,49 +3471,84 @@ __webpack_require__.r(__webpack_exports__);
                ],
             },
             {
-               id: ids.validateStartDate,
-               name: "validateStartDate",
-               view: "datepicker",
-               label: L("Start Date"),
-               labelWidth: 100,
+               id: ids.validateStartDateContainer,
                hidden: true,
-            },
-            {
-               id: ids.validateEndDate,
-               name: "validateEndDate",
-               view: "datepicker",
-               label: L("End Date"),
-               labelWidth: 100,
-               hidden: true,
-            },
-            {
-               view: "richselect",
-               name: "timeFormat",
-               id: ids.timeFormat,
-               label: L("Time Format"),
-               labelWidth: 110,
-               value: 2,
-               options: [
-                  // {
-                  //    id: 1,
-                  //    value: L("ab.dataField.datetime.ignoreTime", "*Ignore Time")
-                  // },
-                  { id: 2, value: "HH:MM AM/PM" },
-                  { id: 3, value: "HH:MM (military)" },
-               ],
-               on: {
-                  onChange: () => {
-                     this.refreshTimevalue();
+               cols: [
+                  {
+                     id: ids.validateStartDateContainerLabel,
+                     view: "label",
+                     label: L("Start Date") + ": ",
+                     align: "right",
+                     width: 88,
                   },
-               },
+                  {
+                     name: "validateStartDate",
+                     view: "datepicker",
+                  },
+               ],
+            },
+            {
+               id: ids.validateEndDateContainer,
+               hidden: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("End Date") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
+                     name: "validateEndDate",
+                     view: "datepicker",
+                  },
+               ],
+            },
+            {
+               view: "label",
+               label: L("Time") + ": ",
+               align: "left",
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Format") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
+                     view: "richselect",
+                     name: "timeFormat",
+                     id: ids.timeFormat,
+                     value: 2,
+                     options: [
+                        // {
+                        //    id: 1,
+                        //    value: L("ab.dataField.datetime.ignoreTime", "*Ignore Time")
+                        // },
+                        { id: 2, value: "HH:MM AM/PM" },
+                        { id: 3, value: "HH:MM (military)" },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.refreshTimevalue();
+                        },
+                     },
+                  },
+               ],
+            },
+            {
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default Time") + ": ",
+                     align: "right",
+                     width: 88,
+                  },
+                  {
                      view: "richselect",
                      name: "defaultTime",
                      id: ids.defaultTime,
-                     label: L("Default Time"),
                      labelWidth: 110,
                      value: 1,
                      options: [
@@ -3559,6 +3788,7 @@ __webpack_require__.r(__webpack_exports__);
       constructor() {
          super("properties_abfield_email", {
             default: "",
+            defaultCheckbox: "",
          });
       }
 
@@ -3567,14 +3797,52 @@ __webpack_require__.r(__webpack_exports__);
 
          return super.ui([
             {
-               view: "text",
-               id: ids.default,
-               name: "default",
-               labelWidth: uiConfig.labelWidthXLarge,
-               label: L("Default"),
-               placeholder: L("Enter default value"),
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default Value") + ": ",
+                     align: "right",
+                     width: 100,
+                  },
+                  {
+                     id: ids.defaultCheckbox,
+                     view: "checkbox",
+                     width: 30,
+                     value: 0,
+                     on: {
+                        onChange: (newv) => {
+                           this.checkboxDefaultValue(newv);
+                        },
+                        onAfterRender: () => {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+                  {
+                     view: "text",
+                     id: ids.default,
+                     name: "default",
+                     placeholder: L("Enter default value"),
+                     disabled: true,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
             },
          ]);
+      }
+
+      checkboxDefaultValue(state) {
+         if (state === 0) {
+            $$(this.ids.default).disable();
+            $$(this.ids.default).setValue("");
+         } else {
+            $$(this.ids.default).enable();
+         }
       }
 
       /**
@@ -3607,6 +3875,17 @@ __webpack_require__.r(__webpack_exports__);
          } else isValid = true;
 
          return isValid;
+      }
+
+      populate(field) {
+         const ids = this.ids;
+         super.populate(field);
+
+         if (field.settings.default === "") {
+            $$(ids.defaultCheckbox).setValue(0);
+         } else {
+            $$(ids.defaultCheckbox).setValue(1);
+         }
       }
    }
 
@@ -3654,12 +3933,16 @@ __webpack_require__.r(__webpack_exports__);
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Size (MB)") + ": ",
+                     align: "right",
+                     width: 75,
+                  },
+                  {
                      view: "checkbox",
                      name: "limitFileSize",
-                     labelRight: L("Size (MB)"),
-                     width: 120,
-                     labelWidth: 0,
                      value: 1,
+                     width: 30,
                      click: function () {
                         if (this.getValue()) $$(ids.fileSize).enable();
                         else $$(ids.fileSize).disable();
@@ -3669,16 +3952,22 @@ __webpack_require__.r(__webpack_exports__);
                      view: "counter",
                      name: "fileSize",
                      id: ids.fileSize,
+                     width: 104,
                   },
                ],
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Type") + ": ",
+                     align: "right",
+                     width: 75,
+                  },
+                  {
                      view: "checkbox",
                      name: "limitFileType",
-                     labelRight: L("Type"),
-                     width: 120,
+                     width: 30,
                      labelWidth: 0,
                      value: 1,
                      click: function () {
@@ -3687,10 +3976,10 @@ __webpack_require__.r(__webpack_exports__);
                      },
                   },
                   {
+                     id: ids.fileType,
                      view: "text",
                      name: "fileType",
                      placeholder: L("txt,rtf,doc,docx,..."),
-                     id: ids.fileType,
                   },
                ],
             },
@@ -3764,45 +4053,63 @@ __webpack_require__.r(__webpack_exports__);
 
          return super.ui([
             {
-               view: "richselect",
-               name: "type",
-               label: L("Type"),
-               labelWidth: uiConfig.labelWidthMedium,
-               value: "sum",
-               options: [
-                  { id: "sum", value: L("Sum") },
-                  { id: "max", value: L("Max") },
-                  { id: "min", value: L("Min") },
+               cols: [
                   {
-                     id: "average",
-                     value: L("Average"),
+                     view: "label",
+                     label: L("Type") + ": ",
+                     align: "right",
+                     width: 40,
                   },
                   {
-                     id: "count",
-                     value: L("Count"),
+                     view: "richselect",
+                     name: "type",
+                     labelWidth: uiConfig.labelWidthMedium,
+                     value: "sum",
+                     options: [
+                        { id: "sum", value: L("Sum") },
+                        { id: "max", value: L("Max") },
+                        { id: "min", value: L("Min") },
+                        {
+                           id: "average",
+                           value: L("Average"),
+                        },
+                        {
+                           id: "count",
+                           value: L("Count"),
+                        },
+                     ],
                   },
                ],
             },
             {
-               id: ids.field,
-               view: "richselect",
-               name: "field",
-               label: L("Field"),
-               labelWidth: uiConfig.labelWidthMedium,
-               options: {
-                  view: "suggest",
-                  body: {
-                     id: ids.fieldList,
-                     view: "list",
-                     template: this.itemTemplate,
-                     data: [],
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Field") + ": ",
+                     align: "right",
+                     width: 40,
                   },
-               },
-               on: {
-                  onChange: () => {
-                     this.refreshFilter();
+                  {
+                     id: ids.field,
+                     view: "richselect",
+                     name: "field",
+                     labelWidth: uiConfig.labelWidthMedium,
+                     options: {
+                        view: "suggest",
+                        body: {
+                           id: ids.fieldList,
+                           view: "list",
+                           template: this.itemTemplate,
+                           data: [],
+                        },
+                     },
+                     on: {
+                        onChange: () => {
+                           this.refreshFilter();
+                        },
+                     },
                   },
-               },
+               ],
             },
             this.rowFilter.ui,
          ]);
@@ -3959,6 +4266,7 @@ __webpack_require__.r(__webpack_exports__);
          super("properties_abfield_image", {
             imageWidth: "",
             imageHeight: "",
+            imageContainer: "",
             defaultImageUrl: "",
 
             useWidth: "",
@@ -3974,12 +4282,16 @@ __webpack_require__.r(__webpack_exports__);
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Width") + ": ",
+                     align: "right",
+                     width: 60,
+                  },
+                  {
                      id: ids.useWidth,
                      view: "checkbox",
                      name: "useWidth",
-                     labelRight: L("Width"),
-                     width: 80,
-                     labelWidth: 0,
+                     width: 30,
                      value: 1,
                      click: function () {
                         if (this.getValue()) $$(ids.imageWidth).enable();
@@ -3987,22 +4299,25 @@ __webpack_require__.r(__webpack_exports__);
                      },
                   },
                   {
+                     id: ids.imageWidth,
                      view: "text",
                      name: "imageWidth",
-                     id: ids.imageWidth,
                   },
                ],
             },
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Height") + ": ",
+                     align: "right",
+                     width: 60,
+                  },
+                  {
                      id: ids.useHeight,
                      view: "checkbox",
                      name: "useHeight",
-                     // id:componentIds.useHeight,
-                     labelRight: L("Height"),
-                     width: 80,
-                     labelWidth: 0,
+                     width: 30,
                      value: 1,
                      click: function () {
                         if (this.getValue()) $$(ids.imageHeight).enable();
@@ -4019,39 +4334,51 @@ __webpack_require__.r(__webpack_exports__);
             {
                cols: [
                   {
+                     view: "label",
+                     label: L("Default image") + ": ",
+                     align: "right",
+                     width: 100,
+                  },
+                  {
                      id: ids.useDefaultImage,
                      view: "checkbox",
                      name: "useDefaultImage",
-                     labelRight: L("Default image"),
-                     width: 200,
-                     labelWidth: 0,
                      value: 0,
                      click: function () {
-                        if (this.getValue()) $$(ids.defaultImageUrl).enable();
-                        else $$(ids.defaultImageUrl).disable();
+                        if (this.getValue()) $$(ids.imageContainer).enable();
+                        else $$(ids.imageContainer).disable();
                      },
                   },
-
+               ],
+            },
+            {
+               id: ids.imageContainer,
+               disabled: true,
+               cols: [
+                  {},
                   {
                      view: "uploader",
                      id: ids.defaultImageUrl,
                      template:
+                        '<div style="text-align:center; font-size: 30px;">' +
                         '<div class="default-image-holder">' +
                         '<div class="image-data-field-icon">' +
                         '<i class="fa fa-picture-o fa-2x"></i>' +
-                        `<div>${L("Drag and drop or click here")}</div>` +
+                        `<div style="font-size: 15px;">${L(
+                           "Drag and drop or click here"
+                        )}</div>` +
                         "</div>" +
                         '<div class="image-data-field-image" style="display:none;">' +
                         '<a style="" class="ab-delete-photo" href="javascript:void(0);"><i class="fa fa-times delete-image" style="display:none;"></i></a>' +
+                        "</div>" +
                         "</div>" +
                         "</div>",
                      apiOnly: true,
                      inputName: "file",
                      multiple: false,
-                     disabled: true,
                      name: "defaultImageUrl",
-                     height: 150,
-                     width: 100,
+                     height: 105,
+                     width: 150,
                      on: {
                         // when a file is added to the uploader
                         onBeforeFileAdd: function (item) {
@@ -4074,7 +4401,6 @@ __webpack_require__.r(__webpack_exports__);
                               return false;
                            }
                         },
-
                         // if an error was returned
                         onFileUploadError: function (item, response) {
                            AB.notify.developer(
@@ -4087,6 +4413,7 @@ __webpack_require__.r(__webpack_exports__);
                         },
                      },
                   },
+                  {},
                ],
             },
          ]);
@@ -4120,7 +4447,7 @@ __webpack_require__.r(__webpack_exports__);
          super.populate(field);
 
          if (field.settings.useDefaultImage) {
-            uploader.enable();
+            $$(ids.imageContainer).enable();
          }
 
          if (value && isUseDefaultImage) {
@@ -4393,7 +4720,7 @@ __webpack_require__.r(__webpack_exports__);
             },
             {
                view: "label",
-               label: `<b>${L("Options")}</b>`,
+               label: `<b>${L("Options")}</b>: `,
             },
             {
                id: ids.options,
@@ -4522,18 +4849,26 @@ __webpack_require__.r(__webpack_exports__);
                },
             },
             {
-               id: ids.default,
-               placeholder: L("Select Default"),
-               name: "default",
-               view: "richselect",
-               label: L("Default"),
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Default") + ": ",
+                     width: 55,
+                  },
+                  {
+                     id: ids.default,
+                     placeholder: L("Select Default"),
+                     name: "default",
+                     view: "richselect",
+                  },
+               ],
             },
             {
                id: ids.multipleDefault,
                name: "multipleDefault",
                view: "forminput",
                labelWidth: 0,
-               height: 36,
+               height: 44,
                borderless: true,
                hidden: true,
                body: {
@@ -4827,7 +5162,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value") + ": ",
                      align: "right",
                      width: 100,
                   },
@@ -5049,7 +5384,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Places:") + " ",
+                           label: L("Places:") + ": ",
                            align: "right",
                            width: 100,
                         },
@@ -5452,7 +5787,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value") + ": ",
                      align: "right",
                      width: 100,
                   },
