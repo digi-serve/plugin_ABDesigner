@@ -135,7 +135,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Places:") + " ",
+                           label: L("Places:") + ": ",
                            align: "right",
                            width: 100,
                         },

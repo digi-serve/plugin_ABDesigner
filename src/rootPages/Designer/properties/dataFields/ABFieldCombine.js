@@ -15,6 +15,7 @@ export default function (AB) {
       constructor() {
          super("properties_abfield_combine", {
             combinedFields: "",
+            delimiter: "plus",
          });
       }
 
@@ -50,6 +51,7 @@ export default function (AB) {
                      width: 125,
                   },
                   {
+                     id: ids.delimiter,
                      view: "richselect",
                      name: "delimiter",
                      value: FC.defaultValues().delimiter,

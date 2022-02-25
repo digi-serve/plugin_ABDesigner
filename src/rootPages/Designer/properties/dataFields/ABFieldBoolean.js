@@ -13,6 +13,7 @@ export default function (AB) {
       constructor() {
          super("properties_abfield_boolean", {
             checkBoxLabel: "",
+            default: "",
          });
       }
 
@@ -28,6 +29,7 @@ export default function (AB) {
                      width: 65,
                   },
                   {
+                     id: ids.default,
                      name: "default",
                      view: "checkbox",
                      css: "webix_table_checkbox",

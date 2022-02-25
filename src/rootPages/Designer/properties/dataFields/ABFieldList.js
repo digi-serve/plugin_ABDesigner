@@ -238,7 +238,7 @@ export default function (AB) {
                name: "multipleDefault",
                view: "forminput",
                labelWidth: 0,
-               height: 36,
+               height: 44,
                borderless: true,
                hidden: true,
                body: {

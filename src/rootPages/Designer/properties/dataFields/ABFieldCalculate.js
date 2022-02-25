@@ -23,6 +23,7 @@ export default function (AB) {
             dateOperatorPopup: "",
             dateFieldList: "",
 
+            decimalSign: "",
             decimalPlaces: "",
          });
       }
@@ -236,6 +237,7 @@ export default function (AB) {
                            width: 66.63,
                         },
                         {
+                           id: ids.decimalSign,
                            view: "richselect",
                            name: "decimalSign",
                            value: "none",
