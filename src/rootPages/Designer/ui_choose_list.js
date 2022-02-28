@@ -5,7 +5,7 @@
  *
  *
  */
-
+import UI_Class from "./ui_class";
 import AB_Choose_List_Menu_Factory from "./ui_common_popupEditMenu";
 
 export default function (AB) {
@@ -13,27 +13,19 @@ export default function (AB) {
    // const AppForm = AB_Choose_Form_Factory(AB);
 
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    const AB_Choose_List_Menu = AB_Choose_List_Menu_Factory(AB);
 
-   class UIChooseList extends AB.ClassUI {
+   class UIChooseList extends UIClass {
       constructor() {
-         var base = "abd_choose_list";
-         super(base);
-         var baseTB = `${base}_toolbar`;
-
-         var ids = {
-            toolbar: baseTB,
-            buttonCreateNewApplication: `${baseTB}_createnewapp`,
-            uploader: `${baseTB}_uploader`,
-            exporter: `${baseTB}_exporter`,
-            list: `${base}_list`,
-         };
-         Object.keys(ids).forEach((k) => {
-            this.ids[k] = ids[k];
+         super("abd_choose_list", {
+            toolbar: "",
+            buttonCreateNewApplication: "",
+            uploader: "",
+            exporter: "",
+            list: "",
          });
       }
 
@@ -71,7 +63,7 @@ export default function (AB) {
                               fillspace: true,
                               on: {
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -112,7 +104,7 @@ export default function (AB) {
                               },
                               on: {
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -163,7 +155,7 @@ export default function (AB) {
                                     return false;
                                  },
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -183,7 +175,7 @@ export default function (AB) {
                               },
                               on: {
                                  onAfterRender() {
-                                    AB.ClassUI.CYPRESS_REF(this);
+                                    UIClass.CYPRESS_REF(this);
                                  },
                               },
                            },
@@ -224,7 +216,7 @@ export default function (AB) {
                         on: {
                            onAfterRender() {
                               this.data.each((a) => {
-                                 AB.ClassUI.CYPRESS_REF(
+                                 UIClass.CYPRESS_REF(
                                     this.getItemNode(a.id),
                                     a.id
                                  );

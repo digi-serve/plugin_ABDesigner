@@ -4,41 +4,38 @@
  * Display the component for working with an ABApplication.
  *
  */
-
+import UI_Class from "./ui_class";
 import UI_Work_Object from "./ui_work_object";
 import UI_Work_Query from "./ui_work_query";
 import UI_Work_Interface from "./ui_work_interface";
-// const AB_Work_Datacollection = require("./ab_work_dataview");
-// const AB_Work_Process = require("./ab_work_process");
+import UI_Work_Datacollection from "./ui_work_datacollection";
+import UI_Work_Process from "./ui_work_process";
 // const AB_Work_Interface = require("./ab_work_interface");
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
    var AppObjectWorkspace = UI_Work_Object(AB);
-   const AppQueryWorkspace = new (UI_Work_Query(AB))();
-   // var AppDatacollectionWorkspace = new AB_Work_Datacollection(App);
-   // var AppProcessWorkspace = new AB_Work_Process(App);
+   const AppQueryWorkspace = UI_Work_Query(AB);
+   const AppDataCollectionWorkspace = UI_Work_Datacollection(AB);
+   const AppProcessWorkspace = UI_Work_Process(AB);
    var AppInterfaceWorkspace = new UI_Work_Interface(AB);
 
-   class UI_Work extends AB.ClassUI {
+   class UI_Work extends UIClass {
       constructor(options = {}) {
-         var base = "abd_work";
-         super({
-            component: `${base}_component`,
-            toolBar: `${base}_toolbar`,
-            labelAppName: `${base}_label_appname`,
-            tabbar: `${base}_tabbar`,
-            tab_object: `${base}_tab_object`,
-            tab_query: `${base}_tab_query`,
-            tab_dataview: `${base}_tab_dataview`,
-            tab_processview: `${base}_tab_processview`,
-            tab_interface: `${base}_tab_interface`,
-            workspace: `${base}_workspace`,
-            collapseMenu: `${base}_collapseMenu`,
-            expandMenu: `${base}_expandMenu`,
+         super("abd_work", {
+            toolBar: "",
+            labelAppName: "",
+            tabbar: "",
+            tab_object: "",
+            tab_query: "",
+            tab_datacollection: "",
+            tab_processview: "",
+            tab_interface: "",
+            workspace: "",
+            collapseMenu: "",
+            expandMenu: "",
          });
 
          this.options = options;
@@ -46,7 +43,7 @@ export default function (AB) {
          this.selectedItem = this.ids.tab_object;
          // {string} {this.ids.xxx}
          // Keep track of the currently selected Tab Item (Object, Query, etc)
-      } // constructor
+      }
 
       /**
        * @method ui()
@@ -66,7 +63,7 @@ export default function (AB) {
                icon: "fa fa-fw fa-filter",
             },
             {
-               id: this.ids.tab_dataview,
+               id: this.ids.tab_datacollection,
                value: L("Data Collections"),
                icon: "fa fa-fw fa-table",
             },
@@ -107,7 +104,6 @@ export default function (AB) {
                         css: "webix_transparent",
                         label: L("Back to Applications page"),
                         autowidth: true,
-                        align: "left",
                         type: "icon",
                         icon: "fa fa-arrow-left",
                         hidden: this.options?.IsBackHidden ?? false, // hide this button in the admin lve page
@@ -202,8 +198,8 @@ export default function (AB) {
                         cells: [
                            AppObjectWorkspace.ui(),
                            AppQueryWorkspace.ui(),
-                           // AppDatacollectionWorkspace.ui,
-                           // AppProcessWorkspace.ui,
+                           AppDataCollectionWorkspace.ui(),
+                           AppProcessWorkspace.ui(),
                            AppInterfaceWorkspace.ui(),
                         ],
                      },
@@ -224,8 +220,8 @@ export default function (AB) {
 
          AppObjectWorkspace.init(AB);
          AppQueryWorkspace.init(AB);
-         // AppDatacollectionWorkspace.init(AB);
-         // AppProcessWorkspace.init(AB);
+         AppDataCollectionWorkspace.init(AB);
+         AppProcessWorkspace.init(AB);
          AppInterfaceWorkspace.init(AB);
 
          this.$tabbar = $$(this.ids.tabbar);
@@ -251,12 +247,16 @@ export default function (AB) {
        * @method applicationInit()
        * Store the current ABApplication we are working with.
        * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
       applicationInit(application) {
-         // setup Application Label:
-         var $labelAppName = $$(this.ids.labelAppName);
-         $labelAppName.define("label", application.label);
-         $labelAppName.refresh();
+         if (application) {
+            // setup Application Label:
+            var $labelAppName = $$(this.ids.labelAppName);
+            $labelAppName.define("label", application?.label);
+            $labelAppName.refresh();
+         }
+         super.applicationLoad(application);
       }
 
       /**
@@ -281,13 +281,16 @@ export default function (AB) {
        * @method transitionWorkspace
        * Switch the UI to view the App Workspace screen.
        * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
       transitionWorkspace(application) {
-         this.applicationInit(application);
+         if (this.CurrentApplicationID != application?.id) {
+            this.applicationInit(application);
+         }
          AppObjectWorkspace.applicationLoad(application);
          AppQueryWorkspace.applicationLoad(application);
-         // AppDatacollectionWorkspace.applicationLoad(application);
-         // AppProcessWorkspace.applicationLoad(application);
+         AppDataCollectionWorkspace.applicationLoad(application);
+         AppProcessWorkspace.applicationLoad(application);
          AppInterfaceWorkspace.applicationLoad(application);
 
          this.show();
@@ -312,8 +315,8 @@ export default function (AB) {
                break;
 
             // Datacollection Workspace Tab
-            case this.ids.tab_dataview:
-               AppDatacollectionWorkspace.show();
+            case this.ids.tab_datacollection:
+               AppDataCollectionWorkspace.show();
                break;
 
             // Process Workspace Tab

@@ -4,40 +4,33 @@
  * Display the form for creating a new Application.
  *
  */
-
+import UI_Class from "./ui_class";
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
-import ABProcessParticipant_selectManagersUI from "./forms/process/ABProcessParticipant_selectManagersUI.js";
+import ABProcessParticipant_selectManagersUI from "./properties/process/ABProcessParticipant_selectManagersUI.js";
 
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
    const ClassSelectManagersUI = ABProcessParticipant_selectManagersUI(AB);
 
-   class ABChooseForm extends AB.ClassUI {
+   class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
 
       constructor() {
-         var base = "abd_choose_form";
-         super({
-            component: base,
-            warnings: `${base}_warnings`,
-            form: `${base}_form`,
-            appFormPermissionList: `${base}_permission`,
-            appFormCreateRoleButton: `${base}_createRole`,
+         super("abd_choose_form", {
+            warnings: "",
+            form: "",
+            appFormPermissionList: "",
+            appFormCreateRoleButton: "",
 
-            saveButton: `${base}_buttonSave`,
-            accessManager: `${base}_accessManager`,
-            accessManagerToolbar: `${base}_accessManagerToolbar`,
-            translationManager: `${base}_translationManager`,
-            translationManagerToolbar: `${base}_translationManagerToolbar`,
+            saveButton: "",
+            accessManager: "",
+            accessManagerToolbar: "",
+            translationManager: "",
+            translationManagerToolbar: "",
          });
-
-         this.Application = null;
-         // {ABApplication} The current ABApplication being Updated().
-         // Should be null if performing a Create()
       }
 
       ui() {
@@ -626,10 +619,10 @@ export default function (AB) {
 
          // if there is a selected Application, then this is an UPDATE
          // var updateApp = App.actions.getSelectedApplication();
-         if (this.Application) {
+         if (this.CurrentApplication) {
             if (this.formValidate("update")) {
                try {
-                  await this.applicationUpdate(this.Application);
+                  await this.applicationUpdate(this.CurrentApplication);
                   this.toList();
                } catch (e) {
                   /* error is handled in .applicationUpdate() */
@@ -714,7 +707,7 @@ export default function (AB) {
        * @param {ABApplication} application  instance of the ABApplication
        */
       formPopulate(application) {
-         this.Application = application;
+         super.applicationLoad(application);
 
          // Populate data to form
          if (application) {
@@ -730,7 +723,9 @@ export default function (AB) {
                }
             });
 
-            var messages = this.Application.warnings().map((w) => w.message);
+            var messages = this.CurrentApplication.warnings().map(
+               (w) => w.message
+            );
             $$(this.ids.warnings).setValue(messages.join("\n"));
 
             // populate access manager ui
@@ -772,7 +767,7 @@ export default function (AB) {
        * return the form to an empty state.
        */
       formReset() {
-         this.Application = null;
+         super.applicationLoad(null);
 
          this.$form.clear();
          this.$form.clearValidation();

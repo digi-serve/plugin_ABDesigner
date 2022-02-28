@@ -17,35 +17,27 @@
  * On Error, "save.error" will be emitted on the sub-component.
  *
  */
+import UI_Class from "./ui_class";
 import UIBlankQuery from "./ui_work_query_list_newQuery_blank";
 import UIImportQuery from "./ui_work_query_list_newQuery_import";
 
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   const UI_Blank_Query = UIBlankQuery(AB);
-   const UI_Import_Query = UIImportQuery(AB);
-
-   class UI_Work_Query_List_NewQuery extends AB.ClassUI {
+   class UI_Work_Query_List_NewQuery extends UIClass {
       constructor() {
-         const base = "ab_work_query_list_newQuery";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super("ui_work_query_list_newQuery", {
+            tab: "",
          });
 
-         this.currentApplication = null;
-         // {ABApplication} the ABApplication we are currently working on.
-
          this.selectNew = true;
-         // {bool} do we select a new object after it is created.
+         // {bool} do we select a new query after it is created.
 
          // var callback = null;
 
-         this.BlankTab = new UI_Blank_Query(AB);
-         this.ImportTab = new UI_Import_Query(AB);
+         this.BlankTab = UIBlankQuery(AB);
+         this.ImportTab = UIImportQuery(AB);
       }
 
       ui() {
@@ -55,7 +47,32 @@ export default function (AB) {
             id: this.ids.component,
             position: "center",
             modal: true,
-            head: L("Add new query"),
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new query"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
             selectNewQuery: true,
             body: {
                view: "tabview",
@@ -95,6 +112,9 @@ export default function (AB) {
                this.emit("cancel");
             });
             this[k].on("save", (values) => {
+               if (values.id) {
+                  return this.import(values, k);
+               }
                this.save(values, k);
             });
          });
@@ -103,12 +123,46 @@ export default function (AB) {
       }
 
       /**
-       * @method applicationLoad()
-       * prepare ourself with the current application
-       * @param {ABApplication} application
+       * @method done()
+       * Finished saving, so hide the popup and clean up.
+       * @param {object} obj
        */
-      applicationLoad(application) {
-         this.currentApplication = application; // remember our current Application.
+      done(obj) {
+         this.ready();
+         this.hide(); // hide our popup
+         this.emit("save", obj, this.selectNew);
+         // _logic.callbacks.onDone(null, obj, selectNew, callback); // tell parent component we're done
+      }
+
+      /**
+       * @method import()
+       * take an existing query and add it to our ABApplication.
+       * @param {ABObjectQuery} query
+       * @param {string} tabKey
+       *        which of our tabs triggered this method?
+       */
+      async import(query, tabKey) {
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Object
+         try {
+            await this.CurrentApplication.queryInsert(query);
+            this[tabKey].emit("save.successful", query);
+            this.done(query);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this object from the current object list of
+            // the CurrentApplication.
+            // NOTE: It has error "queryRemove" is not a function
+            // await this.CurrentApplication.queryRemove(newQuery);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
       }
 
       /**
@@ -122,7 +176,7 @@ export default function (AB) {
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplication) {
+         if (!this.CurrentApplication) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -143,7 +197,7 @@ export default function (AB) {
          }
 
          if (!newQuery.createdInAppID) {
-            newQuery.createdInAppID = this.currentApplication.id;
+            newQuery.createdInAppID = this.CurrentApplicationID;
          }
 
          // show progress
@@ -152,7 +206,7 @@ export default function (AB) {
          // if we get here, save the new Object
          try {
             let query = await newQuery.save();
-            await this.currentApplication.queryInsert(query);
+            await this.CurrentApplication.queryInsert(query);
             this[tabKey].emit("save.successful", query);
             this.done(query);
          } catch (err) {
@@ -161,9 +215,9 @@ export default function (AB) {
 
             // an error happend during the server side creation.
             // so remove this object from the current object list of
-            // the currentApplication.
+            // the CurrentApplication.
             // NOTE: It has error "queryRemove" is not a function
-            // await this.currentApplication.queryRemove(newQuery);
+            // await this.CurrentApplication.queryRemove(newQuery);
 
             // tell current Tab component there was an error
             this[tabKey].emit("save.error", err);
@@ -214,12 +268,12 @@ export default function (AB) {
 
       switchTab(tabId) {
          if (tabId == this.BlankTab?.ui()?.body?.id || !tabId) {
-            this.BlankTab?.onShow?.(this.currentApplication);
+            this.BlankTab?.onShow?.(this.CurrentApplication);
          } else if (tabId == this.ImportTab?.ui()?.body?.id) {
-            this.ImportTab?.onShow?.(this.currentApplication);
+            this.ImportTab?.onShow?.(this.CurrentApplication);
          }
       }
    }
 
-   return UI_Work_Query_List_NewQuery;
+   return new UI_Work_Query_List_NewQuery();
 }

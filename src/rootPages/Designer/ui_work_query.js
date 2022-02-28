@@ -4,21 +4,19 @@
  * Display the Query Tab UI:
  *
  */
-
+import UI_Class from "./ui_class";
 import UI_Work_Query_List from "./ui_work_query_list";
 import UI_Work_Query_Workspace from "./ui_work_query_workspace";
 
 export default function (AB) {
-   const Query_List = UI_Work_Query_List(AB);
-   const Query_Workspace = UI_Work_Query_Workspace(AB);
-
-   class UI_Work_Query extends AB.ClassUI {
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
+   class UI_Work_Query extends UIClass {
       constructor() {
          super("ab_work_query");
 
-         this.CurrentApplication = null;
-         this.QueryList = new Query_List();
-         this.QueryWorkspace = new Query_Workspace(/** default settings */);
+         this.QueryList = UI_Work_Query_List(AB);
+         this.QueryWorkspace = UI_Work_Query_Workspace(AB);
       }
 
       ui() {
@@ -54,7 +52,7 @@ export default function (AB) {
        * @param {ABApplication} application
        */
       applicationLoad(application) {
-         this.CurrentApplication = application;
+         super.applicationLoad(application);
 
          this.QueryWorkspace.clearWorkspace();
          this.QueryList.applicationLoad(application);
@@ -69,8 +67,9 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
 
-         if (this.CurrentApplication) {
-            this.QueryList?.applicationLoad(this.CurrentApplication);
+         var app = this.CurrentApplication;
+         if (app) {
+            this.QueryList?.applicationLoad(app);
          }
          this.QueryList?.ready();
       }
@@ -81,5 +80,5 @@ export default function (AB) {
       }
    }
 
-   return UI_Work_Query;
+   return new UI_Work_Query();
 }

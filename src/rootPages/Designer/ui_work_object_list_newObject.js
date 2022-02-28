@@ -17,28 +17,20 @@
  * On Error, "save.error" will be emitted on the sub-component.
  *
  */
-
+import UI_Class from "./ui_class";
 import UIBlankObject from "./ui_work_object_list_newObject_blank";
 import UICsvObject from "./ui_work_object_list_newObject_csv";
 import UIImportObject from "./ui_work_object_list_newObject_import";
 // const ABImportExternal = require("./ab_work_object_list_newObject_external");
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Object_List_NewObject extends AB.ClassUI {
-      //.extend(idBase, function(App) {
-
+   class UI_Work_Object_List_NewObject extends UIClass {
       constructor() {
-         var base = "ab_work_object_list_newObject";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super("ui_work_object_list_newObject", {
+            tab: "",
          });
-
-         this.currentApplication = null;
-         // {ABApplication} the ABApplication we are currently working on.
 
          this.selectNew = true;
          // {bool} do we select a new object after it is created.
@@ -61,7 +53,32 @@ export default function (AB) {
             // width: 400,
             position: "center",
             modal: true,
-            head: L("Add new object"),
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Add new object"),
+                     css: "modal_title",
+                     align: "center",
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        this.emit("cancel");
+                     },
+                     on: {
+                        onAfterRender() {
+                           UIClass.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
             selectNewObject: true,
             body: {
                view: "tabview",
@@ -81,7 +98,7 @@ export default function (AB) {
                            .querySelectorAll(".webix_item_tab")
                            .forEach((t) => {
                               var tid = t.getAttribute("button_id");
-                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                              UIClass.CYPRESS_REF(t, `${tid}_tab`);
                            });
                      },
                   },
@@ -124,10 +141,12 @@ export default function (AB) {
        * @method applicationLoad()
        * prepare ourself with the current application
        * @param {ABApplication} application
+       *        The current ABApplication we are working with.
        */
-      applicationLoad(application) {
-         this.currentApplication = application; // remember our current Application.
-      }
+      // applicationLoad(application) {
+
+      //    this.CurrentApplicationID = application?.id;
+      // }
 
       /**
        * @function hide()
@@ -135,25 +154,21 @@ export default function (AB) {
        * remove the busy indicator from the form.
        */
       hide() {
-         if (this.$component) this.$component.hide();
+         this.$component?.hide();
       }
 
       /**
        * Show the busy indicator
        */
       busy() {
-         if (this.$component) {
-            this.$component.showProgress();
-         }
+         this.$component?.showProgress?.();
       }
 
       /**
        * Hide the busy indicator
        */
       ready() {
-         if (this.$component) {
-            this.$component.hideProgress();
-         }
+         this.$component?.hideProgress?.();
       }
 
       /**
@@ -165,7 +180,6 @@ export default function (AB) {
          this.ready();
          this.hide(); // hide our popup
          this.emit("save", obj, this.selectNew);
-         // _logic.callbacks.onDone(null, obj, selectNew, callback); // tell parent component we're done
       }
 
       /**
@@ -179,7 +193,7 @@ export default function (AB) {
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplication) {
+         if (!this.CurrentApplicationID) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -200,16 +214,18 @@ export default function (AB) {
          }
 
          if (!newObject.createdInAppID) {
-            newObject.createdInAppID = this.currentApplication.id;
+            newObject.createdInAppID = this.CurrentApplicationID;
          }
 
          // show progress
          this.busy();
 
+         var application = this.CurrentApplication;
+
          // if we get here, save the new Object
          try {
             var obj = await newObject.save();
-            await this.currentApplication.objectInsert(obj);
+            await application.objectInsert(obj);
             this[tabKey].emit("save.successful", obj);
             this.done(obj);
          } catch (err) {
@@ -218,8 +234,8 @@ export default function (AB) {
 
             // an error happend during the server side creation.
             // so remove this object from the current object list of
-            // the currentApplication.
-            await this.currentApplication.objectRemove(newObject);
+            // the current application.
+            await application.objectRemove(newObject);
 
             // tell current Tab component there was an error
             this[tabKey].emit("save.error", err);
@@ -228,7 +244,6 @@ export default function (AB) {
 
       /**
        * @function show()
-       *
        * Show this component.
        */
       show(shouldSelectNew) {
@@ -240,13 +255,13 @@ export default function (AB) {
 
       switchTab(tabId) {
          if (tabId == this.BlankTab?.ui?.body?.id) {
-            this.BlankTab?.onShow?.(this.currentApplication);
+            this.BlankTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.CsvTab?.ui?.body?.id) {
-            this.CsvTab?.onShow?.(this.currentApplication);
-         } else if (tabId == this.ImportTab?.ui()?.body?.id) {
-            this.ImportTab?.onShow?.(this.currentApplication);
+            this.CsvTab?.onShow?.(this.CurrentApplicationID);
+         } else if (tabId == this.ImportTab?.ui?.body?.id) {
+            this.ImportTab?.onShow?.(this.CurrentApplicationID);
          } else if (tabId == this.ExternalTab?.ui?.body?.id) {
-            this.ExternalTab?.onShow?.(this.currentApplication);
+            this.ExternalTab?.onShow?.(this.CurrentApplicationID);
          }
       }
    }

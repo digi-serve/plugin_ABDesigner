@@ -6,202 +6,218 @@
  * options.
  *
  */
+import UI_Class from "./ui_class";
+
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   if (!myClass) {
+      const UIClass = UI_Class(AB);
+      var L = UIClass.L();
 
-   class ABCommonPopupEditMenu extends AB.ClassUI {
-      constructor(contextID) {
-         var idBase = "abd_common_popupEditMenu";
-         super(idBase);
+      myClass = class ABCommonPopupEditMenu extends UIClass {
+         constructor(contextID) {
+            var idBase = "abd_common_popupEditMenu";
+            super(idBase);
 
-         this.labels = {
-            copy: L("Copy"),
-            exclude: L("Exclude"),
-            rename: L("Rename"),
-            delete: L("Delete"),
-         };
+            this.labels = {
+               copy: L("Copy"),
+               exclude: L("Exclude"),
+               rename: L("Rename"),
+               delete: L("Delete"),
+            };
 
-         // var labels = {
-         //    common: App.labels,
+            // var labels = {
+            //    common: App.labels,
 
-         //    component: {
-         //       copy: L("ab.page.copy", "*Copy"),
-         //       exclude: L("ab.object.exclude", "*Exclude"),
+            //    component: {
+            //       copy: L("ab.page.copy", "*Copy"),
+            //       exclude: L("ab.object.exclude", "*Exclude"),
 
-         //       menu: L("ab.application.menu", "*Application Menu"),
-         //       confirmDeleteTitle: L(
-         //          "ab.application.delete.title",
-         //          "*Delete application"
-         //       ),
-         //       confirmDeleteMessage: L(
-         //          "ab.application.delete.message",
-         //          "*Do you want to delete <b>{0}</b>?"
-         //       )
-         //    }
-         // };
+            //       menu: L("ab.application.menu", "*Application Menu"),
+            //       confirmDeleteTitle: L(
+            //          "ab.application.delete.title",
+            //          "*Delete application"
+            //       ),
+            //       confirmDeleteMessage: L(
+            //          "ab.application.delete.message",
+            //          "*Do you want to delete <b>{0}</b>?"
+            //       )
+            //    }
+            // };
 
-         // since multiple instances of this component can exists, we need to
-         // make each instance have unique ids => so add webix.uid() to them:
-         // var uid = webix.uid();
-         // var ids = {
-         //    menu: this.unique("menu") + uid,
-         //    list: this.unique("list") + uid
-         // };
+            // since multiple instances of this component can exists, we need to
+            // make each instance have unique ids => so add webix.uid() to them:
+            // var uid = webix.uid();
+            // var ids = {
+            //    menu: this.unique("menu") + uid,
+            //    list: this.unique("list") + uid
+            // };
 
-         this.ids.menu = `${idBase}_menu_${contextID}`;
-         this.ids.list = `${idBase}_list_${contextID}`;
+            this.ids.menu = `${idBase}_menu_${contextID}`;
+            this.ids.list = `${idBase}_list_${contextID}`;
 
-         this.Popup = null;
-         this._menuOptions = [
-            {
-               label: L("Rename"),
-               icon: "fa fa-pencil-square-o",
-               command: "rename",
-            },
-            {
-               label: L("Copy"),
-               icon: "fa fa-files-o",
-               command: "copy",
-            },
-            {
-               label: L("Exclude"),
-               icon: "fa fa-reply",
-               command: "exclude",
-            },
-            {
-               label: L("Delete"),
-               icon: "fa fa-trash",
-               command: "delete",
-            },
-         ];
-      }
+            this.Popup = null;
+            this._menuOptions = [
+               {
+                  label: this.labels.rename,
+                  icon: "fa fa-pencil-square-o",
+                  command: "rename",
+               },
+               {
+                  label: this.labels.copy,
+                  icon: "fa fa-files-o",
+                  command: "copy",
+               },
+               {
+                  label: this.labels.exclude,
+                  icon: "fa fa-reply",
+                  command: "exclude",
+               },
+               {
+                  label: this.labels.delete,
+                  icon: "fa fa-trash",
+                  command: "delete",
+               },
+            ];
+         }
 
-      ui() {
-         return {
-            view: "popup",
-            id: this.ids.menu,
-            head: L("Application Menu"), // labels.component.menu,
-            width: 120,
-            body: {
-               view: "list",
-               id: this.ids.list,
-               borderless: true,
-               data: [],
-               datatype: "json",
-               template: "<i class='fa #icon#' aria-hidden='true'></i> #label#",
-               autoheight: true,
-               select: false,
-               on: {
-                  onItemClick: (timestamp, e, trg) => {
-                     return this.onItemClick(trg);
+         ui() {
+            return {
+               view: "popup",
+               id: this.ids.menu,
+               head: L("Application Menu"), // labels.component.menu,
+               width: 120,
+               body: {
+                  view: "list",
+                  id: this.ids.list,
+                  borderless: true,
+                  data: [],
+                  datatype: "json",
+                  template:
+                     "<i class='fa #icon#' aria-hidden='true'></i> #label#",
+                  autoheight: true,
+                  select: false,
+                  on: {
+                     onItemClick: (timestamp, e, trg) => {
+                        return this.onItemClick(trg);
+                     },
                   },
                },
-            },
-         };
-      }
-
-      async init(AB, options) {
-         options = options || {};
-
-         if (this.Popup == null) this.Popup = webix.ui(this.ui()); // the current instance of this editor.
-
-         // we reference $$(this.ids.list) alot:
-         this.$list = $$(this.ids.list);
-
-         this.hide();
-         this.menuOptions(this._menuOptions);
-
-         // register our callbacks:
-         // for (var c in _logic.callbacks) {
-         //    if (options && options[c]) {
-         //       _logic.callbacks[c] = options[c] || _logic.callbacks[c];
-         //    }
-         // }
-
-         if (options.onClick) {
-            this.onClick = options.onClick;
+            };
          }
-         // hide "copy" item
-         if (options.hideCopy) {
-            let itemCopy = this.$list.data.find(
-               (item) => item.label == this.labels.copy
-            )[0];
-            if (itemCopy) {
-               this.$list.remove(itemCopy.id);
-               this.$list.refresh();
+
+         async init(AB, options) {
+            options = options || {};
+
+            if (this.Popup == null) this.Popup = webix.ui(this.ui()); // the current instance of this editor.
+
+            // we reference $$(this.ids.list) alot:
+            this.$list = $$(this.ids.list);
+
+            this.hide();
+            this.menuOptions(this._menuOptions);
+
+            // register our callbacks:
+            // for (var c in _logic.callbacks) {
+            //    if (options && options[c]) {
+            //       _logic.callbacks[c] = options[c] || _logic.callbacks[c];
+            //    }
+            // }
+
+            if (options.onClick) {
+                this.onClick = options.onClick;
+            }
+            // hide "copy" item
+            if (options.hideCopy) {
+                let itemCopy = this.$list.data.find(
+                  (item) => item.label == this.labels.copy
+                )[0];
+                if (itemCopy) {
+                  this.$list.remove(itemCopy.id);
+                  this.$list.refresh();
+                }
+
+                // hide "exclude" item
+                if (options.hideExclude) {
+                  let hideExclude = this.$list.data.find(
+                      (item) => item.label == this.labels.exclude
+                  )[0];
+                  if (hideExclude) {
+                      this.$list.remove(hideExclude.id);
+                      this.$list.refresh();
+                  }
+                }
             }
          }
 
-         // hide "exclude" item
-         if (options.hideExclude) {
-            let hideExclude = this.$list.data.find(
-               (item) => item.label == this.labels.exclude
-            )[0];
-            if (hideExclude) {
-               this.$list.remove(hideExclude.id);
-               this.$list.refresh();
-            }
+
+         /**
+          * @function menuOptions
+          * override the set of menu options.
+          * @param {array} menuOptions an array of option entries:
+          *				  .label {string} multilingual label of the option
+          *				  .icon  {string} the font awesome icon reference
+          *				  .command {string} the command passed back when selected.
+          */
+         menuOptions(menuOptions) {
+            this.$list.clearAll();
+
+            this._menuOptions = menuOptions;
+            var data = [];
+            menuOptions.forEach((mo) => {
+               data.push({ label: mo.label, icon: mo.icon });
+            });
+            this.$list.parse(data);
+            this.$list.refresh();
          }
-      }
 
-      /**
-       * @function menuOptions
-       * override the set of menu options.
-       * @param {array} menuOptions an array of option entries:
-       *				  .label {string} multilingual label of the option
-       *				  .icon  {string} the font awesome icon reference
-       *				  .command {string} the command passed back when selected.
-       */
-      menuOptions(menuOptions) {
-         this.$list.clearAll();
-
-         this._menuOptions = menuOptions;
-         var data = [];
-         menuOptions.forEach((mo) => {
-            data.push({ label: mo.label, icon: mo.icon });
-         });
-         this.$list.parse(data);
-         this.$list.refresh();
-      }
-
-      /**
-       * @function onItemClick
-       * process which item in our popup was selected.
-       */
-      onItemClick(itemNode) {
-         // hide our popup before we trigger any other possible UI animation: (like .edit)
-         // NOTE: if the UI is animating another component, and we do .hide()
-         // while it is in progress, the UI will glitch and give the user whiplash.
-
-         var label = itemNode.textContent.trim();
-         var option = this._menuOptions.filter((mo) => {
-            return mo.label == label;
-         })[0];
-         if (option) {
-            if (this.onClick) {
-               this.emit(option.command, itemNode);
-               //this.onClick(option.command);
-            } else {
-               this.emit("click", option.command);
+         /**
+          * @function onItemClick
+          * process which item in our popup was selected.
+          */
+         onItemClick(itemNode) {
+            // hide our popup before we trigger any other possible UI animation: (like .edit)
+            // NOTE: if the UI is animating another component, and we do .hide()
+            // while it is in progress, the UI will glitch and give the user whiplash.
+            var label = itemNode.textContent.trim();
+            var option = this._menuOptions.filter((mo) => {
+                return mo.label == label;
+            })[0];
+            if (option) {
+                if (this.onClick) {
+                  this.emit(option.command, itemNode);
+                  //this.onClick(option.command);
+                } else {
+                  this.emit("click", option.command);
+                }
+                this.hide();
+                return false;
             }
          }
 
-         this.hide();
-         return false;
-      }
+         show(itemNode) {
+            if (this.Popup && itemNode) this.Popup.show(itemNode);
+         }
 
-      show(itemNode) {
-         if (this.Popup && itemNode) this.Popup.show(itemNode);
-      }
+         /**
+          * @method trigger()
+          * emit the selected command.
+          * NOTE: this can be overridden by child objects
+          */
+         trigger(command) {
+            this.emit("click", command);
+         }
 
-      hide() {
-         if (this.Popup) this.Popup.hide();
-      }
+         hide() {
+            if (this.Popup) this.Popup.hide();
+         }
+      };
    }
 
    // NOTE: return JUST the class definition.
-   return ABCommonPopupEditMenu;
+   return myClass;
 }

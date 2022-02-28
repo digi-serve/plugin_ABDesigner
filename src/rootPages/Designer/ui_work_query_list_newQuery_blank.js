@@ -3,22 +3,19 @@
  *
  * Display the form for creating a new ABQuery.
  */
+import UI_Class from "./ui_class";
 
 export default function (AB) {
-   const L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-   class UI_Work_Query_List_NewQuery_Blank extends AB.ClassUI {
+   class UI_Work_Query_List_NewQuery_Blank extends UIClass {
       constructor() {
-         const base = "ui_work_query_list_newQuery_blank";
-         super({
-            component: base,
-
-            form: `${base}_blank`,
-            buttonSave: `${base}_save`,
-            buttonCancel: `${base}_cancel`,
-            object: `${base}_object`,
+         super("ui_work_query_list_newQuery_blank", {
+            form: "",
+            buttonSave: "",
+            buttonCancel: "",
+            object: "",
          });
       }
 
@@ -45,7 +42,7 @@ export default function (AB) {
                      labelWidth: 70,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_query_list_newQuery_blank_name"
                            );
@@ -62,7 +59,7 @@ export default function (AB) {
                      labelWidth: 70,
                      on: {
                         onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(
+                           UIClass.CYPRESS_REF(
                               this,
                               "ui_work_query_list_newQuery_blank_object"
                            );
@@ -84,7 +81,7 @@ export default function (AB) {
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -100,7 +97,7 @@ export default function (AB) {
                            },
                            on: {
                               onAfterRender() {
-                                 AB.ClassUI.CYPRESS_REF(this);
+                                 UIClass.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -269,5 +266,5 @@ export default function (AB) {
       }
    }
 
-   return UI_Work_Query_List_NewQuery_Blank;
+   return new UI_Work_Query_List_NewQuery_Blank();
 }

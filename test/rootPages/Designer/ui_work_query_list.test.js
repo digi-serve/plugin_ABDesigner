@@ -51,14 +51,9 @@ describe("ui_work_query_list", function () {
       assert.equal(ab, target.AB);
       assert.equal(true, spyOn.calledOnce);
       assert.equal(true, target.ListComponent.init.calledOnceWith(ab));
-      ["selected", "addNew", "deleted", "exclude", "copied"].forEach(
-         (key, index) => {
-            assert.equal(
-               key,
-               target.ListComponent.on.getCalls()[index].args[0]
-            );
-         }
-      );
+      ["selected", "addNew", "deleted", "exclude"].forEach((key, index) => {
+         assert.equal(key, target.ListComponent.on.getCalls()[index].args[0]);
+      });
       assert.equal(true, spyAddFormInit.calledOnceWith(ab));
       assert.equal("cancel", spyAddFormOn.getCalls()[0].args[0]);
       assert.equal("save", spyAddFormOn.getCalls()[1].args[0]);

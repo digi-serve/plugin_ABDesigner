@@ -39,6 +39,7 @@ describe("ab_work_query_list_newQuery", function () {
       const ab = new AB();
       const target = getTarget();
       const spyUI = sinon.spy(webix, "ui");
+      webix.extend.restore && webix.extend.restore();
       const spyExtend = sinon.spy(webix, "extend");
       const spyBlankTabInit = sinon.spy(target.BlankTab, "init");
       const spyBlankTabOn = sinon.spy(target.BlankTab, "on");

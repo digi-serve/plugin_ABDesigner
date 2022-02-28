@@ -1,4 +1,6 @@
 export default class webix {
-   static ui() {}
+   static alert() {}
+   static confirm() {}
    static extend() {}
+   static ui() {}
 }

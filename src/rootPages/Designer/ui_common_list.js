@@ -7,7 +7,7 @@
 
 import UIListEditMenuFactory from "./ui_common_popupEditMenu";
 
-export default function (AB) {
+export default function (AB, options) {
    var UIListEditMenu = UIListEditMenuFactory(AB);
 
    const uiConfig = AB.Config.uiSettings();
@@ -19,14 +19,13 @@ export default function (AB) {
       constructor(attributes) {
          // attributes.idBase = attributes.idBase || "ui_common_list";
          var base = attributes.idBase || "ui_common_list";
-         super({
-            component: base,
-            listSetting: `${base}_listsetting`,
-            list: `${base}_editlist`,
-            searchText: `${base}_searchText`,
-            sort: `${base}_sort`,
-            group: `${base}_group`,
-            buttonNew: `${base}_buttonNew`,
+         super(base, {
+            listSetting: "",
+            list: "",
+            searchText: "",
+            sort: "",
+            group: "",
+            buttonNew: "",
          });
 
          this.idBase = base;
@@ -131,7 +130,7 @@ export default function (AB) {
                   },
                   on: {
                      onAfterSelect: (id) => {
-                        this.selectItem(id);
+                        this.onSelectItem(id);
                      },
                      onBeforeEditStop: (state, editor) => {
                         this.onBeforeEditStop(state, editor);
@@ -207,9 +206,8 @@ export default function (AB) {
                                        this.$view
                                           .querySelectorAll("button")
                                           .forEach((b) => {
-                                             var bid = b.getAttribute(
-                                                "button_id"
-                                             );
+                                             var bid =
+                                                b.getAttribute("button_id");
                                              AB.ClassUI.CYPRESS_REF(
                                                 b,
                                                 `${ids.sort}_${bid}`
@@ -400,8 +398,8 @@ export default function (AB) {
          return false;
       }
 
-      /*
-       * @function copy
+      /**
+       * @method copy
        * make a copy of the current selected item.
        *
        * copies should have all the same .toObj() data,
@@ -486,6 +484,10 @@ export default function (AB) {
          if (this.$list) return this.$list.count();
       }
 
+      selectedItem() {
+         return this.$list.getSelectedItem(false);
+      }
+
       onAfterEditStop(state, editor /*, ignoreUpdate */) {
          this.showGear(editor.id);
 
@@ -556,6 +558,20 @@ export default function (AB) {
       }
 
       /**
+       * @function onSelectItem()
+       *
+       * Perform these actions when an Process is selected in the List.
+       */
+      onSelectItem(id) {
+         var process = this.$list.getItem(id);
+
+         // _logic.callbacks.onChange(object);
+         this.emit("selected", process);
+
+         this.showGear(id);
+      }
+
+      /**
        * @function save()
        *
        */
@@ -567,18 +583,10 @@ export default function (AB) {
          this.AB.Storage.set(this.idBase, this._settings);
       }
 
-      /**
-       * @function selectItem()
-       *
-       * Perform these actions when an Process is selected in the List.
-       */
       selectItem(id) {
-         var process = this.$list.getItem(id);
-
-         // _logic.callbacks.onChange(object);
-         this.emit("selected", process);
-
-         this.showGear(id);
+         this.$list.blockEvent();
+         this.select(id);
+         this.$list.unblockEvent();
       }
 
       showGear(id) {
@@ -603,14 +611,20 @@ export default function (AB) {
        */
       templateListItem(obj, common) {
          var warnings = obj.warningsAll();
-         var warnText = "";
-         if (warnings.length > 0) {
-            warnText = `(${warnings.length})`;
+
+         if (typeof this._templateListItem == "string") {
+            var warnText = "";
+            if (warnings.length > 0) {
+               warnText = `(${warnings.length})`;
+            }
+
+            return this._templateListItem
+               .replace("#label#", obj.label || "??label??")
+               .replace("{common.iconGear}", common.iconGear(obj))
+               .replace("#warnings#", warnText);
          }
-         return this._templateListItem
-            .replace("#label#", obj.label || "??label??")
-            .replace("{common.iconGear}", common.iconGear(obj))
-            .replace("#warnings#", warnText);
+         // else they sent in a function()
+         return this._templateListItem(obj, common, warnings);
       }
 
       /**
@@ -738,5 +752,5 @@ export default function (AB) {
    }
 
    // NOTE: We are returning the Class here, not an instance:
-   return UI_Common_List;
+   return new UI_Common_List(options);
 }

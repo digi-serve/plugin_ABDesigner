@@ -1,28 +1,28 @@
 /*
- * ab_work_object_list_newObject_csv
+ * ui_work_object_list_newObject_csv
  *
  * Display the form for import CSV file to a object.
  *
  */
+import UI_Class from "./ui_class";
 import CSVImporter from "../../utils/CSVImporter.js";
 
 export default function (AB) {
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
+   let uiSettings = AB.Config.uiSettings();
 
-   class UI_Work_Object_List_NewObject_Csv extends AB.ClassUI {
+   class UI_Work_Object_List_NewObject_Csv extends UIClass {
       constructor() {
-         var base = "ui_work_object_list_newObject_csv";
-         super({
-            component: base,
+         super("ui_work_object_list_newObject_csv", {
+            // component: base,
 
-            form: `${base}_csvForm`,
-            uploadFileList: `${base}_uploadFileList`,
-            separatedBy: `${base}_separatedBy`,
-            headerOnFirstLine: `${base}_headerOnFirstLine`,
-            columnList: `${base}_columnList`,
-            importButton: `${base}_importButton`,
+            form: "",
+            uploadFileList: "",
+            separatedBy: "",
+            headerOnFirstLine: "",
+            columnList: "",
+            importButton: "",
          });
 
          this._csvImporter = new CSVImporter(AB);
@@ -47,7 +47,7 @@ export default function (AB) {
                      name: "name",
                      required: true,
                      placeholder: L("Object name"),
-                     labelWidth: 70,
+                     labelWidth: uiSettings.labelWidthMedium,
                   },
                   {
                      view: "uploader",
@@ -71,7 +71,7 @@ export default function (AB) {
                      autoheight: true,
                      borderless: true,
                      onClick: {
-                        webix_remove_upload: (e, id, trg) => {
+                        webix_remove_upload: (e, id /*, trg */) => {
                            this.removeCsvFile(id);
                         },
                      },
@@ -81,7 +81,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "separatedBy",
                      label: L("Separated by"),
-                     labelWidth: 140,
+                     labelWidth: uiSettings.labelWidthXLarge,
                      options: this._csvImporter.getSeparateItems(),
                      value: ",",
                      on: {
@@ -99,7 +99,7 @@ export default function (AB) {
                      disabled: true,
                      value: true,
                      on: {
-                        onChange: (newVal, oldVal) => {
+                        onChange: (/* newVal, oldVal */) => {
                            this.populateColumnList();
                         },
                      },
@@ -187,8 +187,8 @@ export default function (AB) {
       async loadCsvFile(fileInfo) {
          if (!this._csvImporter.validateFile(fileInfo)) {
             webix.alert({
-               title: L("This file extension is disallow"),
-               text: L("Please only upload CSV file"),
+               title: L("This file extension is not allowed"),
+               text: L("Please only upload CSV files"),
                ok: L("OK"),
             });
 
@@ -268,7 +268,7 @@ export default function (AB) {
                   {
                      view: "text",
                      value: col.columnName,
-                     width: 170,
+                     width: uiSettings.labelWidthXLarge,
                   },
                   {
                      view: "select",
@@ -276,23 +276,33 @@ export default function (AB) {
                      options: [
                         {
                            id: "string",
-                           value: this.allFields.filter((f) => f.key == "string")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "string")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "LongText",
-                           value: this.allFields.filter((f) => f.key == "LongText")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "LongText")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "number",
-                           value: this.allFields.filter((f) => f.key == "number")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "number")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "date",
-                           value: this.allFields.filter((f) => f.key == "date")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "date")[0]
+                              .defaults().menuName,
                         },
                         {
                            id: "boolean",
-                           value: this.allFields.filter((f) => f.key == "boolean")[0].defaults().menuName,
+                           value: this.allFields
+                              .filter((f) => f.key == "boolean")[0]
+                              .defaults().menuName,
                         },
                      ],
                      width: 120,
@@ -348,7 +358,7 @@ export default function (AB) {
             webix.alert({
                title: L("Column name is invalid"),
                text: L(
-                  "Please enter column name does not match [{0}]",
+                  "Please enter column name that does not match [{0}]",
                   this.allFields[0].reservedNames.join(", ")
                ),
                ok: L("OK"),
@@ -381,7 +391,7 @@ export default function (AB) {
             let dataType = cView.queryView({ view: "select" }).getValue();
 
             let newField = {
-               id: AB.uuid(),
+               // id: AB.uuid(),
                columnName: columnName,
                label: columnName,
                key: dataType,
@@ -406,34 +416,39 @@ export default function (AB) {
          // add rows to Server
          var objModel = newObj.model();
 
-         // prepare row data
-         let rowDatas = [];
+         // Add each records sequentially
          this._dataRows.forEach((data, index) => {
-            if (this.$headerOnFirstLine.getValue() && index == 0)
-               return Promise.resolve();
+            subTasks = subTasks.then(() => {
+               if (this.$headerOnFirstLine.getValue() && index == 0)
+                  return Promise.resolve();
 
-            let rowData = {};
-            let colValues = data;
+               var rowData = {};
+               var colValues = data;
 
-            newObj.fields().forEach((col) => {
-               if (colValues[col.settings.weight] != null)
-                  rowData[col.columnName] = colValues[col.settings.weight];
+               newObj.fields().forEach((col) => {
+                  if (colValues[col.settings.weight] != null)
+                     rowData[col.columnName] = colValues[col.settings.weight];
+               });
+
+               // Add row data
+               return objModel.create(rowData);
             });
-
-            rowDatas.push(rowData);
          });
-
-         // Add bulk of data
-         subTasks = subTasks.then(() => objModel.createAll(rowDatas));
 
          // if there was no error, clear the form for the next
          // entry:
-         return subTasks.then(() => {
-            this.formClear();
-            this.$importButton.enable();
+         return subTasks
+            .then(() => {
+               this.formClear();
+               this.$importButton.enable();
 
-            return Promise.resolve();
-         });
+               return Promise.resolve();
+            })
+            .catch((err) => {
+               AB.notify.developer(err, {
+                  message: "Error import data rows from CSV",
+               });
+            });
       }
 
       onError(err) {

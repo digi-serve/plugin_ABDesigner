@@ -4,21 +4,19 @@
  * Manage the ABObjectQuery List
  *
  */
-import UICommonListFactory from "./ui_common_list";
-import UIListNewProcess from "./ui_work_query_list_newQuery";
+import UI_Class from "./ui_class";
+import UI_COMMON_LIST from "./ui_common_list";
+import UIListNewQuery from "./ui_work_query_list_newQuery";
 
 export default function (AB) {
-   const UI_COMMON_LIST = UICommonListFactory(AB);
-   const UI_ADD_FORM = UIListNewProcess(AB);
-
-   class UI_Work_Query_List extends AB.ClassUI {
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
+   class UI_Work_Query_List extends UIClass {
       constructor() {
          super("ui_work_query_list");
 
-         this.CurrentApplication = null;
-
          // {ui_common_list} instance to display a list of our objects.
-         this.ListComponent = new UI_COMMON_LIST({
+         this.ListComponent = UI_COMMON_LIST(AB, {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new query",
@@ -34,7 +32,7 @@ export default function (AB) {
                exclude: true,
             },
          });
-         this.AddForm = new UI_ADD_FORM();
+         this.AddForm = UIListNewQuery(AB);
 
          this._handler_refreshApp = (def) => {
             if (!this.CurrentApplication) return;
@@ -52,7 +50,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
@@ -63,7 +61,8 @@ export default function (AB) {
          //
          // List of Processes
          //
-         await this.ListComponent.init(AB);
+         var allInits = [];
+         allInits.push(this.ListComponent.init(AB));
 
          this.ListComponent.on("selected", (item) => {
             this.emit("selected", item);
@@ -81,20 +80,16 @@ export default function (AB) {
             this.exclude(item);
          });
 
-         this.ListComponent.on("copied", (data) => {
-            this.copy(data);
-         });
-
          //
          // Add Form
          //
-         await this.AddForm.init(AB);
+         allInits.push(this.AddForm.init(AB));
 
          this.AddForm.on("cancel", () => {
             this.AddForm.hide();
          });
 
-         this.AddForm.on("save", (q, select) => {
+         this.AddForm.on("save", (q /*, select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
@@ -105,6 +100,8 @@ export default function (AB) {
             this.ListComponent.select(q.id);
             // }
          });
+
+         await Promise.all(allInits);
       }
 
       /**
@@ -115,30 +112,9 @@ export default function (AB) {
        *        [optional] The current ABApplication we are working with.
        */
       applicationLoad(application) {
-         var events = ["definition.updated", "definition.deleted"];
-         if (this.CurrentApplication) {
-            // remove current handler
-            events.forEach((e) => {
-               this.CurrentApplication.removeListener(
-                  e,
-                  this._handler_refreshApp
-               );
-            });
-         }
-         this.CurrentApplication = application;
-         if (this.CurrentApplication) {
-            events.forEach((e) => {
-               this.CurrentApplication.on(e, this._handler_refreshApp);
-            });
-         }
-
+         super.applicationLoad(application);
          this.ListComponent.dataLoad(application?.queriesIncluded());
-
          this.AddForm.applicationLoad(application);
-      }
-
-      ready() {
-         this.ListComponent.ready();
       }
 
       /**
@@ -146,11 +122,32 @@ export default function (AB) {
        *
        * Manages initiating the transition to the new Process Popup window
        */
-      clickNewQuery(selectNew) {
+      clickNewQuery(/* selectNew */) {
          // show the new popup
          this.AddForm.show();
       }
+
+      /*
+       * @function exclude
+       * the list component notified us of an exclude action and which
+       * item was chosen.
+       *
+       * perform the removal and update the UI.
+       */
+      async exclude(item) {
+         this.ListComponent.busy();
+         var app = this.CurrentApplication;
+         await app.queryRemove(item);
+         this.ListComponent.dataLoad(app.queriesIncluded());
+
+         // this will clear the  workspace
+         this.emit("selected", null);
+      }
+
+      ready() {
+         this.ListComponent.ready();
+      }
    }
 
-   return UI_Work_Query_List;
+   return new UI_Work_Query_List();
 }

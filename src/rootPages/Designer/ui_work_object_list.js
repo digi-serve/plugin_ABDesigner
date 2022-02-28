@@ -4,29 +4,22 @@
  * Manage the ABObject List
  *
  */
-import UICommonListFactory from "./ui_common_list";
+import UI_Class from "./ui_class";
+import UI_COMMON_LIST from "./ui_common_list";
 import UIListNewProcess from "./ui_work_object_list_newObject";
 
-// const ABProcess = require("../classes/platform/ABProcess");
-
 export default function (AB) {
-   var UI_COMMON_LIST = UICommonListFactory(AB);
-
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+   const UIClass = UI_Class(AB);
+   // var L = UIClass.L();
 
    var AddForm = new UIListNewProcess(AB);
    // the popup form for adding a new process
 
-   class UI_Work_Object_List extends AB.ClassUI {
+   class UI_Work_Object_List extends UIClass {
       constructor() {
          super("ui_work_object_list");
 
-         this.CurrentApplication = null;
-         var processList = null;
-
-         this.ListComponent = new UI_COMMON_LIST({
+         this.ListComponent = UI_COMMON_LIST(AB, {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new object",
@@ -51,7 +44,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      async init(AB, options) {
+      async init(AB) {
          this.AB = AB;
 
          this.on("addNew", (selectNew) => {
@@ -61,12 +54,12 @@ export default function (AB) {
          });
 
          //
-         // List of Processes
+         // List of Objects
          //
          await this.ListComponent.init(AB);
 
          this.ListComponent.on("selected", (item) => {
-            this.emit("selected", item);
+            this.emit("selected", item?.id);
          });
 
          this.ListComponent.on("addNew", (selectNew) => {
@@ -81,9 +74,9 @@ export default function (AB) {
             this.exclude(item);
          });
 
-         this.ListComponent.on("copied", (data) => {
-            this.copy(data);
-         });
+         // this.ListComponent.on("copied", (data) => {
+         //    this.copy(data);
+         // });
 
          // ListComponent.on("menu", (data)=>{
          // 	console.log(data);
@@ -106,7 +99,7 @@ export default function (AB) {
             AddForm.hide();
          });
 
-         AddForm.on("save", (obj, select) => {
+         AddForm.on("save", (obj /* , select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
@@ -128,34 +121,24 @@ export default function (AB) {
          };
       }
 
-      addNew() {
-         console.error("!! Who is calling this?");
-         this.clickNewProcess(true);
-      }
-
       /**
        * @function applicationLoad
        * Initialize the List from the provided ABApplication
        * If no ABApplication is provided, then show an empty form. (create operation)
        * @param {ABApplication} application
-       *        [optional] The current ABApplication we are working with.
+       *        The current ABApplication we are working with.
        */
       applicationLoad(application) {
-         var events = ["definition.updated", "definition.deleted"];
-         if (this.CurrentApplication) {
-            // remove current handler
-            events.forEach((e) => {
-               this.CurrentApplication.removeListener(
-                  e,
-                  this._handler_refreshApp
-               );
-            });
-         }
-         this.CurrentApplication = application;
-         if (this.CurrentApplication) {
-            events.forEach((e) => {
-               this.CurrentApplication.on(e, this._handler_refreshApp);
-            });
+         var oldAppID = this.CurrentApplicationID;
+         var selectedItem = null;
+         // {ABObject}
+         // if we are updating the SAME application, we will want to default
+         // the list to the currently selectedItem
+
+         super.applicationLoad(application);
+
+         if (oldAppID == this.CurrentApplicationID) {
+            selectedItem = this.ListComponent.selectedItem();
          }
 
          // NOTE: only include System Objects if the user has permission
@@ -165,42 +148,18 @@ export default function (AB) {
          }
          this.ListComponent.dataLoad(application?.objectsIncluded(f));
 
+         if (selectedItem) {
+            this.ListComponent.selectItem(selectedItem.id);
+         }
+
          AddForm.applicationLoad(application);
       }
 
       /**
-       * @function callbackNewProcess
-       *
-       * Once a New Process was created in the Popup, follow up with it here.
-       */
-      // callbackNewProcess(err, object, selectNew, callback) {
-      //    debugger;
-      //    if (err) {
-      //       OP.Error.log("Error creating New Process", { error: err });
-      //       return;
-      //    }
-
-      //    let objects = this.CurrentApplication.objects();
-      //    processList.parse(objects);
-
-      //    // if (processList.exists(object.id))
-      //    // 	processList.updateItem(object.id, object);
-      //    // else
-      //    // 	processList.add(object);
-
-      //    if (selectNew != null && selectNew == true) {
-      //       $$(ids.list).select(object.id);
-      //    } else if (callback) {
-      //       callback();
-      //    }
-      // }
-
-      /**
        * @function clickNewProcess
-       *
        * Manages initiating the transition to the new Process Popup window
        */
-      clickNewProcess(selectNew) {
+      clickNewProcess(/* selectNew */) {
          // show the new popup
          AddForm.show();
       }
@@ -213,16 +172,17 @@ export default function (AB) {
        * now our job is to create a new instance of that Item and
        * tell the list to display it
        */
-      copy(data) {
-         debugger;
-         this.ListComponent.busy();
+      // copy(data) {
+      //    debugger;
+      //    // TODO:
+      //    this.ListComponent.busy();
 
-         this.CurrentApplication.processCreate(data.item).then((newProcess) => {
-            this.ListComponent.ready();
-            this.ListComponent.dataLoad(this.CurrentApplication.processes());
-            this.ListComponent.select(newProcess.id);
-         });
-      }
+      //    this.CurrentApplication.processCreate(data.item).then((newProcess) => {
+      //       this.ListComponent.ready();
+      //       this.ListComponent.dataLoad(this.CurrentApplication.processes());
+      //       this.ListComponent.select(newProcess.id);
+      //    });
+      // }
 
       /*
        * @function exclude
@@ -233,8 +193,9 @@ export default function (AB) {
        */
       async exclude(item) {
          this.ListComponent.busy();
-         await this.CurrentApplication.objectRemove(item);
-         this.ListComponent.dataLoad(this.CurrentApplication.objectsIncluded());
+         var app = this.CurrentApplication;
+         await app.objectRemove(item);
+         this.ListComponent.dataLoad(app.objectsIncluded());
 
          // this will clear the object workspace
          this.emit("selected", null);
@@ -243,22 +204,6 @@ export default function (AB) {
       ready() {
          this.ListComponent.ready();
       }
-      // Expose any globally accessible Actions:
-      // this.actions({
-      //    /**
-      //     * @function getSelectedProcess
-      //     *
-      //     * returns which ABProcess is currently selected.
-      //     * @return {ABProcess}  or {null} if nothing selected.
-      //     */
-      //    getSelectedProcess: function () {
-      //       return $$(ids.list).getSelectedItem();
-      //    },
-
-      //    addNewProcess: function (selectNew, callback) {
-      //       _logic.clickNewProcess(selectNew, callback);
-      //    },
-      // });
    }
    return new UI_Work_Object_List();
 }
