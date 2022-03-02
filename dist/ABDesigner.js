@@ -273,6 +273,11 @@ let myClass = null;
                            id: ids.columnName,
                            name: "columnName",
                            hidden: true,
+                           on: {
+                              onAfterRender() {
+                                 UIClass.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {
                            view: "button",
@@ -1186,7 +1191,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Prefix") + ": ",
+                     label: L("Prefix:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -1199,6 +1204,9 @@ __webpack_require__.r(__webpack_exports__);
                         onTimedKeyPress: () => {
                            this.previewChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -1207,7 +1215,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Delimiter") + ": ",
+                     label: L("Delimiter:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -1221,6 +1229,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: () => {
                            this.previewChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -1229,7 +1240,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Length") + ": ",
+                     label: L("Length:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -1246,6 +1257,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: () => {
                            this.previewChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -1254,7 +1268,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Preview") + ": ",
+                     label: L("Preview:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -1264,6 +1278,11 @@ __webpack_require__.r(__webpack_exports__);
                      name: "previewText",
                      value: "0000",
                      disabled: true,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -1358,7 +1377,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default") + ": ",
+                     label: L("Default:") + " ",
                      align: "right",
                      width: 65,
                   },
@@ -1376,6 +1395,9 @@ __webpack_require__.r(__webpack_exports__);
                            $$(ids.checkBoxLabel).setValue(
                               newVal ? checkLabel : uncheckLabel
                            );
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -1453,7 +1475,10 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
 
          const delimiterList = [
-            { id: "none", value: L("None") },
+            {
+               id: "none",
+               value: L("None"),
+            },
             {
                id: "comma",
                value: L("Comma"),
@@ -1490,6 +1515,9 @@ __webpack_require__.r(__webpack_exports__);
                      this.insertEquation(message);
 
                      $$(ids.fieldPopup).hide();
+                  },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
                   },
                },
             },
@@ -1547,6 +1575,9 @@ __webpack_require__.r(__webpack_exports__);
 
                      $$(ids.numberOperatorPopup).hide();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
          });
@@ -1570,6 +1601,9 @@ __webpack_require__.r(__webpack_exports__);
 
                      $$(ids.dateOperatorPopup).hide();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
             on: {
@@ -1588,7 +1622,7 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Equation") + ": ",
+                           label: L("Equation:") + " ",
                            align: "left",
                            width: 75,
                         },
@@ -1600,6 +1634,11 @@ __webpack_require__.r(__webpack_exports__);
                      name: "formula",
                      view: "textarea",
                      height: 100,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -1618,6 +1657,11 @@ __webpack_require__.r(__webpack_exports__);
                               // show popup
                               $$(ids.fieldPopup).show(this.$view);
                            },
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {
                            view: "button",
@@ -1628,6 +1672,11 @@ __webpack_require__.r(__webpack_exports__);
                            click: function () {
                               // show popup
                               $$(ids.dateOperatorPopup).show(this.$view);
+                           },
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
                            },
                         },
                      ],
@@ -1645,6 +1694,11 @@ __webpack_require__.r(__webpack_exports__);
                               // show popup
                               $$(ids.numberOperatorPopup).show(this.$view);
                            },
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {},
                      ],
@@ -1653,7 +1707,7 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Decimals") + ": ",
+                           label: L("Decimals:") + " ",
                            align: "right",
                            width: 66.63,
                         },
@@ -1671,11 +1725,14 @@ __webpack_require__.r(__webpack_exports__);
                                     $$(ids.decimalPlaces).enable();
                                  }
                               },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
                            },
                         },
                         {
                            view: "label",
-                           label: L("Places") + ": ",
+                           label: L("Places:") + " ",
                            align: "right",
                            width: 66.63,
                         },
@@ -1689,6 +1746,11 @@ __webpack_require__.r(__webpack_exports__);
                            max: 10,
                            disabled: true,
                            width: 104,
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
+                           },
                         },
                      ],
                   },
@@ -1896,7 +1958,7 @@ __webpack_require__.r(__webpack_exports__);
       constructor() {
          super("properties_abfield_combine", {
             combinedFields: "",
-            delimiter: "plus",
+            delimiter: "",
          });
       }
 
@@ -1909,7 +1971,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Combined Fields") + ": ",
+                     label: L("Combined Fields:") + " ",
                      align: "right",
                      width: 125,
                   },
@@ -1920,6 +1982,11 @@ __webpack_require__.r(__webpack_exports__);
                      labelWidth: uiConfig.labelWidthXLarge,
                      disallowEdit: true,
                      options: [],
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -1927,7 +1994,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Delimiter") + ": ",
+                     label: L("Delimiter:") + " ",
                      align: "right",
                      width: 125,
                   },
@@ -1944,6 +2011,11 @@ __webpack_require__.r(__webpack_exports__);
                         { id: "period", value: L("Period ( . )") },
                         { id: "space", value: L("Space ( )") },
                      ],
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -1963,19 +2035,21 @@ __webpack_require__.r(__webpack_exports__);
       show() {
          const ids = this.ids;
 
-         let fields = this.CurrentObject.fields((f) => {
+         const fields = this.CurrentObject.fields((f) => {
             return (
-               f.key == "string" ||
-               f.key == "LongText" ||
-               f.key == "number" ||
-               f.key == "date" ||
-               f.key == "datetime" ||
-               f.key == "boolean" ||
-               f.key == "list" ||
-               f.key == "email" ||
-               f.key == "user" ||
-               f.key == "AutoIndex" ||
-               f.key == "combined" ||
+               [
+                  "string",
+                  "LongText",
+                  "number",
+                  "date",
+                  "datetime",
+                  "boolean",
+                  "list",
+                  "email",
+                  "user",
+                  "AutoIndex",
+                  "combined",
+               ].indexOf(f.key) > -1 ||
                (f.isConnection &&
                   // 1:M
                   ((f.settings.linkType == "one" &&
@@ -1994,7 +2068,7 @@ __webpack_require__.r(__webpack_exports__);
 
          super.show();
 
-         let $combinedFields = $$(ids.combinedFields);
+         const $combinedFields = $$(ids.combinedFields);
          if ($combinedFields) {
             $combinedFields.define("options", fields);
             $combinedFields.refresh();
@@ -2065,7 +2139,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Connected to") + ": ",
+                     label: L("Connected to:") + " ",
                      align: "right",
                      width: 94,
                   },
@@ -2083,6 +2157,9 @@ __webpack_require__.r(__webpack_exports__);
                      on: {
                         onChange: (newV, oldV) => {
                            this.selectObjectTo(newV, oldV);
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2135,6 +2212,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: (newValue, oldValue) => {
                            this.selectLinkType(newValue, oldValue);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -2179,6 +2259,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: (newV, oldV) => {
                            this.selectLinkViaType(newV, oldV);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -2210,6 +2293,9 @@ __webpack_require__.r(__webpack_exports__);
                   onChange: () => {
                      this.checkCustomFK();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
             {
@@ -2222,11 +2308,14 @@ __webpack_require__.r(__webpack_exports__);
                label: L("Index Field:"),
                placeholder: L("Select index field"),
                options: [],
-               // on: {
-               //    onChange: () => {
-               //       ABFieldConnectComponent.logic.updateColumnName();
-               //    }
-               // }
+               on: {
+                  // onChange: () => {
+                  //    ABFieldConnectComponent.logic.updateColumnName();
+                  // },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                id: ids.indexField2,
@@ -2238,6 +2327,11 @@ __webpack_require__.r(__webpack_exports__);
                label: L("Index Field:"),
                placeholder: L("Select index field"),
                options: [],
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
          ]);
       }
@@ -2648,7 +2742,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Date Format") + ": ",
+                     label: L("Date Format:") + " ",
                      align: "right",
                      width: 88,
                   },
@@ -2667,6 +2761,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: () => {
                            this.refreshDateValue();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -2675,7 +2772,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default") + ": ",
+                     label: L("Default:") + " ",
                      align: "right",
                      width: 88,
                   },
@@ -2699,6 +2796,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: () => {
                            this.defaultDateChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -2707,13 +2807,18 @@ __webpack_require__.r(__webpack_exports__);
                      id: ids.defaultDateValue,
                      gravity: 0.5,
                      disabled: true,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
             // Validator
             {
                view: "label",
-               label: L("Validation criteria") + ": ",
+               label: L("Validation criteria:") + " ",
                width: 123,
                css: "ab-text-bold",
             },
@@ -2721,7 +2826,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Condition") + ": ",
+                     label: L("Condition:") + " ",
                      align: "right",
                      width: 88,
                      css: "ab-text-bold",
@@ -2788,7 +2893,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Start Date") + ": "
+                                    L("Start Date:") + " "
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -2805,7 +2910,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Date") + ": "
+                                    L("Date:") + " "
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -2814,6 +2919,9 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateEndDateContainer).hide();
                                  break;
                            }
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -2827,7 +2935,7 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Unit") + ": ",
+                           label: L("Unit:") + " ",
                            align: "right",
                            width: 88,
                         },
@@ -2853,6 +2961,9 @@ __webpack_require__.r(__webpack_exports__);
                               onChange: () => {
                                  $$(ids.validateRangeBeforeLabel).refresh();
                                  $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -2919,6 +3030,9 @@ __webpack_require__.r(__webpack_exports__);
                               onChange: () => {
                                  $$(ids.validateRangeBeforeLabel).refresh();
                               },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
                            },
                         },
                         {
@@ -2928,6 +3042,9 @@ __webpack_require__.r(__webpack_exports__);
                            on: {
                               onChange: () => {
                                  $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -2942,13 +3059,18 @@ __webpack_require__.r(__webpack_exports__);
                   {
                      id: ids.validateStartDateContainerLabel,
                      view: "label",
-                     label: L("Start Date") + ": ",
+                     label: L("Start Date:") + " ",
                      align: "right",
                      width: 88,
                   },
                   {
                      name: "validateStartDate",
                      view: "datepicker",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -2958,13 +3080,18 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("End Date") + ": ",
+                     label: L("End Date:") + " ",
                      align: "right",
                      width: 88,
                   },
                   {
                      name: "validateEndDate",
                      view: "datepicker",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -3172,14 +3299,14 @@ __webpack_require__.r(__webpack_exports__);
          return super.ui([
             {
                view: "label",
-               label: L("Date") + ": ",
+               label: L("Date:") + " ",
                align: "left",
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Format") + ": ",
+                     label: L("Format:") + " ",
                      align: "right",
                      width: 88,
                   },
@@ -3202,6 +3329,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: () => {
                            this.refreshDateValue();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -3210,7 +3340,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default") + ": ",
+                     label: L("Default:") + " ",
                      align: "right",
                      width: 88,
                   },
@@ -3234,6 +3364,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: () => {
                            this.defaultDateChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -3242,13 +3375,18 @@ __webpack_require__.r(__webpack_exports__);
                      id: ids.defaultDateValue,
                      gravity: 0.5,
                      disabled: true,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
             // Validator
             {
                view: "label",
-               label: L("Validation criteria") + ": ",
+               label: L("Validation criteria:") + " ",
                width: 123,
                css: "ab-text-bold",
             },
@@ -3256,7 +3394,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Condition") + ": ",
+                     label: L("Condition:") + " ",
                      align: "right",
                      width: 88,
                      css: "ab-text-bold",
@@ -3323,7 +3461,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Start Date") + ": "
+                                    L("Start Date:") + " "
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -3340,7 +3478,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Date") + ": "
+                                    L("Date:") + " "
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -3349,6 +3487,9 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateEndDateContainer).hide();
                                  break;
                            }
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -3362,7 +3503,7 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Unit") + ": ",
+                           label: L("Unit:") + " ",
                            align: "right",
                            width: 88,
                         },
@@ -3388,6 +3529,9 @@ __webpack_require__.r(__webpack_exports__);
                               onChange: () => {
                                  $$(ids.validateRangeBeforeLabel).refresh();
                                  $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -3454,6 +3598,9 @@ __webpack_require__.r(__webpack_exports__);
                               onChange: () => {
                                  $$(ids.validateRangeBeforeLabel).refresh();
                               },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
                            },
                         },
                         {
@@ -3463,6 +3610,9 @@ __webpack_require__.r(__webpack_exports__);
                            on: {
                               onChange: () => {
                                  $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -3477,13 +3627,18 @@ __webpack_require__.r(__webpack_exports__);
                   {
                      id: ids.validateStartDateContainerLabel,
                      view: "label",
-                     label: L("Start Date") + ": ",
+                     label: L("Start Date:") + " ",
                      align: "right",
                      width: 88,
                   },
                   {
                      name: "validateStartDate",
                      view: "datepicker",
+                     om: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -3493,26 +3648,31 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("End Date") + ": ",
+                     label: L("End Date:") + " ",
                      align: "right",
                      width: 88,
                   },
                   {
                      name: "validateEndDate",
                      view: "datepicker",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
             {
                view: "label",
-               label: L("Time") + ": ",
+               label: L("Time:") + " ",
                align: "left",
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Format") + ": ",
+                     label: L("Format:") + " ",
                      align: "right",
                      width: 88,
                   },
@@ -3526,12 +3686,15 @@ __webpack_require__.r(__webpack_exports__);
                         //    id: 1,
                         //    value: L("ab.dataField.datetime.ignoreTime", "*Ignore Time")
                         // },
-                        { id: 2, value: "HH:MM AM/PM" },
-                        { id: 3, value: "HH:MM (military)" },
+                        { id: 2, value: L("HH:MM AM/PM") },
+                        { id: 3, value: L("HH:MM (military)") },
                      ],
                      on: {
                         onChange: () => {
                            this.refreshTimevalue();
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -3541,7 +3704,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Time") + ": ",
+                     label: L("Default Time:") + " ",
                      align: "right",
                      width: 88,
                   },
@@ -3566,6 +3729,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: () => {
                            this.defaultTimeChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -3575,6 +3741,9 @@ __webpack_require__.r(__webpack_exports__);
                      id: ids.defaultTimeValue,
                      gravity: 0.5,
                      disabled: true,
+                     onAfterRender: function () {
+                        ABField.CYPRESS_REF(this);
+                     },
                   },
                ],
             },
@@ -3800,7 +3969,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value") + ": ",
+                     label: L("Default Value:") + " ",
                      align: "right",
                      width: 100,
                   },
@@ -3868,7 +4037,7 @@ __webpack_require__.r(__webpack_exports__);
             if (!webix.rules.isEmail(emailDefault)) {
                $$(ids.component).markInvalid(
                   "default",
-                  L("*This email is invalid")
+                  L("This email is invalid")
                );
                isValid = false;
             } else isValid = true;
@@ -3934,7 +4103,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Size (MB)") + ": ",
+                     label: L("Size (MB):") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -3947,12 +4116,22 @@ __webpack_require__.r(__webpack_exports__);
                         if (this.getValue()) $$(ids.fileSize).enable();
                         else $$(ids.fileSize).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      view: "counter",
                      name: "fileSize",
                      id: ids.fileSize,
                      width: 104,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -3960,7 +4139,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Type") + ": ",
+                     label: L("Type:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -3974,12 +4153,22 @@ __webpack_require__.r(__webpack_exports__);
                         if (this.getValue()) $$(ids.fileType).enable();
                         else $$(ids.fileType).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      id: ids.fileType,
                      view: "text",
                      name: "fileType",
                      placeholder: L("txt,rtf,doc,docx,..."),
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -4056,7 +4245,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Type") + ": ",
+                     label: L("Type:") + " ",
                      align: "right",
                      width: 40,
                   },
@@ -4078,6 +4267,11 @@ __webpack_require__.r(__webpack_exports__);
                            value: L("Count"),
                         },
                      ],
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -4085,7 +4279,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Field") + ": ",
+                     label: L("Field:") + " ",
                      align: "right",
                      width: 40,
                   },
@@ -4106,6 +4300,9 @@ __webpack_require__.r(__webpack_exports__);
                      on: {
                         onChange: () => {
                            this.refreshFilter();
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -4283,7 +4480,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Width") + ": ",
+                     label: L("Width:") + " ",
                      align: "right",
                      width: 60,
                   },
@@ -4297,11 +4494,21 @@ __webpack_require__.r(__webpack_exports__);
                         if (this.getValue()) $$(ids.imageWidth).enable();
                         else $$(ids.imageWidth).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      id: ids.imageWidth,
                      view: "text",
                      name: "imageWidth",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -4309,7 +4516,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Height") + ": ",
+                     label: L("Height:") + " ",
                      align: "right",
                      width: 60,
                   },
@@ -4323,11 +4530,21 @@ __webpack_require__.r(__webpack_exports__);
                         if (this.getValue()) $$(ids.imageHeight).enable();
                         else $$(ids.imageHeight).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      view: "text",
                      name: "imageHeight",
                      id: ids.imageHeight,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -4335,7 +4552,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default image") + ": ",
+                     label: L("Default image:") + " ",
                      align: "right",
                      width: 100,
                   },
@@ -4347,6 +4564,11 @@ __webpack_require__.r(__webpack_exports__);
                      click: function () {
                         if (this.getValue()) $$(ids.imageContainer).enable();
                         else $$(ids.imageContainer).disable();
+                     },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -4394,10 +4616,11 @@ __webpack_require__.r(__webpack_exports__);
                            if (acceptableTypes.indexOf(type) == -1) {
                               //// TODO: multilingual
                               webix.message(
-                                 "Only [" +
-                                    acceptableTypes.join(", ") +
-                                    "] images are supported"
+                                 L("Only [{0}] images are supported", [
+                                    acceptableTypes.join(", "),
+                                 ])
                               );
+
                               return false;
                            }
                         },
@@ -4410,6 +4633,9 @@ __webpack_require__.r(__webpack_exports__);
                                  response,
                               }
                            );
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -4701,6 +4927,9 @@ __webpack_require__.r(__webpack_exports__);
 
                      this.updateDefaultList();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
             {
@@ -4715,6 +4944,9 @@ __webpack_require__.r(__webpack_exports__);
                      if (newV == oldV) return false;
 
                      this.toggleColorControl(newV);
+                  },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
                   },
                },
             },
@@ -4847,12 +5079,17 @@ __webpack_require__.r(__webpack_exports__);
 
                   if (optionElem.exists(itemId)) optionElem.edit(itemId);
                },
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Default") + ": ",
+                     label: L("Default:") + " ",
                      width: 55,
                   },
                   {
@@ -4860,6 +5097,11 @@ __webpack_require__.r(__webpack_exports__);
                      placeholder: L("Select Default"),
                      name: "default",
                      view: "richselect",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -5162,7 +5404,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value") + ": ",
+                     label: L("Default Value:") + " ",
                      align: "right",
                      width: 100,
                   },
@@ -5175,6 +5417,9 @@ __webpack_require__.r(__webpack_exports__);
                         onChange: (newv) => {
                            this.checkboxDefaultValue(newv);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -5184,6 +5429,11 @@ __webpack_require__.r(__webpack_exports__);
                      placeholder: L("Enter default value"),
                      disabled: true,
                      labelWidth: uiConfig.labelWidthXLarge,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -5194,6 +5444,11 @@ __webpack_require__.r(__webpack_exports__);
                labelRight: L("Support multilingual"),
                labelWidth: uiConfig.labelWidthCheckbox,
                value: false,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
          ]);
       }
@@ -5384,7 +5639,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Places:") + ": ",
+                           label: L("Places:") + " ",
                            align: "right",
                            width: 100,
                         },
@@ -5787,7 +6042,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value") + ": ",
+                     label: L("Default Value:") + " ",
                      align: "right",
                      width: 100,
                   },
@@ -5922,6 +6177,11 @@ __webpack_require__.r(__webpack_exports__);
                      editor: "text",
                      labelWidth: uiConfig.labelWidthLarge,
                      placeholder: L("Text Formula"),
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   { view: "spacer", width: 15 },
                   {
@@ -5955,6 +6215,9 @@ __webpack_require__.r(__webpack_exports__);
                                        inputSuggestString
                                  );
                                  $$(ids.formulaSuggest).unselect();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -6068,6 +6331,11 @@ __webpack_require__.r(__webpack_exports__);
                      $$(ids.options).count() * 28 + 18; // Number of pages plus 9px of padding top and bottom
                   $$(ids.options).resize();
                   $$(ids.options).edit(itemId);
+               },
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
             {
@@ -6209,6 +6477,11 @@ __webpack_require__.r(__webpack_exports__);
                disallowEdit: true,
                labelRight: L("Allow multiple users"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                cols: [
@@ -6228,6 +6501,9 @@ __webpack_require__.r(__webpack_exports__);
                               $$(ids.editable).show();
                            }
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -6237,6 +6513,11 @@ __webpack_require__.r(__webpack_exports__);
                      id: ids.editable,
                      labelRight: L("Editable"),
                      labelWidth: uiConfig.labelWidthCheckbox,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -6246,6 +6527,11 @@ __webpack_require__.r(__webpack_exports__);
                id: ids.isShowProfileImage,
                labelRight: L("Show Profile Image"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                view: "checkbox",
@@ -6253,6 +6539,11 @@ __webpack_require__.r(__webpack_exports__);
                id: ids.isShowUsername,
                labelRight: L("Show Username"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
          ]);
       }
