@@ -142,10 +142,11 @@ export default function (AB) {
                            if (acceptableTypes.indexOf(type) == -1) {
                               //// TODO: multilingual
                               webix.message(
-                                 "Only [" +
-                                    acceptableTypes.join(", ") +
-                                    "] images are supported"
+                                 L("Only [{0}] images are supported", [
+                                    acceptableTypes.join(", "),
+                                 ])
                               );
+
                               return false;
                            }
                         },
