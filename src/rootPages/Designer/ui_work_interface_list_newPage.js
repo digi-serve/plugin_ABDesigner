@@ -210,11 +210,16 @@ export default function (AB) {
          //
 
          // have newInterface validate it's values.
-         var validator = newInterface.isValid();
-         if (validator.fail()) {
-            this[tabKey].emit("save.error", validator);
-            // cb(validator); // tell current Tab component the errors
-            return false; // stop here.
+         // if this item supports isValid()
+         if (newInterface.isValid) {
+           var validator = newInterface.isValid();
+           if (validator.fail()) {
+             // cb(validator); // tell current Tab component the errors
+             this[tabKey].emit("save.error", validator);
+             newInterface.label = state.old;
+
+             return false; // stop here.
+           }
          }
 
          if (!newInterface.createdInAppID) {

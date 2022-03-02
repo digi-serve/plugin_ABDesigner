@@ -6,7 +6,7 @@
  *
  */
 import UI_Class from "./ui_class";
-import AB_Choose_List_Menu_Factory from "./ui_common_popupEditMenu";
+import UI_Choose_List_Menu_Factory from "./ui_common_popupEditMenu";
 
 export default function (AB) {
    // const AppList = AB_Choose_List_Factory(AB);
@@ -16,7 +16,7 @@ export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   const AB_Choose_List_Menu = AB_Choose_List_Menu_Factory(AB);
+   const UI_Choose_List_Menu = new UI_Choose_List_Menu_Factory(AB);
 
    class UIChooseList extends UIClass {
       constructor() {
@@ -249,7 +249,7 @@ export default function (AB) {
          webix.extend(this.$list, webix.OverlayBox);
 
          // Setup our popup Editor Menu for our Applications
-         this.MenuComponent = new AB_Choose_List_Menu(this.ids.component);
+         this.MenuComponent = new UI_Choose_List_Menu(this.ids.component);
          this.MenuComponent.init(AB);
          var options = [
             {

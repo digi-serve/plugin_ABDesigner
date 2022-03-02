@@ -6304,7 +6304,7 @@ __webpack_require__.r(__webpack_exports__);
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
-   const AB_Choose_List_Menu = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const UI_Choose_List_Menu = new _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
 
    class UIChooseList extends UIClass {
       constructor() {
@@ -6537,7 +6537,7 @@ __webpack_require__.r(__webpack_exports__);
          webix.extend(this.$list, webix.OverlayBox);
 
          // Setup our popup Editor Menu for our Applications
-         this.MenuComponent = new AB_Choose_List_Menu(this.ids.component);
+         this.MenuComponent = new UI_Choose_List_Menu(this.ids.component);
          this.MenuComponent.init(AB);
          var options = [
             {
@@ -9552,6 +9552,7 @@ __webpack_require__.r(__webpack_exports__);
 
          InterfaceList.on("selected", (obj) => {
             console.log("this is unfinished");
+            // TODO
             // if (obj == null) InterfaceWorkspace.clearInterfaceWorkspace();
             // else InterfaceWorkspace.populateInterfaceWorkspace(obj);
          });
@@ -10962,11 +10963,16 @@ __webpack_require__.r(__webpack_exports__);
          //
 
          // have newInterface validate it's values.
-         var validator = newInterface.isValid();
-         if (validator.fail()) {
-            this[tabKey].emit("save.error", validator);
-            // cb(validator); // tell current Tab component the errors
-            return false; // stop here.
+         // if this item supports isValid()
+         if (newInterface.isValid) {
+           var validator = newInterface.isValid();
+           if (validator.fail()) {
+             // cb(validator); // tell current Tab component the errors
+             this[tabKey].emit("save.error", validator);
+             newInterface.label = state.old;
+
+             return false; // stop here.
+           }
          }
 
          if (!newInterface.createdInAppID) {
