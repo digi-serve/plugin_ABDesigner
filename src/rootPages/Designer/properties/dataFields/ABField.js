@@ -101,6 +101,11 @@ export default function (AB) {
                            id: ids.columnName,
                            name: "columnName",
                            hidden: true,
+                           on: {
+                              onAfterRender() {
+                                 UIClass.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {
                            view: "button",

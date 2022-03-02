@@ -62,6 +62,9 @@ export default function (AB) {
                         onChange: (newV, oldV) => {
                            this.selectObjectTo(newV, oldV);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -113,6 +116,9 @@ export default function (AB) {
                         onChange: (newValue, oldValue) => {
                            this.selectLinkType(newValue, oldValue);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -157,6 +163,9 @@ export default function (AB) {
                         onChange: (newV, oldV) => {
                            this.selectLinkViaType(newV, oldV);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -188,6 +197,9 @@ export default function (AB) {
                   onChange: () => {
                      this.checkCustomFK();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
             {
@@ -200,11 +212,14 @@ export default function (AB) {
                label: L("Index Field:"),
                placeholder: L("Select index field"),
                options: [],
-               // on: {
-               //    onChange: () => {
-               //       ABFieldConnectComponent.logic.updateColumnName();
-               //    }
-               // }
+               on: {
+                  // onChange: () => {
+                  //    ABFieldConnectComponent.logic.updateColumnName();
+                  // },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                id: ids.indexField2,
@@ -216,6 +231,11 @@ export default function (AB) {
                label: L("Index Field:"),
                placeholder: L("Select index field"),
                options: [],
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
          ]);
       }

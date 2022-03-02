@@ -39,6 +39,11 @@ export default function (AB) {
                      labelWidth: uiConfig.labelWidthXLarge,
                      disallowEdit: true,
                      options: [],
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -63,6 +68,11 @@ export default function (AB) {
                         { id: "period", value: L("Period ( . )") },
                         { id: "space", value: L("Space ( )") },
                      ],
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },

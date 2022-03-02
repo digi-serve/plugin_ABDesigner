@@ -43,6 +43,9 @@ export default function (AB) {
                               newVal ? checkLabel : uncheckLabel
                            );
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {

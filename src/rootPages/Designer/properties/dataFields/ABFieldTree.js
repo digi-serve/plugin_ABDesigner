@@ -38,6 +38,11 @@ export default function (AB) {
                   $$(ids.options).resize();
                   $$(ids.options).edit(itemId);
                },
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                id: ids.options,

@@ -42,6 +42,9 @@ export default function (AB) {
                         onTimedKeyPress: () => {
                            this.previewChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -63,6 +66,9 @@ export default function (AB) {
                      on: {
                         onChange: () => {
                            this.previewChange();
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -89,6 +95,9 @@ export default function (AB) {
                         onChange: () => {
                            this.previewChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -107,6 +116,11 @@ export default function (AB) {
                      name: "previewText",
                      value: "0000",
                      disabled: true,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },

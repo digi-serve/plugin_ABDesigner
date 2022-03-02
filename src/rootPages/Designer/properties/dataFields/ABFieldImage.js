@@ -45,11 +45,21 @@ export default function (AB) {
                         if (this.getValue()) $$(ids.imageWidth).enable();
                         else $$(ids.imageWidth).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      id: ids.imageWidth,
                      view: "text",
                      name: "imageWidth",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -71,11 +81,21 @@ export default function (AB) {
                         if (this.getValue()) $$(ids.imageHeight).enable();
                         else $$(ids.imageHeight).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      view: "text",
                      name: "imageHeight",
                      id: ids.imageHeight,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -95,6 +115,11 @@ export default function (AB) {
                      click: function () {
                         if (this.getValue()) $$(ids.imageContainer).enable();
                         else $$(ids.imageContainer).disable();
+                     },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -159,6 +184,9 @@ export default function (AB) {
                                  response,
                               }
                            );
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },

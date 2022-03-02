@@ -38,12 +38,22 @@ export default function (AB) {
                         if (this.getValue()) $$(ids.fileSize).enable();
                         else $$(ids.fileSize).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      view: "counter",
                      name: "fileSize",
                      id: ids.fileSize,
                      width: 104,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -65,12 +75,22 @@ export default function (AB) {
                         if (this.getValue()) $$(ids.fileType).enable();
                         else $$(ids.fileType).disable();
                      },
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   {
                      id: ids.fileType,
                      view: "text",
                      name: "fileType",
                      placeholder: L("txt,rtf,doc,docx,..."),
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },

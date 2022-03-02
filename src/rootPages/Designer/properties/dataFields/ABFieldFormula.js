@@ -53,6 +53,11 @@ export default function (AB) {
                            value: L("Count"),
                         },
                      ],
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -81,6 +86,9 @@ export default function (AB) {
                      on: {
                         onChange: () => {
                            this.refreshFilter();
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },

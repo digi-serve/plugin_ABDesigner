@@ -32,7 +32,10 @@ export default function (AB) {
          const ids = this.ids;
 
          const delimiterList = [
-            { id: "none", value: L("None") },
+            {
+               id: "none",
+               value: L("None"),
+            },
             {
                id: "comma",
                value: L("Comma"),
@@ -69,6 +72,9 @@ export default function (AB) {
                      this.insertEquation(message);
 
                      $$(ids.fieldPopup).hide();
+                  },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
                   },
                },
             },
@@ -126,6 +132,9 @@ export default function (AB) {
 
                      $$(ids.numberOperatorPopup).hide();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
          });
@@ -148,6 +157,9 @@ export default function (AB) {
                      this.insertEquation(component.function);
 
                      $$(ids.dateOperatorPopup).hide();
+                  },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
                   },
                },
             },
@@ -179,6 +191,11 @@ export default function (AB) {
                      name: "formula",
                      view: "textarea",
                      height: 100,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -197,6 +214,11 @@ export default function (AB) {
                               // show popup
                               $$(ids.fieldPopup).show(this.$view);
                            },
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {
                            view: "button",
@@ -207,6 +229,11 @@ export default function (AB) {
                            click: function () {
                               // show popup
                               $$(ids.dateOperatorPopup).show(this.$view);
+                           },
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
                            },
                         },
                      ],
@@ -224,6 +251,11 @@ export default function (AB) {
                               // show popup
                               $$(ids.numberOperatorPopup).show(this.$view);
                            },
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {},
                      ],
@@ -232,7 +264,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Decimals") + ": ",
+                           label: L("Decimals:") + " ",
                            align: "right",
                            width: 66.63,
                         },
@@ -250,11 +282,14 @@ export default function (AB) {
                                     $$(ids.decimalPlaces).enable();
                                  }
                               },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
                            },
                         },
                         {
                            view: "label",
-                           label: L("Places") + ": ",
+                           label: L("Places:") + " ",
                            align: "right",
                            width: 66.63,
                         },
@@ -268,6 +303,11 @@ export default function (AB) {
                            max: 10,
                            disabled: true,
                            width: 104,
+                           on: {
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
+                           },
                         },
                      ],
                   },

@@ -41,6 +41,9 @@ export default function (AB) {
                         onChange: (newv) => {
                            this.checkboxDefaultValue(newv);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -50,6 +53,11 @@ export default function (AB) {
                      placeholder: L("Enter default value"),
                      disabled: true,
                      labelWidth: uiConfig.labelWidthXLarge,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -60,6 +68,11 @@ export default function (AB) {
                labelRight: L("Support multilingual"),
                labelWidth: uiConfig.labelWidthCheckbox,
                value: false,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
          ]);
       }

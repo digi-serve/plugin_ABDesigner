@@ -34,6 +34,11 @@ export default function (AB) {
                disallowEdit: true,
                labelRight: L("Allow multiple users"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                cols: [
@@ -53,6 +58,9 @@ export default function (AB) {
                               $$(ids.editable).show();
                            }
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -62,6 +70,11 @@ export default function (AB) {
                      id: ids.editable,
                      labelRight: L("Editable"),
                      labelWidth: uiConfig.labelWidthCheckbox,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -71,6 +84,11 @@ export default function (AB) {
                id: ids.isShowProfileImage,
                labelRight: L("Show Profile Image"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                view: "checkbox",
@@ -78,6 +96,11 @@ export default function (AB) {
                id: ids.isShowUsername,
                labelRight: L("Show Username"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
          ]);
       }

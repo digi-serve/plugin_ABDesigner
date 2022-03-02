@@ -71,6 +71,9 @@ export default function (AB) {
 
                      this.updateDefaultList();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
             {
@@ -85,6 +88,9 @@ export default function (AB) {
                      if (newV == oldV) return false;
 
                      this.toggleColorControl(newV);
+                  },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
                   },
                },
             },
@@ -217,6 +223,11 @@ export default function (AB) {
 
                   if (optionElem.exists(itemId)) optionElem.edit(itemId);
                },
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                cols: [
@@ -230,6 +241,11 @@ export default function (AB) {
                      placeholder: L("Select Default"),
                      name: "default",
                      view: "richselect",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },

@@ -75,6 +75,9 @@ export default function (AB) {
                         onChange: () => {
                            this.refreshDateValue();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -107,6 +110,9 @@ export default function (AB) {
                         onChange: () => {
                            this.defaultDateChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -115,6 +121,11 @@ export default function (AB) {
                      id: ids.defaultDateValue,
                      gravity: 0.5,
                      disabled: true,
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -223,6 +234,9 @@ export default function (AB) {
                                  break;
                            }
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                ],
@@ -261,6 +275,9 @@ export default function (AB) {
                               onChange: () => {
                                  $$(ids.validateRangeBeforeLabel).refresh();
                                  $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -327,6 +344,9 @@ export default function (AB) {
                               onChange: () => {
                                  $$(ids.validateRangeBeforeLabel).refresh();
                               },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
+                              },
                            },
                         },
                         {
@@ -336,6 +356,9 @@ export default function (AB) {
                            on: {
                               onChange: () => {
                                  $$(ids.validateRangeAfterLabel).refresh();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
@@ -357,6 +380,11 @@ export default function (AB) {
                   {
                      name: "validateStartDate",
                      view: "datepicker",
+                     om: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -373,6 +401,11 @@ export default function (AB) {
                   {
                      name: "validateEndDate",
                      view: "datepicker",
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                ],
             },
@@ -405,6 +438,9 @@ export default function (AB) {
                      on: {
                         onChange: () => {
                            this.refreshTimevalue();
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -439,6 +475,9 @@ export default function (AB) {
                         onChange: () => {
                            this.defaultTimeChange();
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -448,6 +487,9 @@ export default function (AB) {
                      id: ids.defaultTimeValue,
                      gravity: 0.5,
                      disabled: true,
+                     onAfterRender: function () {
+                        ABField.CYPRESS_REF(this);
+                     },
                   },
                ],
             },

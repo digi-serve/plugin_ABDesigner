@@ -34,6 +34,11 @@ export default function (AB) {
                      editor: "text",
                      labelWidth: uiConfig.labelWidthLarge,
                      placeholder: L("Text Formula"),
+                     on: {
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
                   },
                   { view: "spacer", width: 15 },
                   {
@@ -67,6 +72,9 @@ export default function (AB) {
                                        inputSuggestString
                                  );
                                  $$(ids.formulaSuggest).unselect();
+                              },
+                              onAfterRender: function () {
+                                 ABField.CYPRESS_REF(this);
                               },
                            },
                         },
