@@ -82,19 +82,21 @@ export default function (AB) {
       show() {
          const ids = this.ids;
 
-         let fields = this.CurrentObject.fields((f) => {
+         const fields = this.CurrentObject.fields((f) => {
             return (
-               f.key == "string" ||
-               f.key == "LongText" ||
-               f.key == "number" ||
-               f.key == "date" ||
-               f.key == "datetime" ||
-               f.key == "boolean" ||
-               f.key == "list" ||
-               f.key == "email" ||
-               f.key == "user" ||
-               f.key == "AutoIndex" ||
-               f.key == "combined" ||
+               [
+                  "string",
+                  "LongText",
+                  "number",
+                  "date",
+                  "datetime",
+                  "boolean",
+                  "list",
+                  "email",
+                  "user",
+                  "AutoIndex",
+                  "combined",
+               ].indexOf(f.key) > -1 ||
                (f.isConnection &&
                   // 1:M
                   ((f.settings.linkType == "one" &&
@@ -113,7 +115,7 @@ export default function (AB) {
 
          super.show();
 
-         let $combinedFields = $$(ids.combinedFields);
+         const $combinedFields = $$(ids.combinedFields);
          if ($combinedFields) {
             $combinedFields.define("options", fields);
             $combinedFields.refresh();
