@@ -95,7 +95,7 @@ export default function (AB) {
             if (!webix.rules.isEmail(emailDefault)) {
                $$(ids.component).markInvalid(
                   "default",
-                  L("*This email is invalid")
+                  L("This email is invalid")
                );
                isValid = false;
             } else isValid = true;
