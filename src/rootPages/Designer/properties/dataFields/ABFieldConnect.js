@@ -43,7 +43,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Connected to") + ": ",
+                     label: L("Connected to:") + " ",
                      align: "right",
                      width: 94,
                   },

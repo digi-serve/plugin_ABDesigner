@@ -29,7 +29,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Prefix") + ": ",
+                     label: L("Prefix:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -50,7 +50,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Delimiter") + ": ",
+                     label: L("Delimiter:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -72,7 +72,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Length") + ": ",
+                     label: L("Length:") + " ",
                      align: "right",
                      width: 75,
                   },
@@ -97,7 +97,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Preview") + ": ",
+                     label: L("Preview:") + " ",
                      align: "right",
                      width: 75,
                   },

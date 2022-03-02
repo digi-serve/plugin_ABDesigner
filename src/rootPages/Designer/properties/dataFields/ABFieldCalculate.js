@@ -167,7 +167,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Equation") + ": ",
+                           label: L("Equation:") + " ",
                            align: "left",
                            width: 75,
                         },

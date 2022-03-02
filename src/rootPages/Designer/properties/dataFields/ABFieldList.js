@@ -222,7 +222,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Default") + ": ",
+                     label: L("Default:") + " ",
                      width: 55,
                   },
                   {

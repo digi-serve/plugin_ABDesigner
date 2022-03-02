@@ -31,7 +31,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Width") + ": ",
+                     label: L("Width:") + " ",
                      align: "right",
                      width: 60,
                   },
@@ -57,7 +57,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Height") + ": ",
+                     label: L("Height:") + " ",
                      align: "right",
                      width: 60,
                   },
@@ -83,7 +83,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Default image") + ": ",
+                     label: L("Default image:") + " ",
                      align: "right",
                      width: 100,
                   },

@@ -15,7 +15,7 @@ export default function (AB) {
       constructor() {
          super("properties_abfield_combine", {
             combinedFields: "",
-            delimiter: "plus",
+            delimiter: "",
          });
       }
 
@@ -28,7 +28,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Combined Fields") + ": ",
+                     label: L("Combined Fields:") + " ",
                      align: "right",
                      width: 125,
                   },
@@ -46,7 +46,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Delimiter") + ": ",
+                     label: L("Delimiter:") + " ",
                      align: "right",
                      width: 125,
                   },
