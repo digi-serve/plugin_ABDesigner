@@ -20,12 +20,6 @@ export default function (AB) {
    class UI_Work_Object_Workspace_View_Grid extends UIClass {
       constructor() {
          super("ui_work_object_workspace_view_grid");
-
-         this._mockApp = AB.applicationNew({});
-         // {ABApplication}
-         // Any ABViews we create are expected to be in relation to
-         // an ABApplication, so we create a "mock" app for our
-         // workspace views to use to display.
       }
 
       // Our webix UI definition:
@@ -54,10 +48,7 @@ export default function (AB) {
          // Pull the ABViewGrid definitions
          var defaultGridSettings = ViewGridProperties.toSettings();
          defaultGridSettings.label = L(defaultGridSettings.name);
-         var defaultGridView = this._mockApp.viewNew(
-            defaultGridSettings,
-            this._mockApp
-         );
+         var defaultGridView = this.AB.viewNewDetatched(defaultGridSettings);
          var defaultGrid = defaultGridView.toObj();
          defaultGrid.id = data?.id ?? AB.jobID();
 
@@ -116,11 +107,7 @@ export default function (AB) {
       async viewLoad(view) {
          this.currentViewDef = view;
 
-         this.currentView = this._mockApp.viewNew(
-            view.component,
-            this._mockApp,
-            null
-         );
+         this.currentView = this.AB.viewNewDetatched(view.component);
          var component = this.currentView.component();
 
          // OK, a ABViewGrid component wont display the grid unless there
