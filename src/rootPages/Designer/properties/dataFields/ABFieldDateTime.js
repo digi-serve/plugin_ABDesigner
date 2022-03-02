@@ -399,8 +399,8 @@ export default function (AB) {
                         //    id: 1,
                         //    value: L("ab.dataField.datetime.ignoreTime", "*Ignore Time")
                         // },
-                        { id: 2, value: "HH:MM AM/PM" },
-                        { id: 3, value: "HH:MM (military)" },
+                        { id: 2, value: L("HH:MM AM/PM") },
+                        { id: 3, value: L("HH:MM (military)") },
                      ],
                      on: {
                         onChange: () => {
