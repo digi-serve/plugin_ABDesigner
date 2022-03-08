@@ -16,7 +16,7 @@ export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   const UI_Choose_List_Menu = new UI_Choose_List_Menu_Factory(AB);
+   const UI_Choose_List_Menu = UI_Choose_List_Menu_Factory(AB);
 
    class UIChooseList extends UIClass {
       constructor() {
@@ -346,6 +346,11 @@ export default function (AB) {
             if (def?.type == "application") {
                this.loaded = false;
                this.loadData();
+            } else if (!def) {
+               this.AB.notify.developer(new Error("No def passed"), {
+                  plugin: "ABDesigner",
+                  context: "_handler_reload(): /definition/allapplications",
+               });
             }
          };
          // {fn}

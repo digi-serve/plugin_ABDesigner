@@ -162,9 +162,11 @@ export default function (AB) {
             addPage(page, "");
          });
 
+         if($$(this.ids?.parentList)?.define){
          // $$(this.ids.parentList).define("options", options);
-         $$(this.ids.parentList).define("options", options);
-         $$(this.ids.parentList).refresh();
+            $$(this.ids.parentList).define("options", options);
+            $$(this.ids.parentList).refresh();
+         }
       }
 
       cancel() {

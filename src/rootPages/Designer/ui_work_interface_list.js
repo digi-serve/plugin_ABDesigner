@@ -37,21 +37,6 @@ export default function (AB) {
 
          this.EditPopup = new PopupEditPageComponent(base);
 
-         //   idBase: this.ids.component,
-         //   labels: {
-         //      addNew: "Add new page",
-         //      confirmDeleteTitle: "Delete Page",
-         //      title: "Pages",
-         //      searchPlaceholder: "Page name",
-         //   },
-         //   // we can overrid the default template like this:
-         //   // templateListItem:
-         //   //    "<div class='ab-object-list-item'>#label##warnings#{common.iconGear}</div>",
-         //   menu: {
-         //      copy: true,
-         //      exclude: false,
-         //   },
-         // });
          this.CurrentApplication = null;
 
          this.viewList = new webix.TreeCollection();
@@ -159,11 +144,6 @@ export default function (AB) {
          }
 
          await this.EditPopup.init(AB, {
-            onClick: this.callbackPageEditMenu,
-            // onClick: {
-            //   "ab-interface-list-edit": (e, id, trg) => {
-            //      this.callbackPageEditMenu(e, id, trg);
-            //   }},
             hideExclude: true,
          });
 
@@ -293,33 +273,6 @@ export default function (AB) {
       }
 
       /**
-       * @function callbackNewProcess
-       *
-       * Once a New Process was created in the Popup, follow up with it here.
-       */
-      // callbackNewProcess(err, interface, selectNew, callback) {
-      //    debugger;
-      //    if (err) {
-      //       OP.Error.log("Error creating New Process", { error: err });
-      //       return;
-      //    }
-
-      //    let interfaces = this.CurrentApplication.interfaces();
-      //    processList.parse(interfaces);
-
-      //    // if (processList.exists(interface.id))
-      //    // 	processList.updateItem(interface.id, interface);
-      //    // else
-      //    // 	processList.add(interface);
-
-      //    if (selectNew != null && selectNew == true) {
-      //       $$(ids.list).select(interface.id);
-      //    } else if (callback) {
-      //       callback();
-      //    }
-      // }
-
-      /**
        * @function clickNewView
        *
        * Manages initiating the transition to the new Page Popup window
@@ -328,25 +281,6 @@ export default function (AB) {
          // show the new popup
          AddForm.show();
       }
-
-      // /*
-      //  * @function copy
-      //  * the list component notified us of a copy action and has
-      //  * given us the new data for the copied item.
-      //  *
-      //  * now our job is to create a new instance of that Item and
-      //  * tell the list to display it
-      //  */
-      // copy(data) {
-      //    debugger;
-      //    this.ListComponent.busy();
-
-      //    this.CurrentApplication.processCreate(data.item).then((newProcess) => {
-      //       this.ListComponent.ready();
-      //       this.ListComponent.dataLoad(this.CurrentApplication.processes());
-      //       this.ListComponent.select(newProcess.id);
-      //    });
-      // }
 
       showGear(id) {
          var domNode = $$(this.ids.list).getItemNode(id);
@@ -389,7 +323,7 @@ export default function (AB) {
        * @function copy
        * make a copy of the current selected item.
        *
-       * copies should have all the same .toObj() data,
+       * copies should have all the same sub-page data,
        * but will need unique names, and ids.
        *
        * we start the process by making a copy and then
@@ -397,9 +331,6 @@ export default function (AB) {
        *
        * our .afterEdit() routines will detect it is a copy
        * then alert the parent UI component of the "copied" data
-       *
-       * @param {obj} selectedItem the currently selected item in
-       * 		our list.
        */
       copy() {
          var selectedPage = $$(this.ids.list).getSelectedItem(false);
@@ -468,24 +399,6 @@ export default function (AB) {
                }
             },
          });
-      }
-      /**
-       * @function callbackPageEditMenu
-       *
-       * Respond to the edit menu selection.
-       */
-      callbackPageEditMenu(action) {
-         switch (action) {
-            case "rename":
-               this.rename();
-               break;
-            case "copy":
-               this.copy();
-               break;
-            case "delete":
-               this.remove();
-               break;
-         }
       }
       clickEditMenu(e, id, trg) {
          // Show menu

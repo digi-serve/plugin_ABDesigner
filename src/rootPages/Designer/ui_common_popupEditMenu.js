@@ -30,33 +30,8 @@ export default function (AB) {
                delete: L("Delete"),
             };
 
-            // var labels = {
-            //    common: App.labels,
-
-            //    component: {
-            //       copy: L("ab.page.copy", "*Copy"),
-            //       exclude: L("ab.object.exclude", "*Exclude"),
-
-            //       menu: L("ab.application.menu", "*Application Menu"),
-            //       confirmDeleteTitle: L(
-            //          "ab.application.delete.title",
-            //          "*Delete application"
-            //       ),
-            //       confirmDeleteMessage: L(
-            //          "ab.application.delete.message",
-            //          "*Do you want to delete <b>{0}</b>?"
-            //       )
-            //    }
-            // };
-
             // since multiple instances of this component can exists, we need to
-            // make each instance have unique ids => so add webix.uid() to them:
-            // var uid = webix.uid();
-            // var ids = {
-            //    menu: this.unique("menu") + uid,
-            //    list: this.unique("list") + uid
-            // };
-
+            // make each instance have unique ids => so add contextID to them:
             this.ids.menu = `${idBase}_menu_${contextID}`;
             this.ids.list = `${idBase}_list_${contextID}`;
 
@@ -103,6 +78,7 @@ export default function (AB) {
                   select: false,
                   on: {
                      onItemClick: (timestamp, e, trg) => {
+                        // we need to process which node was clicked before emitting
                         return this.onItemClick(trg);
                      },
                   },
@@ -121,39 +97,28 @@ export default function (AB) {
             this.hide();
             this.menuOptions(this._menuOptions);
 
-            // register our callbacks:
-            // for (var c in _logic.callbacks) {
-            //    if (options && options[c]) {
-            //       _logic.callbacks[c] = options[c] || _logic.callbacks[c];
-            //    }
-            // }
-
-            if (options.onClick) {
-                this.onClick = options.onClick;
-            }
             // hide "copy" item
             if (options.hideCopy) {
-                let itemCopy = this.$list.data.find(
+               let itemCopy = this.$list.data.find(
                   (item) => item.label == this.labels.copy
-                )[0];
-                if (itemCopy) {
+               )[0];
+               if (itemCopy) {
                   this.$list.remove(itemCopy.id);
                   this.$list.refresh();
-                }
+               }
 
-                // hide "exclude" item
-                if (options.hideExclude) {
+               // hide "exclude" item
+               if (options.hideExclude) {
                   let hideExclude = this.$list.data.find(
-                      (item) => item.label == this.labels.exclude
+                     (item) => item.label == this.labels.exclude
                   )[0];
                   if (hideExclude) {
-                      this.$list.remove(hideExclude.id);
-                      this.$list.refresh();
+                     this.$list.remove(hideExclude.id);
+                     this.$list.refresh();
                   }
-                }
+               }
             }
          }
-
 
          /**
           * @function menuOptions
@@ -185,17 +150,12 @@ export default function (AB) {
             // while it is in progress, the UI will glitch and give the user whiplash.
             var label = itemNode.textContent.trim();
             var option = this._menuOptions.filter((mo) => {
-                return mo.label == label;
+               return mo.label == label;
             })[0];
             if (option) {
-                if (this.onClick) {
-                  this.emit(option.command, itemNode);
-                  //this.onClick(option.command);
-                } else {
-                  this.emit("click", option.command);
-                }
-                this.hide();
-                return false;
+               this.emit(option.command, itemNode);
+               this.hide();
+               return false;
             }
          }
 
