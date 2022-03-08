@@ -30,7 +30,6 @@ export default function (AB) {
          var base = "ab_work_interface_list_copyInterface";
          super({
             component: base,
-
             form: `${base}_blank`,
             buttonSave: `${base}_save`,
             buttonCancel: `${base}_cancel`,
@@ -164,7 +163,7 @@ export default function (AB) {
        */
       applicationLoad(application) {
          this.currentApplication = application; // remember our current Application.
-         var options = [{ id: "-", value: L("[Root page]") }]; // L("ab.interface.rootPage", "*[Root page]")
+         var options = [{ id: "-", value: L("[Root page]") }];
 
          var addPage = function (page, indent) {
             indent = indent || "";
@@ -196,7 +195,7 @@ export default function (AB) {
        * remove the busy indicator from the form.
        */
       hide() {
-         if (this.$component) this.$component.hide();
+         this?.$component?.hide();
       }
 
       /**
@@ -213,18 +212,14 @@ export default function (AB) {
        * Show the busy indicator
        */
       busy() {
-         if (this.$component) {
-            this.$component.showProgress();
-         }
+         this?.$component?.showProgress();
       }
 
       /**
        * Hide the busy indicator
        */
       ready() {
-         if (this.$component) {
-            this.$component.hideProgress();
-         }
+         this?.$component?.hideProgress();
       }
 
       /**
@@ -285,6 +280,7 @@ export default function (AB) {
          if (values.parent === "-") {
             values.parent = null;
          } else if (values.parent) {
+            // convert a url string to the object of the parent
             values.parent = this.currentApplication.urlResolve(values.parent);
          }
 
@@ -299,23 +295,9 @@ export default function (AB) {
                // .then((copiedPage) => {
                this.emit("save.successful", copiedPage);
                this.done(copiedPage);
-               // })
-               // .catch((err) => {
-               //    // hide progress
-               //    this.ready();
-
-               //    // an error happened during the server side creation.
-               //    // so remove this object from the current object list of
-               //    // the currentApplication.
-               //    this.currentApplication.pageRemove(copiedPage);
-
-               //    // tell current Tab component there was an error
-               //    this.emit("save.error", err);
-               // });
             })
             .catch((err) => {
                this.ready();
-               //  this.listReady();
                var strError = err.toString();
                webix.alert({
                   title: "Error copying page",
@@ -325,65 +307,6 @@ export default function (AB) {
                });
                console.log(err);
             });
-         //await values.parent.pageInsert(values);
-         //  } else {
-         //     this.data
-         //        .copy(null, values.parent)
-         //        .then((copiedPage) => {
-         //           copiedPage.parent = values.parent;
-         //           copiedPage.label = values.name;
-         //           copiedPage.save().then(() => {
-         //              this.callbackNewPage(copiedPage);
-         //              this.listReady();
-         //           });
-         //        })
-         //        .catch((err) => {
-         //           var strError = err.toString();
-         //           webix.alert({
-         //              title: "Error copying page",
-         //              ok: "fix it",
-         //              text: strError,
-         //              type: "alert-error",
-         //           });
-         //           console.log(err);
-         //           this.listReady();
-         //        });
-         //     // page = CurrentApplication.pageNew(values);
-         //     // newInterface = this.currentApplication.pageNew(values);
-         //     // await this.currentApplication.pageInsert(values);
-         //  }
-         //
-
-         // have newInterface validate it's values.
-         //  var validator = newInterface.isValid();
-         //  if (validator.fail()) {
-         //     this.emit("save.error", validator);
-         //     // cb(validator); // tell current Tab component the errors
-         //     return false; // stop here.
-         //  }
-
-         //  if (!newInterface.createdInAppID) {
-         //     newInterface.createdInAppID = this.currentApplication.id;
-         //  }
-
-         // if we get here, save the new Page
-         //  try {
-         //     var obj = await newInterface.save();
-         //     // await this.currentApplication.pageInsert(obj);
-         //     this.emit("save.successful", obj);
-         //     this.done(obj);
-         //  } catch (err) {
-         //     // hide progress
-         //     this.ready();
-
-         //     // an error happend during the server side creation.
-         //     // so remove this object from the current object list of
-         //     // the currentApplication.
-         //     await this.currentApplication.pageRemove(newInterface);
-
-         //     // tell current Tab component there was an error
-         //     this.emit("save.error", err);
-         //  }
       }
 
       /**
@@ -392,12 +315,12 @@ export default function (AB) {
        * Show this component.
        */
       show() {
-         if (this.$component) this.$component.show();
+         this?.$component?.show();
       }
 
       formClear() {
-         this.$form.clearValidation();
-         this.$form.clear();
+         this?.$form.clearValidation();
+         this?.$form.clear();
       }
 
       /**

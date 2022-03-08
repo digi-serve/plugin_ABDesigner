@@ -142,7 +142,7 @@ export default function (AB) {
       applicationLoad(application) {
          this.currentApplication = application;
 
-         var options = [{ id: "-", value: L("[Root page]") }]; // L("ab.interface.rootPage", "*[Root page]")
+         var options = [{ id: "-", value: L("[Root page]") }];
 
          var addPage = function (page, indent) {
             indent = indent || "";
@@ -151,7 +151,6 @@ export default function (AB) {
                value: indent + page.label,
             });
             page
-               // .pages((p) => p instanceof AB.Class.ABViewPage)
                .pages()
                .forEach(function (p) {
                   addPage(p, indent + "-");

@@ -141,7 +141,7 @@ export default function (AB) {
          }
 
          show(itemNode) {
-            if (this.Popup && itemNode) this.Popup.show(itemNode);
+            this.Popup?.show(itemNode);
          }
 
          /**
@@ -168,7 +168,7 @@ export default function (AB) {
          }
 
          hide() {
-            if (this.Popup) this.Popup.hide();
+            this.Popup?.hide();
          }
       };
    }
