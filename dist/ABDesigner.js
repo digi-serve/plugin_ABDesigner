@@ -6304,7 +6304,7 @@ __webpack_require__.r(__webpack_exports__);
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
-   const UI_Choose_List_Menu = new _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
+   const UI_Choose_List_Menu = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UIChooseList extends UIClass {
       constructor() {
@@ -6634,6 +6634,11 @@ __webpack_require__.r(__webpack_exports__);
             if (def?.type == "application") {
                this.loaded = false;
                this.loadData();
+            } else if (!def) {
+               this.AB.notify.developer(new Error("No def passed"), {
+                  plugin: "ABDesigner",
+                  context: "_handler_reload(): /definition/allapplications",
+               });
             }
          };
          // {fn}
@@ -7756,33 +7761,8 @@ var myClass = null;
                delete: L("Delete"),
             };
 
-            // var labels = {
-            //    common: App.labels,
-
-            //    component: {
-            //       copy: L("ab.page.copy", "*Copy"),
-            //       exclude: L("ab.object.exclude", "*Exclude"),
-
-            //       menu: L("ab.application.menu", "*Application Menu"),
-            //       confirmDeleteTitle: L(
-            //          "ab.application.delete.title",
-            //          "*Delete application"
-            //       ),
-            //       confirmDeleteMessage: L(
-            //          "ab.application.delete.message",
-            //          "*Do you want to delete <b>{0}</b>?"
-            //       )
-            //    }
-            // };
-
             // since multiple instances of this component can exists, we need to
-            // make each instance have unique ids => so add webix.uid() to them:
-            // var uid = webix.uid();
-            // var ids = {
-            //    menu: this.unique("menu") + uid,
-            //    list: this.unique("list") + uid
-            // };
-
+            // make each instance have unique ids => so add contextID to them:
             this.ids.menu = `${idBase}_menu_${contextID}`;
             this.ids.list = `${idBase}_list_${contextID}`;
 
@@ -7829,7 +7809,8 @@ var myClass = null;
                   select: false,
                   on: {
                      onItemClick: (timestamp, e, trg) => {
-                        return this.onItemClick(trg);
+                        // we need to process which node was clicked before emitting
+                        return this.trigger(trg);
                      },
                   },
                },
@@ -7847,39 +7828,28 @@ var myClass = null;
             this.hide();
             this.menuOptions(this._menuOptions);
 
-            // register our callbacks:
-            // for (var c in _logic.callbacks) {
-            //    if (options && options[c]) {
-            //       _logic.callbacks[c] = options[c] || _logic.callbacks[c];
-            //    }
-            // }
-
-            if (options.onClick) {
-                this.onClick = options.onClick;
-            }
             // hide "copy" item
             if (options.hideCopy) {
-                let itemCopy = this.$list.data.find(
+               let itemCopy = this.$list.data.find(
                   (item) => item.label == this.labels.copy
-                )[0];
-                if (itemCopy) {
+               )[0];
+               if (itemCopy) {
                   this.$list.remove(itemCopy.id);
                   this.$list.refresh();
-                }
+               }
 
-                // hide "exclude" item
-                if (options.hideExclude) {
+               // hide "exclude" item
+               if (options.hideExclude) {
                   let hideExclude = this.$list.data.find(
-                      (item) => item.label == this.labels.exclude
+                     (item) => item.label == this.labels.exclude
                   )[0];
                   if (hideExclude) {
-                      this.$list.remove(hideExclude.id);
-                      this.$list.refresh();
+                     this.$list.remove(hideExclude.id);
+                     this.$list.refresh();
                   }
-                }
+               }
             }
          }
-
 
          /**
           * @function menuOptions
@@ -7901,41 +7871,31 @@ var myClass = null;
             this.$list.refresh();
          }
 
-         /**
-          * @function onItemClick
-          * process which item in our popup was selected.
-          */
-         onItemClick(itemNode) {
-            // hide our popup before we trigger any other possible UI animation: (like .edit)
-            // NOTE: if the UI is animating another component, and we do .hide()
-            // while it is in progress, the UI will glitch and give the user whiplash.
-            var label = itemNode.textContent.trim();
-            var option = this._menuOptions.filter((mo) => {
-                return mo.label == label;
-            })[0];
-            if (option) {
-                if (this.onClick) {
-                  this.emit(option.command, itemNode);
-                  //this.onClick(option.command);
-                } else {
-                  this.emit("click", option.command);
-                }
-                this.hide();
-                return false;
-            }
-         }
-
          show(itemNode) {
             if (this.Popup && itemNode) this.Popup.show(itemNode);
          }
 
          /**
           * @method trigger()
+          * process which item in our popup was selected, then
           * emit the selected command.
           * NOTE: this can be overridden by child objects
+          * @param {itemNode} div.webix_list_item: we get the label then pass this up,
+          * The itemNode contains the 'page' the user wants to edit
           */
-         trigger(command) {
-            this.emit("click", command);
+         trigger(itemNode) {
+            // hide our popup before we trigger any other possible UI animation: (like .edit)
+            // NOTE: if the UI is animating another component, and we do .hide()
+            // while it is in progress, the UI will glitch and give the user whiplash.
+            var label = itemNode.textContent.trim();
+            var option = this._menuOptions.filter((mo) => {
+               return mo.label == label;
+            })[0];
+            if (option) {
+               this.emit(option.command, itemNode);
+               this.hide();
+               return false;
+            }
          }
 
          hide() {
@@ -9633,7 +9593,7 @@ __webpack_require__.r(__webpack_exports__);
 // const ABProcess = require("../classes/platform/ABProcess");
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var PopupEditPageComponent = new _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
+   var PopupEditPageComponent = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
    //  var PopupNewPageComponent = new UIListNewProcess(AB);
 
    var AddForm = new _ui_work_interface_list_newPage__WEBPACK_IMPORTED_MODULE_0__["default"](AB);
@@ -9656,21 +9616,6 @@ __webpack_require__.r(__webpack_exports__);
 
          this.EditPopup = new PopupEditPageComponent(base);
 
-         //   idBase: this.ids.component,
-         //   labels: {
-         //      addNew: "Add new page",
-         //      confirmDeleteTitle: "Delete Page",
-         //      title: "Pages",
-         //      searchPlaceholder: "Page name",
-         //   },
-         //   // we can overrid the default template like this:
-         //   // templateListItem:
-         //   //    "<div class='ab-object-list-item'>#label##warnings#{common.iconGear}</div>",
-         //   menu: {
-         //      copy: true,
-         //      exclude: false,
-         //   },
-         // });
          this.CurrentApplication = null;
 
          this.viewList = new webix.TreeCollection();
@@ -9778,11 +9723,6 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          await this.EditPopup.init(AB, {
-            onClick: this.callbackPageEditMenu,
-            // onClick: {
-            //   "ab-interface-list-edit": (e, id, trg) => {
-            //      this.callbackPageEditMenu(e, id, trg);
-            //   }},
             hideExclude: true,
          });
 
@@ -9912,33 +9852,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @function callbackNewProcess
-       *
-       * Once a New Process was created in the Popup, follow up with it here.
-       */
-      // callbackNewProcess(err, interface, selectNew, callback) {
-      //    debugger;
-      //    if (err) {
-      //       OP.Error.log("Error creating New Process", { error: err });
-      //       return;
-      //    }
-
-      //    let interfaces = this.CurrentApplication.interfaces();
-      //    processList.parse(interfaces);
-
-      //    // if (processList.exists(interface.id))
-      //    // 	processList.updateItem(interface.id, interface);
-      //    // else
-      //    // 	processList.add(interface);
-
-      //    if (selectNew != null && selectNew == true) {
-      //       $$(ids.list).select(interface.id);
-      //    } else if (callback) {
-      //       callback();
-      //    }
-      // }
-
-      /**
        * @function clickNewView
        *
        * Manages initiating the transition to the new Page Popup window
@@ -9947,25 +9860,6 @@ __webpack_require__.r(__webpack_exports__);
          // show the new popup
          AddForm.show();
       }
-
-      // /*
-      //  * @function copy
-      //  * the list component notified us of a copy action and has
-      //  * given us the new data for the copied item.
-      //  *
-      //  * now our job is to create a new instance of that Item and
-      //  * tell the list to display it
-      //  */
-      // copy(data) {
-      //    debugger;
-      //    this.ListComponent.busy();
-
-      //    this.CurrentApplication.processCreate(data.item).then((newProcess) => {
-      //       this.ListComponent.ready();
-      //       this.ListComponent.dataLoad(this.CurrentApplication.processes());
-      //       this.ListComponent.select(newProcess.id);
-      //    });
-      // }
 
       showGear(id) {
          var domNode = $$(this.ids.list).getItemNode(id);
@@ -10008,7 +9902,7 @@ __webpack_require__.r(__webpack_exports__);
        * @function copy
        * make a copy of the current selected item.
        *
-       * copies should have all the same .toObj() data,
+       * copies should have all the same sub-page data,
        * but will need unique names, and ids.
        *
        * we start the process by making a copy and then
@@ -10016,9 +9910,6 @@ __webpack_require__.r(__webpack_exports__);
        *
        * our .afterEdit() routines will detect it is a copy
        * then alert the parent UI component of the "copied" data
-       *
-       * @param {obj} selectedItem the currently selected item in
-       * 		our list.
        */
       copy() {
          var selectedPage = $$(this.ids.list).getSelectedItem(false);
@@ -10087,24 +9978,6 @@ __webpack_require__.r(__webpack_exports__);
                }
             },
          });
-      }
-      /**
-       * @function callbackPageEditMenu
-       *
-       * Respond to the edit menu selection.
-       */
-      callbackPageEditMenu(action) {
-         switch (action) {
-            case "rename":
-               this.rename();
-               break;
-            case "copy":
-               this.copy();
-               break;
-            case "delete":
-               this.remove();
-               break;
-         }
       }
       clickEditMenu(e, id, trg) {
          // Show menu
@@ -10468,8 +10341,10 @@ __webpack_require__.r(__webpack_exports__);
             addPage(page, "");
          });
 
-         $$(this.ids?.parentList).define("options", options);
-         $$(this.ids?.parentList).refresh();
+         if($$(this.ids?.parentList)?.define){
+            $$(this.ids?.parentList).define("options", options);
+            $$(this.ids?.parentList).refresh();
+         }
       }
 
       /**
@@ -11201,9 +11076,11 @@ __webpack_require__.r(__webpack_exports__);
             addPage(page, "");
          });
 
+         if($$(this.ids?.parentList)?.define){
          // $$(this.ids.parentList).define("options", options);
-         $$(this.ids.parentList).define("options", options);
-         $$(this.ids.parentList).refresh();
+            $$(this.ids.parentList).define("options", options);
+            $$(this.ids.parentList).refresh();
+         }
       }
 
       cancel() {

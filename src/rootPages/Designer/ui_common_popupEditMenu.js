@@ -79,7 +79,7 @@ export default function (AB) {
                   on: {
                      onItemClick: (timestamp, e, trg) => {
                         // we need to process which node was clicked before emitting
-                        return this.onItemClick(trg);
+                        return this.trigger(trg);
                      },
                   },
                },
@@ -140,11 +140,19 @@ export default function (AB) {
             this.$list.refresh();
          }
 
+         show(itemNode) {
+            if (this.Popup && itemNode) this.Popup.show(itemNode);
+         }
+
          /**
-          * @function onItemClick
-          * process which item in our popup was selected.
+          * @method trigger()
+          * process which item in our popup was selected, then
+          * emit the selected command.
+          * NOTE: this can be overridden by child objects
+          * @param {itemNode} div.webix_list_item: we get the label then pass this up,
+          * The itemNode contains the 'page' the user wants to edit
           */
-         onItemClick(itemNode) {
+         trigger(itemNode) {
             // hide our popup before we trigger any other possible UI animation: (like .edit)
             // NOTE: if the UI is animating another component, and we do .hide()
             // while it is in progress, the UI will glitch and give the user whiplash.
@@ -157,19 +165,6 @@ export default function (AB) {
                this.hide();
                return false;
             }
-         }
-
-         show(itemNode) {
-            if (this.Popup && itemNode) this.Popup.show(itemNode);
-         }
-
-         /**
-          * @method trigger()
-          * emit the selected command.
-          * NOTE: this can be overridden by child objects
-          */
-         trigger(command) {
-            this.emit("click", command);
          }
 
          hide() {

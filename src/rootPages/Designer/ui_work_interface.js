@@ -47,6 +47,7 @@ export default function (AB) {
 
          InterfaceList.on("selected", (obj) => {
             console.log("this is unfinished");
+            // TODO
             // if (obj == null) InterfaceWorkspace.clearInterfaceWorkspace();
             // else InterfaceWorkspace.populateInterfaceWorkspace(obj);
          });

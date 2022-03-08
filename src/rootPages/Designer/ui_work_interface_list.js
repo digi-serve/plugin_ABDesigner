@@ -14,7 +14,7 @@ import UI_Common_PopupEditMenu from "./ui_common_popupEditMenu";
 // const ABProcess = require("../classes/platform/ABProcess");
 
 export default function (AB) {
-   var PopupEditPageComponent = new UI_Common_PopupEditMenu(AB);
+   var PopupEditPageComponent = UI_Common_PopupEditMenu(AB);
    //  var PopupNewPageComponent = new UIListNewProcess(AB);
 
    var AddForm = new UIListNewProcess(AB);
