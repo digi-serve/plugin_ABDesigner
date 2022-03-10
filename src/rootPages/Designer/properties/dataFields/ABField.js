@@ -78,7 +78,7 @@ export default function (AB) {
                            view: "label",
                            label: L("Field Name:"),
                            align: "left",
-                           width: 86.88,
+                           width: 87,
                         },
                         {
                            name: "label",
@@ -130,7 +130,7 @@ export default function (AB) {
                            view: "label",
                            label: L("Show icon:"),
                            align: "left",
-                           width: 75.47,
+                           width: 75,
                         },
                         {
                            view: "switch",
@@ -149,7 +149,7 @@ export default function (AB) {
                            view: "label",
                            label: L("Required:"),
                            align: "left",
-                           width: 66.28,
+                           width: 66,
                         },
                         {
                            view: "switch",
@@ -189,7 +189,7 @@ export default function (AB) {
                            view: "label",
                            label: L("Unique:"),
                            align: "left",
-                           width: 58.84,
+                           width: 59,
                         },
                         {
                            view: "switch",

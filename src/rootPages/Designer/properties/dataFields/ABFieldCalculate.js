@@ -266,7 +266,7 @@ export default function (AB) {
                            view: "label",
                            label: L("Decimals:"),
                            align: "right",
-                           width: 66.63,
+                           width: 67,
                         },
                         {
                            id: ids.decimalSign,
@@ -291,7 +291,7 @@ export default function (AB) {
                            view: "label",
                            label: L("Places:"),
                            align: "right",
-                           width: 66.63,
+                           width: 67,
                         },
                         {
                            id: ids.decimalPlaces,
