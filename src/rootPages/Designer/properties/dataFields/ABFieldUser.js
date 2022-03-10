@@ -51,7 +51,7 @@ export default function (AB) {
                      on: {
                         onChange: function (newValue /*, oldValue*/) {
                            if (newValue == 0) {
-                              $$(ids.editable).setValue(1);
+                              $$(ids.editable).setValue(0);
                               $$(ids.editable).hide();
                            } else {
                               $$(ids.editable).setValue(1);

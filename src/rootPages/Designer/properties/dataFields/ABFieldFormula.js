@@ -31,7 +31,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Type:") + " ",
+                     label: L("Type:"),
                      align: "right",
                      width: 40,
                   },
@@ -65,7 +65,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Field:") + " ",
+                     label: L("Field:"),
                      align: "right",
                      width: 40,
                   },

@@ -76,9 +76,9 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Field Name:") + " ",
+                           label: L("Field Name:"),
                            align: "left",
-                           width: 86.88,
+                           width: 87,
                         },
                         {
                            name: "label",
@@ -128,9 +128,9 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Show icon:") + " ",
+                           label: L("Show icon:"),
                            align: "left",
-                           width: 75.47,
+                           width: 75,
                         },
                         {
                            view: "switch",
@@ -147,9 +147,9 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Required:") + " ",
+                           label: L("Required:"),
                            align: "left",
-                           width: 66.28,
+                           width: 66,
                         },
                         {
                            view: "switch",
@@ -187,9 +187,9 @@ export default function (AB) {
                         },
                         {
                            view: "label",
-                           label: L("Unique:") + " ",
+                           label: L("Unique:"),
                            align: "left",
-                           width: 58.84,
+                           width: 59,
                         },
                         {
                            view: "switch",
@@ -242,7 +242,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Custom Settings:") + " ",
+                           label: L("Custom Settings:"),
                            align: "left",
                            width: 200,
                         },
@@ -325,7 +325,7 @@ export default function (AB) {
                         cols: [
                            {
                               view: "label",
-                              label: L("Database Column:") + " ",
+                              label: L("Database Column:"),
                               align: "right",
                               width: 125,
                            },

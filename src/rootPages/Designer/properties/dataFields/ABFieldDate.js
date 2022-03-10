@@ -44,7 +44,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Date Format:") + " ",
+                     label: L("Date Format:"),
                      align: "right",
                      width: 88,
                   },
@@ -74,7 +74,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Default:") + " ",
+                     label: L("Default:"),
                      align: "right",
                      width: 88,
                   },
@@ -120,7 +120,7 @@ export default function (AB) {
             // Validator
             {
                view: "label",
-               label: L("Validation criteria:") + " ",
+               label: L("Validation criteria:"),
                width: 123,
                css: "ab-text-bold",
             },
@@ -128,7 +128,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Condition:") + " ",
+                     label: L("Condition:"),
                      align: "right",
                      width: 88,
                      css: "ab-text-bold",
@@ -195,7 +195,7 @@ export default function (AB) {
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Start Date:") + " "
+                                    L("Start Date:")
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -212,7 +212,7 @@ export default function (AB) {
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Date:") + " "
+                                    L("Date:")
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -237,7 +237,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Unit:") + " ",
+                           label: L("Unit:"),
                            align: "right",
                            width: 88,
                         },
@@ -361,7 +361,7 @@ export default function (AB) {
                   {
                      id: ids.validateStartDateContainerLabel,
                      view: "label",
-                     label: L("Start Date:") + " ",
+                     label: L("Start Date:"),
                      align: "right",
                      width: 88,
                   },
@@ -382,7 +382,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("End Date:") + " ",
+                     label: L("End Date:"),
                      align: "right",
                      width: 88,
                   },
