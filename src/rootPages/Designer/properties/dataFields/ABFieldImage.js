@@ -132,20 +132,19 @@ export default function (AB) {
                   {
                      view: "uploader",
                      id: ids.defaultImageUrl,
-                     template:
-                        '<div style="text-align:center; font-size: 30px;">' +
-                        '<div class="default-image-holder">' +
-                        '<div class="image-data-field-icon">' +
-                        '<i class="fa fa-picture-o fa-2x"></i>' +
-                        `<div style="font-size: 15px;">${L(
-                           "Drag and drop or click here"
-                        )}</div>` +
-                        "</div>" +
-                        '<div class="image-data-field-image" style="display:none;">' +
-                        '<a style="" class="ab-delete-photo" href="javascript:void(0);"><i class="fa fa-times delete-image" style="display:none;"></i></a>' +
-                        "</div>" +
-                        "</div>" +
-                        "</div>",
+                     template: `<div style="text-align:center; font-size: 30px;">
+                           <div class="default-image-holder">
+                              <div class="image-data-field-icon">
+                                 <i class="fa fa-picture-o fa-2x"></i>
+                                 <div style="font-size: 15px;">${L(
+                                    "Drag and drop or click here"
+                                 )}</div>
+                              </div>
+                              <div class="image-data-field-image" style="display:none;">
+                                 <a style="" class="ab-delete-photo" href="javascript:void(0);"><i class="fa fa-times delete-image" style="display:none;"></i></a>
+                              </div>
+                           </div>
+                        </div>`,
                      apiOnly: true,
                      inputName: "file",
                      multiple: false,
