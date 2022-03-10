@@ -24,7 +24,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Default:") + " ",
+                     label: L("Default:"),
                      align: "right",
                      width: 65,
                   },

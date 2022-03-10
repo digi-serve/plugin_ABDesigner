@@ -25,7 +25,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Size (MB):") + " ",
+                     label: L("Size (MB):"),
                      align: "right",
                      width: 75,
                   },
@@ -61,7 +61,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Type:") + " ",
+                     label: L("Type:"),
                      align: "right",
                      width: 75,
                   },

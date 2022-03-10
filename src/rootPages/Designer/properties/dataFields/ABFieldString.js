@@ -55,7 +55,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value:"),
                      align: "right",
                      width: 100,
                   },

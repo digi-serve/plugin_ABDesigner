@@ -179,7 +179,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Equation:") + " ",
+                           label: L("Equation:"),
                            align: "left",
                            width: 75,
                         },
@@ -264,7 +264,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Decimals:") + " ",
+                           label: L("Decimals:"),
                            align: "right",
                            width: 66.63,
                         },
@@ -289,7 +289,7 @@ export default function (AB) {
                         },
                         {
                            view: "label",
-                           label: L("Places:") + " ",
+                           label: L("Places:"),
                            align: "right",
                            width: 66.63,
                         },
