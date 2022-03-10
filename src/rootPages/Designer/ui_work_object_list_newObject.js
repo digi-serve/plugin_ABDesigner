@@ -134,6 +134,11 @@ export default function (AB) {
             }
          );
 
+         // ImportTab doesn't save, but "imported"
+         this.ImportTab.on("imported", (obj) => {
+            this.done(obj);
+         });
+
          return Promise.all(allInits);
       }
 
@@ -143,10 +148,13 @@ export default function (AB) {
        * @param {ABApplication} application
        *        The current ABApplication we are working with.
        */
-      // applicationLoad(application) {
+      applicationLoad(application) {
+         super.applicationLoad(application);
 
-      //    this.CurrentApplicationID = application?.id;
-      // }
+         this.BlankTab.applicationLoad(application);
+         this.CsvTab.applicationLoad(application);
+         this.ImportTab.applicationLoad(application);
+      }
 
       /**
        * @function hide()
@@ -254,13 +262,13 @@ export default function (AB) {
       }
 
       switchTab(tabId) {
-         if (tabId == this.BlankTab?.ui?.body?.id) {
+         if (tabId == this.BlankTab?.ids.form) {
             this.BlankTab?.onShow?.(this.CurrentApplicationID);
-         } else if (tabId == this.CsvTab?.ui?.body?.id) {
+         } else if (tabId == this.CsvTab?.ids.form) {
             this.CsvTab?.onShow?.(this.CurrentApplicationID);
-         } else if (tabId == this.ImportTab?.ui?.body?.id) {
+         } else if (tabId == this.ImportTab?.ids.form) {
             this.ImportTab?.onShow?.(this.CurrentApplicationID);
-         } else if (tabId == this.ExternalTab?.ui?.body?.id) {
+         } else if (tabId == this.ExternalTab?.ids.form) {
             this.ExternalTab?.onShow?.(this.CurrentApplicationID);
          }
       }

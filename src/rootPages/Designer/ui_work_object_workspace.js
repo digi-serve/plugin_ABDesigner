@@ -24,6 +24,7 @@ import FPopupViewSettings from "./ui_work_object_workspace_popupViewSettings";
 import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 
 import FWorkspaceDatatable from "./ui_work_object_workspace_view_grid";
+import FWorkspaceGantt from "./ui_work_object_workspace_view_gantt";
 import FWorkspaceKanban from "./ui_work_object_workspace_view_kanban";
 
 import FWorkspaceTrack from "./ui_work_object_workspace_popupTrack";
@@ -34,6 +35,7 @@ export default function (AB, init_settings) {
    var L = UIClass.L();
 
    var Datatable = FWorkspaceDatatable(AB);
+   var Gantt = FWorkspaceGantt(AB);
    var Kanban = FWorkspaceKanban(AB);
 
    var Track = FWorkspaceTrack(AB);
@@ -130,11 +132,11 @@ export default function (AB, init_settings) {
             object.save();
          });
 
+         // The Gantt Object View
+         this.hashViews["gantt"] = Gantt;
+
          // The Kanban Object View.
          this.hashViews["kanban"] = Kanban;
-
-         // var Gantt = new ABWorkspaceGantt(base);
-         // this.hashViews["gantt"] = Gantt;
 
          this.PopupCustomIndex = new FPopupCustomIndex(AB);
          this.PopupCustomIndex.on("changed", () => {
@@ -561,10 +563,7 @@ export default function (AB, init_settings) {
                         rows: [
                            {
                               view: "multiview",
-                              cells: [
-                                 Datatable.ui(),
-                                 Kanban.ui() /*, Gantt.ui() */,
-                              ],
+                              cells: [Datatable.ui(), Kanban.ui(), Gantt.ui()],
                            },
                            // this.settings.isInsertable
                            //    ?
@@ -600,6 +599,7 @@ export default function (AB, init_settings) {
          allInits.push(this.workspaceViews.init(AB));
 
          allInits.push(Datatable.init(AB));
+         allInits.push(Gantt.init(AB));
          allInits.push(Kanban.init(AB));
 
          allInits.push(Track.init(AB));
@@ -612,6 +612,7 @@ export default function (AB, init_settings) {
          allInits.push(this.PopupCustomIndex.init(AB));
 
          Datatable.datacollectionLoad(this.CurrentDatacollection);
+         Gantt.datacollectionLoad(this.CurrentDatacollection);
          Kanban.datacollectionLoad(this.CurrentDatacollection);
          // Gantt.datacollectionLoad(this.CurrentDatacollection);
 
@@ -782,6 +783,10 @@ export default function (AB, init_settings) {
          var ids = this.ids;
          var currentView = this.workspaceViews.getCurrentView();
          switch (currentView.type) {
+            case "gantt":
+               Gantt.show(currentView);
+               break;
+
             case "grid":
                Datatable.refreshHeader(
                   currentView.hiddenFields,
@@ -1259,7 +1264,7 @@ export default function (AB, init_settings) {
 
          Datatable.objectLoad(object);
          Kanban.objectLoad(object);
-         // Gantt.objectLoad(object);
+         Gantt.objectLoad(object);
 
          this.PopupNewDataFieldComponent.objectLoad(object);
          this.PopupDefineLabelComponent.objectLoad(object);

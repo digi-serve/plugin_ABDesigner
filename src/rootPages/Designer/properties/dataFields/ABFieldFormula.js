@@ -24,7 +24,7 @@ export default function (AB) {
          const FC = this.FieldClass();
          const ids = this.ids;
 
-         this.rowFilter = FC.rowFilter(App, ids.component, AB);
+         this.rowFilter = AB.rowfilterNew(App, ids.component);
 
          return super.ui([
             {

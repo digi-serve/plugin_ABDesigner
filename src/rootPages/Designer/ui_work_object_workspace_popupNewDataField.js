@@ -36,7 +36,6 @@ export default function (AB) {
             buttonBack: "",
          });
 
-         // const _objectHash = {}; // 'name' => ABFieldXXX object
          this._componentHash = {};
          // {hash} { ABFieldXXX.default().menuname : PropertyEditor }
          // A hash of all the available Field Property Editors, accessible by
@@ -653,34 +652,40 @@ export default function (AB) {
          $$(this.ids.component).hide();
       }
 
-      modeAdd(allowFieldKey) {
+      /**
+       * @method modeAdd()
+       * Opens the new data field widget for Adding a new field.
+       * If an allowFieldKey is provided, then that is the default
+       * Field Editor we want to show. Otherwise shoe the generic
+       * field picker.
+       * @param {string} fieldKey
+       *        show the editor for this ABField.key
+       */
+      modeAdd(fieldKey) {
          // show default editor:
          this.defaultEditorComponent.show(false, false);
          this._currentEditor = this.defaultEditorComponent;
          const ids = this.ids;
 
          // allow add the connect field only to import object
-         if (this.CurrentObject.isImported) allowFieldKey = "connectObject";
+         if (this.CurrentObject.isImported) fieldKey = "connectObject";
 
-         if (allowFieldKey) {
+         if (fieldKey) {
             const connectField = PropertyManager.fields().filter(
-               (f) => f.defaults().key == allowFieldKey
+               (f) => f.defaults().key == fieldKey
             )[0];
             if (!connectField) return;
             const connectMenuName = connectField.defaults().menuName;
-            $$(ids.types).setValue(connectMenuName);
-            $$(ids.chooseFieldType).disable();
+            // $$(ids.types).setValue(connectMenuName);
+            // $$(ids.chooseFieldType).disable();
+
+            this.onClick(connectMenuName);
          }
          // show the ability to switch data types
          else {
             $$(ids.chooseFieldType).enable();
+            this.addPopup();
          }
-
-         // change button text to 'add'
-         // $$(ids.buttonSave).define("label", L("Add Column"));
-
-         // add mode UI
-         this.addPopup();
       }
 
       modeEdit(field) {

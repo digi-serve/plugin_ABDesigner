@@ -33,7 +33,7 @@ export default function (AB, ibase) {
 
          this.on("field.added", (field) => {
             // refresh our droplists with the new field.
-            this.refreshOptions(this._object, this._view);
+            this.refreshOptions(this.CurrentObject, this._view);
             if (this._autoSelectInput) {
                $$(this._autoSelectInput)?.setValue(field.id);
             }
@@ -258,7 +258,7 @@ export default function (AB, ibase) {
       }
 
       init(object, view) {
-         this._object = object;
+         this.objectLoad(object);
          this._view = view;
          this.refreshOptions(object, view);
       }

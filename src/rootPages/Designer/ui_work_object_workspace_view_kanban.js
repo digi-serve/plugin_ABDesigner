@@ -126,6 +126,8 @@ export default function (AB) {
       }
 
       async viewLoad(view) {
+         if (view.id == this.currentViewDef?.id) return;
+
          this.currentViewDef = view;
 
          this.currentView = this.AB.viewNewDetatched(view.component);
