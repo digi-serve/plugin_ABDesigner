@@ -20,7 +20,7 @@ export default function (AB) {
    const AppQueryWorkspace = UI_Work_Query(AB);
    const AppDataCollectionWorkspace = UI_Work_Datacollection(AB);
    const AppProcessWorkspace = UI_Work_Process(AB);
-   var AppInterfaceWorkspace = new UI_Work_Interface(AB);
+   var AppInterfaceWorkspace = UI_Work_Interface(AB);
 
    class UI_Work extends UIClass {
       constructor(options = {}) {

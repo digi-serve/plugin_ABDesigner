@@ -161,7 +161,7 @@ export default function (AB) {
                return mo.label == label;
             })[0];
             if (option) {
-               this.emit(option.command, itemNode);
+               this.emit(option.command);
                this.hide();
                return false;
             }

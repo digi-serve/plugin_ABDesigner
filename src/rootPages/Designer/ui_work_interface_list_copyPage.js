@@ -36,7 +36,6 @@ export default function (AB) {
          });
          this.ids.parentList = {};
 
-         this.currentApplication = null;
       }
 
       ui(oldName) {

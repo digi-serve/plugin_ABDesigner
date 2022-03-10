@@ -5,6 +5,7 @@
  *
  */
 
+import UI_Class from "./ui_class";
 import UI_Work_Interface_List from "./ui_work_interface_list";
 //import UI_Work_Interface_Workspace_Class from "./ui_work_interface_workspace";
 
@@ -15,19 +16,13 @@ export default function (AB) {
    //     /* leave empty for default settings */
    //  );
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+    const UIClass = UI_Class(AB);
+    var L = UIClass.L();
 
-   class UI_Work_Interface extends AB.ClassUI {
-      //.extend(idBase, function(App) {
+    class UI_Work_Interface extends UIClass {
 
       constructor() {
          super("ab_work_interface");
-
-         this.CurrentApplication = null;
-         // {ABApplication}
-         // The current ABApplication we are working with.
       }
 
       ui() {
@@ -70,7 +65,7 @@ export default function (AB) {
        * @param {ABApplication} application
        */
       applicationLoad(application) {
-         this.CurrentApplication = application;
+         super.applicationLoad(application);
 
          //  InterfaceWorkspace.clearInterfaceWorkspace();
          InterfaceList.applicationLoad(application);

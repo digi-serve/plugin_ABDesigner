@@ -42,9 +42,6 @@ export default function (AB) {
             tab: `${base}_tab`,
          });
 
-         this.currentApplication = null;
-         // {ABApplication} the ABApplication we are currently working on.
-
          this.selectNew = true;
          // {bool} do we select a new interface after it is created.
 

@@ -7892,7 +7892,7 @@ var myClass = null;
                return mo.label == label;
             })[0];
             if (option) {
-               this.emit(option.command, itemNode);
+               this.emit(option.command);
                this.hide();
                return false;
             }
@@ -7950,7 +7950,7 @@ __webpack_require__.r(__webpack_exports__);
    const AppQueryWorkspace = (0,_ui_work_query__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
    const AppDataCollectionWorkspace = (0,_ui_work_datacollection__WEBPACK_IMPORTED_MODULE_4__["default"])(AB);
    const AppProcessWorkspace = (0,_ui_work_process__WEBPACK_IMPORTED_MODULE_5__["default"])(AB);
-   var AppInterfaceWorkspace = new _ui_work_interface__WEBPACK_IMPORTED_MODULE_3__["default"](AB);
+   var AppInterfaceWorkspace = (0,_ui_work_interface__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
 
    class UI_Work extends UIClass {
       constructor(options = {}) {
@@ -9462,7 +9462,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_interface_list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_interface_list */ "./src/rootPages/Designer/ui_work_interface_list.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_interface_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_interface_list */ "./src/rootPages/Designer/ui_work_interface_list.js");
 /*
  * ui_work_interface
  *
@@ -9471,28 +9472,23 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+
 //import UI_Work_Interface_Workspace_Class from "./ui_work_interface_workspace";
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var InterfaceList = (0,_ui_work_interface_list__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var InterfaceList = (0,_ui_work_interface_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
    //  var InterfaceWorkspace = UI_Work_Interface_Workspace_Class(
    //     AB
    //     /* leave empty for default settings */
    //  );
 
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+    var L = UIClass.L();
 
-   class UI_Work_Interface extends AB.ClassUI {
-      //.extend(idBase, function(App) {
+    class UI_Work_Interface extends UIClass {
 
       constructor() {
          super("ab_work_interface");
-
-         this.CurrentApplication = null;
-         // {ABApplication}
-         // The current ABApplication we are working with.
       }
 
       ui() {
@@ -9535,7 +9531,7 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABApplication} application
        */
       applicationLoad(application) {
-         this.CurrentApplication = application;
+         super.applicationLoad(application);
 
          //  InterfaceWorkspace.clearInterfaceWorkspace();
          InterfaceList.applicationLoad(application);
@@ -9574,9 +9570,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ui_work_interface_list_newPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_interface_list_newPage */ "./src/rootPages/Designer/ui_work_interface_list_newPage.js");
-/* harmony import */ var _ui_work_interface_list_copyPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_interface_list_copyPage */ "./src/rootPages/Designer/ui_work_interface_list_copyPage.js");
-/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_interface_list_newPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_interface_list_newPage */ "./src/rootPages/Designer/ui_work_interface_list_newPage.js");
+/* harmony import */ var _ui_work_interface_list_copyPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_interface_list_copyPage */ "./src/rootPages/Designer/ui_work_interface_list_copyPage.js");
+/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
 /*
  * ui_work_interface_list
  *
@@ -9587,558 +9584,509 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 //import UI_Work_Interface_List_NewPage from "./ui_work_interface_list_newPage";
 
 
-// const ABProcess = require("../classes/platform/ABProcess");
-
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   var PopupEditPageComponent = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
-   //  var PopupNewPageComponent = new UIListNewProcess(AB);
+  var PopupEditPageComponent = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
 
-   var AddForm = new _ui_work_interface_list_newPage__WEBPACK_IMPORTED_MODULE_0__["default"](AB);
-   var CopyForm = new _ui_work_interface_list_copyPage__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
-   // the popup form for adding a new process
+  var AddForm = new _ui_work_interface_list_newPage__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
+  var CopyForm = new _ui_work_interface_list_copyPage__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
+  // the popup form for adding a new page
 
-   const uiConfig = AB.Config.uiSettings();
-   var L = function (...params) {
-      return AB.Multilingual.labelPlugin("ABDesigner", ...params);
-   };
+  const uiConfig = AB.Config.uiSettings();
+  const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+  var L = UIClass.L();
+  class UI_Work_Interface_List extends UIClass {
+    constructor() {
+      var base = "ui_work_interface_list";
+      super({
+        component: base,
+        list: `${base}_editList`,
+        buttonNew: `${base}_buttonNew`,
+      });
 
-   class UI_Work_Interface_List extends AB.ClassUI {
-      constructor() {
-         var base = "ui_work_interface_list";
-         super({
-            component: base,
-            list: `${base}_editList`,
-            buttonNew: `${base}_buttonNew`,
-         });
+      this.EditPopup = new PopupEditPageComponent(base);
 
-         this.EditPopup = new PopupEditPageComponent(base);
+      this.viewList = new webix.TreeCollection();
+    }
 
-         this.CurrentApplication = null;
-
-         this.viewList = new webix.TreeCollection();
-      }
-
+    // Our webix UI definition:
+    ui() {
+      var ids = this.ids;
       // Our webix UI definition:
-      ui() {
-         var ids = this.ids;
-         // Our webix UI definition:
-         return {
-            id: ids.component,
-            rows: [
-               {
-                  view: "unitlist",
-                  uniteBy: L("Pages"),
-                  height: 34,
-                  data: [" "],
-                  type: {
-                     height: 0,
-                     headerHeight: 35,
-                  },
-               },
-               {
-                  view: AB._App.custom.edittree.view, // "edittree",
-                  id: ids.list,
-                  width: uiConfig.columnWidthLarge,
-
-                  select: true,
-
-                  editaction: "custom",
-                  editable: true,
-                  editor: "text",
-                  editValue: "label",
-                  css: "ab-tree-ui",
-
-                  template: (obj, common) => {
-                     return this.templateListItem(obj, common);
-                  },
-                  type: {
-                     iconGear: "<span class='webix_icon fa fa-cog'></span>",
-                  },
-                  on: {
-                     onAfterRender: () => {
-                        this.onAfterRender();
-                     },
-                     onAfterSelect: (id) => {
-                        this.onAfterSelect(id);
-                     },
-                     onAfterOpen: () => {
-                        this.onAfterOpen();
-                     },
-                     onAfterClose: () => {
-                        this.onAfterClose();
-                     },
-                     onBeforeEditStop: (state, editor) => {
-                        this.onBeforeEditStop(state, editor);
-                     },
-                     onAfterEditStop: (state, editor, ignoreUpdate) => {
-                        this.onAfterEditStop(state, editor, ignoreUpdate);
-                     },
-                  },
-                  onClick: {
-                     "ab-page-list-edit": (e, id, trg) => {
-                        this.clickEditMenu(e, id, trg);
-                     },
-                  },
-               },
-               {
-                  view: "button",
-                  css: "webix_primary",
-                  id: ids.buttonNew,
-                  type: "form",
-                  value: L("Add new Page"), //labels.component.addNew,
-                  click: () => {
-                     console.log("clickNewView");
-                     this.emit("clickNewView");
-                  },
-               },
-            ],
-         };
-         // Making custom UI settings above
-         // return this.ListComponent.ui();
-      }
-
-      // Our init() function for setting up our UI
-      async init(AB, options) {
-         this.AB = AB;
-
-         this.on("clickNewView", (selectNew) => {
-            // if we receive a signal to add a new Interface from another source
-            // like the blank interface workspace offering an Add New button:
-            this.clickNewView(selectNew);
-         });
-
-         if ($$(this.ids.component)) $$(this.ids.component).adjust();
-
-         let $List = $$(this.ids.list);
-         this.ListComponent = $List;
-
-         if ($List) {
-            webix.extend($List, webix.ProgressBar);
-            $List.data.unsync();
-            $List.data.sync(this.viewList);
-            $List.adjust();
-         }
-
-         await this.EditPopup.init(AB, {
-            hideExclude: true,
-         });
-
-         this.EditPopup.menuOptions([
-            {
-               label: L("Rename"),
-               icon: "fa fa-pencil-square-o",
-               command: "rename",
+      return {
+        id: ids.component,
+        rows: [
+          {
+            view: "unitlist",
+            uniteBy: L("Pages"),
+            height: 34,
+            data: [" "],
+            type: {
+              height: 0,
+              headerHeight: 35,
             },
-            {
-               label: L("Copy"),
-               icon: "fa fa-files-o",
-               command: "copy",
+          },
+          {
+            view: AB._App.custom.edittree.view, // "edittree",
+            id: ids.list,
+            width: uiConfig.columnWidthLarge,
+
+            select: true,
+
+            editaction: "custom",
+            editable: true,
+            editor: "text",
+            editValue: "label",
+            css: "ab-tree-ui",
+
+            template: (obj, common) => {
+              return this.templateListItem(obj, common);
             },
-            {
-               label: L("Delete"),
-               icon: "fa fa-trash",
-               command: "delete",
+            type: {
+              iconGear: "<span class='webix_icon fa fa-cog'></span>",
             },
-         ]);
-
-         this.EditPopup.on("delete", (item) => {
-            this.remove(item);
-         });
-
-         this.EditPopup.on("copy", () => {
-            this.copy();
-         });
-
-         this.EditPopup.on("rename", () => {
-            this.rename();
-         });
-
-         await AddForm.init(AB);
-
-         AddForm.on("cancel", () => {
-            AddForm.hide();
-         });
-
-         AddForm.on("save", (obj, select) => {
-            // the PopupEditPageComponent already takes care of updating the
-            // CurrentApplication.
-
-            // we just need to update our list of interfaces
-            this.applicationLoad(this.CurrentApplication);
-
-            // if (select) {
-            this.ListComponent.select(obj.id);
-            // }
-         });
-
-         this._handler_refreshApp = (def) => {
-            if (this.CurrentApplication.refreshInstance) {
-               // TODO: Johnny refactor this
-               this.CurrentApplication =
-                  this.CurrentApplication.refreshInstance();
-            }
-            this.applicationLoad(this.CurrentApplication);
-         };
-      }
-
-      addNew() {
-         console.error("!! Who is calling this?");
-         this.clickNewView(true);
-      }
-
-      /**
-       * @function applicationLoad
-       * Initialize the List from the provided ABApplication
-       * If no ABApplication is provided, then show an empty form. (create operation)
-       * @param {ABApplication} application
-       *        [optional] The current ABApplication we are working with.
-       */
-      applicationLoad(application) {
-         var events = ["definition.updated", "definition.deleted"];
-         if (this.CurrentApplication) {
-            // remove current handler
-            events.forEach((e) => {
-               console.log(this._handler_refreshApp); // always undefined
-               //  this.CurrentApplication.removeListener(
-               //     e,
-               //     this._handler_refreshApp
-               //  );
-            });
-         }
-         this.CurrentApplication = application;
-         if (this.CurrentApplication) {
-            events.forEach((e) => {
-               console.log(this._handler_refreshApp);
-               // this.CurrentApplication.on(e, this._handler_refreshApp);
-            });
-         }
-
-         // TODO list pages
-         console.log(application?.pages());
-         // this.ListComponent.dataLoad(application?.pages());
-
-         this.busy();
-         // this so it looks right/indented in a tree view:
-         this.viewList.clearAll();
-
-         var addPage = (page, index, parentId) => {
-            if (!page) return;
-
-            this.viewList.add(page, index, parentId);
-
-            page.pages().forEach((childPage, childIndex) => {
-               addPage(childPage, childIndex, page.id);
-            });
-         };
-         application.pages().forEach((p, index) => {
-            addPage(p, index);
-         });
-
-         // clear our list and display our objects:
-         var List = $$(this.ids.list);
-         List.refresh();
-         List.unselectAll();
-
-         //
-         this.ready();
-
-         // // prepare our Popup with the current Application
-         AddForm.applicationLoad(application);
-         CopyForm.applicationLoad(application);
-         // this.EditPopup.applicationLoad(application);
-      }
-
-      /**
-       * @function clickNewView
-       *
-       * Manages initiating the transition to the new Page Popup window
-       */
-      clickNewView(selectNew) {
-         // show the new popup
-         AddForm.show();
-      }
-
-      showGear(id) {
-         var domNode = $$(this.ids.list).getItemNode(id);
-         if (domNode) {
-            var gearIcon = domNode.querySelector(".ab-page-list-edit");
-            gearIcon.style.visibility = "visible";
-            gearIcon.style.display = "block";
-         }
-      }
-      /**
-       * @function show()
-       *
-       * Show this component.
-       */
-      show() {
-         $$(this.ids.component).show();
-      }
-
-      ready() {
-         let ids = this.ids;
-         //this.ListComponent.ready();
-         if ($$(ids.list) && $$(ids.list).hideProgress)
-            $$(ids.list).hideProgress();
-      }
-      busy() {
-         let ids = this.ids;
-         if ($$(ids.list) && $$(ids.list).showProgress)
-            $$(ids.list).showProgress({ type: "icon" });
-      }
-      refreshTemplateItem(view) {
-         // make sure this item is updated in our list:
-         view = view.updateIcon(view);
-         this.viewList.updateItem(view.id, view);
-      }
-      rename() {
-         var pageID = $$(this.ids.list).getSelectedId(false);
-         $$(this.ids.list).edit(pageID);
-      }
-      /*
-       * @function copy
-       * make a copy of the current selected item.
-       *
-       * copies should have all the same sub-page data,
-       * but will need unique names, and ids.
-       *
-       * we start the process by making a copy and then
-       * having the user enter a new label/name for it.
-       *
-       * our .afterEdit() routines will detect it is a copy
-       * then alert the parent UI component of the "copied" data
-       */
-      copy() {
-         var selectedPage = $$(this.ids.list).getSelectedItem(false);
-         // show loading cursor
-         this.listBusy();
-
-         CopyForm.init(AB, selectedPage);
-
-         // Data must be loaded AFTER init, as it populates the form immediatly
-         CopyForm.applicationLoad(this.CurrentApplication);
-
-         CopyForm.on("save", (obj) => {
-            // the PopupEditPageComponent already takes care of updating the
-            // CurrentApplication.
-
-            // we just need to update our list of interfaces
-            this.applicationLoad(this.CurrentApplication);
-            this.callbackNewPage(obj);
-
-            // Select the new page
-            this.ListComponent.select(obj.id);
-            this.listReady();
-         });
-
-         CopyForm.on("cancel", () => {
-            CopyForm.hide();
-            this.listReady();
-         });
-
-         CopyForm.show();
-      }
-      remove() {
-         var selectedPage = $$(this.ids.list).getSelectedItem(false);
-         if (!selectedPage) return;
-
-         // verify they mean to do this:
-         webix.confirm({
-            title: L("Delete Page"),
-            text: L("Are you sure you wish to delete this page?", [
-               selectedPage.label,
-            ]),
-            ok: L("Yes"),
-            cancel: L("No"),
-            callback: async (isOK) => {
-               if (isOK) {
-                  this.busy();
-
-                  try {
-                     await selectedPage.destroy();
-                     this.ready();
-                     $$(this.ids.list).remove(
-                        $$(this.ids.list).getSelectedId()
-                     );
-                     // let the calling component know about
-                     // the deletion:
-                     this.emit("deleted", selectedPage);
-
-                     // clear object workspace
-                     this.emit("selected", null);
-                  } catch (e) {
-                     console.error(e, {
-                        context: "ui_common_list:remove(): error removing item",
-                     });
-                     this.ready();
-                  }
-               }
+            on: {
+              onAfterRender: () => {
+                this.onAfterRender();
+              },
+              onAfterSelect: (id) => {
+                this.onAfterSelect(id);
+              },
+              onAfterOpen: () => {
+                this.onAfterOpen();
+              },
+              onAfterClose: () => {
+                this.onAfterClose();
+              },
+              onBeforeEditStop: (state, editor) => {
+                this.onBeforeEditStop(state, editor);
+              },
+              onAfterEditStop: (state, editor, ignoreUpdate) => {
+                this.onAfterEditStop(state, editor, ignoreUpdate);
+              },
             },
-         });
-      }
-      clickEditMenu(e, id, trg) {
-         // Show menu
-         this.EditPopup.show(trg);
+            onClick: {
+              "ab-page-list-edit": (e, id, trg) => {
+                this.clickEditMenu(e, id, trg);
+              },
+            },
+          },
+          {
+            view: "button",
+            css: "webix_primary",
+            id: ids.buttonNew,
+            type: "form",
+            value: L("Add new Page"), //labels.component.addNew,
+            click: () => {
+              this.emit("clickNewView");
+            },
+          },
+        ],
+      };
+      // Making custom UI settings above
+      // return this.ListComponent.ui();
+    }
 
-         return false;
-      }
-      /**
-       * @function callbackNewObject
-       *
-       * Once a New Page was created in the Popup, follow up with it here.
-       */
-      callbackNewPage(page) {
-         var parentPage = page.pageParent() || page.parent;
-         var parentPageId = parentPage.id != page.id ? parentPage.id : null;
-         if (!this.viewList.exists(page.id))
-            this.viewList.add(page, null, parentPageId);
+    // Our init() function for setting up our UI
+    async init(AB, options) {
+      this.AB = AB;
 
-         // add sub-pages to tree-view
-         page.pages().forEach((p, index) => {
-            if (!this.viewList.exists(p.id))
-               this.viewList.add(p, index, page.id);
-         });
+      this.on("clickNewView", (selectNew) => {
+        // if we receive a signal to add a new Interface from another source
+        // like the blank interface workspace offering an Add New button:
+        this.clickNewView(selectNew);
+      });
 
-         $$(this.ids.list).refresh();
+      if ($$(this.ids.component)) $$(this.ids.component).adjust();
 
-         if (parentPageId) $$(this.ids.list).open(parentPageId);
+      let $List = $$(this.ids.list);
+      this.ListComponent = $List;
 
-         $$(this.ids.list).select(page.id);
-
-         AddForm.hide();
-      }
-      listBusy() {
-         if ($$(this.ids.list) && $$(this.ids.list).showProgress)
-            $$(this.ids.list).showProgress({ type: "icon" });
-      }
-
-      listReady() {
-         if ($$(this.ids.list) && $$(this.ids.list).hideProgress)
-            $$(this.ids.list).hideProgress();
-      }
-
-      templateListItem(item, common) {
-         var template = `<div class='ab-page-list-item'>
-            ${common.icon(item)} <span class='webix_icon fa fa-${
-            item.icon || item.viewIcon()
-         }'></span> ${item.label} <div class='ab-page-list-edit'>${
-            common.iconGear
-         }</div>
-            </div>`;
-
-         // now register a callback to update this display when this view is updated:
-         item
-            .removeListener("properties.updated", this.refreshTemplateItem)
-            .once("properties.updated", this.refreshTemplateItem);
-
-         return template;
-      }
-      onAfterOpen() {
-         var id = $$(this.ids.list).getSelectedId(false);
-         if (id) {
-            this.showGear(id);
-         }
+      if ($List) {
+        webix.extend($List, webix.ProgressBar);
+        $List.data.unsync();
+        $List.data.sync(this.viewList);
+        $List.adjust();
       }
 
-      onAfterRender() {
-         var id = $$(this.ids.list).getSelectedId(false);
-         if (id) {
-            this.showGear(id);
-         }
+      await this.EditPopup.init(AB, {
+        hideExclude: true,
+      });
+
+      this.EditPopup.menuOptions([
+        {
+          label: L("Rename"),
+          icon: "fa fa-pencil-square-o",
+          command: "rename",
+        },
+        {
+          label: L("Copy"),
+          icon: "fa fa-files-o",
+          command: "copy",
+        },
+        {
+          label: L("Delete"),
+          icon: "fa fa-trash",
+          command: "delete",
+        },
+      ]);
+
+      this.EditPopup.on("delete", () => {
+        this.remove();
+      });
+
+      this.EditPopup.on("copy", () => {
+        this.copy();
+      });
+
+      this.EditPopup.on("rename", () => {
+        this.rename();
+      });
+
+      await AddForm.init(AB);
+
+      AddForm.on("cancel", () => {
+        AddForm.hide();
+      });
+
+      AddForm.on("save", (obj, select) => {
+        // the PopupEditPageComponent already takes care of updating the
+        // CurrentApplication.
+
+        // we just need to update our list of interfaces
+        this.applicationLoad(this.CurrentApplication);
+
+        // if (select) {
+        this.ListComponent.select(obj.id);
+        // }
+      });
+
+      this._handler_refreshApp = (def) => {
+        if (this.CurrentApplication.refreshInstance) {
+          // TODO: Johnny refactor this
+          this.CurrentApplication =
+            this.CurrentApplication.refreshInstance();
+        }
+        this.applicationLoad(this.CurrentApplication);
+      };
+    }
+
+    addNew() {
+      this.clickNewView(true);
+    }
+
+    /**
+     * @function applicationLoad
+     * Initialize the List from the provided ABApplication
+     * If no ABApplication is provided, then show an empty form. (create operation)
+     * @param {ABApplication} application
+     *        [optional] The current ABApplication we are working with.
+     */
+    applicationLoad(application) {
+      super.applicationLoad(application);
+
+      var events = ["definition.updated", "definition.deleted"];
+
+      this.listBusy();
+      // this so it looks right/indented in a tree view:
+      this.viewList.clearAll();
+
+      var addPage = (page, index, parentId) => {
+        if (!page) return;
+
+        this.viewList.add(page, index, parentId);
+
+        page.pages().forEach((childPage, childIndex) => {
+          addPage(childPage, childIndex, page.id);
+        });
+      };
+      application.pages().forEach((p, index) => {
+        addPage(p, index);
+      });
+
+      // clear our list and display our objects:
+      var List = $$(this.ids.list);
+      List.refresh();
+      List.unselectAll();
+
+      //
+      this.listReady();
+
+      // // prepare our Popup with the current Application
+      AddForm.applicationLoad(application);
+      CopyForm.applicationLoad(application);
+      // this.EditPopup.applicationLoad(application);
+    }
+
+    /**
+     * @function clickNewView
+     *
+     * Manages initiating the transition to the new Page Popup window
+     */
+    clickNewView(selectNew) {
+      // show the new popup
+      AddForm.show();
+    }
+
+    showGear(id) {
+      var domNode = $$(this.ids.list).getItemNode(id);
+      if (domNode) {
+        var gearIcon = domNode.querySelector(".ab-page-list-edit");
+        gearIcon.style.visibility = "visible";
+        gearIcon.style.display = "block";
       }
+    }
+    /**
+     * @function show()
+     *
+     * Show this component.
+     */
+    show() {
+      $$(this.ids.component).show();
+    }
 
-      /**
-       * @function onAfterSelect()
-       *
-       * Perform these actions when a View is selected in the List.
-       */
-      onAfterSelect(id) {
-         // var view = $$(this.ids.list).getItem(id);
-         // AB.actions.populateInterfaceWorkspace(view);
+    refreshTemplateItem(view) {
+      // make sure this item is updated in our list:
+      view = view.updateIcon(view);
+      this.viewList.updateItem(view.id, view);
+    }
+    rename() {
+      var pageID = $$(this.ids.list).getSelectedId(false);
+      $$(this.ids.list).edit(pageID);
+    }
+    /*
+     * @function copy
+     * make a copy of the current selected item.
+     *
+     * copies should have all the same sub-page data,
+     * but will need unique names, and ids.
+     *
+     * we start the process by making a copy and then
+     * having the user enter a new label/name for it.
+     *
+     * our .afterEdit() routines will detect it is a copy
+     * then alert the parent UI component of the "copied" data
+     */
+    copy() {
+      var selectedPage = $$(this.ids.list).getSelectedItem(false);
+      // show loading cursor
+      this.listBusy();
 
-         this.showGear(id);
-      }
-      onBeforeEditStop(state /*, editor */) {
-         console.log(state);
-         var selectedItem = $$(this.ids.list).getSelectedItem(false);
-         selectedItem.label = state.value;
+      CopyForm.init(AB, selectedPage);
 
-         // if this item supports isValid()
-         if (selectedItem.isValid) {
-            var validator = selectedItem.isValid();
-            if (validator.fail()) {
-               selectedItem.label = state.old;
+      // Data must be loaded AFTER init, as it populates the form immediatly
+      CopyForm.applicationLoad(this.CurrentApplication);
 
-               return false; // stop here.
-            }
-         }
+      CopyForm.on("save", (obj) => {
+        // the PopupEditPageComponent already takes care of updating the
+        // CurrentApplication.
 
-         return true;
-      }
-      onAfterEditStop(state, editor, ignoreUpdate) {
-         this.showGear(editor.id);
+        // we just need to update our list of interfaces
+        this.applicationLoad(this.CurrentApplication);
+        this.callbackNewPage(obj);
 
-         if (state.value != state.old) {
+        // Select the new page
+        this.ListComponent.select(obj.id);
+        this.listReady();
+      });
+
+      CopyForm.on("cancel", () => {
+        CopyForm.hide();
+        this.listReady();
+      });
+
+      CopyForm.show();
+    }
+    remove() {
+      var selectedPage = $$(this.ids.list).getSelectedItem(false);
+      if (!selectedPage) return;
+
+      // verify they mean to do this:
+      webix.confirm({
+        title: L("Delete Page"),
+        text: L("Are you sure you wish to delete this page?", [
+          selectedPage?.label,
+        ]),
+        ok: L("Yes"),
+        cancel: L("No"),
+        callback: async (isOK) => {
+          if (isOK) {
             this.listBusy();
 
-            var selectedPage = $$(this.ids.list).getSelectedItem(false);
-            selectedPage.label = state.value;
+            try {
+              await selectedPage.destroy();
+              this.listReady();
+              $$(this.ids.list).remove(
+                $$(this.ids.list).getSelectedId()
+              );
+              // let the calling component know about
+              // the deletion:
+              this.emit("deleted", selectedPage);
 
-            // Call server to rename
-            selectedPage
-               .save()
-               .then(() => {
-                  this.listReady();
+              // clear object workspace
+              this.emit("selected", null);
+            } catch (e) {
+              this.AB.notify.developer(
+                e,
+                {
+                  context: "ui_common_list:remove(): error removing item",
+                  base: selectedPage,
+                }
+              );
+              this.listReady();
+            }
+          }
+        },
+      });
+    }
+    clickEditMenu(e, id, trg) {
+      // Show menu
+      this.EditPopup.show(trg);
 
-                  // refresh the root page list
-                  AddForm.applicationLoad(this.CurrentApplication);
+      return false;
+    }
+    /**
+     * @function callbackNewObject
+     *
+     * Once a New Page was created in the Popup, follow up with it here.
+     */
+    callbackNewPage(page) {
+      var parentPage = page.pageParent() || page.parent;
+      var parentPageId = parentPage.id != page.id ? parentPage.id : null;
+      if (!this.viewList.exists(page.id))
+        this.viewList.add(page, null, parentPageId);
 
-                  // TODO : should use message box
-                  webix.alert({
-                     text: L("<b>{0}</b> is renamed.", [state.value]),
-                  });
-               })
-               .catch((err) => {
-                  this.listReady();
-                  console.error(err);
-                  webix.alert({
-                     text: L("System could not rename <b>{0}</b>.", [
-                        state.value,
-                     ]),
-                  });
-               });
-         }
+      // add sub-pages to tree-view
+      page.pages().forEach((p, index) => {
+        if (!this.viewList.exists(p.id))
+          this.viewList.add(p, index, page.id);
+      });
+
+      $$(this.ids.list).refresh();
+
+      if (parentPageId) $$(this.ids.list).open(parentPageId);
+
+      $$(this.ids.list).select(page.id);
+
+      AddForm.hide();
+    }
+    listBusy() {
+      $$(this.ids.list)?.showProgress?.({ type: "icon" });
+    }
+
+    listReady() {
+      $$(this.ids.list)?.hideProgress?.()
+    }
+
+    templateListItem(item, common) {
+      var template = `<div class='ab-page-list-item'>
+            ${common.icon(item)} <span class='webix_icon fa fa-${item.icon || item.viewIcon()
+        }'></span> ${item.label} <div class='ab-page-list-edit'>${common.iconGear
+        }</div>
+            </div>`;
+
+      // now register a callback to update this display when this view is updated:
+      item
+        .removeListener("properties.updated", this.refreshTemplateItem)
+        .once("properties.updated", this.refreshTemplateItem);
+
+      return template;
+    }
+    onAfterOpen() {
+      var id = $$(this.ids.list).getSelectedId(false);
+      if (id) {
+        this.showGear(id);
       }
-      onAfterClose() {
-         var selectedIds = $$(this.ids.list).getSelectedId(true);
+    }
 
-         // Show gear icon
-         selectedIds.forEach((id) => {
-            this.showGear(id);
-         });
+    onAfterRender() {
+      var id = $$(this.ids.list).getSelectedId(false);
+      if (id) {
+        this.showGear(id);
+      }
+    }
+
+    /**
+     * @function onAfterSelect()
+     *
+     * Perform these actions when a View is selected in the List.
+     */
+    onAfterSelect(id) {
+      // var view = $$(this.ids.list).getItem(id);
+      // AB.actions.populateInterfaceWorkspace(view);
+
+      this.showGear(id);
+    }
+    onBeforeEditStop(state /*, editor */) {
+      var selectedItem = $$(this.ids.list).getSelectedItem(false);
+      selectedItem.label = state.value;
+
+      // if this item supports isValid()
+      if (selectedItem.isValid) {
+        var validator = selectedItem.isValid();
+        if (validator.fail()) {
+          selectedItem.label = state.old;
+
+          return false; // stop here.
+        }
       }
 
-      // Expose any globally accessible Actions:
-      // this.actions({
-      //    /**
-      //     * @function getSelectedProcess
-      //     *
-      //     * returns which ABProcess is currently selected.
-      //     * @return {ABProcess}  or {null} if nothing selected.
-      //     */
-      //    getSelectedProcess: function () {
-      //       return $$(this.ids.list).getSelectedItem();
-      //    },
+      return true;
+    }
+    onAfterEditStop(state, editor, ignoreUpdate) {
+      this.showGear(editor.id);
 
-      //    addNewProcess: function (selectNew, callback) {
-      //       _logic.clickNewView(selectNew, callback);
-      //    },
-      // });
-   }
-   return new UI_Work_Interface_List();
+      if (state.value != state.old) {
+        this.listBusy();
+
+        var selectedPage = $$(this.ids.list).getSelectedItem(false);
+        selectedPage.label = state.value;
+
+        // Call server to rename
+        selectedPage
+          .save()
+          .then(() => {
+            this.listReady();
+
+            // refresh the root page list
+            AddForm.applicationLoad(this.CurrentApplication);
+
+            // TODO : should use message box
+            webix.alert({
+              text: L("<b>{0}</b> is renamed.", [state.value]),
+            });
+          })
+          .catch((err) => {
+            this.listReady();
+            this.AB.notify.developer(
+              err,
+              {
+                context: "ABFieldProperty: isValid()",
+                base: state.value,
+              }
+            );
+            webix.alert({
+              text: L("System could not rename <b>{0}</b>.", [
+                state.value,
+              ]),
+            });
+          });
+      }
+    }
+    onAfterClose() {
+      var selectedIds = $$(this.ids.list).getSelectedId(true);
+
+      // Show gear icon
+      selectedIds.forEach((id) => {
+        this.showGear(id);
+      });
+    }
+
+  }
+  return new UI_Work_Interface_List();
 }
 
 
@@ -10193,7 +10141,6 @@ __webpack_require__.r(__webpack_exports__);
          });
          this.ids.parentList = {};
 
-         this.currentApplication = null;
       }
 
       ui(oldName) {
@@ -10592,9 +10539,6 @@ __webpack_require__.r(__webpack_exports__);
             component: base,
             tab: `${base}_tab`,
          });
-
-         this.currentApplication = null;
-         // {ABApplication} the ABApplication we are currently working on.
 
          this.selectNew = true;
          // {bool} do we select a new interface after it is created.
