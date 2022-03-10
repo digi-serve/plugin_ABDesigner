@@ -248,9 +248,9 @@ let myClass = null;
                      cols: [
                         {
                            view: "label",
-                           label: L("Field Name:") + " ",
+                           label: L("Field Name:"),
                            align: "left",
-                           width: 86.88,
+                           width: 87,
                         },
                         {
                            name: "label",
@@ -300,9 +300,9 @@ let myClass = null;
                      cols: [
                         {
                            view: "label",
-                           label: L("Show icon:") + " ",
+                           label: L("Show icon:"),
                            align: "left",
-                           width: 75.47,
+                           width: 75,
                         },
                         {
                            view: "switch",
@@ -319,9 +319,9 @@ let myClass = null;
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Required:") + " ",
+                           label: L("Required:"),
                            align: "left",
-                           width: 66.28,
+                           width: 66,
                         },
                         {
                            view: "switch",
@@ -359,9 +359,9 @@ let myClass = null;
                         },
                         {
                            view: "label",
-                           label: L("Unique:") + " ",
+                           label: L("Unique:"),
                            align: "left",
-                           width: 58.84,
+                           width: 59,
                         },
                         {
                            view: "switch",
@@ -414,7 +414,7 @@ let myClass = null;
                      cols: [
                         {
                            view: "label",
-                           label: L("Custom Settings:") + " ",
+                           label: L("Custom Settings:"),
                            align: "left",
                            width: 200,
                         },
@@ -497,7 +497,7 @@ let myClass = null;
                         cols: [
                            {
                               view: "label",
-                              label: L("Database Column:") + " ",
+                              label: L("Database Column:"),
                               align: "right",
                               width: 125,
                            },
@@ -1191,7 +1191,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Prefix:") + " ",
+                     label: L("Prefix:"),
                      align: "right",
                      width: 75,
                   },
@@ -1215,7 +1215,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Delimiter:") + " ",
+                     label: L("Delimiter:"),
                      align: "right",
                      width: 75,
                   },
@@ -1240,7 +1240,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Length:") + " ",
+                     label: L("Length:"),
                      align: "right",
                      width: 75,
                   },
@@ -1268,7 +1268,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Preview:") + " ",
+                     label: L("Preview:"),
                      align: "right",
                      width: 75,
                   },
@@ -1377,7 +1377,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default:") + " ",
+                     label: L("Default:"),
                      align: "right",
                      width: 65,
                   },
@@ -1622,7 +1622,7 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Equation:") + " ",
+                           label: L("Equation:"),
                            align: "left",
                            width: 75,
                         },
@@ -1707,9 +1707,9 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Decimals:") + " ",
+                           label: L("Decimals:"),
                            align: "right",
-                           width: 66.63,
+                           width: 67,
                         },
                         {
                            id: ids.decimalSign,
@@ -1732,9 +1732,9 @@ __webpack_require__.r(__webpack_exports__);
                         },
                         {
                            view: "label",
-                           label: L("Places:") + " ",
+                           label: L("Places:"),
                            align: "right",
-                           width: 66.63,
+                           width: 67,
                         },
                         {
                            id: ids.decimalPlaces,
@@ -1971,7 +1971,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Combined Fields:") + " ",
+                     label: L("Combined Fields:"),
                      align: "right",
                      width: 125,
                   },
@@ -1994,7 +1994,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Delimiter:") + " ",
+                     label: L("Delimiter:"),
                      align: "right",
                      width: 125,
                   },
@@ -2139,7 +2139,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Connected to:") + " ",
+                     label: L("Connected to:"),
                      align: "right",
                      width: 94,
                   },
@@ -2742,7 +2742,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Date Format:") + " ",
+                     label: L("Date Format:"),
                      align: "right",
                      width: 88,
                   },
@@ -2772,7 +2772,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default:") + " ",
+                     label: L("Default:"),
                      align: "right",
                      width: 88,
                   },
@@ -2818,7 +2818,7 @@ __webpack_require__.r(__webpack_exports__);
             // Validator
             {
                view: "label",
-               label: L("Validation criteria:") + " ",
+               label: L("Validation criteria:"),
                width: 123,
                css: "ab-text-bold",
             },
@@ -2826,7 +2826,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Condition:") + " ",
+                     label: L("Condition:"),
                      align: "right",
                      width: 88,
                      css: "ab-text-bold",
@@ -2893,7 +2893,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Start Date:") + " "
+                                    L("Start Date:")
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -2910,7 +2910,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Date:") + " "
+                                    L("Date:")
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -2935,7 +2935,7 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Unit:") + " ",
+                           label: L("Unit:"),
                            align: "right",
                            width: 88,
                         },
@@ -3059,7 +3059,7 @@ __webpack_require__.r(__webpack_exports__);
                   {
                      id: ids.validateStartDateContainerLabel,
                      view: "label",
-                     label: L("Start Date:") + " ",
+                     label: L("Start Date:"),
                      align: "right",
                      width: 88,
                   },
@@ -3080,7 +3080,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("End Date:") + " ",
+                     label: L("End Date:"),
                      align: "right",
                      width: 88,
                   },
@@ -3299,14 +3299,14 @@ __webpack_require__.r(__webpack_exports__);
          return super.ui([
             {
                view: "label",
-               label: L("Date:") + " ",
+               label: L("Date:"),
                align: "left",
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Format:") + " ",
+                     label: L("Format:"),
                      align: "right",
                      width: 88,
                   },
@@ -3340,7 +3340,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default:") + " ",
+                     label: L("Default:"),
                      align: "right",
                      width: 88,
                   },
@@ -3386,7 +3386,7 @@ __webpack_require__.r(__webpack_exports__);
             // Validator
             {
                view: "label",
-               label: L("Validation criteria:") + " ",
+               label: L("Validation criteria:"),
                width: 123,
                css: "ab-text-bold",
             },
@@ -3394,7 +3394,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Condition:") + " ",
+                     label: L("Condition:"),
                      align: "right",
                      width: 88,
                      css: "ab-text-bold",
@@ -3461,7 +3461,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Start Date:") + " "
+                                    L("Start Date:")
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -3478,7 +3478,7 @@ __webpack_require__.r(__webpack_exports__);
                                  $$(ids.validateRange).hide();
                                  $$(ids.validateStartDateContainerLabel).define(
                                     "label",
-                                    L("Date:") + " "
+                                    L("Date:")
                                  );
                                  $$(
                                     ids.validateStartDateContainerLabel
@@ -3503,7 +3503,7 @@ __webpack_require__.r(__webpack_exports__);
                      cols: [
                         {
                            view: "label",
-                           label: L("Unit:") + " ",
+                           label: L("Unit:"),
                            align: "right",
                            width: 88,
                         },
@@ -3627,7 +3627,7 @@ __webpack_require__.r(__webpack_exports__);
                   {
                      id: ids.validateStartDateContainerLabel,
                      view: "label",
-                     label: L("Start Date:") + " ",
+                     label: L("Start Date:"),
                      align: "right",
                      width: 88,
                   },
@@ -3648,7 +3648,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("End Date:") + " ",
+                     label: L("End Date:"),
                      align: "right",
                      width: 88,
                   },
@@ -3665,14 +3665,14 @@ __webpack_require__.r(__webpack_exports__);
             },
             {
                view: "label",
-               label: L("Time:") + " ",
+               label: L("Time:"),
                align: "left",
             },
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Format:") + " ",
+                     label: L("Format:"),
                      align: "right",
                      width: 88,
                   },
@@ -3704,7 +3704,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Time:") + " ",
+                     label: L("Default Time:"),
                      align: "right",
                      width: 88,
                   },
@@ -3969,7 +3969,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value:"),
                      align: "right",
                      width: 100,
                   },
@@ -4103,7 +4103,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Size (MB):") + " ",
+                     label: L("Size (MB):"),
                      align: "right",
                      width: 75,
                   },
@@ -4139,7 +4139,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Type:") + " ",
+                     label: L("Type:"),
                      align: "right",
                      width: 75,
                   },
@@ -4245,7 +4245,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Type:") + " ",
+                     label: L("Type:"),
                      align: "right",
                      width: 40,
                   },
@@ -4279,7 +4279,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Field:") + " ",
+                     label: L("Field:"),
                      align: "right",
                      width: 40,
                   },
@@ -4480,7 +4480,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Width:") + " ",
+                     label: L("Width:"),
                      align: "right",
                      width: 60,
                   },
@@ -4516,7 +4516,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Height:") + " ",
+                     label: L("Height:"),
                      align: "right",
                      width: 60,
                   },
@@ -4552,7 +4552,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default image:") + " ",
+                     label: L("Default image:"),
                      align: "right",
                      width: 100,
                   },
@@ -4581,20 +4581,19 @@ __webpack_require__.r(__webpack_exports__);
                   {
                      view: "uploader",
                      id: ids.defaultImageUrl,
-                     template:
-                        '<div style="text-align:center; font-size: 30px;">' +
-                        '<div class="default-image-holder">' +
-                        '<div class="image-data-field-icon">' +
-                        '<i class="fa fa-picture-o fa-2x"></i>' +
-                        `<div style="font-size: 15px;">${L(
-                           "Drag and drop or click here"
-                        )}</div>` +
-                        "</div>" +
-                        '<div class="image-data-field-image" style="display:none;">' +
-                        '<a style="" class="ab-delete-photo" href="javascript:void(0);"><i class="fa fa-times delete-image" style="display:none;"></i></a>' +
-                        "</div>" +
-                        "</div>" +
-                        "</div>",
+                     template: `<div style="text-align:center; font-size: 30px;">
+                           <div class="default-image-holder">
+                              <div class="image-data-field-icon">
+                                 <i class="fa fa-picture-o fa-2x"></i>
+                                 <div style="font-size: 15px;">${L(
+                                    "Drag and drop or click here"
+                                 )}</div>
+                              </div>
+                              <div class="image-data-field-image" style="display:none;">
+                                 <a style="" class="ab-delete-photo" href="javascript:void(0);"><i class="fa fa-times delete-image" style="display:none;"></i></a>
+                              </div>
+                           </div>
+                        </div>`,
                      apiOnly: true,
                      inputName: "file",
                      multiple: false,
@@ -5089,7 +5088,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default:") + " ",
+                     label: L("Default:"),
                      width: 55,
                   },
                   {
@@ -5404,7 +5403,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value:"),
                      align: "right",
                      width: 100,
                   },
@@ -5542,7 +5541,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value:"),
                      align: "right",
                      width: 100,
                   },
@@ -5582,7 +5581,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Format:" + " "),
+                     label: L("Format:"),
                      align: "right",
                      width: 100,
                   },
@@ -5605,7 +5604,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Decimals:") + " ",
+                     label: L("Decimals:"),
                      align: "right",
                      width: 100,
                   },
@@ -5639,7 +5638,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Places:") + " ",
+                           label: L("Places:"),
                            align: "right",
                            width: 100,
                         },
@@ -5658,7 +5657,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Rounding:") + " ",
+                           label: L("Rounding:"),
                            align: "right",
                            width: 100,
                         },
@@ -5693,7 +5692,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Thousands:") + " ",
+                     label: L("Thousands:"),
                      align: "right",
                      width: 100,
                   },
@@ -5715,7 +5714,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Validation:") + " ",
+                     label: L("Validation:"),
                      align: "right",
                      width: 100,
                   },
@@ -5747,7 +5746,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Minimum:") + " ",
+                           label: L("Minimum:"),
                            align: "right",
                            width: 100,
                         },
@@ -5777,7 +5776,7 @@ __webpack_require__.r(__webpack_exports__);
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Maximum:") + " ",
+                           label: L("Maximum:"),
                            align: "right",
                            width: 100,
                         },
@@ -6042,7 +6041,7 @@ __webpack_require__.r(__webpack_exports__);
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value:"),
                      align: "right",
                      width: 100,
                   },
@@ -6494,7 +6493,7 @@ __webpack_require__.r(__webpack_exports__);
                      on: {
                         onChange: function (newValue /*, oldValue*/) {
                            if (newValue == 0) {
-                              $$(ids.editable).setValue(1);
+                              $$(ids.editable).setValue(0);
                               $$(ids.editable).hide();
                            } else {
                               $$(ids.editable).setValue(1);
@@ -12070,37 +12069,36 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+
+   const DataCollectionList = (0,_ui_work_datacollection_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const DataCollectionWorkspace = (0,_ui_work_datacollection_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
    class UI_Work_DataCollection extends UIClass {
       constructor() {
          super("ui_work_datacollection");
-
-         this.DataCollectionList = (0,_ui_work_datacollection_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-         this.DataCollectionWorkspace = (0,_ui_work_datacollection_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
       }
 
       ui() {
+         const ids = this.ids;
          // Our webix UI definition:
          return {
-            id: this.ids.component,
+            id: ids.component,
             type: "space",
             cols: [
-               this.DataCollectionList.ui(),
+               DataCollectionList.ui(),
                { view: "resizer", width: 11 },
-               this.DataCollectionWorkspace.ui(),
+               DataCollectionWorkspace.ui(),
             ],
          };
       }
 
-      init(AB) {
+      async init(AB) {
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         this.DataCollectionList.on("selected", this.select);
+         await DataCollectionList.on("selected", this.select);
 
-         return Promise.all([
-            this.DataCollectionWorkspace.init(AB),
-            this.DataCollectionList.init(AB),
-         ]);
+         await DataCollectionWorkspace.init(AB);
+         await DataCollectionList.init(AB);
       }
 
       /**
@@ -12111,9 +12109,10 @@ __webpack_require__.r(__webpack_exports__);
       applicationLoad(application) {
          super.applicationLoad(application);
 
-         this.DataCollectionWorkspace.clearWorkspace();
-         this.DataCollectionList.applicationLoad(application);
-         this.DataCollectionWorkspace.applicationLoad(application);
+         DataCollectionWorkspace.clearWorkspace();
+
+         DataCollectionList.applicationLoad(application);
+         DataCollectionWorkspace.applicationLoad(application);
       }
 
       /**
@@ -12122,21 +12121,23 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         const ids = this.ids;
+
+         $$(ids.component).show();
 
          // this.DataCollectionList.busy();
 
-         var app = this.CurrentApplication;
+         const app = this.CurrentApplication;
          if (app) {
-            this.DataCollectionWorkspace.applicationLoad(app);
-            this.DataCollectionList.applicationLoad(app);
+            DataCollectionWorkspace.applicationLoad(app);
+            DataCollectionList.applicationLoad(app);
          }
-         this.DataCollectionList.ready();
+         DataCollectionList.ready();
       }
 
       select(dc) {
-         this.DataCollectionWorkspace.clearWorkspace();
-         this.DataCollectionWorkspace.populateWorkspace(dc);
+         DataCollectionWorkspace.clearWorkspace();
+         DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
 
@@ -13181,41 +13182,336 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_datacollection_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_datacollection_workspace_view_grid */ "./src/rootPages/Designer/ui_work_datacollection_workspace_view_grid.js");
+
+
+
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // var L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
+   const L = UIClass.L();
+
+   const Datatable = (0,_ui_work_datacollection_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+
    class UI_Work_Datacollection_Workspace extends UIClass {
       constructor(settings = init_settings || {}) {
-         super("ui_work_datacollection_workspace");
+         super("ui_work_datacollection_workspace", {
+            error: "",
+            error_msg: "",
+
+            noSelection: "",
+            selectedDatacollection: "",
+         });
+
+         this.hashViews = {};
+         // {hash}  { view.id : webix_component }
+         // a hash of the live workspace view components
+
+         // The Grid that displays our object:
+         this.hashViews["grid"] = Datatable;
+
+         // create ABViewDataCollection
+         this.CurrentDatacollection = null;
+         // {ABDataCollection}
+         // An instance of an ABDataCollection to manage the data we are displaying
+         // in our workspace.
 
          this.settings = settings;
-      }
+      } // constructor
 
       ui() {
-         return {};
+         const ids = this.ids;
+         return {
+            view: "multiview",
+            id: ids.component,
+            rows: [
+               {
+                  id: ids.error,
+                  rows: [
+                     {
+                        maxHeight: uiConfig.xxxLargeSpacer,
+                        hidden: uiConfig.hideMobile,
+                     },
+                     {
+                        view: "label",
+                        align: "center",
+                        height: 200,
+                        label: "<div style='display: block; font-size: 180px; background-color: #666; color: transparent; text-shadow: 0px 1px 1px rgba(255,255,255,0.5); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text;' class='fa fa-exclamation-triangle'></div>",
+                     },
+                     {
+                        id: ids.error_msg,
+                        view: "label",
+                        align: "center",
+                        label: L("There was an error"),
+                     },
+                     {
+                        maxHeight: uiConfig.xxxLargeSpacer,
+                        hidden: uiConfig.hideMobile,
+                     },
+                  ],
+               },
+               {
+                  id: ids.noSelection,
+                  rows: [
+                     {
+                        maxHeight: uiConfig.xxxLargeSpacer,
+                        hidden: uiConfig.hideMobile,
+                     },
+                     {
+                        view: "label",
+                        align: "center",
+                        height: 200,
+                        label: "<div style='display: block; font-size: 180px; background-color: #666; color: transparent; text-shadow: 0px 1px 1px rgba(255,255,255,0.5); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text;' class='fa fa-table'></div>",
+                     },
+                     {
+                        view: "label",
+                        align: "center",
+                        label: L("Select an datacollection to work with."),
+                     },
+                     {
+                        cols: [
+                           {},
+                           {
+                              view: "button",
+                              label: L("Add new data view"),
+                              type: "form",
+                              css: "webix_primary",
+                              autowidth: true,
+                              click: () => {
+                                 this.emit("addNew", true);
+                              },
+                           },
+                           {},
+                        ],
+                     },
+                     {
+                        maxHeight: uiConfig.xxxLargeSpacer,
+                        hidden: uiConfig.hideMobile,
+                     },
+                  ],
+               },
+               {
+                  id: ids.selectedDatacollection,
+                  type: "wide",
+                  paddingY: 0,
+                  // css: "ab-data-toolbar",
+                  // borderless: true,
+                  rows: [
+                     {
+                        padding: 0,
+                        rows: [
+                           {
+                              view: "multiview",
+                              cells: [Datatable.ui()],
+                           },
+                        ],
+                     },
+                  ],
+               },
+            ],
+         };
       }
 
-      init() {
+      async init() {
+         const ids = this.ids;
+
+         this.AB = AB;
+
+         await Datatable.init(AB);
+
+         $$(ids.noSelection).show();
+      }
+
+      applicationLoad(application) {
+         super.applicationLoad(application);
          // TODO
-         return Promise.resolve();
       }
 
-      // applicationLoad(app) {
-      //    super.applicationLoad(app);
-      //    // TODO
-      // }
-
+      /**
+       * @function clearWorkspace()
+       *
+       * Clear the datacollection workspace.
+       */
       clearWorkspace() {
-         // TODO
+         const ids = this.ids;
+
+         // NOTE: to clear a visual glitch when multiple views are updating
+         // at one time ... stop the animation on this one:
+         $$(ids.component)?.hideProgress?.();
       }
 
-      populateWorkspace() {
-         // TODO
+      /**
+       * @method populateWorkspace()
+       * Initialize the Datacollection Workspace with the provided ABDataCollection.
+       * @param {uuid} datacollection
+       *        current ABDataCollection instance we are working with.
+       */
+      async populateWorkspace(datacollection) {
+         const ids = this.ids;
+
+         $$(ids.selectedDatacollection).show();
+
+         this.CurrentDatacollectionID =
+            this.AB.datacollectionByID(datacollection);
+
+         Datatable.datacollectionLoad(datacollection);
+
+         // // display the proper ViewComponent
+         // const currDisplay = hashViews[currentView.type];
+         // currDisplay.show();
+         // // viewPicker needs to show this is the current view.
       }
    }
 
    return new UI_Work_Datacollection_Workspace();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_datacollection_workspace_view_grid.js":
+/*!******************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_datacollection_workspace_view_grid.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
+/*
+ * ui_work_datacollection_workspace_view_grid
+ *
+ * Display an instance of a Grid type of Workspace View in our area.
+ *
+ * This generic webix container will be given an instace of a workspace
+ * view definition (Grid), and then create an instance of an ABViewGrid
+ * widget to display.
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+
+   const ViewGridProperties = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+
+   class UI_Work_Datacollection_Workspace_View_Grid extends UIClass {
+      constructor() {
+         super("ui_work_datacollection_workspace_view_grid");
+      }
+
+      // Our webix UI definition:
+      ui() {
+         const ids = this.ids;
+
+         return {
+            id: ids.component,
+            rows: [
+               {},
+               {
+                  view: "label",
+                  label: "Impressive View -> Grid",
+               },
+               {},
+            ],
+         };
+      }
+
+      // Our init() function for setting up our UI
+      async init(AB) {
+         this.AB = AB;
+      }
+
+      getColumnIndex(id) {
+         return this._currentComponent.getColumnIndex(id);
+      }
+
+      datacollectionLoad(dc) {
+         this.datacollection = dc;
+      }
+
+      get $grid() {
+         return this._currentComponent?.getDataTable();
+      }
+
+      ready() {
+         this.ListComponent.ready();
+      }
+
+      async show(view) {
+         await this.viewLoad(view);
+         $$(this.ids.component).show();
+         this.emit("show");
+      }
+
+      async viewLoad(view) {
+         this.currentViewDef = view;
+
+         this.currentView = this.AB.viewNewDetatched(view.component);
+         const component = this.currentView.component();
+
+         // OK, a ABViewGrid component wont display the grid unless there
+         // is a .datacollection or .dataviewID specified.
+         // but calling .datacollectionLoad() doesn't actually load the data
+         // unless there is the UI available.
+         // So ... do this to register the datacollection
+         component.datacollectionLoad(this.datacollection);
+
+         const ui = component.ui();
+         ui.id = this.ids.component;
+         webix.ui(ui, $$(this.ids.component));
+         await component.init(this.AB);
+
+         // Now call .datacollectionLoad() again to actually load the data.
+         component.datacollectionLoad(this.datacollection);
+
+         component.on("column.header.clicked", (node, EditField) => {
+            this.emit("column.header.clicked", node, EditField);
+         });
+
+         component.on("object.track", (currentObject, id) => {
+            this.emit("object.track", currentObject, id);
+         });
+
+         component.on("selection", () => {
+            this.emit("selection");
+         });
+
+         component.on("selection.cleared", () => {
+            this.emit("selection.cleared");
+         });
+
+         component.on("column.order", (fieldOrder) => {
+            this.emit("column.order", fieldOrder);
+         });
+
+         this._currentComponent = component;
+      }
+
+      viewNew(data) {
+         const defaults = this.defaultSettings(data);
+         Object.keys(data).forEach((k) => {
+            defaults[k] = data[k];
+         });
+
+         return defaults;
+      }
+
+      deleteSelected($view) {
+         return this._currentComponent.toolbarDeleteSelected($view);
+      }
+
+      massUpdate($view) {
+         return this._currentComponent.toolbarMassUpdate($view);
+      }
+   }
+   return new UI_Work_Datacollection_Workspace_View_Grid();
 }
 
 
