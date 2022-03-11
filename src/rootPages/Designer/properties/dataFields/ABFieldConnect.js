@@ -8,8 +8,8 @@ import FFieldClass from "./ABField";
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = FFieldClass(AB);
-   var L = ABField.L();
+   const ABField = FFieldClass(AB);
+   const L = ABField.L();
 
    class ABFieldConnectProperty extends ABField {
       constructor() {
@@ -36,26 +36,38 @@ export default function (AB) {
       }
 
       ui() {
-         var FC = this.FieldClass();
-         var ids = this.ids;
+         const FC = this.FieldClass();
+         const ids = this.ids;
          return super.ui([
             {
-               view: "richselect",
-               label: L("Connected to:"),
-               id: ids.linkObject,
-               disallowEdit: true,
-               name: "linkObject",
-               labelWidth: uiConfig.labelWidthLarge,
-               placeholder: L("Select object"),
-               options: [],
-               // select: true,
-               // height: 140,
-               // template: "<div class='ab-new-connectObject-list-item'>#label#</div>",
-               on: {
-                  onChange: (newV, oldV) => {
-                     this.selectObjectTo(newV, oldV);
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Connected to:"),
+                     align: "right",
+                     width: 94,
                   },
-               },
+                  {
+                     id: ids.linkObject,
+                     view: "richselect",
+                     disallowEdit: true,
+                     name: "linkObject",
+                     labelWidth: uiConfig.labelWidthLarge,
+                     placeholder: L("Select object"),
+                     options: [],
+                     // select: true,
+                     // height: 140,
+                     // template: "<div class='ab-new-connectObject-list-item'>#label#</div>",
+                     on: {
+                        onChange: (newV, oldV) => {
+                           this.selectObjectTo(newV, oldV);
+                        },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
             },
             /*
             // NOTE: leave out of v2 until someone asks for it back.
@@ -104,6 +116,9 @@ export default function (AB) {
                         onChange: (newValue, oldValue) => {
                            this.selectLinkType(newValue, oldValue);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -148,6 +163,9 @@ export default function (AB) {
                         onChange: (newV, oldV) => {
                            this.selectLinkViaType(newV, oldV);
                         },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
                      },
                   },
                   {
@@ -179,6 +197,9 @@ export default function (AB) {
                   onChange: () => {
                      this.checkCustomFK();
                   },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
                },
             },
             {
@@ -191,11 +212,14 @@ export default function (AB) {
                label: L("Index Field:"),
                placeholder: L("Select index field"),
                options: [],
-               // on: {
-               //    onChange: () => {
-               //       ABFieldConnectComponent.logic.updateColumnName();
-               //    }
-               // }
+               on: {
+                  // onChange: () => {
+                  //    ABFieldConnectComponent.logic.updateColumnName();
+                  // },
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
             {
                id: ids.indexField2,
@@ -207,6 +231,11 @@ export default function (AB) {
                label: L("Index Field:"),
                placeholder: L("Select index field"),
                options: [],
+               on: {
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
+                  },
+               },
             },
          ]);
       }
@@ -229,11 +258,11 @@ export default function (AB) {
       }
 
       isValid() {
-         var ids = this.ids;
-         var isValid = super.isValid();
+         const ids = this.ids;
+         let isValid = super.isValid();
 
          // validate require select linked object
-         var selectedObjId = $$(ids.linkObject).getValue();
+         const selectedObjId = $$(ids.linkObject).getValue();
          if (!selectedObjId) {
             this.markInvalid("linkObject", L("Select an object"));
             // webix.html.addCss($$(ids.linkObject).$view, "webix_invalid");
@@ -247,7 +276,7 @@ export default function (AB) {
       }
 
       // populate(field) {
-      //    var ids = this.ids;
+      //    const ids = this.ids;
       //    super.populate(field);
       // }
 
@@ -274,7 +303,7 @@ export default function (AB) {
          super.show();
 
          this.populateSelect(false);
-         var ids = this.ids;
+         const ids = this.ids;
 
          // show current object name
          $$(ids.fieldLink).setValue(
@@ -294,7 +323,7 @@ export default function (AB) {
       ////
 
       checkCustomFK() {
-         var ids = this.ids;
+         const ids = this.ids;
          $$(ids.indexField).hide();
          $$(ids.indexField2).hide();
 
@@ -357,9 +386,9 @@ export default function (AB) {
        *        a task was complete. This is that callback.
        */
       populateSelect(/* populate, callback */) {
-         var options = [];
+         const options = [];
          // if an ABApplication is set then load in the related objects
-         var application = this.CurrentApplication;
+         const application = this.CurrentApplication;
          if (application) {
             application.objectsIncluded().forEach((o) => {
                options.push({ id: o.id, value: o.label });
@@ -378,8 +407,8 @@ export default function (AB) {
             return 0;
          });
 
-         var ids = this.ids;
-         var $linkObject = $$(ids.linkObject);
+         const ids = this.ids;
+         const $linkObject = $$(ids.linkObject);
          $linkObject.define("options", options);
          $linkObject.refresh();
          /*
@@ -387,11 +416,11 @@ export default function (AB) {
          if (populate != null && populate == true) {
             $linkObject.setValue(options[options.length - 1].id);
             $linkObject.refresh();
-            var selectedObj = $linkObject
+            const selectedObj = $linkObject
                .getList()
                .getItem(options[options.length - 1].id);
             if (selectedObj) {
-               var selectedObjLabel = selectedObj.value;
+               const selectedObjLabel = selectedObj.value;
                $$(ids.fieldLinkVia).setValue(
                   L("<b>{0}</b> entry.", [selectedObjLabel])
                );
@@ -425,7 +454,7 @@ export default function (AB) {
       }
 
       selectObjectTo(newValue, oldValue) {
-         var ids = this.ids;
+         const ids = this.ids;
 
          if (!newValue) {
             $$(ids.link1).hide();
@@ -450,7 +479,7 @@ export default function (AB) {
       }
 
       updateCustomIndex() {
-         var ids = this.ids;
+         const ids = this.ids;
          let linkObjectId = $$(ids.linkObject).getValue();
          let linkType = $$(ids.linkType).getValue();
          let linkViaType = $$(ids.linkViaType).getValue();

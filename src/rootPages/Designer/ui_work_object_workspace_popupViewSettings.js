@@ -32,12 +32,17 @@ export default function (AB) {
 
          this.comKanban = FormABViewKanBan(AB, `${base}_kanban`);
          this.comKanban.on("new.field", (key) => {
+            this._newFieldSource = "comKanban";
             this.emit("new.field", key);
          });
          this.comGantt = FormABViewGantt(AB, `${base}_gantt`);
+         this.comGantt.on("new.field", (key) => {
+            this._newFieldSource = "comGantt";
+            this.emit("new.field", key);
+         });
 
          this.on("field.added", (field) => {
-            this.comKanban.emit("field.added", field);
+            this[this._newFieldSource]?.emit("field.added", field);
          });
       }
 
@@ -298,7 +303,6 @@ export default function (AB) {
          } else {
             // viewObj = this.CurrentObject.workspaceViews.addView(view);
             this.emit("added", view);
-            // this.callbacks.onViewAdded(viewObj);
          }
          this.hide();
       }

@@ -4,7 +4,7 @@
  */
 import UI_Class from "../../ui_class";
 
-var myClass = null;
+let myClass = null;
 // {singleton}
 // we will want to call this factory fn() repeatedly in our imports,
 // but we only want to define 1 Class reference.
@@ -13,7 +13,7 @@ export default function (AB) {
    if (!myClass) {
       const uiConfig = AB.Config.uiSettings();
       const UIClass = UI_Class(AB);
-      var L = UIClass.L();
+      const L = UIClass.L();
 
       myClass = class ABFieldProperty extends UIClass {
          constructor(base = "properties_abfield", ids = {}) {
@@ -22,7 +22,7 @@ export default function (AB) {
             // this is provided by the Sub Class and has the keys
             // unique to the Sub Class' interface elements.
 
-            var common = {
+            const common = {
                // component: `${base}_component`,
 
                // the common property fields
@@ -63,10 +63,10 @@ export default function (AB) {
          }
 
          ui(elements = []) {
-            var ids = this.ids;
+            const ids = this.ids;
 
-            var FC = this.FieldClass();
-            var _ui = {
+            const FC = this.FieldClass();
+            const _ui = {
                view: "form",
                id: ids.component,
                borderless: true,
@@ -76,9 +76,9 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Field Name:") + " ",
+                           label: L("Field Name:"),
                            align: "left",
-                           width: 86.88,
+                           width: 87,
                         },
                         {
                            name: "label",
@@ -101,6 +101,11 @@ export default function (AB) {
                            id: ids.columnName,
                            name: "columnName",
                            hidden: true,
+                           on: {
+                              onAfterRender() {
+                                 UIClass.CYPRESS_REF(this);
+                              },
+                           },
                         },
                         {
                            view: "button",
@@ -123,9 +128,9 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Show icon:") + " ",
+                           label: L("Show icon:"),
                            align: "left",
-                           width: 75.47,
+                           width: 75,
                         },
                         {
                            view: "switch",
@@ -142,9 +147,9 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Required:") + " ",
+                           label: L("Required:"),
                            align: "left",
-                           width: 66.28,
+                           width: 66,
                         },
                         {
                            view: "switch",
@@ -182,9 +187,9 @@ export default function (AB) {
                         },
                         {
                            view: "label",
-                           label: L("Unique:") + " ",
+                           label: L("Unique:"),
                            align: "left",
-                           width: 58.84,
+                           width: 59,
                         },
                         {
                            view: "switch",
@@ -237,7 +242,7 @@ export default function (AB) {
                      cols: [
                         {
                            view: "label",
-                           label: L("Custom Settings:") + " ",
+                           label: L("Custom Settings:"),
                            align: "left",
                            width: 200,
                         },
@@ -320,7 +325,7 @@ export default function (AB) {
                         cols: [
                            {
                               view: "label",
-                              label: L("Database Column:") + " ",
+                              label: L("Database Column:"),
                               align: "right",
                               width: 125,
                            },
@@ -466,7 +471,7 @@ export default function (AB) {
          async init(AB) {
             this.AB = AB;
 
-            var FC = this.FieldClass();
+            const FC = this.FieldClass();
             if (FC) {
                $$(this.ids.fieldDescription).define(
                   "label",
@@ -525,8 +530,8 @@ export default function (AB) {
          }
 
          addValidation(settings) {
-            var ids = this.ids;
-            var Filter = new this.AB.Class.FilterComplex(
+            const ids = this.ids;
+            const Filter = new this.AB.Class.FilterComplex(
                this.AB._App,
                "field_validation_rules",
                this.AB
@@ -557,7 +562,7 @@ export default function (AB) {
                      type: "icon",
                      autowidth: true,
                      click: function () {
-                        var $viewCond = this.getParentView();
+                        const $viewCond = this.getParentView();
                         $$(ids.filterComplex).removeView($viewCond);
 
                         // reset the validation rules UI
@@ -594,7 +599,7 @@ export default function (AB) {
             const ids = this.ids;
 
             // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
+            const filterViews = $$(ids.filterComplex).queryView(
                {
                   view: "form",
                   css: "abValidationForm",
@@ -617,13 +622,13 @@ export default function (AB) {
          }
 
          clear() {
-            var ids = this.ids;
+            const ids = this.ids;
             this._CurrentField = null;
 
-            var defaultValues = this.defaultValues();
+            const defaultValues = this.defaultValues();
 
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
+            for (const f in defaultValues) {
+               const component = $$(ids[f]);
                if (component) component.setValue(defaultValues[f]);
             }
 
@@ -661,7 +666,7 @@ export default function (AB) {
           * @return {obj}
           */
          defaults() {
-            var FieldClass = this.FieldClass();
+            const FieldClass = this.FieldClass();
             if (!FieldClass) {
                console.error(
                   "!!! ABFieldStringProperty: could not find FieldClass[]"
@@ -672,7 +677,7 @@ export default function (AB) {
          }
 
          defaultValues() {
-            var values = {
+            const values = {
                label: "",
                columnName: "",
                showIcon: 1,
@@ -681,9 +686,9 @@ export default function (AB) {
                validationRules: "",
             };
 
-            var FieldClass = this.FieldClass();
+            const FieldClass = this.FieldClass();
             if (FieldClass) {
-               var fcValues = FieldClass.defaultValues();
+               const fcValues = FieldClass.defaultValues();
                Object.keys(fcValues).forEach((k) => {
                   if (typeof values[k] == "undefined") {
                      values[k] = fcValues[k];
@@ -754,7 +759,7 @@ export default function (AB) {
          }
 
          async getNumberOfNullValue(isRequired) {
-            var ids = this.ids;
+            const ids = this.ids;
             if (
                isRequired &&
                this._CurrentField &&
@@ -765,7 +770,7 @@ export default function (AB) {
 
                // get count number
                try {
-                  var data = await this._CurrentField.object.model().count({
+                  const data = await this._CurrentField.object.model().count({
                      where: {
                         glue: "and",
                         rules: [
@@ -805,8 +810,8 @@ export default function (AB) {
           * @return {bool}
           */
          isValid() {
-            var ids = this.ids;
-            var isValid = $$(ids.component).validate(),
+            const ids = this.ids;
+            let isValid = $$(ids.component).validate(),
                colName = this.formValues()["columnName"];
 
             setTimeout(() => {
@@ -814,7 +819,7 @@ export default function (AB) {
             }, 500);
 
             // validate reserve column names
-            var FC = this.FieldClass();
+            const FC = this.FieldClass();
             if (!FC) {
                this.AB.notify.developer(
                   new Error("Unable to resolve FieldClass"),
@@ -833,7 +838,7 @@ export default function (AB) {
 
             // columnName should not be in use by other fields on this object
             // get All fields with matching colName
-            var fieldColName = this.CurrentObject?.fields(
+            let fieldColName = this.CurrentObject?.fields(
                (f) => f.columnName == colName
             );
             // ignore current edit field
@@ -867,7 +872,7 @@ export default function (AB) {
           *        The ABFieldXXX instance that we are editing the settings for.
           */
          populate(field) {
-            var ids = this.ids;
+            const ids = this.ids;
             this._CurrentField = field;
 
             // these columns are located on the base ABField object
@@ -889,7 +894,7 @@ export default function (AB) {
             $$(ids.unique).setValue(field.settings.unique);
 
             if (field.settings && field.settings.validationRules) {
-               var rules = field.settings.validationRules;
+               let rules = field.settings.validationRules;
                if (typeof rules == "string") {
                   try {
                      rules = JSON.parse(rules);
@@ -929,23 +934,23 @@ export default function (AB) {
           * @return {obj}
           */
          values() {
-            var ids = this.ids;
+            const ids = this.ids;
 
-            var settings = $$(ids.component).getValues();
+            const settings = $$(ids.component).getValues();
             if ($$(ids.filterComplex)) {
-               var validationRules = [];
-               var forms = $$(ids.filterComplex).queryView(
+               const validationRules = [];
+               const forms = $$(ids.filterComplex).queryView(
                   { view: "form", css: "abValidationForm" },
                   "all"
                );
                forms.forEach((form) => {
-                  var rules = form
+                  const rules = form
                      .queryView({ view: "querybuilder" })
                      .getValue();
-                  var invalidMessage = form
+                  const invalidMessage = form
                      .queryView({ name: "invalidMessage" })
                      .getValue();
-                  var validationObj = {
+                  const validationObj = {
                      invalidMessage: invalidMessage,
                      rules: rules,
                   };
@@ -954,10 +959,10 @@ export default function (AB) {
                settings.validationRules = JSON.stringify(validationRules);
             }
 
-            var FC = this.FieldClass();
+            const FC = this.FieldClass();
 
             // convert flat settings into our ABField value format:
-            var values = FC.editorValues(settings);
+            const values = FC.editorValues(settings);
 
             values.key = FC.defaults().key;
 

@@ -12,9 +12,9 @@ import FPropertyManager from "./properties/PropertyManager";
 export default function (AB) {
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
 
-   var PropertyManager = FPropertyManager(AB);
+   const PropertyManager = FPropertyManager(AB);
 
    class UI_Work_Object_Workspace_PopupNewDataField extends UIClass {
       //.extend(idBase, function(App) {
@@ -36,7 +36,6 @@ export default function (AB) {
             buttonBack: "",
          });
 
-         // var _objectHash = {}; // 'name' => ABFieldXXX object
          this._componentHash = {};
          // {hash} { ABFieldXXX.default().menuname : PropertyEditor }
          // A hash of all the available Field Property Editors, accessible by
@@ -59,7 +58,7 @@ export default function (AB) {
          // {PropertyEditor}
          // the default editor.  Usually the first one loaded.
 
-         // var defaultEditorID = null; // the default editor id.
+         // const defaultEditorID = null; // the default editor id.
 
          this.submenus = [];
          // {array}
@@ -72,7 +71,7 @@ export default function (AB) {
       }
 
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          // Our webix UI definition:
          return {
@@ -252,18 +251,18 @@ export default function (AB) {
          if (AB) {
             this.AB = AB;
          }
-         var ids = this.ids;
+         const ids = this.ids;
 
          // initialize our components
          webix.ui(this.ui());
          webix.extend($$(ids.component), webix.ProgressBar);
 
-         var Fields = PropertyManager.fields(); // ABFieldManager.allFields();
+         const Fields = PropertyManager.fields(); // ABFieldManager.allFields();
 
          //// we need to load a submenu entry and an editor definition for each
          //// of our Fields
 
-         var newEditorList = {
+         const newEditorList = {
             view: "multiview",
             id: ids.editDefinitions,
             animate: false,
@@ -271,8 +270,8 @@ export default function (AB) {
          };
 
          Fields.forEach((F) => {
-            var menuName = F.defaults().menuName;
-            var key = F.defaults().key;
+            const menuName = F.defaults().menuName;
+            const key = F.defaults().key;
 
             const icon = F.defaults().icon;
 
@@ -297,7 +296,7 @@ export default function (AB) {
 
          // the submenu button has a placeholder we need to remove and update
          // with one that has all our submenus in it.
-         // var firstID = $$(ids.types).getFirstId();
+         // const firstID = $$(ids.types).getFirstId();
          // $$(ids.types).updateItem(firstID, {
          //  value: labels.component.chooseType,
          //  submenu: submenus
@@ -335,7 +334,7 @@ export default function (AB) {
          super.applicationLoad(application);
 
          // make sure all the Property components refer to this ABApplication
-         for (var menuName in this._componentHash) {
+         for (const menuName in this._componentHash) {
             this._componentHash[menuName]?.applicationLoad(application);
          }
       }
@@ -344,7 +343,7 @@ export default function (AB) {
          super.objectLoad(object);
 
          // make sure all the Property components refer to this ABObject
-         for (var menuName in this._componentHash) {
+         for (const menuName in this._componentHash) {
             this._componentHash[menuName]?.objectLoad(object);
          }
       }
@@ -387,28 +386,28 @@ export default function (AB) {
          this.addPopup();
 
          // clear all editors:
-         for (var c in this._componentHash) {
+         for (const c in this._componentHash) {
             this._componentHash[c].clear();
          }
       }
 
       async buttonSave() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          $$(ids.buttonSave).disable();
          // show progress
          $$(ids.component).showProgress();
 
-         var editor = this._currentEditor;
+         const editor = this._currentEditor;
          if (editor) {
             // the editor can define some basic form validations.
             if (editor.isValid()) {
-               var vals = this.AB.cloneDeep(editor.values());
+               const vals = this.AB.cloneDeep(editor.values());
 
-               var field = null;
-               var oldData = null;
+               let field = null;
+               let oldData = null;
 
-               var linkCol;
+               let linkCol;
 
                // if this is an ADD operation, (_editField will be undefined)
                if (!this._editField) {
@@ -416,7 +415,7 @@ export default function (AB) {
                   field = this.CurrentObject.fieldNew(vals);
 
                   // Provide a default width based on the column label
-                  var width = 20 + field.label.length * 10;
+                  let width = 20 + field.label.length * 10;
                   if (field.settings.showIcon) {
                      width = width + 20;
                   }
@@ -431,7 +430,7 @@ export default function (AB) {
                      let rand = Math.floor(Math.random() * 1000);
                      field.settings.isSource = 1;
 
-                     var linkObject = field.datasourceLink;
+                     const linkObject = field.datasourceLink;
 
                      // 1:1, 1:M, M:1 should have same column name
                      let linkColumnName = field.columnName;
@@ -483,7 +482,7 @@ export default function (AB) {
                   oldData = this._editField.toObj();
 
                   // update changed values to old data
-                  var updateValues = this.AB.cloneDeep(oldData);
+                  const updateValues = this.AB.cloneDeep(oldData);
                   for (let key in vals) {
                      // update each values of .settings
                      if (
@@ -508,7 +507,7 @@ export default function (AB) {
                   field = this._editField;
                }
 
-               var validator = field.isValid();
+               const validator = field.isValid();
                if (validator.fail()) {
                   validator.updateForm($$(editor.ids.component));
                   // OP.Form.isValidationError(errors, $$(editor.ui.id));
@@ -585,7 +584,7 @@ export default function (AB) {
                      //    $$(ids.buttonSave).enable();
                      //    $$(ids.component).hideProgress();
                      // } else {
-                     //    var errMsg = err.toString();
+                     //    const errMsg = err.toString();
                      //    if (err.message) {
                      //       errMsg = err.message;
                      //    }
@@ -622,7 +621,7 @@ export default function (AB) {
          // }
 
          // // Validate duplicate field name
-         // var existsColumn = $.grep(dataTable.config.columns, function (c) { return c.id == fieldInfo.name.replace(/ /g, '_'); });
+         // const existsColumn = $.grep(dataTable.config.columns, function (c) { return c.id == fieldInfo.name.replace(/ /g, '_'); });
          // if (existsColumn && existsColumn.length > 0 && !data.editFieldId) {
          //  webix.alert({
          //      title: labels.add_fields.duplicateFieldTitle,
@@ -653,34 +652,40 @@ export default function (AB) {
          $$(this.ids.component).hide();
       }
 
-      modeAdd(allowFieldKey) {
+      /**
+       * @method modeAdd()
+       * Opens the new data field widget for Adding a new field.
+       * If an allowFieldKey is provided, then that is the default
+       * Field Editor we want to show. Otherwise shoe the generic
+       * field picker.
+       * @param {string} fieldKey
+       *        show the editor for this ABField.key
+       */
+      modeAdd(fieldKey) {
          // show default editor:
          this.defaultEditorComponent.show(false, false);
          this._currentEditor = this.defaultEditorComponent;
-         var ids = this.ids;
+         const ids = this.ids;
 
          // allow add the connect field only to import object
-         if (this.CurrentObject.isImported) allowFieldKey = "connectObject";
+         if (this.CurrentObject.isImported) fieldKey = "connectObject";
 
-         if (allowFieldKey) {
-            var connectField = PropertyManager.fields().filter(
-               (f) => f.defaults().key == allowFieldKey
+         if (fieldKey) {
+            const connectField = PropertyManager.fields().filter(
+               (f) => f.defaults().key == fieldKey
             )[0];
             if (!connectField) return;
-            var connectMenuName = connectField.defaults().menuName;
-            $$(ids.types).setValue(connectMenuName);
-            $$(ids.chooseFieldType).disable();
+            const connectMenuName = connectField.defaults().menuName;
+            // $$(ids.types).setValue(connectMenuName);
+            // $$(ids.chooseFieldType).disable();
+
+            this.onClick(connectMenuName);
          }
          // show the ability to switch data types
          else {
             $$(ids.chooseFieldType).enable();
+            this.addPopup();
          }
-
-         // change button text to 'add'
-         // $$(ids.buttonSave).define("label", L("Add Column"));
-
-         // add mode UI
-         this.addPopup();
       }
 
       modeEdit(field) {
@@ -688,7 +693,7 @@ export default function (AB) {
 
          // switch to this field's editor:
          // hide the rest
-         for (var c in this._componentsByType) {
+         for (const c in this._componentsByType) {
             if (c == field.key) {
                this._componentsByType[c].show(false, false);
                this._componentsByType[c].populate(field);
@@ -700,9 +705,9 @@ export default function (AB) {
          }
 
          // disable elements that disallow to edit
-         var elements = this._currentEditor.ui()?.elements;
+         const elements = this._currentEditor.ui()?.elements;
          if (elements) {
-            var disableElem = (elem) => {
+            const disableElem = (elem) => {
                if (elem.disallowEdit) {
                   $$(elem.id)?.disable?.();
                }
@@ -713,7 +718,7 @@ export default function (AB) {
             //    disableElem(elem);
 
             //    // disable elements are in rows/cols
-            //    var childElems = elem.cols || elem.rows;
+            //    const childElems = elem.cols || elem.rows;
             //    if (childElems && childElems.forEach) {
             //       childElems.forEach((childElem) => {
             //          disableElem(childElem);
@@ -741,10 +746,11 @@ export default function (AB) {
 
          // note, the submenu returns the Field.menuName() values.
          // we use that to lookup the Field here:
-         var editor = this._componentHash[name];
+         const editor = this._componentHash[name];
          if (editor) {
             editor.show();
             this._currentEditor = editor;
+            this._currentEditor["modeEdit"] = false;
             // $$(this.ids.types).blur();
          } else {
             // most likely they clicked on the menu button itself.
@@ -755,9 +761,9 @@ export default function (AB) {
 
       resetState() {
          // enable elements that disallow to edit
-         var elements = this._currentEditor.ui()?.elements;
+         const elements = this._currentEditor.ui()?.elements;
          if (elements) {
-            var enableElem = (elem) => {
+            const enableElem = (elem) => {
                if (elem.disallowEdit) {
                   $$(elem.id)?.enable?.();
                }
@@ -768,7 +774,7 @@ export default function (AB) {
             //    enableElem(elem);
 
             //    // enable elements are in rows/cols
-            //    var childElems = elem.cols || elem.rows;
+            //    const childElems = elem.cols || elem.rows;
             //    if (childElems && childElems.forEach) {
             //       childElems.forEach((childElem) => {
             //          enableElem(childElem);
@@ -851,9 +857,9 @@ export default function (AB) {
          // (functional tests don't do .hover very well)
          // so this routine is to enable .click() to show the submenu.
 
-         var ids = this.ids;
+         const ids = this.ids;
 
-         var subMenuId = $$(ids.types).config.data[0].submenu;
+         let subMenuId = $$(ids.types).config.data[0].submenu;
 
          // #HACK Sub-menu popup does not render on initial
          // Force it to render popup by use .getSubMenu()

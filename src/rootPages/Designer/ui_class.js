@@ -17,6 +17,10 @@ export default function (AB) {
          constructor(...params) {
             super(...params);
 
+            this.AB = AB;
+            // {ABFactory}
+            // Our common ABFactory for our application.
+
             this.CurrentApplicationID = null;
             // {string} uuid
             // The current ABApplication.id we are working with.

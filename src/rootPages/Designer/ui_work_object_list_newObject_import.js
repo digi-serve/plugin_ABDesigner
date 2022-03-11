@@ -129,7 +129,7 @@ export default function (AB) {
          };
       }
 
-      async init(AB) {
+      init(AB) {
          this.AB = AB;
 
          this.$form = $$(this.ids.form);
@@ -155,14 +155,14 @@ export default function (AB) {
          return Promise.resolve();
       }
 
-      onShow(app) {
+      onShow() {
          this.formClear();
 
          // now all objects are *global* but an application might only
          // reference a sub set of them.  Here we just need to show
          // the objects our current application isn't referencing:
 
-         let availableObjs = app.objectsExcluded(
+         let availableObjs = this.CurrentApplication.objectsExcluded(
             (o) => !o.isSystemObject || AB.Account.isSystemDesigner()
          );
          this.$objectList.parse(availableObjs, "json");
@@ -225,13 +225,17 @@ export default function (AB) {
          }
       }
 
-      save() {
+      async save() {
          var selectedObj = this.$objectList.getSelectedItem();
          if (!selectedObj) return false;
 
          this.$buttonSave.disable();
 
-         this.emit("save", selectedObj);
+         await this.CurrentApplication.objectInsert(selectedObj);
+
+         // we have already updated things, so:
+         this.emit("imported", selectedObj);
+         this.$buttonSave.enable();
       }
 
       cancel() {

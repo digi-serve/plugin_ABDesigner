@@ -8,8 +8,8 @@ import FFieldClass from "./ABField";
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
 
-   var ABField = FFieldClass(AB);
-   var L = ABField.L();
+   const ABField = FFieldClass(AB);
+   const L = ABField.L();
 
    class ABFieldNumberProperty extends ABField {
       constructor() {
@@ -31,14 +31,14 @@ export default function (AB) {
       }
 
       ui() {
-         var FC = this.FieldClass();
-         var ids = this.ids;
+         const FC = this.FieldClass();
+         const ids = this.ids;
          return super.ui([
             {
                cols: [
                   {
                      view: "label",
-                     label: L("Default Value:") + " ",
+                     label: L("Default Value:"),
                      align: "right",
                      width: 100,
                   },
@@ -78,7 +78,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Format:" + " "),
+                     label: L("Format:"),
                      align: "right",
                      width: 100,
                   },
@@ -101,7 +101,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Decimals:") + " ",
+                     label: L("Decimals:"),
                      align: "right",
                      width: 100,
                   },
@@ -135,7 +135,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Places:") + " ",
+                           label: L("Places:"),
                            align: "right",
                            width: 100,
                         },
@@ -154,7 +154,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Rounding:") + " ",
+                           label: L("Rounding:"),
                            align: "right",
                            width: 100,
                         },
@@ -189,7 +189,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Thousands:") + " ",
+                     label: L("Thousands:"),
                      align: "right",
                      width: 100,
                   },
@@ -211,7 +211,7 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: L("Validation:") + " ",
+                     label: L("Validation:"),
                      align: "right",
                      width: 100,
                   },
@@ -243,7 +243,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Minimum:") + " ",
+                           label: L("Minimum:"),
                            align: "right",
                            width: 100,
                         },
@@ -273,7 +273,7 @@ export default function (AB) {
                         { width: 20 },
                         {
                            view: "label",
-                           label: L("Maximum:") + " ",
+                           label: L("Maximum:"),
                            align: "right",
                            width: 100,
                         },
@@ -350,18 +350,18 @@ export default function (AB) {
       }
 
       isValid() {
-         var isValid = super.isValid();
+         let isValid = super.isValid();
 
-         var values = this.formValues();
+         const values = this.formValues();
 
-         var defaultValue = values["default"];
-         var fDefault = 0;
+         const defaultValue = values["default"];
+         let fDefault = 0;
          if (defaultValue !== "") {
             fDefault = parseFloat(defaultValue);
          }
 
          // if required then default value must be set:
-         var required = values["required"];
+         const required = values["required"];
          if (required) {
             if (defaultValue === "") {
                this.markInvalid(
@@ -374,10 +374,10 @@ export default function (AB) {
 
          // Default Value must be within any min / max value set.
          if (values["validation"]) {
-            var minValue = values["validateMinimum"];
-            var maxValue = values["validateMaximum"];
-            var fmin = 0;
-            var fmax = 0;
+            const minValue = values["validateMinimum"];
+            const maxValue = values["validateMaximum"];
+            let fmin = 0;
+            let fmax = 0;
 
             if (minValue !== "") {
                fmin = parseFloat(minValue);
@@ -434,7 +434,7 @@ export default function (AB) {
       }
 
       populate(field) {
-         var ids = this.ids;
+         const ids = this.ids;
          super.populate(field);
 
          if (field.settings.default === "") {

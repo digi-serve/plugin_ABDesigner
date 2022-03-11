@@ -13,6 +13,7 @@
 //
 import UI_Class from "./ui_class";
 import WorkspaceDatatable from "./ui_work_object_workspace_view_grid";
+import WorkspaceGantt from "./ui_work_object_workspace_view_gantt";
 import WorkspaceKanban from "./ui_work_object_workspace_view_kanban";
 
 import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
@@ -24,6 +25,7 @@ export default function (AB) {
    // var L = UIClass.L();
 
    const Datatable = WorkspaceDatatable(AB);
+   const Gantt = WorkspaceGantt(AB);
    const Kanban = WorkspaceKanban(AB);
 
    // Gather a list of the various View Properties
@@ -37,6 +39,7 @@ export default function (AB) {
    hashViewProperties[ViewKanbanProperties.type()] = ViewKanbanProperties;
 
    var hashViewComponents = {};
+   hashViewComponents[ViewGanttProperties.type()] = Gantt;
    hashViewComponents[ViewGridProperties.type()] = Datatable;
    hashViewComponents[ViewKanbanProperties.type()] = Kanban;
 

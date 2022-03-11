@@ -1,6 +1,6 @@
 /*
- * ABField
- * A Generic Property manager for All our fields.
+ * ABFieldLongText
+ * A Property manager for our ABFieldLongText.
  */
 
 import FFieldClass from "./ABField";
@@ -11,47 +11,20 @@ export default function (AB) {
    const ABField = FFieldClass(AB);
    const L = ABField.L();
 
-   class ABFieldStringProperty extends ABField {
+   class ABFieldLongText extends ABField {
       constructor() {
-         super("properties_abfield_string", {
+         super("properties_abfield_longtext", {
             default: "",
-            supportMultilingual: "",
-
             defaultCheckbox: "",
          });
       }
 
       ui() {
          const ids = this.ids;
+
          return super.ui([
-            // {
-            //    view: "text",
-            //    id: ids.default,
-            //    name: "default",
-            //    labelWidth: uiConfig.labelWidthXLarge,
-            //    label: L("Default"),
-            //    placeholder: L("Enter default value"),
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
-            // {
-            //    view: "checkbox",
-            //    id: ids.supportMultilingual,
-            //    name: "supportMultilingual",
-            //    disallowEdit: true,
-            //    labelRight: L("Support multilingual"),
-            //    labelWidth: uiConfig.labelWidthCheckbox,
-            //    value: false,
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
             {
+               view: "layout",
                cols: [
                   {
                      view: "label",
@@ -68,21 +41,21 @@ export default function (AB) {
                         onChange: (newv) => {
                            this.checkboxDefaultValue(newv);
                         },
-                        onAfterRender: () => {
-                           AB.ClassUI.CYPRESS_REF(this);
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
                   {
-                     view: "text",
                      id: ids.default,
+                     view: "text",
                      name: "default",
                      placeholder: L("Enter default value"),
                      disabled: true,
                      labelWidth: uiConfig.labelWidthXLarge,
                      on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
                         },
                      },
                   },
@@ -90,28 +63,18 @@ export default function (AB) {
             },
             {
                view: "checkbox",
-               id: ids.supportMultilingual,
                name: "supportMultilingual",
                disallowEdit: true,
                labelRight: L("Support multilingual"),
                labelWidth: uiConfig.labelWidthCheckbox,
                value: false,
                on: {
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
+                  onAfterRender: function () {
+                     ABField.CYPRESS_REF(this);
                   },
                },
             },
          ]);
-      }
-
-      checkboxDefaultValue(state) {
-         if (state === 0) {
-            $$(this.ids.default).disable();
-            $$(this.ids.default).setValue("");
-         } else {
-            $$(this.ids.default).enable();
-         }
       }
 
       /**
@@ -121,20 +84,29 @@ export default function (AB) {
        * @return {ABFieldXXX Class}
        */
       FieldClass() {
-         return super._FieldClass("string");
+         return super._FieldClass("LongText");
       }
 
       populate(field) {
-         const ids = this.ids;
          super.populate(field);
+         const value = field.settings.default === "" ? 0 : 1;
+         $$(this.ids.defaultCheckbox).setValue(value);
+      }
 
-         if (field.settings.default === "") {
-            $$(ids.defaultCheckbox).setValue(0);
+      show() {
+         super.show();
+         $$(this.ids.defaultCheckbox).setValue(0);
+      }
+
+      checkboxDefaultValue(state) {
+         if (state == 0) {
+            $$(this.ids.default).disable();
+            $$(this.ids.default).setValue("");
          } else {
-            $$(ids.defaultCheckbox).setValue(1);
+            $$(this.ids.default).enable();
          }
       }
    }
 
-   return ABFieldStringProperty;
+   return ABFieldLongText;
 }

@@ -1,6 +1,6 @@
 /*
- * ABField
- * A Generic Property manager for All our fields.
+ * ABFieldEmail
+ * A Property manager for our ABFieldEmail.
  */
 
 import FFieldClass from "./ABField";
@@ -11,46 +11,18 @@ export default function (AB) {
    const ABField = FFieldClass(AB);
    const L = ABField.L();
 
-   class ABFieldStringProperty extends ABField {
+   class ABFieldEmail extends ABField {
       constructor() {
-         super("properties_abfield_string", {
+         super("properties_abfield_email", {
             default: "",
-            supportMultilingual: "",
-
             defaultCheckbox: "",
          });
       }
 
       ui() {
          const ids = this.ids;
+
          return super.ui([
-            // {
-            //    view: "text",
-            //    id: ids.default,
-            //    name: "default",
-            //    labelWidth: uiConfig.labelWidthXLarge,
-            //    label: L("Default"),
-            //    placeholder: L("Enter default value"),
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
-            // {
-            //    view: "checkbox",
-            //    id: ids.supportMultilingual,
-            //    name: "supportMultilingual",
-            //    disallowEdit: true,
-            //    labelRight: L("Support multilingual"),
-            //    labelWidth: uiConfig.labelWidthCheckbox,
-            //    value: false,
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
             {
                cols: [
                   {
@@ -88,20 +60,6 @@ export default function (AB) {
                   },
                ],
             },
-            {
-               view: "checkbox",
-               id: ids.supportMultilingual,
-               name: "supportMultilingual",
-               disallowEdit: true,
-               labelRight: L("Support multilingual"),
-               labelWidth: uiConfig.labelWidthCheckbox,
-               value: false,
-               on: {
-                  onAfterRender() {
-                     AB.ClassUI.CYPRESS_REF(this);
-                  },
-               },
-            },
          ]);
       }
 
@@ -121,7 +79,29 @@ export default function (AB) {
        * @return {ABFieldXXX Class}
        */
       FieldClass() {
-         return super._FieldClass("string");
+         return super._FieldClass("email");
+      }
+
+      isValid() {
+         const ids = this.ids;
+         let isValid = super.isValid();
+
+         $$(ids.component).clearValidation();
+
+         const isRequired = $$(ids.required).getValue();
+         const emailDefault = $$(ids.default).getValue();
+
+         if (isRequired || emailDefault) {
+            if (!webix.rules.isEmail(emailDefault)) {
+               $$(ids.component).markInvalid(
+                  "default",
+                  L("This email is invalid")
+               );
+               isValid = false;
+            } else isValid = true;
+         } else isValid = true;
+
+         return isValid;
       }
 
       populate(field) {
@@ -136,5 +116,5 @@ export default function (AB) {
       }
    }
 
-   return ABFieldStringProperty;
+   return ABFieldEmail;
 }

@@ -36,7 +36,9 @@ export default function (AB) {
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         this.QueryList.on("selected", this.select);
+         this.QueryList.on("selected", (q) => {
+            this.select(q);
+         });
 
          return Promise.all([
             this.QueryWorkspace.init(AB),
