@@ -1280,9 +1280,14 @@ export default function (AB, init_settings) {
          this.PopupExportObjectComponent.objectLoad(object);
 
          // NOTE: make sure Datatable exists before this:
-         Datatable.on("show", () => {
-            this.PopupExportObjectComponent.setGridComponent(Datatable.$grid);
-         });
+         if (!this._handler_show) {
+            this._handler_show = () => {
+               this.PopupExportObjectComponent.setGridComponent(
+                  Datatable.$grid
+               );
+            };
+            Datatable.on("show", this._handler_show);
+         }
 
          this.PopupExportObjectComponent.setFilename(object.label);
          this.PopupViewSettingsComponent.objectLoad(object);
