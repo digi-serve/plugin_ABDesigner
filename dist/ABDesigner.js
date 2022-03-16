@@ -12171,36 +12171,37 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-
-   const DataCollectionList = (0,_ui_work_datacollection_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-   const DataCollectionWorkspace = (0,_ui_work_datacollection_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
    class UI_Work_DataCollection extends UIClass {
       constructor() {
          super("ui_work_datacollection");
+
+         this.DataCollectionList = (0,_ui_work_datacollection_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+         this.DataCollectionWorkspace = (0,_ui_work_datacollection_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
       }
 
       ui() {
-         const ids = this.ids;
          // Our webix UI definition:
          return {
-            id: ids.component,
+            id: this.ids.component,
             type: "space",
             cols: [
-               DataCollectionList.ui(),
+               this.DataCollectionList.ui(),
                { view: "resizer", width: 11 },
-               DataCollectionWorkspace.ui(),
+               this.DataCollectionWorkspace.ui(),
             ],
          };
       }
 
-      async init(AB) {
+      init(AB) {
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         await DataCollectionList.on("selected", this.select);
+         this.DataCollectionList.on("selected", this.select);
 
-         await DataCollectionWorkspace.init(AB);
-         await DataCollectionList.init(AB);
+         return Promise.all([
+            this.DataCollectionWorkspace.init(AB),
+            this.DataCollectionList.init(AB),
+         ]);
       }
 
       /**
@@ -12211,10 +12212,9 @@ __webpack_require__.r(__webpack_exports__);
       applicationLoad(application) {
          super.applicationLoad(application);
 
-         DataCollectionWorkspace.clearWorkspace();
-
-         DataCollectionList.applicationLoad(application);
-         DataCollectionWorkspace.applicationLoad(application);
+         this.DataCollectionWorkspace.clearWorkspace();
+         this.DataCollectionList.applicationLoad(application);
+         this.DataCollectionWorkspace.applicationLoad(application);
       }
 
       /**
@@ -12223,23 +12223,21 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         const ids = this.ids;
-
-         $$(ids.component).show();
+         $$(this.ids.component).show();
 
          // this.DataCollectionList.busy();
 
-         const app = this.CurrentApplication;
+         var app = this.CurrentApplication;
          if (app) {
-            DataCollectionWorkspace.applicationLoad(app);
-            DataCollectionList.applicationLoad(app);
+            this.DataCollectionWorkspace.applicationLoad(app);
+            this.DataCollectionList.applicationLoad(app);
          }
-         DataCollectionList.ready();
+         this.DataCollectionList.ready();
       }
 
       select(dc) {
-         DataCollectionWorkspace.clearWorkspace();
-         DataCollectionWorkspace.populateWorkspace(dc);
+         this.DataCollectionWorkspace.clearWorkspace();
+         this.DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
 
@@ -13284,336 +13282,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ui_work_datacollection_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_datacollection_workspace_view_grid */ "./src/rootPages/Designer/ui_work_datacollection_workspace_view_grid.js");
-
-
-
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   const uiConfig = AB.Config.uiSettings();
-   const L = UIClass.L();
-
-   const Datatable = (0,_ui_work_datacollection_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-
+   // var L = UIClass.L();
    class UI_Work_Datacollection_Workspace extends UIClass {
       constructor(settings = init_settings || {}) {
-         super("ui_work_datacollection_workspace", {
-            error: "",
-            error_msg: "",
-
-            noSelection: "",
-            selectedDatacollection: "",
-         });
-
-         this.hashViews = {};
-         // {hash}  { view.id : webix_component }
-         // a hash of the live workspace view components
-
-         // The Grid that displays our object:
-         this.hashViews["grid"] = Datatable;
-
-         // create ABViewDataCollection
-         this.CurrentDatacollection = null;
-         // {ABDataCollection}
-         // An instance of an ABDataCollection to manage the data we are displaying
-         // in our workspace.
+         super("ui_work_datacollection_workspace");
 
          this.settings = settings;
-      } // constructor
+      }
 
       ui() {
-         const ids = this.ids;
-         return {
-            view: "multiview",
-            id: ids.component,
-            rows: [
-               {
-                  id: ids.error,
-                  rows: [
-                     {
-                        maxHeight: uiConfig.xxxLargeSpacer,
-                        hidden: uiConfig.hideMobile,
-                     },
-                     {
-                        view: "label",
-                        align: "center",
-                        height: 200,
-                        label: "<div style='display: block; font-size: 180px; background-color: #666; color: transparent; text-shadow: 0px 1px 1px rgba(255,255,255,0.5); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text;' class='fa fa-exclamation-triangle'></div>",
-                     },
-                     {
-                        id: ids.error_msg,
-                        view: "label",
-                        align: "center",
-                        label: L("There was an error"),
-                     },
-                     {
-                        maxHeight: uiConfig.xxxLargeSpacer,
-                        hidden: uiConfig.hideMobile,
-                     },
-                  ],
-               },
-               {
-                  id: ids.noSelection,
-                  rows: [
-                     {
-                        maxHeight: uiConfig.xxxLargeSpacer,
-                        hidden: uiConfig.hideMobile,
-                     },
-                     {
-                        view: "label",
-                        align: "center",
-                        height: 200,
-                        label: "<div style='display: block; font-size: 180px; background-color: #666; color: transparent; text-shadow: 0px 1px 1px rgba(255,255,255,0.5); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text;' class='fa fa-table'></div>",
-                     },
-                     {
-                        view: "label",
-                        align: "center",
-                        label: L("Select an datacollection to work with."),
-                     },
-                     {
-                        cols: [
-                           {},
-                           {
-                              view: "button",
-                              label: L("Add new data view"),
-                              type: "form",
-                              css: "webix_primary",
-                              autowidth: true,
-                              click: () => {
-                                 this.emit("addNew", true);
-                              },
-                           },
-                           {},
-                        ],
-                     },
-                     {
-                        maxHeight: uiConfig.xxxLargeSpacer,
-                        hidden: uiConfig.hideMobile,
-                     },
-                  ],
-               },
-               {
-                  id: ids.selectedDatacollection,
-                  type: "wide",
-                  paddingY: 0,
-                  // css: "ab-data-toolbar",
-                  // borderless: true,
-                  rows: [
-                     {
-                        padding: 0,
-                        rows: [
-                           {
-                              view: "multiview",
-                              cells: [Datatable.ui()],
-                           },
-                        ],
-                     },
-                  ],
-               },
-            ],
-         };
+         return {};
       }
 
-      async init() {
-         const ids = this.ids;
-
-         this.AB = AB;
-
-         await Datatable.init(AB);
-
-         $$(ids.noSelection).show();
+      init() {
+         // TODO
+         return Promise.resolve();
       }
 
-      applicationLoad(application) {
-         super.applicationLoad(application);
+      // applicationLoad(app) {
+      //    super.applicationLoad(app);
+      //    // TODO
+      // }
+
+      clearWorkspace() {
          // TODO
       }
 
-      /**
-       * @function clearWorkspace()
-       *
-       * Clear the datacollection workspace.
-       */
-      clearWorkspace() {
-         const ids = this.ids;
-
-         // NOTE: to clear a visual glitch when multiple views are updating
-         // at one time ... stop the animation on this one:
-         $$(ids.component)?.hideProgress?.();
-      }
-
-      /**
-       * @method populateWorkspace()
-       * Initialize the Datacollection Workspace with the provided ABDataCollection.
-       * @param {uuid} datacollection
-       *        current ABDataCollection instance we are working with.
-       */
-      async populateWorkspace(datacollection) {
-         const ids = this.ids;
-
-         $$(ids.selectedDatacollection).show();
-
-         this.CurrentDatacollectionID =
-            this.AB.datacollectionByID(datacollection);
-
-         Datatable.datacollectionLoad(datacollection);
-
-         // // display the proper ViewComponent
-         // const currDisplay = hashViews[currentView.type];
-         // currDisplay.show();
-         // // viewPicker needs to show this is the current view.
+      populateWorkspace() {
+         // TODO
       }
    }
 
    return new UI_Work_Datacollection_Workspace();
-}
-
-
-/***/ }),
-
-/***/ "./src/rootPages/Designer/ui_work_datacollection_workspace_view_grid.js":
-/*!******************************************************************************!*\
-  !*** ./src/rootPages/Designer/ui_work_datacollection_workspace_view_grid.js ***!
-  \******************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/workspaceViews/ABViewGrid */ "./src/rootPages/Designer/properties/workspaceViews/ABViewGrid.js");
-/*
- * ui_work_datacollection_workspace_view_grid
- *
- * Display an instance of a Grid type of Workspace View in our area.
- *
- * This generic webix container will be given an instace of a workspace
- * view definition (Grid), and then create an instance of an ABViewGrid
- * widget to display.
- *
- */
-
-
-
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-
-   const ViewGridProperties = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-
-   class UI_Work_Datacollection_Workspace_View_Grid extends UIClass {
-      constructor() {
-         super("ui_work_datacollection_workspace_view_grid");
-      }
-
-      // Our webix UI definition:
-      ui() {
-         const ids = this.ids;
-
-         return {
-            id: ids.component,
-            rows: [
-               {},
-               {
-                  view: "label",
-                  label: "Impressive View -> Grid",
-               },
-               {},
-            ],
-         };
-      }
-
-      // Our init() function for setting up our UI
-      async init(AB) {
-         this.AB = AB;
-      }
-
-      getColumnIndex(id) {
-         return this._currentComponent.getColumnIndex(id);
-      }
-
-      datacollectionLoad(dc) {
-         this.datacollection = dc;
-      }
-
-      get $grid() {
-         return this._currentComponent?.getDataTable();
-      }
-
-      ready() {
-         this.ListComponent.ready();
-      }
-
-      async show(view) {
-         await this.viewLoad(view);
-         $$(this.ids.component).show();
-         this.emit("show");
-      }
-
-      async viewLoad(view) {
-         this.currentViewDef = view;
-
-         this.currentView = this.AB.viewNewDetatched(view.component);
-         const component = this.currentView.component();
-
-         // OK, a ABViewGrid component wont display the grid unless there
-         // is a .datacollection or .dataviewID specified.
-         // but calling .datacollectionLoad() doesn't actually load the data
-         // unless there is the UI available.
-         // So ... do this to register the datacollection
-         component.datacollectionLoad(this.datacollection);
-
-         const ui = component.ui();
-         ui.id = this.ids.component;
-         webix.ui(ui, $$(this.ids.component));
-         await component.init(this.AB);
-
-         // Now call .datacollectionLoad() again to actually load the data.
-         component.datacollectionLoad(this.datacollection);
-
-         component.on("column.header.clicked", (node, EditField) => {
-            this.emit("column.header.clicked", node, EditField);
-         });
-
-         component.on("object.track", (currentObject, id) => {
-            this.emit("object.track", currentObject, id);
-         });
-
-         component.on("selection", () => {
-            this.emit("selection");
-         });
-
-         component.on("selection.cleared", () => {
-            this.emit("selection.cleared");
-         });
-
-         component.on("column.order", (fieldOrder) => {
-            this.emit("column.order", fieldOrder);
-         });
-
-         this._currentComponent = component;
-      }
-
-      viewNew(data) {
-         const defaults = this.defaultSettings(data);
-         Object.keys(data).forEach((k) => {
-            defaults[k] = data[k];
-         });
-
-         return defaults;
-      }
-
-      deleteSelected($view) {
-         return this._currentComponent.toolbarDeleteSelected($view);
-      }
-
-      massUpdate($view) {
-         return this._currentComponent.toolbarMassUpdate($view);
-      }
-   }
-   return new UI_Work_Datacollection_Workspace_View_Grid();
 }
 
 
@@ -16613,9 +16316,14 @@ __webpack_require__.r(__webpack_exports__);
          this.PopupExportObjectComponent.objectLoad(object);
 
          // NOTE: make sure Datatable exists before this:
-         Datatable.on("show", () => {
-            this.PopupExportObjectComponent.setGridComponent(Datatable.$grid);
-         });
+         if (!this._handler_show) {
+            this._handler_show = () => {
+               this.PopupExportObjectComponent.setGridComponent(
+                  Datatable.$grid
+               );
+            };
+            Datatable.on("show", this._handler_show);
+         }
 
          this.PopupExportObjectComponent.setFilename(object.label);
          this.PopupViewSettingsComponent.objectLoad(object);
@@ -20597,6 +20305,9 @@ __webpack_require__.r(__webpack_exports__);
 
          this.currentViewDef = view;
 
+         // remove any listeners from our current component
+         this._currentComponent?.eventsClear();
+
          this.currentView = this.AB.viewNewDetatched(view.component);
          var component = this.currentView.component();
 
@@ -22168,6 +21879,10 @@ __webpack_require__.r(__webpack_exports__);
             this.select(q);
          });
 
+         this.QueryWorkspace.on("query.add", () => {
+            this.QueryList.emit("addNew");
+         });
+
          return Promise.all([
             this.QueryWorkspace.init(AB),
             this.QueryList.init(AB),
@@ -22202,11 +21917,19 @@ __webpack_require__.r(__webpack_exports__);
             this.QueryList?.applicationLoad(app);
          }
          this.QueryList?.ready();
+         if (this._lastSelectedQuery) {
+            this.QueryList.select(this._lastSelectedQuery);
+            // NOTE: this.select() is called when an item in QueryList is selected.
+            this.select(this._lastSelectedQuery);
+         }
       }
 
       select(q) {
+         // if (q?.id != this._lastSelectedQuery?.id) {
+         this._lastSelectedQuery = q;
          this.QueryWorkspace.resetTabs();
-         this.QueryWorkspace.populateQueryWorkspace(q);
+         this.QueryWorkspace.queryLoad(q);
+         // }
       }
    }
 
@@ -22369,6 +22092,10 @@ __webpack_require__.r(__webpack_exports__);
 
       ready() {
          this.ListComponent.ready();
+      }
+
+      select(query) {
+         this.ListComponent.select(query.id);
       }
    }
 
@@ -23199,24 +22926,154 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_workspace_design */ "./src/rootPages/Designer/ui_work_query_workspace_design.js");
+
+
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // var L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
+   var L = UIClass.L();
+
+   const QueryDesignComponent = (0,_ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+
    class UI_Work_Query_Workspace extends UIClass {
-      constructor(settings = init_settings || {}) {
-         super();
+      constructor(settings = {}) {
+         super("ab_work_query_workspace", {
+            multiview: "",
+            toolbar: "",
+            modeButton: "",
+            // loadAllButton: "",
+            noSelection: "",
+            run: "",
+            design: "",
+         });
 
          this.settings = settings;
       }
 
       ui() {
-         return {};
+         var ids = this.ids;
+
+         return {
+            view: "multiview",
+            cells: [
+               {
+                  id: ids.noSelection,
+                  rows: [
+                     {
+                        maxHeight: uiConfig.xxxLargeSpacer,
+                        hidden: uiConfig.hideMobile,
+                     },
+                     {
+                        view: "label",
+                        align: "center",
+                        height: 200,
+                        label: "<div style='display: block; font-size: 180px; background-color: #666; color: transparent; text-shadow: 0px 1px 1px rgba(255,255,255,0.5); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text;' class='fa fa-filter'></div>",
+                     },
+                     {
+                        view: "label",
+                        align: "center",
+                        label: L("Select a query to work with."),
+                     },
+                     {
+                        cols: [
+                           {},
+                           {
+                              view: "button",
+                              css: "webix_primary",
+                              label: L("Add new query"),
+                              type: "form",
+                              autowidth: true,
+                              click: () => {
+                                 this.emit("query.add");
+                                 // App.actions.addNewQuery(true);
+                              },
+                           },
+                           {},
+                        ],
+                     },
+                     {
+                        maxHeight: uiConfig.xxxLargeSpacer,
+                        hidden: uiConfig.hideMobile,
+                     },
+                  ],
+               },
+               {
+                  // type: "line",
+                  id: ids.component,
+                  rows: [
+                     {
+                        id: ids.toolbar,
+                        view: "tabbar",
+                        // hidden: true,
+                        css: "webix_dark",
+                        type: "bottom",
+                        borderless: false,
+                        bottomOffset: 0,
+                        // css: "ab-data-toolbar",
+                        options: [
+                           {
+                              id: ids.design,
+                              value: L("Build Query"),
+                              icon: "fa fa-sliders",
+                              type: "icon",
+                              // on: {
+                              //    click: () => {
+                              //       this.changeMode("run");
+                              //    },
+                              // },
+                           },
+                           {
+                              id: ids.run,
+                              value: L("View Query"),
+                              icon: "fa fa-table",
+                              type: "icon",
+                              // on: {
+                              //    click: () => {
+                              //       this.changeMode("design");
+                              //    },
+                              // },
+                           },
+                        ],
+                        on: {
+                           onChange: (newv, oldv) => {
+                              if (newv != oldv) {
+                                 this.changeMode(newv);
+                              }
+                           },
+                        },
+                     },
+                     {
+                        id: ids.multiview,
+                        view: "multiview",
+                        cells: [
+                           QueryDesignComponent.ui(),
+                           // DataTable.ui()
+                        ],
+                     },
+                     // {
+                     //    id: ids.loadAllButton,
+                     //    view: "button",
+                     //    css: "webix_primary",
+                     //    label: L("Load all"),
+                     //    type: "form",
+                     //    hidden: true,
+                     //    click: () => {
+                     //       this.loadAll();
+                     //    },
+                     // },
+                  ],
+               },
+            ],
+         };
       }
 
-      init() {
-         // TODO
+      init(AB) {
+         this.AB = AB;
+
+         return Promise.all([QueryDesignComponent.init(AB)]);
       }
 
       // applicationLoad(app) {
@@ -23224,20 +23081,1216 @@ __webpack_require__.r(__webpack_exports__);
       //    // TODO
       // }
 
+      changeMode(mode) {
+         let ids = this.ids;
+
+         // $$(ids.noSelection).hide(false, false);
+         $$(this.ids.component).show();
+         $$(ids.toolbar).show(false, false);
+
+         // Run
+         if (mode == ids.run) {
+            // $$(ids.modeButton).define('label', labels.design);
+            // $$(ids.modeButton).define('icon', "fa fa-tasks");
+            // $$(ids.loadAllButton).show();
+            // $$(ids.loadAllButton).refresh();
+
+            DataTable.show();
+            DataTable.populateObjectWorkspace(this.CurrentQuery);
+
+            // $$(ids.multiview).setValue(DataTable.ui.id);
+         }
+         // Design
+         else {
+            // $$(ids.modeButton).define('label', labels.run);
+            // $$(ids.modeButton).define('icon', "fa fa-filter");
+            // $$(ids.loadAllButton).hide();
+            // $$(ids.loadAllButton).refresh();
+
+            QueryDesignComponent.show(true);
+            QueryDesignComponent.queryLoad(this.CurrentQuery);
+         }
+
+         // $$(ids.modeButton).refresh();
+      }
+
+      applicationLoad(application) {
+         super.applicationLoad(application);
+
+         this.clearWorkspace();
+         QueryDesignComponent.applicationLoad(application);
+      }
+
       clearWorkspace() {
-         // TODO
+         $$(this.ids.noSelection).show(false, false);
+         QueryDesignComponent.clearWorkspace();
       }
 
+      loadAll() {
+         DataTable.loadAll();
+      }
+
+      queryLoad(query) {
+         // DataTable?.queryLoad(query);
+         QueryDesignComponent.queryLoad(query);
+
+         if (!query) {
+            this.clearWorkspace();
+         } else {
+            $$(this.ids.component).show();
+            QueryDesignComponent.show(true);
+         }
+      }
+
+      /**
+       * @function resetTabs()
+       * Set the tabs to the default state when a new query is selected.
+       */
       resetTabs() {
-         // TODO
-      }
-
-      populateQueryWorkspace() {
-         // TODO
+         $$(this.ids.toolbar).setValue(this.ids.design);
       }
    }
 
-   return new UI_Work_Query_Workspace();
+   return new UI_Work_Query_Workspace(init_settings);
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_query_workspace_design.js":
+/*!******************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_query_workspace_design.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ui_work_query_workspace_design
+ *
+ * Manage the Query Workspace area.
+ *
+ */
+
+
+
+// const ABDataCollection = require("../classes/platform/ABDataCollection");
+// const RowFilter = require("../classes/platform/RowFilter");
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const uiConfig = AB.Config.uiSettings();
+   var L = UIClass.L();
+
+   class UI_Work_Query_Workspace_Design extends UIClass {
+      constructor(settings = {}) {
+         super("ui_work_query_workspace_design", {
+            tree: "",
+            tabObjects: "",
+            depth: "",
+
+            datatable: "",
+
+            selectedObject: "",
+            grouping: "",
+            hidePrefix: "",
+            filter: "",
+         });
+
+         this.settings = settings;
+
+         this.CurrentDatacollection = null;
+         // {ABDataCollection}
+         // A DC used to drive the display of our workspace views.
+
+         this.CurrentQueryID = null;
+         // {string}
+         // the ABObjectQuery.id of the query we are working with.
+
+         this.DataFilter = AB.rowfilterNew(null, this.ids.filter);
+         this.DataFilter.init({
+            onChange: () => {
+               this.save();
+            },
+            showObjectName: true,
+         });
+      }
+
+      ui() {
+         const _this = this;
+         const ids = this.ids;
+
+         return {
+            view: "scrollview",
+            id: ids.component,
+            body: {
+               rows: [
+                  {
+                     id: ids.selectedObject,
+                     type: "form",
+                     rows: [
+                        {
+                           cols: [
+                              {
+                                 rows: [
+                                    {
+                                       view: "label",
+                                       label: L("Manage Objects"),
+                                       css: "ab-query-label",
+                                       // height: 50
+                                    },
+                                    // {
+                                    //    autowidth: true,
+                                    //    css: "bg-gray",
+                                    //    cols: [
+                                    //       {},
+                                    //       {
+                                    //          id: ids.depth,
+                                    //          view: "counter",
+                                    //          label: L('ab.object.querybuilder.relationshipDepth', "*Relationship Depth"),
+                                    //          width: 270,
+                                    //          labelWidth: 165,
+                                    //          step: 1,
+                                    //          value: 5,
+                                    //          min: 1,
+                                    //          max: 10,
+                                    //          on: {
+                                    //             onChange: function (newv, oldv) {
+                                    //                _logic.depthChange(newv, oldv);
+                                    //             }
+                                    //          }
+                                    //       },
+                                    //       {}
+                                    //    ]
+                                    // },
+                                    {
+                                       view: "tree",
+                                       id: ids.tree,
+                                       css: "ab-tree",
+                                       template:
+                                          "{common.icon()} {common.checkbox()} #value#",
+                                       data: [],
+                                       on: {
+                                          onItemClick: function (
+                                             id,
+                                             event,
+                                             item
+                                          ) {
+                                             if (this.getItem(id).disabled)
+                                                return;
+
+                                             if (this.isChecked(id)) {
+                                                this.uncheckItem(id);
+                                             } else {
+                                                this.checkItem(id);
+                                             }
+                                          },
+                                          onItemCheck: (
+                                             id,
+                                             isChecked,
+                                             event
+                                          ) => {
+                                             this.checkObjectLink(
+                                                id,
+                                                isChecked
+                                             );
+                                          },
+                                          onBeforeOpen: function (id) {
+                                             let item = this.getItem(id);
+                                             if (item.$count === -1) {
+                                                $$(ids.tree).showProgress({
+                                                   type: "icon",
+                                                });
+
+                                                let result =
+                                                   _this.getChildItems(
+                                                      item.objectLinkId,
+                                                      id
+                                                   );
+
+                                                $$(ids.tree).parse(
+                                                   result.treeItems
+                                                );
+                                                $$(ids.tree).hideProgress();
+                                             }
+                                          },
+                                       },
+                                    },
+                                 ],
+                              },
+                              {
+                                 width: 20,
+                              },
+                              {
+                                 gravity: 2,
+                                 rows: [
+                                    {
+                                       view: "label",
+                                       label: L("Manage Fields"),
+                                       css: "ab-query-label",
+                                       // height: 50
+                                    },
+                                    {
+                                       view: "tabview",
+                                       id: ids.tabObjects,
+                                       tabMinWidth: 180,
+                                       tabbar: {
+                                          bottomOffset: 1,
+                                       },
+                                       cells: [
+                                          {}, // require
+                                       ],
+                                       multiview: {
+                                          on: {
+                                             onViewChange: (prevId, nextId) => {
+                                                this.setSelectedFields(nextId);
+                                             },
+                                          },
+                                       },
+                                    },
+                                 ],
+                              },
+                           ],
+                        },
+                        // grouping
+                        {
+                           id: ids.grouping,
+                           view: "checkbox",
+                           label: L("Grouping"),
+                           labelWidth: uiConfig.labelWidthXLarge,
+                           on: {
+                              onChange: () => {
+                                 this.save();
+                              },
+                           },
+                        },
+                        // hide prefix labels
+                        {
+                           id: ids.hidePrefix,
+                           view: "checkbox",
+                           label: L("Hide prefix labels"),
+                           labelWidth: uiConfig.labelWidthXLarge,
+                           on: {
+                              onChange: () => {
+                                 this.save();
+                              },
+                           },
+                        },
+                        // filter
+                        {
+                           view: "label",
+                           label: L("Manage Filters"),
+                           css: "ab-query-label",
+                           // height: 50
+                        },
+                        this.DataFilter.ui,
+                        {
+                           id: ids.datatable,
+                           view: "treetable",
+                           minHeight: 280,
+                           dragColumn: true,
+                           columns: [],
+                           data: [],
+                           on: {
+                              onAfterColumnDrop: () => {
+                                 this.save();
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      // Our init() function for setting up our UI
+      init(AB) {
+         this.AB = AB;
+         const ids = this.ids;
+
+         // webix.extend($$(ids.form), webix.ProgressBar);
+         webix.extend($$(ids.tree), webix.ProgressBar);
+         webix.extend($$(ids.tabObjects), webix.ProgressBar);
+         webix.extend($$(ids.datatable), webix.ProgressBar);
+
+         return Promise.resolve();
+      }
+
+      /**
+       * @method CurrentQuery()
+       * A helper to return the current ABObject we are working with.
+       * @return {ABObject}
+       */
+      get CurrentQuery() {
+         return this.AB.queryByID(this.CurrentQueryID);
+      }
+
+      /**
+       * @function applicationLoad
+       *
+       * Initialize the Object Workspace with the given ABApplication.
+       *
+       * @param {ABApplication} application
+       */
+      // applicationLoad(application) {
+      //    CurrentApplication = application;
+      // }
+
+      /**
+       * @method clearWorkspace()
+       * Clear the query workspace.
+       */
+      clearWorkspace() {
+         // $$(this.ids.component).hide();
+      }
+
+      /**
+       * @method populateQueryWorkspace()
+       * Initialize the Object Workspace with the provided ABObject.
+       * @param {ABObjectQuery} query
+       *        current ABObject instance we are working with.
+       */
+      populateQueryWorkspace(query) {
+         console.error("DEPRECIATED! Use queryLoad() instead");
+         this.queryLoad(query);
+      }
+      queryLoad(query) {
+         this.CurrentQueryID = query?.id;
+
+         let CurrentQuery = this.CurrentQuery;
+         if (CurrentQuery == null) {
+            this.clearWorkspace();
+            return;
+         }
+
+         // create new data view
+         this.CurrentDatacollection = this.AB.datacollectionNew({
+            query: [CurrentQuery.toObj()],
+            settings: {
+               datasourceID: CurrentQuery.id,
+            },
+         });
+         this.CurrentDatacollection.datasource = CurrentQuery;
+         // this.CurrentDatacollection.init(); << need this?
+
+         const objBase = CurrentQuery.objectBase();
+
+         const ids = this.ids;
+         $$(ids.selectedObject).show();
+
+         // *** Tree ***
+         this.refreshTree();
+
+         // *** Tabs ***
+
+         let links = CurrentQuery.joins().links || [];
+         const $tabObjects = $$(ids.tabObjects);
+
+         $tabObjects?.showProgress({ type: "icon" });
+
+         // NOTE : Tabview have to contain at least one cell
+         $tabObjects.addView({
+            body: {
+               id: "temp",
+            },
+         });
+
+         // clear object tabs
+         var tabbar = $tabObjects.getTabbar();
+         var optionIds = tabbar.config.options.map((opt) => opt.id);
+         optionIds.forEach((optId) => {
+            if (optId != "temp") {
+               // Don't remove a temporary tab (remove later)
+               $tabObjects.removeView(optId);
+            }
+         });
+         var $viewMultiview = $tabObjects.getMultiview();
+         $viewMultiview
+            .getChildViews()
+            .map(($view) => $view)
+            .forEach(($view) => {
+               if ($view && $view.config.id != "temp")
+                  $viewMultiview.removeView($view);
+            });
+
+         if (!objBase) return;
+
+         // add the main object tab
+         let tabUI = this.templateField({
+            object: objBase,
+            isTypeHidden: true,
+            aliasName: "BASE_OBJECT",
+         });
+         $tabObjects.addView(tabUI);
+
+         // select default tab to the main object
+         $tabObjects.setValue(tabUI.id);
+
+         // populate selected fields
+         this.setSelectedFields("BASE_OBJECT");
+
+         // Other object tabs will be added in a check tree item event
+         var fnAddTab = (objFrom, links) => {
+            (links || []).forEach((join) => {
+               // NOTE: query v1
+               // if (join.objectURL) {
+               //    objFrom = CurrentApplication.urlResolve(
+               //       join.objectURL
+               //    );
+               // }
+
+               if (!objFrom) return;
+
+               if (!join.fieldID) return;
+
+               var fieldLink = objFrom.fieldByID(join.fieldID);
+               if (!fieldLink) return;
+
+               var objLink = CurrentQuery.objectByID(
+                  fieldLink.settings.linkObject
+               );
+               if (!objLink) return;
+               // if (!objLink ||
+               // 	// prevent join recursive base object
+               // 	objLink.id == objBase.id) return;
+
+               // add tab
+               let tabUI = this.templateField({
+                  field: fieldLink,
+                  joinType: join.type,
+                  aliasName: join.alias,
+               });
+               $tabObjects.addView(tabUI);
+
+               // populate selected fields
+               this.setSelectedFields(join.alias);
+
+               fnAddTab(objLink, join.links);
+            });
+         };
+
+         fnAddTab(objBase, links);
+
+         /** Grouping **/
+         $$(ids.grouping).define("value", query.settings.grouping);
+         $$(ids.grouping).refresh();
+
+         /** Hide prefix label **/
+         $$(ids.hidePrefix).define("value", query.settings.hidePrefix);
+         $$(ids.hidePrefix).refresh();
+
+         // remove a temporary tab
+         $tabObjects.removeView("temp");
+         $tabObjects.adjust();
+
+         $tabObjects.hideProgress();
+
+         /** Filter **/
+         this.refreshFilter();
+
+         /** DataTable **/
+         this.refreshDataTable();
+      }
+
+      /**
+       * @method getChildItems
+       * Get items of tree view
+       * @param {string} objectId
+       *        ABObject.id
+       * @param {uuid} parentItemId
+       * @return {Promise}
+       */
+      getChildItems(objectId, parentItemId) {
+         let treeItems = {
+            data: [],
+         };
+         let object = this.getObject(objectId);
+
+         if (parentItemId) treeItems.parent = parentItemId;
+
+         let tasks = [];
+
+         // Loop to find object of the connect field
+         object.connectFields().forEach((f) => {
+            let objectLink = this.getObject(f.settings.linkObject);
+            if (objectLink == null) return;
+
+            // Prevent System Objects from showing up in List
+            // UNLESS we are in a SystemApp:
+            if (!this.CurrentApplication.isSystemObj) {
+               if (objectLink.isSystemObject) return;
+            }
+
+            let fieldID = f.id;
+
+            // add items to tree
+            var label = `${objectLink.label} (${f.label})`;
+
+            treeItems.data.push({
+               value: label, // a label of link object
+               fieldID: fieldID,
+               objectId: objectLink.id,
+               objectLinkId: f.settings.linkObject,
+               checked: false,
+               disabled: false, // always enable
+               open: false,
+
+               webix_kids: true,
+            });
+         });
+
+         return {
+            object,
+            treeItems: treeItems,
+         };
+
+         /*
+               return (
+                  Promise.resolve()
+                     // get object
+                     .then(() => _logic.getObject(objectId))
+
+                     // populate to tree values
+                     .then((object) => {
+                        // if (parentItemId) {
+                        // 	var item = store.getItem(parentItemId);
+                        // 	if (item.$level > $$(ids.depth).getValue())
+                        // 		return;
+                        // }
+
+                        objectResult = object;
+
+                        if (parentItemId) treeItems.parent = parentItemId;
+
+                        let tasks = [];
+
+                        // Loop to find object of the connect field
+                        object.connectFields(true).forEach((f) => {
+                           tasks.push(() => {
+                              return new Promise((ok, error) => {
+                                 _logic
+                                    .getObject(f.settings.linkObject)
+                                    .catch(error)
+                                    .then((objectLink) => {
+                                       if (objectLink == null) return ok();
+
+                                       let fieldID = f.id;
+
+                                       // add items to tree
+                                       var label = "#object# (#field#)"
+                                          .replace("#object#", objectLink.label)
+                                          .replace("#field#", f.label);
+
+                                       treeItems.data.push({
+                                          value: label, // a label of link object
+                                          fieldID: fieldID,
+                                          objectId: objectLink.id,
+                                          objectLinkId: f.settings.linkObject,
+                                          checked: false,
+                                          disabled: false, // always enable
+                                          open: false,
+
+                                          webix_kids: true,
+                                       });
+
+                                       ok();
+                                    });
+                              });
+                           });
+                        });
+
+                        // action sequentially
+                        return tasks.reduce((promiseChain, currTask) => {
+                           return promiseChain.then(currTask);
+                        }, Promise.resolve());
+                     })
+
+                     // Final - pass result
+                     .then(() =>
+                        Promise.resolve({
+                           object: objectResult,
+                           treeItems: treeItems,
+                        })
+                     )
+               );
+               */
+      }
+
+      /**
+       * @method aliasName
+       * get new alias name
+       *
+       * @return {string}
+       */
+      aliasName() {
+         return this.AB.uuid()
+            .replace(/[^a-zA-Z0-9]+/g, "")
+            .substring(0, 8);
+      }
+
+      /**
+       * @method save
+       * update settings of the current query and save to database
+       *
+       * @return {Promise}
+       */
+      save(selctedFields = null) {
+         let ids = this.ids;
+         let CurrentQuery = this.CurrentQuery;
+         return new Promise((resolve, reject) => {
+            var $tree = $$(ids.tree);
+
+            var objectBase = CurrentQuery.objectBase();
+
+            //
+            // 1) Prepare current joins
+            //
+            let joins = {
+               alias: "BASE_OBJECT",
+               objectID: objectBase.id, // the base object of the join
+               links: [],
+            };
+
+            let lookupFields = {};
+
+            let $checkedItem = $tree
+               .getChecked()
+               .map((id) => $tree.getItem(id))
+               .sort((a, b) => a.$level - b.$level);
+
+            ($checkedItem || []).forEach(($treeItem) => {
+               // let field = CurrentQuery.fields(f => f.id == $treeItem.fieldID, true)[0];
+               // if (!field) return;
+
+               // alias name
+               let aliasName = $treeItem.alias;
+               if (!aliasName) {
+                  aliasName = this.aliasName();
+                  $tree.updateItem($treeItem.id, {
+                     alias: aliasName,
+                  });
+               }
+
+               // pull the join type &&
+               let joinType = "innerjoin";
+               let $tabObject = $$(ids.tabObjects)
+                  .getMultiview()
+                  .getChildViews()
+                  .filter((v) => v.config.id == aliasName)[0];
+               if ($tabObject) {
+                  let $joinType = $tabObject.queryView({
+                     name: "joinType",
+                  });
+                  joinType = $joinType.getValue() || "innerjoin";
+               }
+
+               let links = joins.links, // default is links of base
+                  newJoin = {
+                     alias: aliasName,
+                     fieldID: $treeItem.fieldID,
+                     type: joinType,
+                     links: [],
+                  };
+
+               if ($treeItem.$level > 1) {
+                  // pull parent join
+                  let parentId = $tree.getParentId($treeItem.id),
+                     $parentItem = $tree.getItem(parentId);
+
+                  links = lookupFields[$parentItem.alias].links;
+               }
+
+               // add new join into parent links
+               links.push(newJoin);
+
+               // cache join
+               lookupFields[aliasName] = newJoin;
+            });
+
+            CurrentQuery.importJoins(joins);
+
+            //
+            // 2) Prepare current fields
+            //
+            if (selctedFields == null) {
+               selctedFields = $$(ids.datatable)
+                  .config.columns.map((col) => {
+                     // an array of field ids
+
+                     // pull object by alias
+                     let object = CurrentQuery.objectByAlias(col.alias);
+                     if (!object) return;
+
+                     let field = object.fieldByID(col.fieldID);
+                     if (!field) return;
+
+                     // avoid add fields that not exists alias
+                     if (
+                        col.alias != "BASE_OBJECT" &&
+                        CurrentQuery.links((l) => l.alias == col.alias).length <
+                           1
+                     )
+                        return;
+
+                     return {
+                        alias: col.alias,
+                        fieldID: col.fieldID,
+                     };
+                  })
+                  .filter((col) => col != null);
+            }
+
+            CurrentQuery.importFields(selctedFields);
+
+            //
+            // 3) Prepare where condition
+            //
+            CurrentQuery.where = this.DataFilter.getValue();
+
+            /** depth **/
+            // CurrentQuery.objectWorkspace.depth = $$(ids.depth).getValue();
+
+            //
+            // 4) Prepare grouping
+            //
+            CurrentQuery.settings = {
+               grouping: $$(ids.grouping).getValue(),
+               hidePrefix: $$(ids.hidePrefix).getValue(),
+            };
+
+            //
+            // Save to db
+            //
+            CurrentQuery.save()
+               .then(() => {
+                  return CurrentQuery.migrateCreate();
+               })
+               .then(() => {
+                  // refresh data
+                  this.refreshDataTable();
+                  resolve();
+               })
+               .catch((err) => {
+                  this.AB.notify.developer(err, {
+                     context: `${ids.component}:save(): Error saving Query`,
+                     query: CurrentQuery.toObj(),
+                  });
+                  reject(err);
+               });
+         });
+      }
+
+      checkObjectLink(objId, isChecked) {
+         var $tree = $$(this.ids.tree);
+         $tree.blockEvent(); // prevents endless loop
+
+         var rootid = objId;
+         if (isChecked) {
+            // If check we want to check all of the parents as well
+            while ($tree.getParentId(rootid)) {
+               rootid = $tree.getParentId(rootid);
+               if (rootid != objId) $tree.checkItem(rootid);
+            }
+         } else {
+            // If uncheck we want to uncheck all of the child items as well.
+            $tree.data.eachSubItem(rootid, function (item) {
+               if (item.id != objId) $tree.uncheckItem(item.id);
+            });
+         }
+
+         // call save to db
+         this.save().then(() => {
+            // update UI -- add new tab
+            this.populateQueryWorkspace(this.CurrentQuery);
+         });
+
+         $tree.unblockEvent();
+      }
+
+      depthChange(/*newv, oldv*/) {
+         // call save to db
+         this.save().then(() => {
+            this.populateQueryWorkspace(this.CurrentQuery);
+         });
+      }
+
+      setSelectedFields(aliasName) {
+         // *** Field double list ***
+         let $viewDbl = $$(aliasName).queryView({ name: "fields" });
+         if ($viewDbl) {
+            let fieldIDs = this.CurrentQuery.fields(
+               (f) => f.alias == aliasName,
+               true
+            ).map((f) => f.id);
+
+            $viewDbl.setValue(fieldIDs);
+         }
+      }
+
+      checkFields() {
+         let ids = this.ids;
+         // pull check fields
+         var fields = [];
+         var $viewMultiview = $$(ids.tabObjects).getMultiview();
+         $viewMultiview.getChildViews().forEach(($viewTab) => {
+            let $viewDbl = $viewTab.queryView({ name: "fields" });
+            if ($viewDbl && $viewDbl.getValue()) {
+               // pull an array of field's url
+               let selectedFields = $viewDbl
+                  .getValue()
+                  .split(",")
+                  .map((fieldID) => {
+                     return {
+                        alias: $viewTab.config.aliasName,
+                        fieldID: fieldID,
+                     };
+                  });
+               fields = fields.concat(selectedFields);
+            }
+         });
+
+         // keep same order of fields
+         var orderFieldUrls = $$(ids.datatable).config.columns.map(
+            (col) => col.fieldID
+         );
+         fields.sort((a, b) => {
+            var indexA = orderFieldUrls.indexOf(a.fieldID),
+               indexB = orderFieldUrls.indexOf(b.fieldID);
+
+            if (indexA < 0) indexA = 999;
+            if (indexB < 0) indexB = 999;
+
+            return indexA - indexB;
+         });
+
+         // CurrentQuery.importFields(fields);
+
+         // call save to db
+         this.save(fields).then(() => {
+            // refresh filter
+            this.refreshFilter();
+         });
+      }
+
+      /**
+       * @function templateField()
+       *	return UI of the object tab
+       * @param {JSON} option - {
+       *           object: ABObject [option],
+       *           field:  ABField [option],
+       *           joinType: 'string',
+       *           isTypeHidden: boolean
+       *        }
+       *
+       * @return {JSON}
+       */
+      templateField(option) {
+         if (option.object == null && option.field == null)
+            throw new Error("Invalid params");
+
+         var object = option.object
+            ? option.object
+            : this.CurrentQuery.objectByID(option.field.settings.linkObject);
+
+         var fields = object
+            .fields((f) => f.fieldSupportQuery(), true)
+            .map((f) => {
+               return {
+                  id: f.id,
+                  value: f.label,
+               };
+            });
+
+         let fieldLabel = "";
+         if (option.field) {
+            fieldLabel = ` (${option.field.label})`;
+         }
+         var label = `${object.label}${fieldLabel}`;
+
+         let aliasName = option.aliasName;
+
+         return {
+            header: label,
+            body: {
+               id: aliasName,
+               aliasName: aliasName,
+               type: "space",
+               css: "bg-white",
+               rows: [
+                  {
+                     view: "select",
+                     name: "joinType",
+                     label: L("join records by"),
+                     labelWidth: 200,
+                     placeholder: L("Choose a type of table join"),
+                     hidden: option.isTypeHidden == true,
+                     value: option.joinType || "innerjoin",
+                     options: [
+                        {
+                           id: "innerjoin",
+                           value: L(
+                              "Returns records that have matching values in both tables (INNER JOIN)."
+                           ),
+                        },
+                        {
+                           id: "left",
+                           value: L(
+                              "Return all records from the left table, and the matched records from the right table (LEFT JOIN)."
+                           ),
+                        },
+                        {
+                           id: "right",
+                           value: L(
+                              "Return all records from the right table, and the matched records from the left table (RIGHT JOIN)."
+                           ),
+                        },
+                        {
+                           id: "fullouterjoin",
+                           value: L(
+                              "Return all records when there is a match in either left or right table (FULL JOIN)"
+                           ),
+                        },
+                     ],
+                     on: {
+                        onChange: () => {
+                           this.save();
+                        },
+                     },
+                  },
+                  {
+                     view: "dbllist",
+                     name: "fields",
+                     list: {
+                        height: 300,
+                     },
+                     labelLeft: L("Available Fields"),
+                     labelRight: L("Included Fields"),
+                     labelBottomLeft: L(
+                        "Move these fields to the right to include in data set."
+                     ),
+                     labelBottomRight: L(
+                        "These fields will display in your final data set."
+                     ),
+                     data: fields,
+                     on: {
+                        onChange: () => {
+                           this.checkFields();
+                        },
+                     },
+                  },
+                  { fillspace: true },
+               ],
+            },
+         };
+      }
+
+      refreshTree() {
+         // return new Promise((resolve, reject) => {
+         // Relationship Depth
+         // $$(ids.depth).blockEvent(); // prevents endless loop
+
+         // if (CurrentQuery.objectWorkspace.depth) {
+         // 	$$(ids.depth).setValue(CurrentQuery.objectWorkspace.depth);
+         // } else {
+         // 	$$(ids.depth).setValue(5);
+         // }
+
+         // $$(ids.depth).unblockEvent();
+
+         let fnCheckItem = (treeStore, object, links, parentId = 0) => {
+            (links || []).forEach((link) => {
+               // NOTE: query v1
+               // if (link.objectURL) {
+               //    object = CurrentApplication.urlResolve(
+               //       link.objectURL
+               //    );
+               //    parentId = undefined;
+               // } else {
+               // parentId = parentId || 0;
+               // }
+
+               if (!object) return;
+
+               let field = object.fieldByID(link.fieldID);
+               if (!field) return;
+
+               let findCond = {
+                  fieldID: field.id,
+               };
+               if (parentId != null) {
+                  findCond.$parent = parentId;
+               }
+
+               let $item = null;
+               (treeStore.find(findCond) || []).forEach((item) => {
+                  if (item.$parent) {
+                     // select item who has parent is checked
+                     let parentItem = treeStore.getItem(item.$parent);
+                     if (parentItem && parentItem.checked) $item = item;
+                  } else {
+                     $item = item;
+                  }
+               });
+
+               // update check status
+               if ($item) {
+                  treeStore.updateItem($item.id, {
+                     alias: link.alias,
+                     checked: true,
+                     open: true,
+                  });
+
+                  let result = this.getChildItems(
+                     field.settings.linkObject,
+                     $item.id
+                  );
+
+                  $$(ids.tree).parse(result.treeItems);
+
+                  fnCheckItem(treeStore, result.object, link.links, $item.id);
+               }
+            });
+         };
+
+         const objBase = this.CurrentQuery.objectBase();
+         let links = this.CurrentQuery.joins().links || [];
+
+         // set connected objects:
+         let ids = this.ids;
+         $$(ids.tree).clearAll();
+
+         // show loading cursor
+         $$(ids.tree).showProgress({ type: "icon" });
+
+         // NOTE: render the tree component in Promise to prevent freeze UI.
+         // populate tree store
+
+         // Transition v2: testing w/o Promise here
+         if (objBase) {
+            let result = this.getChildItems(objBase.id);
+
+            $$(ids.tree).parse(result.treeItems);
+
+            fnCheckItem($$(ids.tree), objBase, links);
+
+            // show loading cursor
+            $$(ids.tree).hideProgress();
+         }
+
+         /* if (objBase) {
+                     _logic
+                        .getChildItems(objBase.id)
+                        .catch(reject)
+                        .then((result) => {
+                           $$(ids.tree).parse(result.treeItems);
+
+                           fnCheckItem($$(ids.tree), objBase, links);
+
+                           // show loading cursor
+                           $$(ids.tree).hideProgress({ type: "icon" });
+
+                           resolve();
+                        });
+                  }
+                  */
+         // });
+      }
+
+      refreshFilter() {
+         // this.DataFilter.applicationLoad(
+         //    CurrentQuery ? CurrentQuery.application : null
+         // );
+         let CurrentQuery = this.CurrentQuery;
+         this.DataFilter.fieldsLoad(
+            CurrentQuery ? CurrentQuery.fields() : [],
+            CurrentQuery
+         );
+         this.DataFilter.setValue(CurrentQuery.where);
+      }
+
+      refreshDataTable() {
+         if (this.CurrentDatacollection == null) return;
+         let CurrentQuery = this.CurrentQuery;
+         if (!CurrentQuery) return;
+
+         // console.log("Refresh data table *******");
+
+         let DataTable = $$(this.ids.datatable);
+         DataTable.clearAll();
+
+         // set columns:
+         var columns = CurrentQuery.columnHeaders(false, false);
+         DataTable.refreshColumns(columns);
+
+         DataTable.showProgress({ type: "icon" });
+         let qCurrentView = CurrentQuery.workspaceViews.getCurrentView();
+
+         this.CurrentDatacollection.clearAll();
+         this.CurrentDatacollection.datasource = CurrentQuery;
+
+         // Set filter and sort conditions
+         this.CurrentDatacollection.fromValues({
+            query: [CurrentQuery.toObj()],
+            settings: {
+               datasourceID: CurrentQuery.id,
+               objectWorkspace: {
+                  //// NOTE: the .where condition is already part of the
+                  //// query definition, so we don't want to pass it again
+                  //// as part of the workspace filter conditions.
+                  // filterConditions: null,  // qCurrentView.filterConditions,
+                  sortFields: qCurrentView.sortFields,
+               },
+            },
+         });
+         this.CurrentDatacollection.datasource = CurrentQuery;
+
+         // Bind datatable view to data view
+         this.CurrentDatacollection.unbind(DataTable);
+         this.CurrentDatacollection.bind(DataTable);
+
+         // set data:
+         this.CurrentDatacollection.loadData(0, 50, () => {}).then(() => {
+            this.CurrentDatacollection.bind(DataTable);
+            // DataTable.hideProgress();
+         });
+         // CurrentQuery.model().findAll({ limit: 20, where: CurrentQuery.workspaceViews.getCurrentView().filterConditions, sort: CurrentQuery.workspaceViews.getCurrentView().sortFields })
+         // 	.then((response) => {
+
+         // 		DataTable.clearAll();
+
+         // 		response.data.forEach((d) => {
+         // 			DataTable.add(d);
+         // 		})
+         // 	})
+         // 	.catch((err) => {
+         // 		OP.Error.log('Error running Query:', { error: err, query: CurrentQuery });
+         // 	});
+      }
+
+      getObject(objectId) {
+         let objectLink = this.CurrentQuery.objectByID(objectId);
+         if (objectLink) return objectLink;
+
+         // Find object from our complete list of Objects
+         objectLink = this.AB.objectByID(objectId);
+         if (objectLink) return objectLink;
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         $$(this.ids.component).show();
+      }
+   }
+   return new UI_Work_Query_Workspace_Design(init_settings);
 }
 
 

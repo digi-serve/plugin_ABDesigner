@@ -138,6 +138,10 @@ export default function (AB) {
       ready() {
          this.ListComponent.ready();
       }
+
+      select(query) {
+         this.ListComponent.select(query.id);
+      }
    }
 
    return new UI_Work_Query_List();
