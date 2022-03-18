@@ -1,10 +1,4 @@
 /*
- * ab_work_interface_list_newPage
- *
- * Display the form for creating a new Application.
- *
- */
-/*
  * UI_Work_Interface_List_NewPage
  *
  * Display the form for creating a new Page.  This Popup will manage several
@@ -36,9 +30,8 @@ export default function (AB) {
 
       constructor() {
          var base = "ab_work_interface_list_newInterface";
-         super({
-            component: base,
-            tab: `${base}_tab`,
+         super(base, {
+            tab: "",
          });
 
          this.selectNew = true;
@@ -112,7 +105,7 @@ export default function (AB) {
             });
          });
 
-         return Promise.all(allInits);
+         await Promise.all(allInits);
       }
 
       /**
@@ -171,7 +164,7 @@ export default function (AB) {
        */
       async save(values, tabKey) {
          // must have an application set.
-         if (!this.currentApplication) {
+         if (!this.CurrentApplication) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -196,7 +189,7 @@ export default function (AB) {
             newInterface = values.parent.pageNew(values);
          } else {
             //page = CurrentApplication.pageNew(values);
-            newInterface = this.currentApplication.pageNew(values);
+            newInterface = this.CurrentApplication.pageNew(values);
          }
          //
 
@@ -212,7 +205,7 @@ export default function (AB) {
          }
 
          if (!newInterface.createdInAppID) {
-            newInterface.createdInAppID = this.currentApplication.id;
+            newInterface.createdInAppID = this.CurrentApplication.id;
          }
 
          // show progress
@@ -221,7 +214,7 @@ export default function (AB) {
          // if we get here, save the new Page
          try {
             var obj = await newInterface.save();
-            // await this.currentApplication.pageInsert(obj);
+            // await this.CurrentApplication.pageInsert(obj);
             this[tabKey].emit("save.successful", obj);
             this.done(obj);
          } catch (err) {
@@ -230,8 +223,8 @@ export default function (AB) {
 
             // an error happend during the server side creation.
             // so remove this page from the current interface list of
-            // the currentApplication.
-            await this.currentApplication.pageRemove(newInterface);
+            // the CurrentApplication.
+            await this.CurrentApplication.pageRemove(newInterface);
 
             // tell current Tab component there was an error
             this[tabKey].emit("save.error", err);
@@ -247,12 +240,14 @@ export default function (AB) {
          this.$component?.show();
       }
 
+      //  ui is now a method. 
+      // TODO refactor this to pick a better value to send in for tabId
       switchTab(tabId) {
-         if (tabId == this.BlankTab?.ui?.body?.id) {
-            this.BlankTab?.onShow?.(this.currentApplication);
-         } else if (tabId == this.QuickTab?.ui?.body?.id) {
-            this.QuickTab?.onShow?.(this.currentApplication);
-         }
+         // if (tabId == this.BlankTab?.ui?.body?.id) {
+         //    this.BlankTab?.onShow?.(this.CurrentApplication);
+         // } else if (tabId == this.QuickTab?.ui?.body?.id) {
+         //    this.QuickTab?.onShow?.(this.CurrentApplication);
+         // }
       }
    }
 

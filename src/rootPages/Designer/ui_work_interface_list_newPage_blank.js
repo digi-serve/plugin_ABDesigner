@@ -12,9 +12,7 @@ export default function (AB) {
    class UI_Work_Interface_List_NewPage_Blank extends UIClass {
       constructor() {
          var base = "ui_work_interface_list_newPage_blank";
-         super({
-            component: base,
-
+         super(base, {
             form: "",
             buttonSave: "",
             buttonCancel: "",
@@ -113,7 +111,7 @@ export default function (AB) {
          };
       }
 
-      async init(AB) {
+      init(AB) {
          this.AB = AB;
 
          this.$form = $$(this.ids.form);
@@ -121,7 +119,9 @@ export default function (AB) {
          // "save.error" is triggered by the ui_work_interface_list_newPage
          // if there was an error saving the values from our form.
          this.on("save.error", (err) => {
-            this.onError(err);
+            this.AB.notify.developer(err, {
+               context: "ui_work_interface_list_newPage:init(): there was an error saving the values from our form."
+            });
          });
 
          // "save.successful" is triggered by the ui_work_interface_list_newPage
@@ -156,7 +156,7 @@ export default function (AB) {
                   addPage(p, indent + "-");
                });
          };
-         // this.currentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
+         // this.CurrentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
          application.pages().forEach(function (page) {
             addPage(page, "");
          });
@@ -207,6 +207,10 @@ export default function (AB) {
             }
 
             var values = this.$form.getValues();
+            this.AB.notify.developer(err, {
+               context: "ui_work_interface_list_newPage: the entered data is invalid",
+               base: values,
+            });
             webix.alert({
                title: L("Error creating Page: {0}", [values.name]),
                ok: L("fix it"),
@@ -253,7 +257,7 @@ export default function (AB) {
          if (values.parent === "-") {
             values.parent = null;
          } else if (values.parent) {
-            values.parent = this.currentApplication.urlResolve(values.parent);
+            values.parent = this.CurrentApplication.urlResolve(values.parent);
          }
 
          // set uuid to be primary column

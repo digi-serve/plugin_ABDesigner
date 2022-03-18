@@ -25,10 +25,9 @@ export default function (AB) {
    class UI_Work_Interface_List extends UIClass {
       constructor() {
          var base = "ui_work_interface_list";
-         super({
-            component: base,
-            list: `${base}_editList`,
-            buttonNew: `${base}_buttonNew`,
+         super(base, {
+            list: "",
+            buttonNew: "",
          });
 
          this.EditPopup = new PopupEditPageComponent(base);
@@ -187,14 +186,24 @@ export default function (AB) {
             this.ListComponent.select(obj.id);
             // }
          });
+         CopyForm.on("save", (obj) => {
+            // the PopupEditPageComponent already takes care of updating the
+            // CurrentApplication.
 
-         this._handler_refreshApp = (def) => {
-            if (this.CurrentApplication.refreshInstance) {
-               // TODO: Johnny refactor this
-               this.CurrentApplication = this.CurrentApplication.refreshInstance();
-            }
+            // we just need to update our list of interfaces
             this.applicationLoad(this.CurrentApplication);
-         };
+            this.callbackNewPage(obj);
+
+            // Select the new page
+            this.ListComponent.select(obj.id);
+            this.listReady();
+         });
+
+         CopyForm.on("cancel", () => {
+            CopyForm.hide();
+            this.listReady();
+         });
+
       }
 
       addNew() {
@@ -301,24 +310,6 @@ export default function (AB) {
          // Data must be loaded AFTER init, as it populates the form immediatly
          CopyForm.applicationLoad(this.CurrentApplication);
 
-         CopyForm.on("save", (obj) => {
-            // the PopupEditPageComponent already takes care of updating the
-            // CurrentApplication.
-
-            // we just need to update our list of interfaces
-            this.applicationLoad(this.CurrentApplication);
-            this.callbackNewPage(obj);
-
-            // Select the new page
-            this.ListComponent.select(obj.id);
-            this.listReady();
-         });
-
-         CopyForm.on("cancel", () => {
-            CopyForm.hide();
-            this.listReady();
-         });
-
          CopyForm.show();
       }
       remove() {
@@ -349,7 +340,7 @@ export default function (AB) {
                      this.emit("selected", null);
                   } catch (e) {
                      this.AB.notify.developer(e, {
-                        context: "ui_common_list:remove(): error removing item",
+                        context: "ui_interface_list:remove(): error removing item",
                         base: selectedPage,
                      });
                      this.listReady();

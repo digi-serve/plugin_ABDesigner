@@ -23,14 +23,12 @@ export default function (AB) {
    class UI_Work_Interface_List_NewPage extends UIClass {
       constructor() {
          var base = "ab_work_interface_list_copyInterface";
-         super({
-            component: base,
+         super(base, {
             form: "",
             buttonSave: "",
             buttonCancel: "",
          });
          this.ids.parentList = {};
-
       }
 
       ui(oldName) {
@@ -65,7 +63,7 @@ export default function (AB) {
                      label: L("Name"),
                      name: "name",
                      required: true,
-                     placeholder: `${oldName} - ${L("copy")}`,
+                     placeholder: `${L("{0} - copy", [oldName])}`,
                      labelWidth: 110,
                      on: {
                         onAfterRender() {
@@ -114,13 +112,7 @@ export default function (AB) {
                      ],
                   },
                ],
-            },
-            on: {
-               onBeforeShow: () => {
-                  // var id = $$(this.ids.tab).getValue();
-                  // this.switchTab(id);
-               },
-            },
+            }
          };
       }
 
@@ -159,7 +151,7 @@ export default function (AB) {
          var addPage = function (page, indent) {
             indent = indent || "";
             options.push({
-               id: page.urlPointer(),
+               id: page.id,
                value: indent + page.label,
             });
             page
@@ -169,7 +161,7 @@ export default function (AB) {
                   addPage(p, indent + "-");
                });
          };
-         // this.currentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
+         // this.CurrentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
          application.pages().forEach(function (page) {
             addPage(page, "");
          });
@@ -251,7 +243,7 @@ export default function (AB) {
          var values = Form.getValues();
 
          // must have an application set.
-         if (!this.currentApplication) {
+         if (!this.CurrentApplication) {
             webix.alert({
                title: L("Shoot!"),
                test: L("No Application Set!  Why?"),
@@ -270,32 +262,22 @@ export default function (AB) {
             values.parent = null;
          } else if (values.parent) {
             // convert a url string to the object of the parent
-            values.parent = this.currentApplication.urlResolve(values.parent);
+            values.parent = this.CurrentApplication.urlResolve(values.parent);
          }
 
-         //  if (values.parent) {
          var newPage = this.data;
 
-         newPage
-            .copy(null, values.parent, { newName: values.name })
-            .then((copiedPage) => {
-               // .copy() should save ...........
-               //  copiedPage.save()
-               // .then((copiedPage) => {
-               this.emit("save.successful", copiedPage);
-               this.done(copiedPage);
-            })
+         let copiedPage = await newPage.copy(null, values.parent, { newName: values.name })
             .catch((err) => {
                this.ready();
-               var strError = err.toString();
-               webix.alert({
-                  title: "Error copying page",
-                  ok: "fix it",
-                  text: strError,
-                  type: "alert-error",
+               this.AB.notify.developer(err, {
+                  context: "ui_interface_list_copyPage:save(): Error saving copied page",
+                  base: newPage,
                });
-               console.log(err);
             });
+
+         this.emit("save.successful", copiedPage);
+         this.done(copiedPage);
       }
 
       /**
@@ -327,7 +309,6 @@ export default function (AB) {
        */
       onError(err) {
          if (err) {
-            console.error(err);
             var message = L("the entered data is invalid");
             // if this was our Validation() object:
             if (err.updateForm) {
@@ -341,6 +322,12 @@ export default function (AB) {
             }
 
             var values = this.$form.getValues();
+
+            this.AB.notify.developer(err, {
+               context: "ui_interace_list: error",
+               base: values,
+            });
+
             webix.alert({
                title: L("Error creating Page: {0}", [values.name]),
                ok: L("fix it"),
