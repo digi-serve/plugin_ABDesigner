@@ -40,6 +40,10 @@ export default function (AB) {
             this.select(q);
          });
 
+         this.QueryWorkspace.on("query.add", () => {
+            this.QueryList.emit("addNew");
+         });
+
          return Promise.all([
             this.QueryWorkspace.init(AB),
             this.QueryList.init(AB),
@@ -74,11 +78,19 @@ export default function (AB) {
             this.QueryList?.applicationLoad(app);
          }
          this.QueryList?.ready();
+         if (this._lastSelectedQuery) {
+            this.QueryList.select(this._lastSelectedQuery);
+            // NOTE: this.select() is called when an item in QueryList is selected.
+            this.select(this._lastSelectedQuery);
+         }
       }
 
       select(q) {
+         // if (q?.id != this._lastSelectedQuery?.id) {
+         this._lastSelectedQuery = q;
          this.QueryWorkspace.resetTabs();
-         this.QueryWorkspace.populateQueryWorkspace(q);
+         this.QueryWorkspace.queryLoad(q);
+         // }
       }
    }
 

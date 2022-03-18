@@ -92,6 +92,9 @@ export default function (AB) {
 
          this.currentViewDef = view;
 
+         // remove any listeners from our current component
+         this._currentComponent?.eventsClear();
+
          this.currentView = this.AB.viewNewDetatched(view.component);
          var component = this.currentView.component();
 
