@@ -76,10 +76,10 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                editor: "text",
                editValue: "label",
 
-               uniteBy: function(item) {
+               uniteBy: function (item) {
                   return labels.component.title;
                },
-               template: function(obj, common) {
+               template: function (obj, common) {
                   return _logic.templateListItem(obj, common);
                },
                type: {
@@ -89,18 +89,18 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                      "<div class='ab-object-list-edit'><span class='webix_icon fa fa-cog'></span></div>"
                },
                on: {
-                  onAfterSelect: function(id) {
+                  onAfterSelect: function (id) {
                      _logic.selectObject(id);
                   },
-                  onBeforeEditStop: function(state, editor) {
+                  onBeforeEditStop: function (state, editor) {
                      _logic.onBeforeEditStop(state, editor);
                   },
-                  onAfterEditStop: function(state, editor, ignoreUpdate) {
+                  onAfterEditStop: function (state, editor, ignoreUpdate) {
                      _logic.onAfterEditStop(state, editor, ignoreUpdate);
                   }
                },
                onClick: {
-                  "ab-object-list-edit": function(e, id, trg) {
+                  "ab-object-list-edit": function (e, id, trg) {
                      _logic.clickEditMenu(e, id, trg);
                   }
                }
@@ -128,7 +128,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                               height: 35,
                               keyPressTimeout: 100,
                               on: {
-                                 onTimedKeyPress: function() {
+                                 onTimedKeyPress: function () {
                                     _logic.listSearch();
                                     _logic.save();
                                  }
@@ -190,7 +190,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                css: "webix_primary",
                value: labels.component.addNew,
                type: "form",
-               click: function() {
+               click: function () {
                   _logic.clickNewObject(true); // pass true so it will select the new object after you created it
                }
             }
@@ -243,7 +243,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             /**
              * @function onChange
              */
-            onChange: function() {}
+            onChange: function () { }
          },
 
          /**
@@ -256,7 +256,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           * @param {ABApplication} application  	[optional] The current ABApplication
           *										we are working with.
           */
-         applicationLoad: function(application) {
+         applicationLoad: function (application) {
             //
             if (!application) {
                return;
@@ -327,14 +327,14 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             PopupNewObjectComponent.applicationLoad(application);
          },
 
-         clickEditMenu: function(e, id, trg) {
+         clickEditMenu: function (e, id, trg) {
             // Show menu
             PopupEditObjectComponent.show(trg);
 
             return false;
          },
 
-         listSettingCollapse: function() {
+         listSettingCollapse: function () {
             // if (CurrentApplication && CurrentApplication.objectlistIsOpen != false) {
             // 	CurrentApplication.objectlistIsOpen = false;
 
@@ -343,7 +343,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             // }
          },
 
-         listSettingExpand: function() {
+         listSettingExpand: function () {
             // if (CurrentApplication && CurrentApplication.objectlistIsOpen != true) {
             // 	CurrentApplication.objectlistIsOpen = true;
 
@@ -352,22 +352,22 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             // }
          },
 
-         listBusy: function() {
+         listBusy: function () {
             if ($$(ids.list) && $$(ids.list).showProgress)
                $$(ids.list).showProgress({ type: "icon" });
          },
 
-         listReady: function() {
+         listReady: function () {
             if ($$(ids.list) && $$(ids.list).hideProgress)
                $$(ids.list).hideProgress();
          },
 
-         listSearch: function() {
+         listSearch: function () {
             var searchText = $$(ids.searchText)
                .getValue()
                .toLowerCase();
 
-            $$(ids.list).filter(function(item) {
+            $$(ids.list).filter(function (item) {
                return (
                   !item.label ||
                   item.label.toLowerCase().indexOf(searchText) > -1
@@ -381,7 +381,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             // }
          },
 
-         listSort: function(sortType) {
+         listSort: function (sortType) {
             if (objectList == null) return;
 
             objectList.sort("label", sortType);
@@ -397,7 +397,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             // }
          },
 
-         listGroup: function(isGroup) {
+         listGroup: function (isGroup) {
             if (isGroup == true) {
                $$(ids.list).define("uniteBy", (item) => {
                   return item.label.toUpperCase().substr(0, 1);
@@ -419,11 +419,11 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             // }
          },
 
-         listCount: function() {
+         listCount: function () {
             if ($$(ids.list)) return $$(ids.list).count();
          },
 
-         onAfterEditStop: function(state, editor, ignoreUpdate) {
+         onAfterEditStop: function (state, editor, ignoreUpdate) {
             _logic.showGear(editor.id);
 
             if (state.value != state.old) {
@@ -435,7 +435,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                // Call server to rename
                selectedObject
                   .save()
-                  .catch(function() {
+                  .catch(function () {
                      _logic.listReady();
 
                      OP.Dialog.Alert({
@@ -445,7 +445,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                         )
                      });
                   })
-                  .then(function() {
+                  .then(function () {
                      _logic.listReady();
 
                      // TODO : should use message box
@@ -459,7 +459,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             }
          },
 
-         onBeforeEditStop: function(state, editor) {
+         onBeforeEditStop: function (state, editor) {
             var selectedObject = $$(ids.list).getSelectedItem(false);
             selectedObject.label = state.value;
 
@@ -477,7 +477,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           * @function save()
           *
           */
-         save: function() {
+         save: function () {
             // if this UI does not be initialed, then skip it
             if (!_initialized) return;
 
@@ -490,7 +490,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           *
           * Perform these actions when an Object is selected in the List.
           */
-         selectObject: function(id) {
+         selectObject: function (id) {
             var object = $$(ids.list).getItem(id);
 
             _logic.callbacks.onChange(object);
@@ -498,7 +498,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             _logic.showGear(id);
          },
 
-         showGear: function(id) {
+         showGear: function (id) {
             let $item = $$(ids.list).getItemNode(id);
             if ($item) {
                let gearIcon = $item.querySelector(".ab-object-list-edit");
@@ -514,7 +514,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           *
           * Show this component.
           */
-         show: function() {
+         show: function () {
             $$(ids.component).show();
          },
 
@@ -527,7 +527,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           * @param {?} common the webix.common icon data structure
           * @return {string}
           */
-         templateListItem: function(obj, common) {
+         templateListItem: function (obj, common) {
             return _templateListItem
                .replace("#label#", obj.label || "??label??")
                .replace("{common.iconGear}", common.iconGear);
@@ -538,7 +538,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           *
           * Once a New Object was created in the Popup, follow up with it here.
           */
-         callbackNewObject: function(err, object, selectNew, callback) {
+         callbackNewObject: function (err, object, selectNew, callback) {
             if (err) {
                OP.Error.log("Error creating New Object", { error: err });
                return;
@@ -564,12 +564,12 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           *
           * Manages initiating the transition to the new Object Popup window
           */
-         clickNewObject: function(selectNew, callback) {
+         clickNewObject: function (selectNew, callback) {
             // show the new popup
             PopupNewObjectComponent.show(selectNew, callback);
          },
 
-         exclude: function() {
+         exclude: function () {
             var object = $$(ids.list).getSelectedItem(false);
 
             _logic.listBusy();
@@ -584,12 +584,12 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             });
          },
 
-         rename: function() {
+         rename: function () {
             var objectId = $$(ids.list).getSelectedId(false);
             $$(ids.list).edit(objectId);
          },
 
-         remove: function() {
+         remove: function () {
             var selectedObject = $$(ids.list).getSelectedItem(false);
 
             // verify they mean to do this:
@@ -647,7 +647,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             });
          },
 
-         callbackObjectEditorMenu: function(action) {
+         callbackObjectEditorMenu: function (action) {
             switch (action) {
                case "rename":
                   _logic.rename();
@@ -682,11 +682,11 @@ module.exports = class AB_Work_Object_List extends ABComponent {
           * returns which ABObject is currently selected.
           * @return {ABObject}  or {null} if nothing selected.
           */
-         getSelectedObject: function() {
+         getSelectedObject: function () {
             return $$(ids.list).getSelectedItem();
          },
 
-         addNewObject: function(selectNew, callback) {
+         addNewObject: function (selectNew, callback) {
             _logic.clickNewObject(selectNew, callback);
          }
       });

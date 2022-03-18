@@ -16,10 +16,10 @@ export default function (AB) {
    //     /* leave empty for default settings */
    //  );
 
-    const UIClass = UI_Class(AB);
-    var L = UIClass.L();
+   const UIClass = UI_Class(AB);
+   var L = UIClass.L();
 
-    class UI_Work_Interface extends UIClass {
+   class UI_Work_Interface extends UIClass {
 
       constructor() {
          super("ab_work_interface");

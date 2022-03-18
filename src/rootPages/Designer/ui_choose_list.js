@@ -556,9 +556,8 @@ export default function (AB) {
          var numWarnings = (obj.warningsAll() || []).length;
          return `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>
-      <div class='ab-app-list-name'>${common.iconAdmin(obj)}${
-            obj.label ?? ""
-         }(${numWarnings})</div>
+      <div class='ab-app-list-name'>${common.iconAdmin(obj)}${obj.label ?? ""
+            }(${numWarnings})</div>
       <div class='ab-app-list-description'>${obj.description ?? ""}</div>
    </div>
    <div class='ab-app-list-edit'>
