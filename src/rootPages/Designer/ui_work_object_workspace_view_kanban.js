@@ -11,15 +11,16 @@
 import UI_Class from "./ui_class";
 import FViewKanbanProperties from "./properties/workspaceViews/ABViewKanban";
 
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_view_kanban";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   const ViewKanbanProperties = FViewKanbanProperties(AB);
+   const ViewKanbanProperties = FViewKanbanProperties(AB, `${ibase}_prop`);
 
    class UI_Work_Object_Workspace_View_Kanban extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_view_kanban");
+      constructor(base) {
+         super(base);
       }
 
       // Our webix UI definition:
@@ -256,5 +257,5 @@ export default function (AB) {
       }
       */
    }
-   return new UI_Work_Object_Workspace_View_Kanban();
+   return new UI_Work_Object_Workspace_View_Kanban(ibase);
 }

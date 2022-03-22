@@ -1,17 +1,22 @@
 import UI_Class from "./ui_class";
 
 import FWorkspaceDesign from "./ui_work_query_workspace_design";
+import FWorkspaceDisplay from "./ui_work_object_workspace";
 
 export default function (AB, init_settings) {
    const UIClass = UI_Class(AB);
    const uiConfig = AB.Config.uiSettings();
    var L = UIClass.L();
 
+   const iBase = "ab_work_query_workspace";
    const QueryDesignComponent = FWorkspaceDesign(AB);
+   const QueryDisplayComponent = FWorkspaceDisplay(AB, `${iBase}_display`, {
+      isReadOnly: true,
+   });
 
    class UI_Work_Query_Workspace extends UIClass {
       constructor(settings = {}) {
-         super("ab_work_query_workspace", {
+         super(iBase, {
             multiview: "",
             toolbar: "",
             modeButton: "",
@@ -121,7 +126,7 @@ export default function (AB, init_settings) {
                         view: "multiview",
                         cells: [
                            QueryDesignComponent.ui(),
-                           // DataTable.ui()
+                           QueryDisplayComponent.ui(),
                         ],
                      },
                      // {
@@ -144,7 +149,10 @@ export default function (AB, init_settings) {
       init(AB) {
          this.AB = AB;
 
-         return Promise.all([QueryDesignComponent.init(AB)]);
+         return Promise.all([
+            QueryDesignComponent.init(AB),
+            QueryDisplayComponent.init(AB),
+         ]);
       }
 
       // applicationLoad(app) {
@@ -166,8 +174,8 @@ export default function (AB, init_settings) {
             // $$(ids.loadAllButton).show();
             // $$(ids.loadAllButton).refresh();
 
-            DataTable.show();
-            DataTable.populateObjectWorkspace(this.CurrentQuery);
+            QueryDisplayComponent.show();
+            QueryDisplayComponent.populateObjectWorkspace(this.CurrentQueryID);
 
             // $$(ids.multiview).setValue(DataTable.ui.id);
          }
@@ -190,6 +198,7 @@ export default function (AB, init_settings) {
 
          this.clearWorkspace();
          QueryDesignComponent.applicationLoad(application);
+         QueryDisplayComponent.applicationLoad(application);
       }
 
       clearWorkspace() {
@@ -198,12 +207,14 @@ export default function (AB, init_settings) {
       }
 
       loadAll() {
-         DataTable.loadAll();
+         QueryDisplayComponent.loadAll();
       }
 
       queryLoad(query) {
-         // DataTable?.queryLoad(query);
+         super.queryLoad(query);
+
          QueryDesignComponent.queryLoad(query);
+         QueryDisplayComponent.queryLoad(query);
 
          if (!query) {
             this.clearWorkspace();
@@ -218,7 +229,7 @@ export default function (AB, init_settings) {
        * Set the tabs to the default state when a new query is selected.
        */
       resetTabs() {
-         $$(this.ids.toolbar).setValue(this.ids.design);
+         $$(this.ids.toolbar)?.setValue?.(this.ids.design);
       }
    }
 

@@ -28,6 +28,10 @@ export default function (AB) {
             this.CurrentObjectID = null;
             // {string}
             // the ABObject.id of the object we are working with.
+
+            this.CurrentQueryID = null;
+            // {string}
+            // the ABObjectQuery.id of the query we are working with.
          }
 
          static L() {
@@ -58,13 +62,30 @@ export default function (AB) {
             this.CurrentObjectID = obj?.id;
          }
 
+         queryLoad(query) {
+            this.CurrentQueryID = query?.id;
+         }
+
          /**
           * @method CurrentObject()
           * A helper to return the current ABObject we are working with.
           * @return {ABObject}
           */
          get CurrentObject() {
-            return this.AB.objectByID(this.CurrentObjectID);
+            let obj = this.AB.objectByID(this.CurrentObjectID);
+            if (!obj) {
+               obj = this.AB.queryByID(this.CurrentObjectID);
+            }
+            return obj;
+         }
+
+         /**
+          * @method CurrentQuery()
+          * A helper to return the current ABObjectQuery we are working with.
+          * @return {ABObjectQuery}
+          */
+         get CurrentQuery() {
+            return this.AB.queryByID(this.CurrentQueryID);
          }
       };
    }

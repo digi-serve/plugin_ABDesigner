@@ -29,16 +29,17 @@ import FWorkspaceKanban from "./ui_work_object_workspace_view_kanban";
 
 import FWorkspaceTrack from "./ui_work_object_workspace_popupTrack";
 
-export default function (AB, init_settings) {
+export default function (AB, ibase, init_settings) {
+   ibase = ibase || "abd_work_object_workspace";
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   var Datatable = FWorkspaceDatatable(AB);
-   var Gantt = FWorkspaceGantt(AB);
-   var Kanban = FWorkspaceKanban(AB);
+   var Datatable = FWorkspaceDatatable(AB, `${ibase}_view_grid`, init_settings);
+   var Gantt = FWorkspaceGantt(AB, `${ibase}_view_gantt`);
+   var Kanban = FWorkspaceKanban(AB, `${ibase}_view_kanban`);
 
-   var Track = FWorkspaceTrack(AB);
+   var Track = FWorkspaceTrack(AB, `${ibase}_track`);
 
    class UIWorkObjectWorkspace extends UIClass {
       /**
@@ -56,8 +57,8 @@ export default function (AB, init_settings) {
        * 								isFieldAddable: bool
        * 							}
        */
-      constructor(settings = {}) {
-         super("abd_work_object_workspace", {
+      constructor(base, settings = {}) {
+         super(base, {
             // component: `${base}_component`,
 
             buttonAddField: "",
@@ -97,10 +98,14 @@ export default function (AB, init_settings) {
          // settings.isEditable = settings.isEditable ?? true;
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
+         settings.isReadOnly = settings.isReadOnly ?? false;
+         // settings.isLabelEditable = settings.isLabelEditable ?? true;
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
-         // this.settings = settings;
+         this.settings = settings;
 
-         this.workspaceViews = FWorkspaceViews(AB);
+         this.workspaceViews = FWorkspaceViews(AB, `${base}_views`, {
+            isReadOnly: this.settings.isReadOnly,
+         });
 
          this.hashViews = {};
          // {hash}  { view.id : webix_component }
@@ -149,11 +154,12 @@ export default function (AB, init_settings) {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
-         this.PopupDefineLabelComponent = new FPopupDefineLabel(AB);
-         this.PopupDefineLabelComponent.on("changed", () => {
-            this.callbackDefineLabel();
-         });
-
+         if (!this.settings.isReadOnly) {
+            this.PopupDefineLabelComponent = new FPopupDefineLabel(AB);
+            this.PopupDefineLabelComponent.on("changed", () => {
+               this.callbackDefineLabel();
+            });
+         }
          // var PopupFilterDataTableComponent = new ABPopupFilterDataTable(
          //    App,
          //    idBase
@@ -170,8 +176,12 @@ export default function (AB, init_settings) {
          });
 
          // var PopupMassUpdateComponent = new ABPopupMassUpdate(App, idBase);
-
-         this.PopupNewDataFieldComponent = FPopupNewDataField(AB);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent = FPopupNewDataField(
+               AB,
+               `${base}_popupNewDataField`
+            );
+         }
 
          this.PopupSortFieldComponent = FPopupSortField(AB);
          this.PopupSortFieldComponent.on("changed", (settings) => {
@@ -185,10 +195,16 @@ export default function (AB, init_settings) {
          //    this.populateObjectWorkspace(this.CurrentObject);
          // });
 
-         this.PopupViewSettingsComponent = FPopupViewSettings(AB);
-         this.PopupViewSettingsComponent.on("new.field", (key) => {
-            this.PopupNewDataFieldComponent.show(null, key);
-         });
+         this.PopupViewSettingsComponent = FPopupViewSettings(
+            AB,
+            `${base}_popupAddView`,
+            { isReadOnly: this.settings.isReadOnly }
+         );
+         if (!this.settings.isReadOnly) {
+            this.PopupViewSettingsComponent.on("new.field", (key) => {
+               this.PopupNewDataFieldComponent.show(null, key);
+            });
+         }
 
          // create ABViewDataCollection
          this.CurrentDatacollection = null;
@@ -297,7 +313,7 @@ export default function (AB, init_settings) {
                         icon: "fa fa-plus",
                         css: "webix_transparent",
                         type: "icon",
-                        hidden: false, // !this.settings.isFieldAddable,
+                        hidden: this.settings.isReadOnly,
                         // minWidth: 115,
                         // autowidth: true,
                         click: function () {
@@ -372,8 +388,7 @@ export default function (AB, init_settings) {
                         icon: "fa fa-crosshairs",
                         css: "webix_transparent",
                         type: "icon",
-                        // minWidth: 75,
-                        // autowidth: true,
+                        hidden: this.settings.isReadOnly,
                         click: function () {
                            _logic.toolbarDefineLabel(this.$view);
                         },
@@ -398,6 +413,7 @@ export default function (AB, init_settings) {
                         css: "webix_transparent",
                         type: "icon",
                         // minWidth: 80,
+                        hidden: this.settings.isReadOnly,
                         click: function () {
                            _logic.toolbarButtonImport();
                         },
@@ -453,6 +469,7 @@ export default function (AB, init_settings) {
                },
                {
                   css: { "background-color": "#747d84 !important" },
+                  hidden: this.settings.isReadOnly,
                   cols: [
                      {
                         view: view,
@@ -573,6 +590,7 @@ export default function (AB, init_settings) {
                               id: ids.buttonRowNew,
                               css: "webix_primary",
                               value: L("Add new row"),
+                              hidden: this.settings.isReadOnly,
                               click: () => {
                                  this.rowAdd();
                               },
@@ -618,7 +636,9 @@ export default function (AB, init_settings) {
 
          allInits.push(this.PopupHeaderEditMenu.init(AB));
 
-         allInits.push(this.PopupDefineLabelComponent.init(AB));
+         if (!this.settings.isReadOnly) {
+            allInits.push(this.PopupDefineLabelComponent.init(AB));
+         }
 
          // PopupFilterDataTableComponent.init({
          //    onChange: _logic.callbackFilterDataTable, // be notified when there is a change in the filters
@@ -637,11 +657,13 @@ export default function (AB, init_settings) {
          //       onSave: _logic.callbackAddFields, // be notified when a new Field is created & saved
          //    });
          // }
-         allInits.push(this.PopupNewDataFieldComponent.init(AB));
-         this.PopupNewDataFieldComponent.on("save", (...params) => {
-            this.callbackAddFields(...params);
-            this.PopupViewSettingsComponent.emit("field.added", params[0]);
-         });
+         if (!this.settings.isReadOnly) {
+            allInits.push(this.PopupNewDataFieldComponent.init(AB));
+            this.PopupNewDataFieldComponent.on("save", (...params) => {
+               this.callbackAddFields(...params);
+               this.PopupViewSettingsComponent.emit("field.added", params[0]);
+            });
+         }
 
          // // ?? what is this for ??
          // // var fieldList = Datatable.getFieldList();
@@ -675,7 +697,9 @@ export default function (AB, init_settings) {
        */
       applicationLoad(application) {
          super.applicationLoad(application);
-         this.PopupNewDataFieldComponent.applicationLoad(application);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent.applicationLoad(application);
+         }
 
          // this.CurrentDatacollection.application = CurrentApplication;
       }
@@ -869,7 +893,9 @@ export default function (AB, init_settings) {
                break;
             case "edit":
                // pass control on to our Popup:
-               this.PopupNewDataFieldComponent.show(field);
+               if (!this.settings.isReadOnly) {
+                  this.PopupNewDataFieldComponent.show(field);
+               }
                break;
 
             case "delete":
@@ -1138,7 +1164,7 @@ export default function (AB, init_settings) {
        * Show this component.
        */
       show() {
-         $$(ids.component).show();
+         $$(this.ids.component).show();
       }
 
       /**
@@ -1230,7 +1256,7 @@ export default function (AB, init_settings) {
          $$(this.ids.selectedObject).show();
 
          this.CurrentObjectID = objectID;
-         var object = this.AB.objectByID(objectID);
+         var object = this.CurrentObject;
 
          // get current view from object
          this.workspaceViews.objectLoad(object);
@@ -1239,35 +1265,16 @@ export default function (AB, init_settings) {
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid | ABViewKanBan | ABViewGantt}
 
-         // // get defined views
-         // // update the view picker in the toolbar
-
-         // // get toolbar config
-         // // update toolbar with approved tools
-
-         // /// still working with DataTable
-         // // initial data
-         // _logic.loadData();
-
-         // // the replicated tables are read only
-         // if (this.CurrentObject.isReadOnly) {
-         //    DataTable.readonly();
-
-         //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).disable();
-         // } else {
-         //    DataTable.editable();
-
-         //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).enable();
-         // }
-
          this.CurrentDatacollection.datasource = object;
 
          Datatable.objectLoad(object);
          Kanban.objectLoad(object);
          Gantt.objectLoad(object);
 
-         this.PopupNewDataFieldComponent.objectLoad(object);
-         this.PopupDefineLabelComponent.objectLoad(object);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent.objectLoad(object);
+            this.PopupDefineLabelComponent.objectLoad(object);
+         }
          // PopupFilterDataTableComponent.objectLoad(object);
          this.PopupFrozenColumnsComponent.objectLoad(object);
 
@@ -1334,9 +1341,14 @@ export default function (AB, init_settings) {
          $$(this.ids.noSelection).show(false, false);
       }
 
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
+      queryLoad(query) {
+         // attempt to use a query as an object
+         this.objectLoad(query);
       }
+
+      // get CurrentObject() {
+      //    return this.AB.objectByID(this.CurrentObjectID);
+      // }
 
       /**
        * @function loadAll
@@ -1551,5 +1563,5 @@ export default function (AB, init_settings) {
       }
    }
 
-   return new UIWorkObjectWorkspace(init_settings);
+   return new UIWorkObjectWorkspace(ibase, init_settings);
 }

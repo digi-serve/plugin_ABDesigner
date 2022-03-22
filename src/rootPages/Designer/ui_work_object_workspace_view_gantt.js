@@ -11,15 +11,16 @@
 import UI_Class from "./ui_class";
 import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
 
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_view_gantt";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    const ViewGanttProperties = FViewGanttProperties(AB);
 
    class UI_Work_Object_Workspace_View_Gantt extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_view_gantt");
+      constructor(base) {
+         super(base);
       }
 
       // Our webix UI definition:
@@ -215,5 +216,5 @@ export default function (AB) {
       }
       */
    }
-   return new UI_Work_Object_Workspace_View_Gantt();
+   return new UI_Work_Object_Workspace_View_Gantt(ibase);
 }
