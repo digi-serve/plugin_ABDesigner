@@ -19226,7 +19226,7 @@ __webpack_require__.r(__webpack_exports__);
                   on: {
                      onItemClick: (/* id, e, node */) => {
                         this.clickAddNewSort();
-                        this.triggerOnChange();
+                        // this.triggerOnChange();
                      },
                   },
                },
