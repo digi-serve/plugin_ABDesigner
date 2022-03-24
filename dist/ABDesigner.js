@@ -9634,7 +9634,14 @@ __webpack_require__.r(__webpack_exports__);
             var messages = this.CurrentApplication.warnings().map(
                (w) => w.message
             );
-            $$(this.ids.warnings).setValue(messages.join("\n"));
+            let $warnings = $$(this.ids.warnings);
+            if (messages.length) {
+               $warnings.setValue(messages.join("\n"));
+               $warnings.show();
+            } else {
+               $warnings.setValue("");
+               $warnings.hide();
+            }
 
             // populate access manager ui
             var $accessManager = $$(this.ids.accessManager);
@@ -11866,21 +11873,32 @@ __webpack_require__.r(__webpack_exports__);
          // Keep track of the currently selected Tab Item (Object, Query, etc)
       }
 
-      /**
-       * @method ui()
-       * Return the webix definition of the UI we are managing.
-       * @return {json}
-       */
-      ui() {
+      scanTopic(app, key) {
+         let countObjects = 0;
+         let warnObjects = "";
+         if (app) {
+            app[key]().forEach((o) => {
+               countObjects += (o.warningsAll() || []).length;
+            });
+         }
+         if (countObjects) {
+            warnObjects = ` (${countObjects})`;
+         }
+         return warnObjects;
+      }
+      sidebarItems(app) {
+         let warnObjects = this.scanTopic(app, "objectsIncluded");
+         let warnQueries = this.scanTopic(app, "queriesIncluded");
+
          var sidebarItems = [
             {
                id: this.ids.tab_object,
-               value: L("Objects"),
+               value: `${L("Objects")}${warnObjects}`,
                icon: "fa fa-fw fa-database",
             },
             {
                id: this.ids.tab_query,
-               value: L("Queries"),
+               value: `${L("Queries")}${warnQueries}`,
                icon: "fa fa-fw fa-filter",
             },
             {
@@ -11899,6 +11917,17 @@ __webpack_require__.r(__webpack_exports__);
                icon: "fa fa-fw fa-id-card-o",
             },
          ];
+
+         return sidebarItems;
+      }
+
+      /**
+       * @method ui()
+       * Return the webix definition of the UI we are managing.
+       * @return {json}
+       */
+      ui() {
+         var sidebarItems = this.sidebarItems();
 
          var expandMenu = (this.expandMenu = {
             id: this.ids.expandMenu,
@@ -11985,9 +12014,9 @@ __webpack_require__.r(__webpack_exports__);
                {
                   cols: [
                      {
+                        id: this.ids.tabbar,
                         css: "webix_dark",
                         view: "sidebar",
-                        id: this.ids.tabbar,
                         width: 160,
                         data: sidebarItems.concat(collapseMenu),
                         on: {
@@ -12114,6 +12143,11 @@ __webpack_require__.r(__webpack_exports__);
          AppDataCollectionWorkspace.applicationLoad(application);
          AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
+
+         let $tabbar = $$(this.ids.tabbar);
+         let sidebarItems = this.sidebarItems(application);
+         $tabbar?.define("data", sidebarItems);
+         $tabbar?.refresh();
 
          this.show();
       }
@@ -15205,19 +15239,28 @@ __webpack_require__.r(__webpack_exports__);
          // The Kanban Object View.
          this.hashViews["kanban"] = Kanban;
 
-         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
+         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__["default"](
+            AB,
+            `${base}_customIndex`
+         );
          this.PopupCustomIndex.on("changed", () => {
             this.refreshIndexes();
          });
 
          // // Various Popups on our page:
-         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__["default"])(AB);
+         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__["default"])(
+            AB,
+            `${base}_headerEditMenu`
+         );
          this.PopupHeaderEditMenu.on("click", (action, field, node) => {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
          if (!this.settings.isReadOnly) {
-            this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
+            this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__["default"](
+               AB,
+               `${base}_defineLabel`
+            );
             this.PopupDefineLabelComponent.on("changed", () => {
                this.callbackDefineLabel();
             });
@@ -15227,12 +15270,18 @@ __webpack_require__.r(__webpack_exports__);
          //    idBase
          // );
 
-         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__["default"](AB);
+         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__["default"](
+            AB,
+            `${base}_frozenFields`
+         );
          this.PopupFrozenColumnsComponent.on("changed", (settings) => {
             this.callbackFrozenColumns(settings);
          });
 
-         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__["default"])(AB);
+         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__["default"])(
+            AB,
+            `${base}_hideFields`
+         );
          this.PopupHideFieldComponent.on("changed", (settings) => {
             this.callbackFieldsVisible(settings);
          });
@@ -15245,14 +15294,23 @@ __webpack_require__.r(__webpack_exports__);
             );
          }
 
-         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__["default"])(AB);
+         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__["default"])(
+            AB,
+            `${base}_sortFields`
+         );
          this.PopupSortFieldComponent.on("changed", (settings) => {
             this.callbackSortFields(settings);
          });
 
-         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__["default"](AB);
+         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__["default"](
+            AB,
+            `${base}_export`
+         );
 
-         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__["default"](AB);
+         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__["default"](
+            AB,
+            `${base}_import`
+         );
          // this.PopupImportObjectComponent.on("done", () => {
          //    this.populateObjectWorkspace(this.CurrentObject);
          // });
@@ -16669,7 +16727,8 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupIndex";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
@@ -16680,8 +16739,8 @@ __webpack_require__.r(__webpack_exports__);
        * @param {object} App
        * @param {string} idBase
        */
-      constructor() {
-         super("ui_work_object_workspace_popupIndex", {
+      constructor(base) {
+         super(base, {
             // component: idBase,
             popup: "",
             form: "",
@@ -16914,7 +16973,7 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             this.AB.notify.developer(err, {
-               context: "ui_work_object_workspace_popupIndex:save()",
+               context: `${this.ids.component}:save()`,
                message,
                vals,
             });
@@ -16963,8 +17022,7 @@ __webpack_require__.r(__webpack_exports__);
                      this.close();
                   } catch (err) {
                      this.AB.notify.developer(err, {
-                        context:
-                           "ui_work_object_workspace_popupIndex:removeIndex()",
+                        context: `${this.ids.component}:removeIndex()`,
                         ABIndex: this.CurrentIndex.toObj(),
                      });
                      this.ready();
@@ -16975,7 +17033,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupIndex();
+   return new UI_Work_Object_Workspace_PopupIndex(ibase);
 }
 
 
@@ -17000,13 +17058,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupDefineLabel";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupDefineLabel extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupDefineLabel", {
+      constructor(base) {
+         super(base, {
             // component: idBase,
             format: "",
             list: "",
@@ -17243,7 +17302,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupDefineLabel();
+   return new UI_Work_Object_Workspace_PopupDefineLabel(ibase);
 }
 
 
@@ -17268,13 +17327,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupExport";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    // var L = UIClass.L();
 
    class UI_Work_Object_PopupExport extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupExport", {
+      constructor(base) {
+         super(base, {
             popupExport: "",
             list: "",
          });
@@ -17465,7 +17525,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_PopupExport();
+   return new UI_Work_Object_PopupExport(ibase);
 }
 
 
@@ -17491,14 +17551,15 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupFrozenColumns";
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupFrozenColumns extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupFrozenColumns", {
+      constructor(base) {
+         super(base, {
             list: "",
          });
 
@@ -17746,7 +17807,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupFrozenColumns();
+   return new UI_Work_Object_Workspace_PopupFrozenColumns(ibase);
 }
 
 
@@ -17774,14 +17835,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupHeaderEditMenu";
    var ListClass = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UIWorkObjectWorkspacePopupHeaderEditMenu extends ListClass {
-      constructor() {
-         super("ui_work_object_workspace_popupHeaderEditMenu");
+      constructor(base) {
+         super(base);
 
          // overwrite the default common menu with our column Header
          // options.
@@ -17845,7 +17907,7 @@ __webpack_require__.r(__webpack_exports__);
          this.emit("click", command, this.field, this.$node);
       }
    }
-   return new UIWorkObjectWorkspacePopupHeaderEditMenu();
+   return new UIWorkObjectWorkspacePopupHeaderEditMenu(ibase);
 }
 
 
@@ -17870,13 +17932,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupHideFields";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupHideFields extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupHideFields", {
+      constructor(base) {
+         super(base, {
             list: "",
             buttonHide: "",
             buttonShow: "",
@@ -18224,7 +18287,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupHideFields();
+   return new UI_Work_Object_Workspace_PopupHideFields(ibase);
 }
 
 
@@ -18252,14 +18315,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupImport";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    // var L = UIClass.L();
    const ViewProperties = (0,_properties_views_ABViewCSVImporter__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Object_Workspace_PopupImport extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupImport");
+      constructor(base) {
+         super(base);
 
          this.popup = null;
          // {ABViewCSVImporter}
@@ -18302,7 +18366,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupImport();
+   return new UI_Work_Object_Workspace_PopupImport(ibase);
 }
 
 
@@ -19219,13 +19283,14 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupSortFields";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupSortFields extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupSortFields", {
+      constructor(base) {
+         super(base, {
             list: "",
             form: "",
          });
@@ -19716,7 +19781,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupSortFields();
+   return new UI_Work_Object_Workspace_PopupSortFields(ibase);
 }
 
 
@@ -21437,9 +21502,9 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       select(process) {
-         this.CurrentProcessID = process.id;
+         this.CurrentProcessID = process?.id;
 
-         if (process == null) this.ProcessWorkspace?.clearWorkspace();
+         if (!process) this.ProcessWorkspace?.clearWorkspace();
          else this.ProcessWorkspace?.populateWorkspace(process);
       }
    }
@@ -21744,7 +21809,8 @@ __webpack_require__.r(__webpack_exports__);
                            autowidth: true,
                            type: "form",
                            click: () => {
-                              return this.save();
+                              let vals = $$(this.ids.form).getValues();
+                              return this.save(vals);
                            },
                         },
                      ],
@@ -21788,9 +21854,9 @@ __webpack_require__.r(__webpack_exports__);
 
          try {
             // create a new process:
-            let newProcess = await this.CurrentApplication.processCreate(
-               values
-            );
+            let newProcess = await this.AB.processNew(values);
+            await newProcess.save();
+            await this.CurrentApplication.processInsert(newProcess);
             this.emit("save", newProcess);
             this.clear();
             this.hide();
@@ -23026,6 +23092,7 @@ __webpack_require__.r(__webpack_exports__);
             noSelection: "",
             run: "",
             design: "",
+            warnings: "",
          });
 
          this.settings = settings;
@@ -23082,6 +23149,11 @@ __webpack_require__.r(__webpack_exports__);
                   // type: "line",
                   id: ids.component,
                   rows: [
+                     {
+                        id: ids.warnings,
+                        view: "label",
+                        label: "",
+                     },
                      {
                         id: ids.toolbar,
                         view: "tabbar",
@@ -23215,6 +23287,16 @@ __webpack_require__.r(__webpack_exports__);
 
       queryLoad(query) {
          super.queryLoad(query);
+
+         var messages = (query?.warnings() ?? []).map((w) => w.message);
+         let $warnings = $$(this.ids.warnings);
+         if (messages.length) {
+            $warnings.setValue(messages.join("\n"));
+            $warnings.show();
+         } else {
+            $warnings.setValue("");
+            $warnings.hide();
+         }
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);
