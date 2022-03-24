@@ -151,11 +151,9 @@ export default function (AB, init_settings) {
                                     },
                                  ],
                               },
+                              { view: "resizer", borderless: true },
                               {
-                                 width: 20,
-                              },
-                              {
-                                 gravity: 2,
+                                 gravity: 3,
                                  rows: [
                                     {
                                        view: "label",
@@ -166,9 +164,11 @@ export default function (AB, init_settings) {
                                     {
                                        view: "tabview",
                                        id: ids.tabObjects,
-                                       tabMinWidth: 180,
                                        tabbar: {
-                                          bottomOffset: 1,
+                                          tabMinWidth: 240,
+                                          css: "webix_dark",
+                                          type: "bottom",
+                                          bottomOffset: 0,
                                        },
                                        cells: [
                                           {}, // require

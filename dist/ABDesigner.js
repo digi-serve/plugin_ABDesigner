@@ -7925,7 +7925,7 @@ var defaultValues = {
                      {
                         id: ids.title,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Title"
                         )}`,
                         placeholder: L("Select a string field"),
@@ -7947,7 +7947,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.title;
                            this.emit("new.field", ABFieldString.defaults().key);
@@ -7960,7 +7960,7 @@ var defaultValues = {
                      {
                         id: ids.startDate,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Start Date"
                         )}`,
                         placeholder: L("Select a date field"),
@@ -7983,7 +7983,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.startDate;
                            this.emit("new.field", ABFieldDate.defaults().key);
@@ -7996,7 +7996,7 @@ var defaultValues = {
                      {
                         id: ids.endDate,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "End Date"
                         )}`,
                         placeholder: L("Select a date field"),
@@ -8018,7 +8018,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.endDate;
                            this.emit("new.field", ABFieldDate.defaults().key);
@@ -8031,7 +8031,7 @@ var defaultValues = {
                      {
                         id: ids.duration,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-hashtag'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Duration"
                         )}`,
                         placeholder: L("Select a number field"),
@@ -8053,7 +8053,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.duration;
                            this.emit("new.field", ABFieldNumber.defaults().key);
@@ -8066,7 +8066,7 @@ var defaultValues = {
                      {
                         id: ids.progress,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-hashtag'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Progress"
                         )}`,
                         placeholder: L("Select a number field"),
@@ -8089,7 +8089,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.progress;
                            this.emit("new.field", ABFieldNumber.defaults().key);
@@ -8102,7 +8102,7 @@ var defaultValues = {
                      {
                         id: ids.notes,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-align-right'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-align-right'></span> ${L(
                            "Notes"
                         )}`,
                         placeholder: L("Select a string field"),
@@ -8125,7 +8125,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.notes;
                            this.emit(
@@ -8515,7 +8515,7 @@ var defaultValues = {
                      {
                         id: ids.vGroupInput,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-columns'></span> ${L(
+                        label: `<span style="opacity: 0.6;" class='webix_icon fa fa-columns'></span> ${L(
                            "Vertical Grouping"
                         )}`,
                         placeholder: L("Select a field"),
@@ -8537,7 +8537,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.vGroupInput;
                            this.emit("new.field", ABFieldList.defaults().key);
@@ -8550,7 +8550,7 @@ var defaultValues = {
                      {
                         id: ids.hGroupInput,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-list'></span> ${L(
+                        label: `<span style="opacity: 0.6;"class='webix_icon fa fa-list'></span> ${L(
                            "Horizontal Grouping"
                         )}`,
                         placeholder: L("Select a field"),
@@ -8579,7 +8579,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.hGroupInput;
                            this.emit("new.field", ABFieldList.defaults().key);
@@ -8591,7 +8591,7 @@ var defaultValues = {
                   cols: [
                      {
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-user-circle'></span> ${L(
+                        label: `<span style="opacity: 0.6;" class='webix_icon fa fa-user-circle'></span> ${L(
                            "Card Owner"
                         )}`,
                         placeholder: L("Select a user field"),
@@ -8606,7 +8606,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.ownerInput;
                            this.emit(
@@ -10849,7 +10849,7 @@ __webpack_require__.r(__webpack_exports__);
             // we can reuse some of the Object ones:
             confirmDeleteMessage: "Do you want to delete <b>{0}</b>?",
             listSearch: "Search",
-            listSetting: "Setting",
+            listSetting: "Settings",
             listSort: "Sort",
             listAsc: "A -> Z",
             listDesc: "Z -> A",
@@ -15120,15 +15120,20 @@ __webpack_require__.r(__webpack_exports__);
 
             buttonAddField: "",
             buttonDeleteSelected: "",
+            buttonDeleteSelectedSpacer: "",
             buttonExport: "",
             buttonImport: "",
             buttonFieldsVisible: "",
+            buttonFieldsVisibleSpacer: "",
             buttonFilter: "",
             buttonFrozen: "",
+            buttonFrozenSpacer: "",
             buttonLabel: "",
             buttonMassUpdate: "",
+            buttonMassUpdateSpacer: "",
             buttonRowNew: "",
             buttonSort: "",
+            buttonSortSpacer: "",
 
             listIndex: "",
             buttonIndex: "",
@@ -15289,9 +15294,9 @@ __webpack_require__.r(__webpack_exports__);
             view: "button",
             type: "icon",
             autowidth: true,
-            css: "webix_primary",
+            css: "webix_transparent",
             label: L("New view"),
-            icon: "fa fa-plus",
+            icon: "fa fa-plus-circle",
             align: "center",
             click: () => {
                this.PopupViewSettingsComponent.show();
@@ -15377,7 +15382,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarAddFields(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      {
                         view: view,
                         id: ids.buttonFieldsVisible,
@@ -15392,7 +15397,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarFieldsVisible(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonFieldsVisibleSpacer },
                      {
                         view: view,
                         id: ids.buttonFilter,
@@ -15422,7 +15427,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarSort(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonSortSpacer },
                      {
                         view: view,
                         id: ids.buttonFrozen,
@@ -15437,7 +15442,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarFrozen(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonFrozenSpacer },
                      {
                         view: view,
                         id: ids.buttonLabel,
@@ -15450,7 +15455,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarDefineLabel(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      // {
                      //  view: view,
                      //  label: L("Permission"),
@@ -15475,7 +15480,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarButtonImport();
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      {
                         view: view,
                         id: ids.buttonExport,
@@ -15505,7 +15510,11 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarMassUpdate(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     {
+                        responsive: "hide",
+                        hidden: true,
+                        id: ids.buttonMassUpdateSpacer,
+                     },
                      {
                         view: view,
                         id: ids.buttonDeleteSelected,
@@ -15521,7 +15530,11 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarDeleteSelected(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     {
+                        responsive: "hide",
+                        hidden: true,
+                        id: ids.buttonDeleteSelectedSpacer,
+                     },
                   ],
                },
                {
@@ -15555,6 +15568,7 @@ __webpack_require__.r(__webpack_exports__);
          return {
             view: "multiview",
             id: ids.component,
+            borderless: true,
             rows: [
                {
                   id: ids.error,
@@ -16079,7 +16093,9 @@ __webpack_require__.r(__webpack_exports__);
       enableUpdateDelete() {
          var ids = this.ids;
          $$(ids.buttonMassUpdate).show();
+         $$(ids.buttonMassUpdateSpacer).show();
          $$(ids.buttonDeleteSelected).show();
+         $$(ids.buttonDeleteSelectedSpacer).show();
       }
 
       /**
@@ -16091,7 +16107,9 @@ __webpack_require__.r(__webpack_exports__);
       disableUpdateDelete() {
          var ids = this.ids;
          $$(ids.buttonMassUpdate).hide();
+         $$(ids.buttonMassUpdateSpacer).hide();
          $$(ids.buttonDeleteSelected).hide();
+         $$(ids.buttonDeleteSelectedSpacer).hide();
       }
 
       /**
@@ -16527,11 +16545,17 @@ __webpack_require__.r(__webpack_exports__);
                $$(ids.buttonFieldsVisible).show();
                $$(ids.buttonFrozen).show();
                $$(ids.buttonSort).show();
+               $$(ids.buttonFieldsVisibleSpacer).show();
+               $$(ids.buttonFrozenSpacer).show();
+               $$(ids.buttonSortSpacer).show();
                break;
             case "kanban":
                $$(ids.buttonFieldsVisible).hide();
                $$(ids.buttonFrozen).hide();
                $$(ids.buttonSort).hide();
+               $$(ids.buttonFieldsVisibleSpacer).hide();
+               $$(ids.buttonFrozenSpacer).hide();
+               $$(ids.buttonSortSpacer).hide();
                break;
          }
 
@@ -20073,8 +20097,8 @@ __webpack_require__.r(__webpack_exports__);
          return {
             view: "window",
             id: ids.component,
-            height: 400,
             width: 400,
+            resize: true,
             head: {
                view: "toolbar",
                css: "webix_dark",
@@ -23099,6 +23123,7 @@ __webpack_require__.r(__webpack_exports__);
                            },
                         },
                      },
+                     { height: 10 },
                      {
                         id: ids.multiview,
                         view: "multiview",
@@ -23382,11 +23407,9 @@ __webpack_require__.r(__webpack_exports__);
                                     },
                                  ],
                               },
+                              { view: "resizer", borderless: true },
                               {
-                                 width: 20,
-                              },
-                              {
-                                 gravity: 2,
+                                 gravity: 3,
                                  rows: [
                                     {
                                        view: "label",
@@ -23397,9 +23420,11 @@ __webpack_require__.r(__webpack_exports__);
                                     {
                                        view: "tabview",
                                        id: ids.tabObjects,
-                                       tabMinWidth: 180,
                                        tabbar: {
-                                          bottomOffset: 1,
+                                          tabMinWidth: 240,
+                                          css: "webix_dark",
+                                          type: "bottom",
+                                          bottomOffset: 0,
                                        },
                                        cells: [
                                           {}, // require

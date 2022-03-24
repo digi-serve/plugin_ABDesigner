@@ -282,7 +282,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.title,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Title"
                         )}`,
                         placeholder: L("Select a string field"),
@@ -304,7 +304,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.title;
                            this.emit("new.field", ABFieldString.defaults().key);
@@ -317,7 +317,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.startDate,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Start Date"
                         )}`,
                         placeholder: L("Select a date field"),
@@ -340,7 +340,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.startDate;
                            this.emit("new.field", ABFieldDate.defaults().key);
@@ -353,7 +353,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.endDate,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "End Date"
                         )}`,
                         placeholder: L("Select a date field"),
@@ -375,7 +375,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.endDate;
                            this.emit("new.field", ABFieldDate.defaults().key);
@@ -388,7 +388,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.duration,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-hashtag'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Duration"
                         )}`,
                         placeholder: L("Select a number field"),
@@ -410,7 +410,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.duration;
                            this.emit("new.field", ABFieldNumber.defaults().key);
@@ -423,7 +423,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.progress,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-hashtag'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Progress"
                         )}`,
                         placeholder: L("Select a number field"),
@@ -446,7 +446,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.progress;
                            this.emit("new.field", ABFieldNumber.defaults().key);
@@ -459,7 +459,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.notes,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-align-right'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-align-right'></span> ${L(
                            "Notes"
                         )}`,
                         placeholder: L("Select a string field"),
@@ -482,7 +482,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.notes;
                            this.emit(

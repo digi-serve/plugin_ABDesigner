@@ -121,6 +121,7 @@ export default function (AB, init_settings) {
                            },
                         },
                      },
+                     { height: 10 },
                      {
                         id: ids.multiview,
                         view: "multiview",

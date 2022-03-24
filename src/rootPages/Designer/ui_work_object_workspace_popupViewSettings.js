@@ -157,8 +157,8 @@ export default function (AB, ibase, isettings) {
          return {
             view: "window",
             id: ids.component,
-            height: 400,
             width: 400,
+            resize: true,
             head: {
                view: "toolbar",
                css: "webix_dark",
