@@ -66,10 +66,13 @@ export default function (AB) {
             this.CurrentQueryID = query?.id;
          }
 
+<<<<<<< HEAD
          datacollectionLoad(dc) {
             this.CurrentDatacollectionID = dc?.id;
          }
 
+=======
+>>>>>>> master
          /**
           * @method CurrentObject()
           * A helper to return the current ABObject we are working with.
