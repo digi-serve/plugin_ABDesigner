@@ -7,14 +7,15 @@
 import UI_Class from "./ui_class";
 import FViewProperties from "./properties/views/ABViewCSVImporter";
 
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupImport";
    const UIClass = UI_Class(AB);
    // var L = UIClass.L();
    const ViewProperties = FViewProperties(AB);
 
    class UI_Work_Object_Workspace_PopupImport extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupImport");
+      constructor(base) {
+         super(base);
 
          this.popup = null;
          // {ABViewCSVImporter}
@@ -57,5 +58,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupImport();
+   return new UI_Work_Object_Workspace_PopupImport(ibase);
 }

@@ -6,13 +6,14 @@
  */
 import UI_Class from "./ui_class";
 
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupSortFields";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupSortFields extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupSortFields", {
+      constructor(base) {
+         super(base, {
             list: "",
             form: "",
          });
@@ -503,5 +504,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupSortFields();
+   return new UI_Work_Object_Workspace_PopupSortFields(ibase);
 }

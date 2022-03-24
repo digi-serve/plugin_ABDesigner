@@ -148,19 +148,28 @@ export default function (AB, ibase, init_settings) {
          // The Kanban Object View.
          this.hashViews["kanban"] = Kanban;
 
-         this.PopupCustomIndex = new FPopupCustomIndex(AB);
+         this.PopupCustomIndex = new FPopupCustomIndex(
+            AB,
+            `${base}_customIndex`
+         );
          this.PopupCustomIndex.on("changed", () => {
             this.refreshIndexes();
          });
 
          // // Various Popups on our page:
-         this.PopupHeaderEditMenu = FPopupHeaderEditMenu(AB);
+         this.PopupHeaderEditMenu = FPopupHeaderEditMenu(
+            AB,
+            `${base}_headerEditMenu`
+         );
          this.PopupHeaderEditMenu.on("click", (action, field, node) => {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
          if (!this.settings.isReadOnly) {
-            this.PopupDefineLabelComponent = new FPopupDefineLabel(AB);
+            this.PopupDefineLabelComponent = new FPopupDefineLabel(
+               AB,
+               `${base}_defineLabel`
+            );
             this.PopupDefineLabelComponent.on("changed", () => {
                this.callbackDefineLabel();
             });
@@ -170,12 +179,18 @@ export default function (AB, ibase, init_settings) {
          //    idBase
          // );
 
-         this.PopupFrozenColumnsComponent = new FPopupFrozenColumns(AB);
+         this.PopupFrozenColumnsComponent = new FPopupFrozenColumns(
+            AB,
+            `${base}_frozenFields`
+         );
          this.PopupFrozenColumnsComponent.on("changed", (settings) => {
             this.callbackFrozenColumns(settings);
          });
 
-         this.PopupHideFieldComponent = FPopupHideFields(AB);
+         this.PopupHideFieldComponent = FPopupHideFields(
+            AB,
+            `${base}_hideFields`
+         );
          this.PopupHideFieldComponent.on("changed", (settings) => {
             this.callbackFieldsVisible(settings);
          });
@@ -188,14 +203,23 @@ export default function (AB, ibase, init_settings) {
             );
          }
 
-         this.PopupSortFieldComponent = FPopupSortField(AB);
+         this.PopupSortFieldComponent = FPopupSortField(
+            AB,
+            `${base}_sortFields`
+         );
          this.PopupSortFieldComponent.on("changed", (settings) => {
             this.callbackSortFields(settings);
          });
 
-         this.PopupExportObjectComponent = new FPopupExport(AB);
+         this.PopupExportObjectComponent = new FPopupExport(
+            AB,
+            `${base}_export`
+         );
 
-         this.PopupImportObjectComponent = new FPopupImport(AB);
+         this.PopupImportObjectComponent = new FPopupImport(
+            AB,
+            `${base}_import`
+         );
          // this.PopupImportObjectComponent.on("done", () => {
          //    this.populateObjectWorkspace(this.CurrentObject);
          // });
