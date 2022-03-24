@@ -10,37 +10,45 @@ import UI_Work_DataCollection_Workspace from "./ui_work_datacollection_workspace
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
+
+   const DataCollectionList = UI_Work_DataCollection_List(AB);
+   const DataCollectionWorkspace = UI_Work_DataCollection_Workspace(AB, {
+      allowDelete: 0,
+      configureHeaders: false,
+      detailsView: "",
+      editView: "",
+      isEditable: 0,
+      massUpdate: 0,
+      isReadOnly: true,
+   });
+
    class UI_Work_DataCollection extends UIClass {
       constructor() {
          super("ui_work_datacollection");
-
-         this.DataCollectionList = UI_Work_DataCollection_List(AB);
-         this.DataCollectionWorkspace = UI_Work_DataCollection_Workspace(AB);
       }
 
       ui() {
+         const ids = this.ids;
          // Our webix UI definition:
          return {
-            id: this.ids.component,
+            id: ids.component,
             type: "space",
             cols: [
-               this.DataCollectionList.ui(),
+               DataCollectionList.ui(),
                { view: "resizer", width: 11 },
-               this.DataCollectionWorkspace.ui(),
+               DataCollectionWorkspace.ui(),
             ],
          };
       }
 
-      init(AB) {
+      async init(AB) {
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         this.DataCollectionList.on("selected", this.select);
+         DataCollectionList.on("selected", this.select);
 
-         return Promise.all([
-            this.DataCollectionWorkspace.init(AB),
-            this.DataCollectionList.init(AB),
-         ]);
+         await DataCollectionWorkspace.init(AB);
+         await DataCollectionList.init(AB);
       }
 
       /**
@@ -51,9 +59,9 @@ export default function (AB) {
       applicationLoad(application) {
          super.applicationLoad(application);
 
-         this.DataCollectionWorkspace.clearWorkspace();
-         this.DataCollectionList.applicationLoad(application);
-         this.DataCollectionWorkspace.applicationLoad(application);
+         DataCollectionWorkspace.clearWorkspace();
+         DataCollectionList.applicationLoad(application);
+         DataCollectionWorkspace.applicationLoad(application);
       }
 
       /**
@@ -64,19 +72,19 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
 
-         // this.DataCollectionList.busy();
+         // DataCollectionList.busy();
 
-         var app = this.CurrentApplication;
-         if (app) {
-            this.DataCollectionWorkspace.applicationLoad(app);
-            this.DataCollectionList.applicationLoad(app);
+         const application = this.CurrentApplication;
+         if (application) {
+            DataCollectionWorkspace.applicationLoad(application);
+            DataCollectionList.applicationLoad(application);
          }
-         this.DataCollectionList.ready();
+         DataCollectionList.ready();
       }
 
-      select(dc) {
-         this.DataCollectionWorkspace.clearWorkspace();
-         this.DataCollectionWorkspace.populateWorkspace(dc);
+      async select(dc) {
+         DataCollectionWorkspace.clearWorkspace();
+         await DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
 

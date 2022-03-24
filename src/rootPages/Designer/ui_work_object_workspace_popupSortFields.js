@@ -37,7 +37,7 @@ export default function (AB) {
                   on: {
                      onItemClick: (/* id, e, node */) => {
                         this.clickAddNewSort();
-                        this.triggerOnChange();
+                        // this.triggerOnChange();
                      },
                   },
                },

@@ -11,15 +11,19 @@
 import UI_Class from "./ui_class";
 import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
 
-export default function (AB) {
+export default function (AB, iBase, iSettings) {
+   iBase = iBase || "ui_work_object_workspace_view_grid";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    const ViewGridProperties = FViewGridProperties(AB);
 
    class UI_Work_Object_Workspace_View_Grid extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_view_grid");
+      constructor(idBase, settings = {}) {
+         super(idBase);
+
+         settings.isReadOnly = settings.isReadOnly ?? false;
+         this.settings = settings;
       }
 
       // Our webix UI definition:
@@ -122,7 +126,12 @@ export default function (AB) {
          var ui = component.ui();
          ui.id = this.ids.component;
          webix.ui(ui, $$(this.ids.component));
-         await component.init(this.AB);
+
+         let accessLevel = 2;
+         if (this.settings.isReadOnly) {
+            accessLevel = 1;
+         }
+         await component.init(this.AB, accessLevel);
 
          // Now call .datacollectionLoad() again to actually load the data.
          component.datacollectionLoad(this.datacollection);
@@ -247,5 +256,5 @@ export default function (AB) {
       }
       */
    }
-   return new UI_Work_Object_Workspace_View_Grid();
+   return new UI_Work_Object_Workspace_View_Grid(iBase, iSettings);
 }

@@ -20,11 +20,12 @@ import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
 import FViewGridProperties from "./properties/workspaceViews/ABViewGrid";
 import FViewKanbanProperties from "./properties/workspaceViews/ABViewKanban";
 
-export default function (AB) {
+export default function (AB, ibase, isettings) {
+   ibase = ibase || "ui_work_object_workspace_workspaceviews";
    const UIClass = UI_Class(AB);
    // var L = UIClass.L();
 
-   const Datatable = WorkspaceDatatable(AB);
+   const Datatable = WorkspaceDatatable(AB, `${ibase}_grid`, isettings);
    const Gantt = WorkspaceGantt(AB);
    const Kanban = WorkspaceKanban(AB);
 
@@ -49,8 +50,8 @@ export default function (AB) {
    };
 
    class ABObjectWorkspaceViewCollection extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_workspaceviews");
+      constructor(base, settings) {
+         super(base);
 
          this.AB = AB;
          // {ABFactory}
@@ -265,5 +266,5 @@ export default function (AB) {
          this._currentView.sortFields = fields;
       }
    }
-   return new ABObjectWorkspaceViewCollection();
+   return new ABObjectWorkspaceViewCollection(ibase, isettings);
 }
