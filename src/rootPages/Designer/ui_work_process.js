@@ -79,9 +79,9 @@ export default function (AB) {
       }
 
       select(process) {
-         this.CurrentProcessID = process.id;
+         this.CurrentProcessID = process?.id;
 
-         if (process == null) this.ProcessWorkspace?.clearWorkspace();
+         if (!process) this.ProcessWorkspace?.clearWorkspace();
          else this.ProcessWorkspace?.populateWorkspace(process);
       }
    }

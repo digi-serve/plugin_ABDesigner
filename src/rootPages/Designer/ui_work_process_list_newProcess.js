@@ -93,7 +93,8 @@ export default function (AB) {
                            autowidth: true,
                            type: "form",
                            click: () => {
-                              return this.save();
+                              let vals = $$(this.ids.form).getValues();
+                              return this.save(vals);
                            },
                         },
                      ],
@@ -137,9 +138,9 @@ export default function (AB) {
 
          try {
             // create a new process:
-            let newProcess = await this.CurrentApplication.processCreate(
-               values
-            );
+            let newProcess = await this.AB.processNew(values);
+            await newProcess.save();
+            await this.CurrentApplication.processInsert(newProcess);
             this.emit("save", newProcess);
             this.clear();
             this.hide();
