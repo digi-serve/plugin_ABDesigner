@@ -5,13 +5,14 @@
  *
  */
 import UI_Class from "./ui_class";
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupDefineLabel";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupDefineLabel extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupDefineLabel", {
+      constructor(base) {
+         super(base, {
             // component: idBase,
             format: "",
             list: "",
@@ -248,5 +249,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupDefineLabel();
+   return new UI_Work_Object_Workspace_PopupDefineLabel(ibase);
 }

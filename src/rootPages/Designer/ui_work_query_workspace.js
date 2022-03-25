@@ -24,6 +24,7 @@ export default function (AB, init_settings) {
             noSelection: "",
             run: "",
             design: "",
+            warnings: "",
          });
 
          this.settings = settings;
@@ -81,6 +82,11 @@ export default function (AB, init_settings) {
                   id: ids.component,
                   rows: [
                      {
+                        id: ids.warnings,
+                        view: "label",
+                        label: "",
+                     },
+                     {
                         id: ids.toolbar,
                         view: "tabbar",
                         // hidden: true,
@@ -121,6 +127,7 @@ export default function (AB, init_settings) {
                            },
                         },
                      },
+                     { height: 10 },
                      {
                         id: ids.multiview,
                         view: "multiview",
@@ -212,6 +219,16 @@ export default function (AB, init_settings) {
 
       queryLoad(query) {
          super.queryLoad(query);
+
+         var messages = (query?.warnings() ?? []).map((w) => w.message);
+         let $warnings = $$(this.ids.warnings);
+         if (messages.length) {
+            $warnings.setValue(messages.join("\n"));
+            $warnings.show();
+         } else {
+            $warnings.setValue("");
+            $warnings.hide();
+         }
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);

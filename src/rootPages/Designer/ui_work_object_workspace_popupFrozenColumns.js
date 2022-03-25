@@ -6,14 +6,15 @@
  */
 import UI_Class from "./ui_class";
 
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupFrozenColumns";
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupFrozenColumns extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupFrozenColumns", {
+      constructor(base) {
+         super(base, {
             list: "",
          });
 
@@ -261,5 +262,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupFrozenColumns();
+   return new UI_Work_Object_Workspace_PopupFrozenColumns(ibase);
 }

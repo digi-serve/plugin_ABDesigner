@@ -40,7 +40,7 @@ export default function (AB, options) {
             // we can reuse some of the Object ones:
             confirmDeleteMessage: "Do you want to delete <b>{0}</b>?",
             listSearch: "Search",
-            listSetting: "Setting",
+            listSetting: "Settings",
             listSort: "Sort",
             listAsc: "A -> Z",
             listDesc: "Z -> A",

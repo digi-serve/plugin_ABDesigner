@@ -7,14 +7,15 @@
 import UI_Class from "./ui_class";
 import UIListEditMenuFactory from "./ui_common_popupEditMenu";
 
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupHeaderEditMenu";
    var ListClass = UIListEditMenuFactory(AB);
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    class UIWorkObjectWorkspacePopupHeaderEditMenu extends ListClass {
-      constructor() {
-         super("ui_work_object_workspace_popupHeaderEditMenu");
+      constructor(base) {
+         super(base);
 
          // overwrite the default common menu with our column Header
          // options.
@@ -78,5 +79,5 @@ export default function (AB) {
          this.emit("click", command, this.field, this.$node);
       }
    }
-   return new UIWorkObjectWorkspacePopupHeaderEditMenu();
+   return new UIWorkObjectWorkspacePopupHeaderEditMenu(ibase);
 }
