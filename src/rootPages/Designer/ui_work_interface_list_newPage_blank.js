@@ -16,8 +16,9 @@ export default function (AB) {
             form: "",
             buttonSave: "",
             buttonCancel: "",
+            parentList: "",
          });
-         this.ids.parentList = {};
+         // this.ids.parentList = {};
       }
 
       ui() {
