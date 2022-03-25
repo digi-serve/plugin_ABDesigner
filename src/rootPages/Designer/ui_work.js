@@ -46,14 +46,15 @@ export default function (AB) {
 
       scanTopic(app, key) {
          let countObjects = 0;
-         let warnObjects = "";
+         let warnObjects = {};
          if (app) {
             app[key]().forEach((o) => {
                countObjects += (o.warningsAll() || []).length;
             });
          }
          if (countObjects) {
-            warnObjects = ` (${countObjects})`;
+            warnObjects.icon = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseDark smalltext"></span>`;
+            warnObjects.count = countObjects;
          }
          return warnObjects;
       }
@@ -64,13 +65,15 @@ export default function (AB) {
          var sidebarItems = [
             {
                id: this.ids.tab_object,
-               value: `${L("Objects")}${warnObjects}`,
+               value: `${L("Objects")}`,
                icon: "fa fa-fw fa-database",
+               issues: warnObjects,
             },
             {
                id: this.ids.tab_query,
-               value: `${L("Queries")}${warnQueries}`,
+               value: `${L("Queries")}`,
                icon: "fa fa-fw fa-filter",
+               issues: warnQueries,
             },
             {
                id: this.ids.tab_datacollection,
@@ -212,6 +215,26 @@ export default function (AB) {
                                  this.tabSwitch(id);
                                  this.selectedItem = id;
                               }
+                           },
+                        },
+                        template: function (obj, common) {
+                           if (common.collapsed) {
+                              return common.icon(obj, common);
+                           } else {
+                              return (
+                                 (obj.issues?.icon || "") +
+                                 common.icon(obj, common) +
+                                 "<span>" +
+                                 obj.value +
+                                 "</span>"
+                              );
+                           }
+                        },
+                        tooltip: {
+                           template: function (obj) {
+                              return obj.issues?.count
+                                 ? `${obj.issues?.count} issues`
+                                 : "";
                            },
                         },
                      },

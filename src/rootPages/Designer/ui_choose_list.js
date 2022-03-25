@@ -192,6 +192,9 @@ export default function (AB) {
                         template: (obj, common) => {
                            return this.templateListItem(obj, common);
                         },
+                        tooltip: (obj) => {
+                           return this.toolTipListItem(obj);
+                        },
                         type: {
                            height: uiConfig.appListRowHeight, // Defines item height
                            iconGear: function (app) {
@@ -548,18 +551,33 @@ export default function (AB) {
          //    this object and any of it's sub objects.
          //
          //
-         var numWarnings = (obj.warningsAll() || []).length;
+         var warnings = {
+            icon: "",
+            count: 0,
+         };
+         if (obj.warningsAll().length) {
+            warnings.icon = `<span class="webix_icon fa fa-warning pulseLight smalltext"></span>`;
+            warnings.count = obj.warningsAll().length;
+         }
          return `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>
       <div class='ab-app-list-name'>${common.iconAdmin(obj)}${
             obj.label ?? ""
-         }(${numWarnings})</div>
+         }</div>
       <div class='ab-app-list-description'>${obj.description ?? ""}</div>
    </div>
    <div class='ab-app-list-edit'>
+      ${warnings.icon}
       ${common.iconGear(obj)}
    </div>
 </div>`;
+      }
+
+      toolTipListItem(obj) {
+         let issues = $$(this.ids.list)
+            .data.getItem(obj.id)
+            .warningsAll().length;
+         return issues ? `${issues} issues` : "";
       }
    }
    return new UIChooseList();

@@ -10317,6 +10317,9 @@ __webpack_require__.r(__webpack_exports__);
                         template: (obj, common) => {
                            return this.templateListItem(obj, common);
                         },
+                        tooltip: (obj) => {
+                           return this.toolTipListItem(obj);
+                        },
                         type: {
                            height: uiConfig.appListRowHeight, // Defines item height
                            iconGear: function (app) {
@@ -10673,18 +10676,33 @@ __webpack_require__.r(__webpack_exports__);
          //    this object and any of it's sub objects.
          //
          //
-         var numWarnings = (obj.warningsAll() || []).length;
+         var warnings = {
+            icon: "",
+            count: 0,
+         };
+         if (obj.warningsAll().length) {
+            warnings.icon = `<span class="webix_icon fa fa-warning pulseLight smalltext"></span>`;
+            warnings.count = obj.warningsAll().length;
+         }
          return `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>
       <div class='ab-app-list-name'>${common.iconAdmin(obj)}${
             obj.label ?? ""
-         }(${numWarnings})</div>
+         }</div>
       <div class='ab-app-list-description'>${obj.description ?? ""}</div>
    </div>
    <div class='ab-app-list-edit'>
+      ${warnings.icon}
       ${common.iconGear(obj)}
    </div>
 </div>`;
+      }
+
+      toolTipListItem(obj) {
+         let issues = $$(this.ids.list)
+            .data.getItem(obj.id)
+            .warningsAll().length;
+         return issues ? `${issues} issues` : "";
       }
    }
    return new UIChooseList();
@@ -10936,6 +10954,9 @@ __webpack_require__.r(__webpack_exports__);
                   },
                   template: (obj, common) => {
                      return this.templateListItem(obj, common);
+                  },
+                  tooltip: (obj) => {
+                     return this.toolTipListItem(obj);
                   },
                   type: {
                      height: 35,
@@ -11431,7 +11452,7 @@ __webpack_require__.r(__webpack_exports__);
          if (typeof this._templateListItem == "string") {
             var warnText = "";
             if (warnings.length > 0) {
-               warnText = `(${warnings.length})`;
+               warnText = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>`;
             }
 
             return this._templateListItem
@@ -11441,6 +11462,21 @@ __webpack_require__.r(__webpack_exports__);
          }
          // else they sent in a function()
          return this._templateListItem(obj, common, warnings);
+      }
+
+      /**
+       * @function templateListItem
+       *
+       * Defines the template for each row of our ProcessList.
+       *
+       * @param {obj} obj the current instance of ABProcess for the row.
+       * @param {?} common the webix.common icon data structure
+       * @return {string}
+       */
+      toolTipListItem(obj) {
+         let issues = $$(this.ids.list).data.getItem(obj.id).warnings().length;
+
+         return issues ? `${issues} issues` : "";
       }
 
       /**
@@ -11875,14 +11911,15 @@ __webpack_require__.r(__webpack_exports__);
 
       scanTopic(app, key) {
          let countObjects = 0;
-         let warnObjects = "";
+         let warnObjects = {};
          if (app) {
             app[key]().forEach((o) => {
                countObjects += (o.warningsAll() || []).length;
             });
          }
          if (countObjects) {
-            warnObjects = ` (${countObjects})`;
+            warnObjects.icon = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseDark smalltext"></span>`;
+            warnObjects.count = countObjects;
          }
          return warnObjects;
       }
@@ -11893,13 +11930,15 @@ __webpack_require__.r(__webpack_exports__);
          var sidebarItems = [
             {
                id: this.ids.tab_object,
-               value: `${L("Objects")}${warnObjects}`,
+               value: `${L("Objects")}`,
                icon: "fa fa-fw fa-database",
+               issues: warnObjects,
             },
             {
                id: this.ids.tab_query,
-               value: `${L("Queries")}${warnQueries}`,
+               value: `${L("Queries")}`,
                icon: "fa fa-fw fa-filter",
+               issues: warnQueries,
             },
             {
                id: this.ids.tab_datacollection,
@@ -12041,6 +12080,26 @@ __webpack_require__.r(__webpack_exports__);
                                  this.tabSwitch(id);
                                  this.selectedItem = id;
                               }
+                           },
+                        },
+                        template: function (obj, common) {
+                           if (common.collapsed) {
+                              return common.icon(obj, common);
+                           } else {
+                              return (
+                                 (obj.issues?.icon || "") +
+                                 common.icon(obj, common) +
+                                 "<span>" +
+                                 obj.value +
+                                 "</span>"
+                              );
+                           }
+                        },
+                        tooltip: {
+                           template: function (obj) {
+                              return obj.issues?.count
+                                 ? `${obj.issues?.count} issues`
+                                 : "";
                            },
                         },
                      },
