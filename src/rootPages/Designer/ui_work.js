@@ -263,6 +263,16 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
+         this.warningsPropogate([
+            AppObjectWorkspace,
+            AppQueryWorkspace,
+            AppDataCollectionWorkspace,
+            AppProcessWorkspace,
+         ]);
+         this.on("warnings", () => {
+            this.refreshSideBar(this.CurrentApplication);
+         });
+
          AppObjectWorkspace.init(AB);
          AppQueryWorkspace.init(AB);
          AppDataCollectionWorkspace.init(AB);
@@ -322,6 +332,13 @@ export default function (AB) {
          this.tabSwitch(tabId);
       }
 
+      refreshSideBar(application) {
+         let $tabbar = $$(this.ids.tabbar);
+         let sidebarItems = this.sidebarItems(application);
+         $tabbar?.define("data", sidebarItems);
+         $tabbar?.refresh();
+      }
+
       /**
        * @method transitionWorkspace
        * Switch the UI to view the App Workspace screen.
@@ -338,10 +355,7 @@ export default function (AB) {
          AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
 
-         let $tabbar = $$(this.ids.tabbar);
-         let sidebarItems = this.sidebarItems(application);
-         $tabbar?.define("data", sidebarItems);
-         $tabbar?.refresh();
+         this.refreshSideBar(application);
 
          this.show();
       }

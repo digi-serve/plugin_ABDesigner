@@ -8,7 +8,7 @@ export default function (AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
    var L = UIClass.L();
 
-   const iBase = "ab_work_query_workspace";
+   const iBase = "ui_work_query_workspace";
    const QueryDesignComponent = FWorkspaceDesign(AB);
    const QueryDisplayComponent = FWorkspaceDisplay(AB, `${iBase}_display`, {
       isReadOnly: true,
@@ -156,6 +156,11 @@ export default function (AB, init_settings) {
       init(AB) {
          this.AB = AB;
 
+         this.warningsPropogate([QueryDesignComponent, QueryDisplayComponent]);
+         this.on("warnings", () => {
+            this.refreshWarnings(this.CurrentQuery);
+         });
+
          return Promise.all([
             QueryDesignComponent.init(AB),
             QueryDisplayComponent.init(AB),
@@ -217,9 +222,7 @@ export default function (AB, init_settings) {
          QueryDisplayComponent.loadAll();
       }
 
-      queryLoad(query) {
-         super.queryLoad(query);
-
+      refreshWarnings(query) {
          var messages = (query?.warnings() ?? []).map((w) => w.message);
          let $warnings = $$(this.ids.warnings);
          if (messages.length) {
@@ -229,6 +232,12 @@ export default function (AB, init_settings) {
             $warnings.setValue("");
             $warnings.hide();
          }
+      }
+
+      queryLoad(query) {
+         super.queryLoad(query);
+
+         this.refreshWarnings(query);
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);

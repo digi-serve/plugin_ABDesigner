@@ -40,12 +40,20 @@ export default function (AB, init_settings) {
          // {string}
          // the ABObjectQuery.id of the query we are working with.
 
+         // TODO: once FilterComplex is merged into our core repo
+         // this.DataFilter = AB.filterComplexNew(this.ids.filter);
          this.DataFilter = AB.rowfilterNew(null, this.ids.filter);
-         this.DataFilter.init({
-            onChange: () => {
-               this.save();
-            },
-            showObjectName: true,
+         this.DataFilter.init({ showObjectName: true });
+         this.DataFilter.on("change", () => {
+            // if (this.DataFilter.isComplete()) {
+            if (!this.__saveInProcess) {
+               // prevent multiple "change" events from firing off
+               // a save()
+               this.__saveInProcess = this.save().finally(() => {
+                  this.__saveInProcess = null;
+               });
+            }
+            // }
          });
       }
 
@@ -693,6 +701,7 @@ export default function (AB, init_settings) {
                .then(() => {
                   // refresh data
                   this.refreshDataTable();
+                  this.warningsRefresh(CurrentQuery);
                   resolve();
                })
                .catch((err) => {
@@ -910,18 +919,6 @@ export default function (AB, init_settings) {
       }
 
       refreshTree() {
-         // return new Promise((resolve, reject) => {
-         // Relationship Depth
-         // $$(ids.depth).blockEvent(); // prevents endless loop
-
-         // if (CurrentQuery.objectWorkspace.depth) {
-         // 	$$(ids.depth).setValue(CurrentQuery.objectWorkspace.depth);
-         // } else {
-         // 	$$(ids.depth).setValue(5);
-         // }
-
-         // $$(ids.depth).unblockEvent();
-
          let fnCheckItem = (treeStore, object, links, parentId = 0) => {
             (links || []).forEach((link) => {
                // NOTE: query v1
@@ -987,10 +984,6 @@ export default function (AB, init_settings) {
          // show loading cursor
          $$(ids.tree).showProgress({ type: "icon" });
 
-         // NOTE: render the tree component in Promise to prevent freeze UI.
-         // populate tree store
-
-         // Transition v2: testing w/o Promise here
          if (objBase) {
             let result = this.getChildItems(objBase.id);
 
@@ -1001,24 +994,6 @@ export default function (AB, init_settings) {
             // show loading cursor
             $$(ids.tree).hideProgress();
          }
-
-         /* if (objBase) {
-                     _logic
-                        .getChildItems(objBase.id)
-                        .catch(reject)
-                        .then((result) => {
-                           $$(ids.tree).parse(result.treeItems);
-
-                           fnCheckItem($$(ids.tree), objBase, links);
-
-                           // show loading cursor
-                           $$(ids.tree).hideProgress({ type: "icon" });
-
-                           resolve();
-                        });
-                  }
-                  */
-         // });
       }
 
       refreshFilter() {
@@ -1037,8 +1012,6 @@ export default function (AB, init_settings) {
          if (this.CurrentDatacollection == null) return;
          let CurrentQuery = this.CurrentQuery;
          if (!CurrentQuery) return;
-
-         // console.log("Refresh data table *******");
 
          let DataTable = $$(this.ids.datatable);
          DataTable.clearAll();
@@ -1077,20 +1050,8 @@ export default function (AB, init_settings) {
          // set data:
          this.CurrentDatacollection.loadData(0, 50, () => {}).then(() => {
             this.CurrentDatacollection.bind(DataTable);
-            // DataTable.hideProgress();
+            // DataTable.hideProgress(); <-- happens on the .bind()
          });
-         // CurrentQuery.model().findAll({ limit: 20, where: CurrentQuery.workspaceViews.getCurrentView().filterConditions, sort: CurrentQuery.workspaceViews.getCurrentView().sortFields })
-         // 	.then((response) => {
-
-         // 		DataTable.clearAll();
-
-         // 		response.data.forEach((d) => {
-         // 			DataTable.add(d);
-         // 		})
-         // 	})
-         // 	.catch((err) => {
-         // 		OP.Error.log('Error running Query:', { error: err, query: CurrentQuery });
-         // 	});
       }
 
       getObject(objectId) {
