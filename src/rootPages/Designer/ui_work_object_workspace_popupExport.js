@@ -5,13 +5,14 @@
  *
  */
 import UI_Class from "./ui_class";
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupExport";
    const UIClass = UI_Class(AB);
    // var L = UIClass.L();
 
    class UI_Work_Object_PopupExport extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupExport", {
+      constructor(base) {
+         super(base, {
             popupExport: "",
             list: "",
          });
@@ -202,5 +203,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Object_PopupExport();
+   return new UI_Work_Object_PopupExport(ibase);
 }

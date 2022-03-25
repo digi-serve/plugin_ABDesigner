@@ -726,7 +726,14 @@ export default function (AB) {
             var messages = this.CurrentApplication.warnings().map(
                (w) => w.message
             );
-            $$(this.ids.warnings).setValue(messages.join("\n"));
+            let $warnings = $$(this.ids.warnings);
+            if (messages.length) {
+               $warnings.setValue(messages.join("\n"));
+               $warnings.show();
+            } else {
+               $warnings.setValue("");
+               $warnings.hide();
+            }
 
             // populate access manager ui
             var $accessManager = $$(this.ids.accessManager);

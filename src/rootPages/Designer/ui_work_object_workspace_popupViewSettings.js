@@ -9,14 +9,13 @@ import FormABViewGantt from "./properties/workspaceViews/ABViewGantt";
 import FormABViewGrid from "./properties/workspaceViews/ABViewGrid";
 import FormABViewKanBan from "./properties/workspaceViews/ABViewKanban";
 
-export default function (AB) {
-   const ABViewGrid = FormABViewGrid(AB);
+export default function (AB, ibase, isettings) {
+   ibase = ibase || "abd_work_object_workspace_popupAddView";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupAddView extends UIClass {
-      constructor() {
-         var base = "abd_work_object_workspace_popupAddView";
+      constructor(base, settings = {}) {
          super(base, {
             form: "",
             formAdditional: "",
@@ -27,8 +26,13 @@ export default function (AB) {
             saveButton: "",
          });
 
+         settings.isReadOnly = settings.isReadOnly ?? false;
+         this.settings = settings;
+
          this._view = null;
          // {Grid/kanban/Gantt} the current UI View type we are displaying
+
+         this.comGrid = FormABViewGrid(AB, `${base}_grid`);
 
          this.comKanban = FormABViewKanBan(AB, `${base}_kanban`);
          this.comKanban.on("new.field", (key) => {
@@ -82,9 +86,10 @@ export default function (AB) {
                   label: L("Type"),
                   id: ids.typeInput,
                   name: "type",
+                  hidden: this.settings.isReadOnly,
                   options: [
                      {
-                        id: ABViewGrid.type(),
+                        id: this.comGrid.type(),
                         value: L("Grid"),
                      },
                      {
@@ -96,7 +101,7 @@ export default function (AB) {
                         value: L("Gantt"),
                      },
                   ],
-                  value: ABViewGrid.type(),
+                  value: this.comGrid.type(),
                   required: true,
                   on: {
                      onChange: (typeView) => {
@@ -152,8 +157,8 @@ export default function (AB) {
          return {
             view: "window",
             id: ids.component,
-            height: 400,
             width: 400,
+            resize: true,
             head: {
                view: "toolbar",
                css: "webix_dark",
@@ -231,7 +236,7 @@ export default function (AB) {
          // Default value
          else {
             $$(ids.nameInput).setValue("");
-            $$(ids.typeInput).setValue(ABViewGrid.type());
+            $$(ids.typeInput).setValue(this.comGrid.type());
          }
       }
 
@@ -307,5 +312,5 @@ export default function (AB) {
          this.hide();
       }
    }
-   return new UI_Work_Object_Workspace_PopupAddView();
+   return new UI_Work_Object_Workspace_PopupAddView(ibase, isettings);
 }

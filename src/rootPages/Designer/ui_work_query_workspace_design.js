@@ -151,11 +151,9 @@ export default function (AB, init_settings) {
                                     },
                                  ],
                               },
+                              { view: "resizer", borderless: true },
                               {
-                                 width: 20,
-                              },
-                              {
-                                 gravity: 2,
+                                 gravity: 3,
                                  rows: [
                                     {
                                        view: "label",
@@ -166,9 +164,11 @@ export default function (AB, init_settings) {
                                     {
                                        view: "tabview",
                                        id: ids.tabObjects,
-                                       tabMinWidth: 180,
                                        tabbar: {
-                                          bottomOffset: 1,
+                                          tabMinWidth: 240,
+                                          css: "webix_dark",
+                                          type: "bottom",
+                                          bottomOffset: 0,
                                        },
                                        cells: [
                                           {}, // require
@@ -251,15 +251,6 @@ export default function (AB, init_settings) {
       }
 
       /**
-       * @method CurrentQuery()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentQuery() {
-         return this.AB.queryByID(this.CurrentQueryID);
-      }
-
-      /**
        * @function applicationLoad
        *
        * Initialize the Object Workspace with the given ABApplication.
@@ -289,7 +280,7 @@ export default function (AB, init_settings) {
          this.queryLoad(query);
       }
       queryLoad(query) {
-         this.CurrentQueryID = query?.id;
+         super.queryLoad(query);
 
          let CurrentQuery = this.CurrentQuery;
          if (CurrentQuery == null) {
@@ -1056,7 +1047,6 @@ export default function (AB, init_settings) {
          var columns = CurrentQuery.columnHeaders(false, false);
          DataTable.refreshColumns(columns);
 
-         DataTable.showProgress({ type: "icon" });
          let qCurrentView = CurrentQuery.workspaceViews.getCurrentView();
 
          this.CurrentDatacollection.clearAll();
@@ -1081,6 +1071,8 @@ export default function (AB, init_settings) {
          // Bind datatable view to data view
          this.CurrentDatacollection.unbind(DataTable);
          this.CurrentDatacollection.bind(DataTable);
+
+         DataTable.showProgress({ type: "icon" });
 
          // set data:
          this.CurrentDatacollection.loadData(0, 50, () => {}).then(() => {

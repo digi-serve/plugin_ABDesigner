@@ -9,18 +9,16 @@ import FPropertyManager from "./properties/PropertyManager";
 
 // const ABFieldManager = require("../AppBuilder/core/ABFieldManager");
 
-export default function (AB) {
-   // const uiConfig = AB.Config.uiSettings();
+export default function (AB, ibase) {
+   ibase = ibase || "abd_work_object_workspace_popupNewDataField";
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
 
    const PropertyManager = FPropertyManager(AB);
 
    class UI_Work_Object_Workspace_PopupNewDataField extends UIClass {
-      //.extend(idBase, function(App) {
-
-      constructor() {
-         super("abd_work_object_workspace_popupNewDataField", {
+      constructor(base) {
+         super(base, {
             types: "",
             editDefinitions: "",
             buttonSave: "",
@@ -872,5 +870,5 @@ export default function (AB) {
       }
    } // end class
 
-   return new UI_Work_Object_Workspace_PopupNewDataField();
+   return new UI_Work_Object_Workspace_PopupNewDataField(ibase);
 }

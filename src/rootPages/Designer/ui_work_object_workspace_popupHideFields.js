@@ -5,13 +5,14 @@
  *
  */
 import UI_Class from "./ui_class";
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupHideFields";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupHideFields extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupHideFields", {
+      constructor(base) {
+         super(base, {
             list: "",
             buttonHide: "",
             buttonShow: "",
@@ -359,5 +360,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupHideFields();
+   return new UI_Work_Object_Workspace_PopupHideFields(ibase);
 }

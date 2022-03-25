@@ -151,7 +151,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.vGroupInput,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-columns'></span> ${L(
+                        label: `<span style="opacity: 0.6;" class='webix_icon fa fa-columns'></span> ${L(
                            "Vertical Grouping"
                         )}`,
                         placeholder: L("Select a field"),
@@ -173,7 +173,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.vGroupInput;
                            this.emit("new.field", ABFieldList.defaults().key);
@@ -186,7 +186,7 @@ export default function (AB, ibase) {
                      {
                         id: ids.hGroupInput,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-list'></span> ${L(
+                        label: `<span style="opacity: 0.6;"class='webix_icon fa fa-list'></span> ${L(
                            "Horizontal Grouping"
                         )}`,
                         placeholder: L("Select a field"),
@@ -215,7 +215,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.hGroupInput;
                            this.emit("new.field", ABFieldList.defaults().key);
@@ -227,7 +227,7 @@ export default function (AB, ibase) {
                   cols: [
                      {
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-user-circle'></span> ${L(
+                        label: `<span style="opacity: 0.6;" class='webix_icon fa fa-user-circle'></span> ${L(
                            "Card Owner"
                         )}`,
                         placeholder: L("Select a user field"),
@@ -242,7 +242,7 @@ export default function (AB, ibase) {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.ownerInput;
                            this.emit(

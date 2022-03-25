@@ -7925,7 +7925,7 @@ var defaultValues = {
                      {
                         id: ids.title,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Title"
                         )}`,
                         placeholder: L("Select a string field"),
@@ -7947,7 +7947,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.title;
                            this.emit("new.field", ABFieldString.defaults().key);
@@ -7960,7 +7960,7 @@ var defaultValues = {
                      {
                         id: ids.startDate,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Start Date"
                         )}`,
                         placeholder: L("Select a date field"),
@@ -7983,7 +7983,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.startDate;
                            this.emit("new.field", ABFieldDate.defaults().key);
@@ -7996,7 +7996,7 @@ var defaultValues = {
                      {
                         id: ids.endDate,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-calendar'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "End Date"
                         )}`,
                         placeholder: L("Select a date field"),
@@ -8018,7 +8018,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.endDate;
                            this.emit("new.field", ABFieldDate.defaults().key);
@@ -8031,7 +8031,7 @@ var defaultValues = {
                      {
                         id: ids.duration,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-hashtag'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Duration"
                         )}`,
                         placeholder: L("Select a number field"),
@@ -8053,7 +8053,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.duration;
                            this.emit("new.field", ABFieldNumber.defaults().key);
@@ -8066,7 +8066,7 @@ var defaultValues = {
                      {
                         id: ids.progress,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-hashtag'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Progress"
                         )}`,
                         placeholder: L("Select a number field"),
@@ -8089,7 +8089,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.progress;
                            this.emit("new.field", ABFieldNumber.defaults().key);
@@ -8102,7 +8102,7 @@ var defaultValues = {
                      {
                         id: ids.notes,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-align-right'></span> ${L(
+                        label: `<span style='opacity: 0.6;' class='webix_icon fa fa-align-right'></span> ${L(
                            "Notes"
                         )}`,
                         placeholder: L("Select a string field"),
@@ -8125,7 +8125,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.notes;
                            this.emit(
@@ -8515,7 +8515,7 @@ var defaultValues = {
                      {
                         id: ids.vGroupInput,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-columns'></span> ${L(
+                        label: `<span style="opacity: 0.6;" class='webix_icon fa fa-columns'></span> ${L(
                            "Vertical Grouping"
                         )}`,
                         placeholder: L("Select a field"),
@@ -8537,7 +8537,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.vGroupInput;
                            this.emit("new.field", ABFieldList.defaults().key);
@@ -8550,7 +8550,7 @@ var defaultValues = {
                      {
                         id: ids.hGroupInput,
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-list'></span> ${L(
+                        label: `<span style="opacity: 0.6;"class='webix_icon fa fa-list'></span> ${L(
                            "Horizontal Grouping"
                         )}`,
                         placeholder: L("Select a field"),
@@ -8579,7 +8579,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.hGroupInput;
                            this.emit("new.field", ABFieldList.defaults().key);
@@ -8591,7 +8591,7 @@ var defaultValues = {
                   cols: [
                      {
                         view: "richselect",
-                        label: `<span class='webix_icon fa fa-user-circle'></span> ${L(
+                        label: `<span style="opacity: 0.6;" class='webix_icon fa fa-user-circle'></span> ${L(
                            "Card Owner"
                         )}`,
                         placeholder: L("Select a user field"),
@@ -8606,7 +8606,7 @@ var defaultValues = {
                         type: "icon",
                         icon: "fa fa-plus",
                         label: "",
-                        width: 20,
+                        width: 30,
                         click: () => {
                            this._autoSelectInput = ids.ownerInput;
                            this.emit(
@@ -9634,7 +9634,14 @@ __webpack_require__.r(__webpack_exports__);
             var messages = this.CurrentApplication.warnings().map(
                (w) => w.message
             );
-            $$(this.ids.warnings).setValue(messages.join("\n"));
+            let $warnings = $$(this.ids.warnings);
+            if (messages.length) {
+               $warnings.setValue(messages.join("\n"));
+               $warnings.show();
+            } else {
+               $warnings.setValue("");
+               $warnings.hide();
+            }
 
             // populate access manager ui
             var $accessManager = $$(this.ids.accessManager);
@@ -10731,6 +10738,10 @@ var myClass = null;
             this.CurrentObjectID = null;
             // {string}
             // the ABObject.id of the object we are working with.
+
+            this.CurrentQueryID = null;
+            // {string}
+            // the ABObjectQuery.id of the query we are working with.
          }
 
          static L() {
@@ -10761,13 +10772,30 @@ var myClass = null;
             this.CurrentObjectID = obj?.id;
          }
 
+         queryLoad(query) {
+            this.CurrentQueryID = query?.id;
+         }
+
          /**
           * @method CurrentObject()
           * A helper to return the current ABObject we are working with.
           * @return {ABObject}
           */
          get CurrentObject() {
-            return this.AB.objectByID(this.CurrentObjectID);
+            let obj = this.AB.objectByID(this.CurrentObjectID);
+            if (!obj) {
+               obj = this.AB.queryByID(this.CurrentObjectID);
+            }
+            return obj;
+         }
+
+         /**
+          * @method CurrentQuery()
+          * A helper to return the current ABObjectQuery we are working with.
+          * @return {ABObjectQuery}
+          */
+         get CurrentQuery() {
+            return this.AB.queryByID(this.CurrentQueryID);
          }
       };
    }
@@ -10832,7 +10860,7 @@ __webpack_require__.r(__webpack_exports__);
             // we can reuse some of the Object ones:
             confirmDeleteMessage: "Do you want to delete <b>{0}</b>?",
             listSearch: "Search",
-            listSetting: "Setting",
+            listSetting: "Settings",
             listSort: "Sort",
             listAsc: "A -> Z",
             listDesc: "Z -> A",
@@ -11808,21 +11836,32 @@ __webpack_require__.r(__webpack_exports__);
          // Keep track of the currently selected Tab Item (Object, Query, etc)
       }
 
-      /**
-       * @method ui()
-       * Return the webix definition of the UI we are managing.
-       * @return {json}
-       */
-      ui() {
+      scanTopic(app, key) {
+         let countObjects = 0;
+         let warnObjects = "";
+         if (app) {
+            app[key]().forEach((o) => {
+               countObjects += (o.warningsAll() || []).length;
+            });
+         }
+         if (countObjects) {
+            warnObjects = ` (${countObjects})`;
+         }
+         return warnObjects;
+      }
+      sidebarItems(app) {
+         let warnObjects = this.scanTopic(app, "objectsIncluded");
+         let warnQueries = this.scanTopic(app, "queriesIncluded");
+
          var sidebarItems = [
             {
                id: this.ids.tab_object,
-               value: L("Objects"),
+               value: `${L("Objects")}${warnObjects}`,
                icon: "fa fa-fw fa-database",
             },
             {
                id: this.ids.tab_query,
-               value: L("Queries"),
+               value: `${L("Queries")}${warnQueries}`,
                icon: "fa fa-fw fa-filter",
             },
             {
@@ -11841,6 +11880,17 @@ __webpack_require__.r(__webpack_exports__);
                icon: "fa fa-fw fa-id-card-o",
             },
          ];
+
+         return sidebarItems;
+      }
+
+      /**
+       * @method ui()
+       * Return the webix definition of the UI we are managing.
+       * @return {json}
+       */
+      ui() {
+         var sidebarItems = this.sidebarItems();
 
          var expandMenu = (this.expandMenu = {
             id: this.ids.expandMenu,
@@ -11926,9 +11976,9 @@ __webpack_require__.r(__webpack_exports__);
                {
                   cols: [
                      {
+                        id: this.ids.tabbar,
                         css: "webix_dark",
                         view: "sidebar",
-                        id: this.ids.tabbar,
                         width: 160,
                         data: sidebarItems.concat(collapseMenu),
                         on: {
@@ -12055,6 +12105,11 @@ __webpack_require__.r(__webpack_exports__);
          AppDataCollectionWorkspace.applicationLoad(application);
          AppProcessWorkspace.applicationLoad(application);
          AppInterfaceWorkspace.applicationLoad(application);
+
+         let $tabbar = $$(this.ids.tabbar);
+         let sidebarItems = this.sidebarItems(application);
+         $tabbar?.define("data", sidebarItems);
+         $tabbar?.refresh();
 
          this.show();
       }
@@ -16581,16 +16636,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase, init_settings) {
+   ibase = ibase || "abd_work_object_workspace";
    const uiConfig = AB.Config.uiSettings();
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
-   var Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_12__["default"])(AB);
-   var Gantt = (0,_ui_work_object_workspace_view_gantt__WEBPACK_IMPORTED_MODULE_13__["default"])(AB);
-   var Kanban = (0,_ui_work_object_workspace_view_kanban__WEBPACK_IMPORTED_MODULE_14__["default"])(AB);
+   var Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_12__["default"])(AB, `${ibase}_view_grid`, init_settings);
+   var Gantt = (0,_ui_work_object_workspace_view_gantt__WEBPACK_IMPORTED_MODULE_13__["default"])(AB, `${ibase}_view_gantt`);
+   var Kanban = (0,_ui_work_object_workspace_view_kanban__WEBPACK_IMPORTED_MODULE_14__["default"])(AB, `${ibase}_view_kanban`);
 
-   var Track = (0,_ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_15__["default"])(AB);
+   var Track = (0,_ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_15__["default"])(AB, `${ibase}_track`);
 
    class UIWorkObjectWorkspace extends UIClass {
       /**
@@ -16608,21 +16664,26 @@ __webpack_require__.r(__webpack_exports__);
        * 								isFieldAddable: bool
        * 							}
        */
-      constructor(settings = {}) {
-         super("abd_work_object_workspace", {
+      constructor(base, settings = {}) {
+         super(base, {
             // component: `${base}_component`,
 
             buttonAddField: "",
             buttonDeleteSelected: "",
+            buttonDeleteSelectedSpacer: "",
             buttonExport: "",
             buttonImport: "",
             buttonFieldsVisible: "",
+            buttonFieldsVisibleSpacer: "",
             buttonFilter: "",
             buttonFrozen: "",
+            buttonFrozenSpacer: "",
             buttonLabel: "",
             buttonMassUpdate: "",
+            buttonMassUpdateSpacer: "",
             buttonRowNew: "",
             buttonSort: "",
+            buttonSortSpacer: "",
 
             listIndex: "",
             buttonIndex: "",
@@ -16649,10 +16710,14 @@ __webpack_require__.r(__webpack_exports__);
          // settings.isEditable = settings.isEditable ?? true;
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
+         settings.isReadOnly = settings.isReadOnly ?? false;
+         // settings.isLabelEditable = settings.isLabelEditable ?? true;
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
-         // this.settings = settings;
+         this.settings = settings;
 
-         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_11__["default"])(AB);
+         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_11__["default"])(AB, `${base}_views`, {
+            isReadOnly: this.settings.isReadOnly,
+         });
 
          this.hashViews = {};
          // {hash}  { view.id : webix_component }
@@ -16690,57 +16755,92 @@ __webpack_require__.r(__webpack_exports__);
          // The Kanban Object View.
          this.hashViews["kanban"] = Kanban;
 
-         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
+         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__["default"](
+            AB,
+            `${base}_customIndex`
+         );
          this.PopupCustomIndex.on("changed", () => {
             this.refreshIndexes();
          });
 
          // // Various Popups on our page:
-         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__["default"])(AB);
+         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__["default"])(
+            AB,
+            `${base}_headerEditMenu`
+         );
          this.PopupHeaderEditMenu.on("click", (action, field, node) => {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
-         this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
-         this.PopupDefineLabelComponent.on("changed", () => {
-            this.callbackDefineLabel();
-         });
-
+         if (!this.settings.isReadOnly) {
+            this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__["default"](
+               AB,
+               `${base}_defineLabel`
+            );
+            this.PopupDefineLabelComponent.on("changed", () => {
+               this.callbackDefineLabel();
+            });
+         }
          // var PopupFilterDataTableComponent = new ABPopupFilterDataTable(
          //    App,
          //    idBase
          // );
 
-         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__["default"](AB);
+         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__["default"](
+            AB,
+            `${base}_frozenFields`
+         );
          this.PopupFrozenColumnsComponent.on("changed", (settings) => {
             this.callbackFrozenColumns(settings);
          });
 
-         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__["default"])(AB);
+         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__["default"])(
+            AB,
+            `${base}_hideFields`
+         );
          this.PopupHideFieldComponent.on("changed", (settings) => {
             this.callbackFieldsVisible(settings);
          });
 
          // var PopupMassUpdateComponent = new ABPopupMassUpdate(App, idBase);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_8__["default"])(
+               AB,
+               `${base}_popupNewDataField`
+            );
+         }
 
-         this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_8__["default"])(AB);
-
-         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__["default"])(AB);
+         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__["default"])(
+            AB,
+            `${base}_sortFields`
+         );
          this.PopupSortFieldComponent.on("changed", (settings) => {
             this.callbackSortFields(settings);
          });
 
-         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__["default"](AB);
+         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__["default"](
+            AB,
+            `${base}_export`
+         );
 
-         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__["default"](AB);
+         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__["default"](
+            AB,
+            `${base}_import`
+         );
          // this.PopupImportObjectComponent.on("done", () => {
          //    this.populateObjectWorkspace(this.CurrentObject);
          // });
 
-         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_10__["default"])(AB);
-         this.PopupViewSettingsComponent.on("new.field", (key) => {
-            this.PopupNewDataFieldComponent.show(null, key);
-         });
+         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_10__["default"])(
+            AB,
+            `${base}_popupAddView`,
+            { isReadOnly: this.settings.isReadOnly }
+         );
+         if (!this.settings.isReadOnly) {
+            this.PopupViewSettingsComponent.on("new.field", (key) => {
+               this.PopupNewDataFieldComponent.show(null, key);
+            });
+         }
 
          // create ABViewDataCollection
          this.CurrentDatacollection = null;
@@ -16768,9 +16868,9 @@ __webpack_require__.r(__webpack_exports__);
             view: "button",
             type: "icon",
             autowidth: true,
-            css: "webix_primary",
+            css: "webix_transparent",
             label: L("New view"),
-            icon: "fa fa-plus",
+            icon: "fa fa-plus-circle",
             align: "center",
             click: () => {
                this.PopupViewSettingsComponent.show();
@@ -16849,14 +16949,14 @@ __webpack_require__.r(__webpack_exports__);
                         icon: "fa fa-plus",
                         css: "webix_transparent",
                         type: "icon",
-                        hidden: false, // !this.settings.isFieldAddable,
+                        hidden: this.settings.isReadOnly,
                         // minWidth: 115,
                         // autowidth: true,
                         click: function () {
                            _logic.toolbarAddFields(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      {
                         view: view,
                         id: ids.buttonFieldsVisible,
@@ -16871,7 +16971,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarFieldsVisible(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonFieldsVisibleSpacer },
                      {
                         view: view,
                         id: ids.buttonFilter,
@@ -16901,7 +17001,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarSort(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonSortSpacer },
                      {
                         view: view,
                         id: ids.buttonFrozen,
@@ -16916,7 +17016,7 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarFrozen(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonFrozenSpacer },
                      {
                         view: view,
                         id: ids.buttonLabel,
@@ -16924,13 +17024,12 @@ __webpack_require__.r(__webpack_exports__);
                         icon: "fa fa-crosshairs",
                         css: "webix_transparent",
                         type: "icon",
-                        // minWidth: 75,
-                        // autowidth: true,
+                        hidden: this.settings.isReadOnly,
                         click: function () {
                            _logic.toolbarDefineLabel(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      // {
                      //  view: view,
                      //  label: L("Permission"),
@@ -16950,11 +17049,12 @@ __webpack_require__.r(__webpack_exports__);
                         css: "webix_transparent",
                         type: "icon",
                         // minWidth: 80,
+                        hidden: this.settings.isReadOnly,
                         click: function () {
                            _logic.toolbarButtonImport();
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      {
                         view: view,
                         id: ids.buttonExport,
@@ -16984,7 +17084,11 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarMassUpdate(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     {
+                        responsive: "hide",
+                        hidden: true,
+                        id: ids.buttonMassUpdateSpacer,
+                     },
                      {
                         view: view,
                         id: ids.buttonDeleteSelected,
@@ -17000,11 +17104,16 @@ __webpack_require__.r(__webpack_exports__);
                            _logic.toolbarDeleteSelected(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     {
+                        responsive: "hide",
+                        hidden: true,
+                        id: ids.buttonDeleteSelectedSpacer,
+                     },
                   ],
                },
                {
                   css: { "background-color": "#747d84 !important" },
+                  hidden: this.settings.isReadOnly,
                   cols: [
                      {
                         view: view,
@@ -17033,6 +17142,7 @@ __webpack_require__.r(__webpack_exports__);
          return {
             view: "multiview",
             id: ids.component,
+            borderless: true,
             rows: [
                {
                   id: ids.error,
@@ -17125,6 +17235,7 @@ __webpack_require__.r(__webpack_exports__);
                               id: ids.buttonRowNew,
                               css: "webix_primary",
                               value: L("Add new row"),
+                              hidden: this.settings.isReadOnly,
                               click: () => {
                                  this.rowAdd();
                               },
@@ -17170,7 +17281,9 @@ __webpack_require__.r(__webpack_exports__);
 
          allInits.push(this.PopupHeaderEditMenu.init(AB));
 
-         allInits.push(this.PopupDefineLabelComponent.init(AB));
+         if (!this.settings.isReadOnly) {
+            allInits.push(this.PopupDefineLabelComponent.init(AB));
+         }
 
          // PopupFilterDataTableComponent.init({
          //    onChange: _logic.callbackFilterDataTable, // be notified when there is a change in the filters
@@ -17189,11 +17302,13 @@ __webpack_require__.r(__webpack_exports__);
          //       onSave: _logic.callbackAddFields, // be notified when a new Field is created & saved
          //    });
          // }
-         allInits.push(this.PopupNewDataFieldComponent.init(AB));
-         this.PopupNewDataFieldComponent.on("save", (...params) => {
-            this.callbackAddFields(...params);
-            this.PopupViewSettingsComponent.emit("field.added", params[0]);
-         });
+         if (!this.settings.isReadOnly) {
+            allInits.push(this.PopupNewDataFieldComponent.init(AB));
+            this.PopupNewDataFieldComponent.on("save", (...params) => {
+               this.callbackAddFields(...params);
+               this.PopupViewSettingsComponent.emit("field.added", params[0]);
+            });
+         }
 
          // // ?? what is this for ??
          // // var fieldList = Datatable.getFieldList();
@@ -17227,7 +17342,9 @@ __webpack_require__.r(__webpack_exports__);
        */
       applicationLoad(application) {
          super.applicationLoad(application);
-         this.PopupNewDataFieldComponent.applicationLoad(application);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent.applicationLoad(application);
+         }
 
          // this.CurrentDatacollection.application = CurrentApplication;
       }
@@ -17421,7 +17538,9 @@ __webpack_require__.r(__webpack_exports__);
                break;
             case "edit":
                // pass control on to our Popup:
-               this.PopupNewDataFieldComponent.show(field);
+               if (!this.settings.isReadOnly) {
+                  this.PopupNewDataFieldComponent.show(field);
+               }
                break;
 
             case "delete":
@@ -17548,7 +17667,9 @@ __webpack_require__.r(__webpack_exports__);
       enableUpdateDelete() {
          var ids = this.ids;
          $$(ids.buttonMassUpdate).show();
+         $$(ids.buttonMassUpdateSpacer).show();
          $$(ids.buttonDeleteSelected).show();
+         $$(ids.buttonDeleteSelectedSpacer).show();
       }
 
       /**
@@ -17560,7 +17681,9 @@ __webpack_require__.r(__webpack_exports__);
       disableUpdateDelete() {
          var ids = this.ids;
          $$(ids.buttonMassUpdate).hide();
+         $$(ids.buttonMassUpdateSpacer).hide();
          $$(ids.buttonDeleteSelected).hide();
+         $$(ids.buttonDeleteSelectedSpacer).hide();
       }
 
       /**
@@ -17690,7 +17813,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(ids.component).show();
+         $$(this.ids.component).show();
       }
 
       /**
@@ -17782,7 +17905,7 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.selectedObject).show();
 
          this.CurrentObjectID = objectID;
-         var object = this.AB.objectByID(objectID);
+         var object = this.CurrentObject;
 
          // get current view from object
          this.workspaceViews.objectLoad(object);
@@ -17791,35 +17914,16 @@ __webpack_require__.r(__webpack_exports__);
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid | ABViewKanBan | ABViewGantt}
 
-         // // get defined views
-         // // update the view picker in the toolbar
-
-         // // get toolbar config
-         // // update toolbar with approved tools
-
-         // /// still working with DataTable
-         // // initial data
-         // _logic.loadData();
-
-         // // the replicated tables are read only
-         // if (this.CurrentObject.isReadOnly) {
-         //    DataTable.readonly();
-
-         //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).disable();
-         // } else {
-         //    DataTable.editable();
-
-         //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).enable();
-         // }
-
          this.CurrentDatacollection.datasource = object;
 
          Datatable.objectLoad(object);
          Kanban.objectLoad(object);
          Gantt.objectLoad(object);
 
-         this.PopupNewDataFieldComponent.objectLoad(object);
-         this.PopupDefineLabelComponent.objectLoad(object);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent.objectLoad(object);
+            this.PopupDefineLabelComponent.objectLoad(object);
+         }
          // PopupFilterDataTableComponent.objectLoad(object);
          this.PopupFrozenColumnsComponent.objectLoad(object);
 
@@ -17886,9 +17990,14 @@ __webpack_require__.r(__webpack_exports__);
          $$(this.ids.noSelection).show(false, false);
       }
 
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
+      queryLoad(query) {
+         // attempt to use a query as an object
+         this.objectLoad(query);
       }
+
+      // get CurrentObject() {
+      //    return this.AB.objectByID(this.CurrentObjectID);
+      // }
 
       /**
        * @function loadAll
@@ -18010,11 +18119,17 @@ __webpack_require__.r(__webpack_exports__);
                $$(ids.buttonFieldsVisible).show();
                $$(ids.buttonFrozen).show();
                $$(ids.buttonSort).show();
+               $$(ids.buttonFieldsVisibleSpacer).show();
+               $$(ids.buttonFrozenSpacer).show();
+               $$(ids.buttonSortSpacer).show();
                break;
             case "kanban":
                $$(ids.buttonFieldsVisible).hide();
                $$(ids.buttonFrozen).hide();
                $$(ids.buttonSort).hide();
+               $$(ids.buttonFieldsVisibleSpacer).hide();
+               $$(ids.buttonFrozenSpacer).hide();
+               $$(ids.buttonSortSpacer).hide();
                break;
          }
 
@@ -18103,7 +18218,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UIWorkObjectWorkspace(init_settings);
+   return new UIWorkObjectWorkspace(ibase, init_settings);
 }
 
 
@@ -18128,7 +18243,8 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupIndex";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
@@ -18139,8 +18255,8 @@ __webpack_require__.r(__webpack_exports__);
        * @param {object} App
        * @param {string} idBase
        */
-      constructor() {
-         super("ui_work_object_workspace_popupIndex", {
+      constructor(base) {
+         super(base, {
             // component: idBase,
             popup: "",
             form: "",
@@ -18373,7 +18489,7 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             this.AB.notify.developer(err, {
-               context: "ui_work_object_workspace_popupIndex:save()",
+               context: `${this.ids.component}:save()`,
                message,
                vals,
             });
@@ -18422,8 +18538,7 @@ __webpack_require__.r(__webpack_exports__);
                      this.close();
                   } catch (err) {
                      this.AB.notify.developer(err, {
-                        context:
-                           "ui_work_object_workspace_popupIndex:removeIndex()",
+                        context: `${this.ids.component}:removeIndex()`,
                         ABIndex: this.CurrentIndex.toObj(),
                      });
                      this.ready();
@@ -18434,7 +18549,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupIndex();
+   return new UI_Work_Object_Workspace_PopupIndex(ibase);
 }
 
 
@@ -18459,13 +18574,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupDefineLabel";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupDefineLabel extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupDefineLabel", {
+      constructor(base) {
+         super(base, {
             // component: idBase,
             format: "",
             list: "",
@@ -18702,7 +18818,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupDefineLabel();
+   return new UI_Work_Object_Workspace_PopupDefineLabel(ibase);
 }
 
 
@@ -18727,13 +18843,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupExport";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    // var L = UIClass.L();
 
    class UI_Work_Object_PopupExport extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupExport", {
+      constructor(base) {
+         super(base, {
             popupExport: "",
             list: "",
          });
@@ -18924,7 +19041,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_PopupExport();
+   return new UI_Work_Object_PopupExport(ibase);
 }
 
 
@@ -18950,14 +19067,15 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupFrozenColumns";
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupFrozenColumns extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupFrozenColumns", {
+      constructor(base) {
+         super(base, {
             list: "",
          });
 
@@ -19205,7 +19323,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupFrozenColumns();
+   return new UI_Work_Object_Workspace_PopupFrozenColumns(ibase);
 }
 
 
@@ -19233,14 +19351,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupHeaderEditMenu";
    var ListClass = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UIWorkObjectWorkspacePopupHeaderEditMenu extends ListClass {
-      constructor() {
-         super("ui_work_object_workspace_popupHeaderEditMenu");
+      constructor(base) {
+         super(base);
 
          // overwrite the default common menu with our column Header
          // options.
@@ -19304,7 +19423,7 @@ __webpack_require__.r(__webpack_exports__);
          this.emit("click", command, this.field, this.$node);
       }
    }
-   return new UIWorkObjectWorkspacePopupHeaderEditMenu();
+   return new UIWorkObjectWorkspacePopupHeaderEditMenu(ibase);
 }
 
 
@@ -19329,13 +19448,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupHideFields";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupHideFields extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupHideFields", {
+      constructor(base) {
+         super(base, {
             list: "",
             buttonHide: "",
             buttonShow: "",
@@ -19683,7 +19803,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupHideFields();
+   return new UI_Work_Object_Workspace_PopupHideFields(ibase);
 }
 
 
@@ -19711,14 +19831,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupImport";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    // var L = UIClass.L();
    const ViewProperties = (0,_properties_views_ABViewCSVImporter__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Object_Workspace_PopupImport extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupImport");
+      constructor(base) {
+         super(base);
 
          this.popup = null;
          // {ABViewCSVImporter}
@@ -19761,7 +19882,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupImport();
+   return new UI_Work_Object_Workspace_PopupImport(ibase);
 }
 
 
@@ -19791,18 +19912,16 @@ __webpack_require__.r(__webpack_exports__);
 
 // const ABFieldManager = require("../AppBuilder/core/ABFieldManager");
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   // const uiConfig = AB.Config.uiSettings();
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "abd_work_object_workspace_popupNewDataField";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const L = UIClass.L();
 
    const PropertyManager = (0,_properties_PropertyManager__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Object_Workspace_PopupNewDataField extends UIClass {
-      //.extend(idBase, function(App) {
-
-      constructor() {
-         super("abd_work_object_workspace_popupNewDataField", {
+      constructor(base) {
+         super(base, {
             types: "",
             editDefinitions: "",
             buttonSave: "",
@@ -20654,7 +20773,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    } // end class
 
-   return new UI_Work_Object_Workspace_PopupNewDataField();
+   return new UI_Work_Object_Workspace_PopupNewDataField(ibase);
 }
 
 
@@ -20680,13 +20799,14 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupSortFields";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupSortFields extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_popupSortFields", {
+      constructor(base) {
+         super(base, {
             list: "",
             form: "",
          });
@@ -20711,7 +20831,7 @@ __webpack_require__.r(__webpack_exports__);
                   on: {
                      onItemClick: (/* id, e, node */) => {
                         this.clickAddNewSort();
-                        this.triggerOnChange();
+                        // this.triggerOnChange();
                      },
                   },
                },
@@ -21177,7 +21297,7 @@ __webpack_require__.r(__webpack_exports__);
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupSortFields();
+   return new UI_Work_Object_Workspace_PopupSortFields(ibase);
 }
 
 
@@ -21410,14 +21530,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const ABViewGrid = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase, isettings) {
+   ibase = ibase || "abd_work_object_workspace_popupAddView";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupAddView extends UIClass {
-      constructor() {
-         var base = "abd_work_object_workspace_popupAddView";
+      constructor(base, settings = {}) {
          super(base, {
             form: "",
             formAdditional: "",
@@ -21428,8 +21547,13 @@ __webpack_require__.r(__webpack_exports__);
             saveButton: "",
          });
 
+         settings.isReadOnly = settings.isReadOnly ?? false;
+         this.settings = settings;
+
          this._view = null;
          // {Grid/kanban/Gantt} the current UI View type we are displaying
+
+         this.comGrid = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${base}_grid`);
 
          this.comKanban = (0,_properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_3__["default"])(AB, `${base}_kanban`);
          this.comKanban.on("new.field", (key) => {
@@ -21483,9 +21607,10 @@ __webpack_require__.r(__webpack_exports__);
                   label: L("Type"),
                   id: ids.typeInput,
                   name: "type",
+                  hidden: this.settings.isReadOnly,
                   options: [
                      {
-                        id: ABViewGrid.type(),
+                        id: this.comGrid.type(),
                         value: L("Grid"),
                      },
                      {
@@ -21497,7 +21622,7 @@ __webpack_require__.r(__webpack_exports__);
                         value: L("Gantt"),
                      },
                   ],
-                  value: ABViewGrid.type(),
+                  value: this.comGrid.type(),
                   required: true,
                   on: {
                      onChange: (typeView) => {
@@ -21553,8 +21678,8 @@ __webpack_require__.r(__webpack_exports__);
          return {
             view: "window",
             id: ids.component,
-            height: 400,
             width: 400,
+            resize: true,
             head: {
                view: "toolbar",
                css: "webix_dark",
@@ -21632,7 +21757,7 @@ __webpack_require__.r(__webpack_exports__);
          // Default value
          else {
             $$(ids.nameInput).setValue("");
-            $$(ids.typeInput).setValue(ABViewGrid.type());
+            $$(ids.typeInput).setValue(this.comGrid.type());
          }
       }
 
@@ -21708,7 +21833,7 @@ __webpack_require__.r(__webpack_exports__);
          this.hide();
       }
    }
-   return new UI_Work_Object_Workspace_PopupAddView();
+   return new UI_Work_Object_Workspace_PopupAddView(ibase, isettings);
 }
 
 
@@ -21740,15 +21865,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_view_gantt";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    const ViewGanttProperties = (0,_properties_workspaceViews_ABViewGantt__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Object_Workspace_View_Gantt extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_view_gantt");
+      constructor(base) {
+         super(base);
       }
 
       // Our webix UI definition:
@@ -21944,7 +22070,7 @@ __webpack_require__.r(__webpack_exports__);
       }
       */
    }
-   return new UI_Work_Object_Workspace_View_Gantt();
+   return new UI_Work_Object_Workspace_View_Gantt(ibase);
 }
 
 
@@ -21976,15 +22102,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, iBase, iSettings) {
+   iBase = iBase || "ui_work_object_workspace_view_grid";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
    const ViewGridProperties = (0,_properties_workspaceViews_ABViewGrid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Object_Workspace_View_Grid extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_view_grid");
+      constructor(idBase, settings = {}) {
+         super(idBase);
+
+         settings.isReadOnly = settings.isReadOnly ?? false;
+         this.settings = settings;
       }
 
       // Our webix UI definition:
@@ -22087,7 +22217,12 @@ __webpack_require__.r(__webpack_exports__);
          var ui = component.ui();
          ui.id = this.ids.component;
          webix.ui(ui, $$(this.ids.component));
-         await component.init(this.AB);
+
+         let accessLevel = 2;
+         if (this.settings.isReadOnly) {
+            accessLevel = 1;
+         }
+         await component.init(this.AB, accessLevel);
 
          // Now call .datacollectionLoad() again to actually load the data.
          component.datacollectionLoad(this.datacollection);
@@ -22212,7 +22347,7 @@ __webpack_require__.r(__webpack_exports__);
       }
       */
    }
-   return new UI_Work_Object_Workspace_View_Grid();
+   return new UI_Work_Object_Workspace_View_Grid(iBase, iSettings);
 }
 
 
@@ -22244,15 +22379,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_view_kanban";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
-   const ViewKanbanProperties = (0,_properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const ViewKanbanProperties = (0,_properties_workspaceViews_ABViewKanban__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${ibase}_prop`);
 
    class UI_Work_Object_Workspace_View_Kanban extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_view_kanban");
+      constructor(base) {
+         super(base);
       }
 
       // Our webix UI definition:
@@ -22489,7 +22625,7 @@ __webpack_require__.r(__webpack_exports__);
       }
       */
    }
-   return new UI_Work_Object_Workspace_View_Kanban();
+   return new UI_Work_Object_Workspace_View_Kanban(ibase);
 }
 
 
@@ -22535,11 +22671,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase, isettings) {
+   ibase = ibase || "ui_work_object_workspace_workspaceviews";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    // var L = UIClass.L();
 
-   const Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${ibase}_grid`, isettings);
    const Gantt = (0,_ui_work_object_workspace_view_gantt__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
    const Kanban = (0,_ui_work_object_workspace_view_kanban__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
 
@@ -22564,8 +22701,8 @@ __webpack_require__.r(__webpack_exports__);
    };
 
    class ABObjectWorkspaceViewCollection extends UIClass {
-      constructor() {
-         super("ui_work_object_workspace_workspaceviews");
+      constructor(base, settings) {
+         super(base);
 
          this.AB = AB;
          // {ABFactory}
@@ -22780,7 +22917,7 @@ __webpack_require__.r(__webpack_exports__);
          this._currentView.sortFields = fields;
       }
    }
-   return new ABObjectWorkspaceViewCollection();
+   return new ABObjectWorkspaceViewCollection(ibase, isettings);
 }
 
 
@@ -22881,9 +23018,9 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       select(process) {
-         this.CurrentProcessID = process.id;
+         this.CurrentProcessID = process?.id;
 
-         if (process == null) this.ProcessWorkspace?.clearWorkspace();
+         if (!process) this.ProcessWorkspace?.clearWorkspace();
          else this.ProcessWorkspace?.populateWorkspace(process);
       }
    }
@@ -23188,7 +23325,8 @@ __webpack_require__.r(__webpack_exports__);
                            autowidth: true,
                            type: "form",
                            click: () => {
-                              return this.save();
+                              let vals = $$(this.ids.form).getValues();
+                              return this.save(vals);
                            },
                         },
                      ],
@@ -23232,9 +23370,9 @@ __webpack_require__.r(__webpack_exports__);
 
          try {
             // create a new process:
-            let newProcess = await this.CurrentApplication.processCreate(
-               values
-            );
+            let newProcess = await this.AB.processNew(values);
+            await newProcess.save();
+            await this.CurrentApplication.processInsert(newProcess);
             this.emit("save", newProcess);
             this.clear();
             this.hide();
@@ -24443,6 +24581,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
 /* harmony import */ var _ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_workspace_design */ "./src/rootPages/Designer/ui_work_query_workspace_design.js");
+/* harmony import */ var _ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace */ "./src/rootPages/Designer/ui_work_object_workspace.js");
+
 
 
 
@@ -24452,11 +24592,15 @@ __webpack_require__.r(__webpack_exports__);
    const uiConfig = AB.Config.uiSettings();
    var L = UIClass.L();
 
+   const iBase = "ab_work_query_workspace";
    const QueryDesignComponent = (0,_ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const QueryDisplayComponent = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${iBase}_display`, {
+      isReadOnly: true,
+   });
 
    class UI_Work_Query_Workspace extends UIClass {
       constructor(settings = {}) {
-         super("ab_work_query_workspace", {
+         super(iBase, {
             multiview: "",
             toolbar: "",
             modeButton: "",
@@ -24464,6 +24608,7 @@ __webpack_require__.r(__webpack_exports__);
             noSelection: "",
             run: "",
             design: "",
+            warnings: "",
          });
 
          this.settings = settings;
@@ -24521,6 +24666,11 @@ __webpack_require__.r(__webpack_exports__);
                   id: ids.component,
                   rows: [
                      {
+                        id: ids.warnings,
+                        view: "label",
+                        label: "",
+                     },
+                     {
                         id: ids.toolbar,
                         view: "tabbar",
                         // hidden: true,
@@ -24561,12 +24711,13 @@ __webpack_require__.r(__webpack_exports__);
                            },
                         },
                      },
+                     { height: 10 },
                      {
                         id: ids.multiview,
                         view: "multiview",
                         cells: [
                            QueryDesignComponent.ui(),
-                           // DataTable.ui()
+                           QueryDisplayComponent.ui(),
                         ],
                      },
                      // {
@@ -24589,7 +24740,10 @@ __webpack_require__.r(__webpack_exports__);
       init(AB) {
          this.AB = AB;
 
-         return Promise.all([QueryDesignComponent.init(AB)]);
+         return Promise.all([
+            QueryDesignComponent.init(AB),
+            QueryDisplayComponent.init(AB),
+         ]);
       }
 
       // applicationLoad(app) {
@@ -24611,8 +24765,8 @@ __webpack_require__.r(__webpack_exports__);
             // $$(ids.loadAllButton).show();
             // $$(ids.loadAllButton).refresh();
 
-            DataTable.show();
-            DataTable.populateObjectWorkspace(this.CurrentQuery);
+            QueryDisplayComponent.show();
+            QueryDisplayComponent.populateObjectWorkspace(this.CurrentQueryID);
 
             // $$(ids.multiview).setValue(DataTable.ui.id);
          }
@@ -24635,6 +24789,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.clearWorkspace();
          QueryDesignComponent.applicationLoad(application);
+         QueryDisplayComponent.applicationLoad(application);
       }
 
       clearWorkspace() {
@@ -24643,12 +24798,24 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       loadAll() {
-         DataTable.loadAll();
+         QueryDisplayComponent.loadAll();
       }
 
       queryLoad(query) {
-         // DataTable?.queryLoad(query);
+         super.queryLoad(query);
+
+         var messages = (query?.warnings() ?? []).map((w) => w.message);
+         let $warnings = $$(this.ids.warnings);
+         if (messages.length) {
+            $warnings.setValue(messages.join("\n"));
+            $warnings.show();
+         } else {
+            $warnings.setValue("");
+            $warnings.hide();
+         }
+
          QueryDesignComponent.queryLoad(query);
+         QueryDisplayComponent.queryLoad(query);
 
          if (!query) {
             this.clearWorkspace();
@@ -24663,7 +24830,7 @@ __webpack_require__.r(__webpack_exports__);
        * Set the tabs to the default state when a new query is selected.
        */
       resetTabs() {
-         $$(this.ids.toolbar).setValue(this.ids.design);
+         $$(this.ids.toolbar)?.setValue?.(this.ids.design);
       }
    }
 
@@ -24838,11 +25005,9 @@ __webpack_require__.r(__webpack_exports__);
                                     },
                                  ],
                               },
+                              { view: "resizer", borderless: true },
                               {
-                                 width: 20,
-                              },
-                              {
-                                 gravity: 2,
+                                 gravity: 3,
                                  rows: [
                                     {
                                        view: "label",
@@ -24853,9 +25018,11 @@ __webpack_require__.r(__webpack_exports__);
                                     {
                                        view: "tabview",
                                        id: ids.tabObjects,
-                                       tabMinWidth: 180,
                                        tabbar: {
-                                          bottomOffset: 1,
+                                          tabMinWidth: 240,
+                                          css: "webix_dark",
+                                          type: "bottom",
+                                          bottomOffset: 0,
                                        },
                                        cells: [
                                           {}, // require
@@ -24938,15 +25105,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @method CurrentQuery()
-       * A helper to return the current ABObject we are working with.
-       * @return {ABObject}
-       */
-      get CurrentQuery() {
-         return this.AB.queryByID(this.CurrentQueryID);
-      }
-
-      /**
        * @function applicationLoad
        *
        * Initialize the Object Workspace with the given ABApplication.
@@ -24976,7 +25134,7 @@ __webpack_require__.r(__webpack_exports__);
          this.queryLoad(query);
       }
       queryLoad(query) {
-         this.CurrentQueryID = query?.id;
+         super.queryLoad(query);
 
          let CurrentQuery = this.CurrentQuery;
          if (CurrentQuery == null) {
@@ -25743,7 +25901,6 @@ __webpack_require__.r(__webpack_exports__);
          var columns = CurrentQuery.columnHeaders(false, false);
          DataTable.refreshColumns(columns);
 
-         DataTable.showProgress({ type: "icon" });
          let qCurrentView = CurrentQuery.workspaceViews.getCurrentView();
 
          this.CurrentDatacollection.clearAll();
@@ -25768,6 +25925,8 @@ __webpack_require__.r(__webpack_exports__);
          // Bind datatable view to data view
          this.CurrentDatacollection.unbind(DataTable);
          this.CurrentDatacollection.bind(DataTable);
+
+         DataTable.showProgress({ type: "icon" });
 
          // set data:
          this.CurrentDatacollection.loadData(0, 50, () => {}).then(() => {

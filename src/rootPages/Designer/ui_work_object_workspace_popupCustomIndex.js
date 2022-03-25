@@ -5,7 +5,8 @@
  *
  */
 import UI_Class from "./ui_class";
-export default function (AB) {
+export default function (AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupIndex";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
@@ -16,8 +17,8 @@ export default function (AB) {
        * @param {object} App
        * @param {string} idBase
        */
-      constructor() {
-         super("ui_work_object_workspace_popupIndex", {
+      constructor(base) {
+         super(base, {
             // component: idBase,
             popup: "",
             form: "",
@@ -250,7 +251,7 @@ export default function (AB) {
             }
 
             this.AB.notify.developer(err, {
-               context: "ui_work_object_workspace_popupIndex:save()",
+               context: `${this.ids.component}:save()`,
                message,
                vals,
             });
@@ -299,8 +300,7 @@ export default function (AB) {
                      this.close();
                   } catch (err) {
                      this.AB.notify.developer(err, {
-                        context:
-                           "ui_work_object_workspace_popupIndex:removeIndex()",
+                        context: `${this.ids.component}:removeIndex()`,
                         ABIndex: this.CurrentIndex.toObj(),
                      });
                      this.ready();
@@ -311,5 +311,5 @@ export default function (AB) {
       }
    }
 
-   return new UI_Work_Object_Workspace_PopupIndex();
+   return new UI_Work_Object_Workspace_PopupIndex(ibase);
 }

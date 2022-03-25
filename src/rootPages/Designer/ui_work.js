@@ -45,21 +45,32 @@ export default function (AB) {
          // Keep track of the currently selected Tab Item (Object, Query, etc)
       }
 
-      /**
-       * @method ui()
-       * Return the webix definition of the UI we are managing.
-       * @return {json}
-       */
-      ui() {
+      scanTopic(app, key) {
+         let countObjects = 0;
+         let warnObjects = "";
+         if (app) {
+            app[key]().forEach((o) => {
+               countObjects += (o.warningsAll() || []).length;
+            });
+         }
+         if (countObjects) {
+            warnObjects = ` (${countObjects})`;
+         }
+         return warnObjects;
+      }
+      sidebarItems(app) {
+         let warnObjects = this.scanTopic(app, "objectsIncluded");
+         let warnQueries = this.scanTopic(app, "queriesIncluded");
+
          var sidebarItems = [
             {
                id: this.ids.tab_object,
-               value: L("Objects"),
+               value: `${L("Objects")}${warnObjects}`,
                icon: "fa fa-fw fa-database",
             },
             {
                id: this.ids.tab_query,
-               value: L("Queries"),
+               value: `${L("Queries")}${warnQueries}`,
                icon: "fa fa-fw fa-filter",
             },
             {
@@ -78,6 +89,17 @@ export default function (AB) {
                icon: "fa fa-fw fa-id-card-o",
             },
          ];
+
+         return sidebarItems;
+      }
+
+      /**
+       * @method ui()
+       * Return the webix definition of the UI we are managing.
+       * @return {json}
+       */
+      ui() {
+         var sidebarItems = this.sidebarItems();
 
          var expandMenu = (this.expandMenu = {
             id: this.ids.expandMenu,
@@ -163,9 +185,9 @@ export default function (AB) {
                {
                   cols: [
                      {
+                        id: this.ids.tabbar,
                         css: "webix_dark",
                         view: "sidebar",
-                        id: this.ids.tabbar,
                         width: 160,
                         data: sidebarItems.concat(collapseMenu),
                         on: {
@@ -292,6 +314,11 @@ export default function (AB) {
          AppDataCollectionWorkspace.applicationLoad(application);
          AppProcessWorkspace.applicationLoad(application);
          AppInterfaceWorkspace.applicationLoad(application);
+
+         let $tabbar = $$(this.ids.tabbar);
+         let sidebarItems = this.sidebarItems(application);
+         $tabbar?.define("data", sidebarItems);
+         $tabbar?.refresh();
 
          this.show();
       }

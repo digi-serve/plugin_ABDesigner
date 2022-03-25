@@ -29,16 +29,17 @@ import FWorkspaceKanban from "./ui_work_object_workspace_view_kanban";
 
 import FWorkspaceTrack from "./ui_work_object_workspace_popupTrack";
 
-export default function (AB, init_settings) {
+export default function (AB, ibase, init_settings) {
+   ibase = ibase || "abd_work_object_workspace";
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   var Datatable = FWorkspaceDatatable(AB);
-   var Gantt = FWorkspaceGantt(AB);
-   var Kanban = FWorkspaceKanban(AB);
+   var Datatable = FWorkspaceDatatable(AB, `${ibase}_view_grid`, init_settings);
+   var Gantt = FWorkspaceGantt(AB, `${ibase}_view_gantt`);
+   var Kanban = FWorkspaceKanban(AB, `${ibase}_view_kanban`);
 
-   var Track = FWorkspaceTrack(AB);
+   var Track = FWorkspaceTrack(AB, `${ibase}_track`);
 
    class UIWorkObjectWorkspace extends UIClass {
       /**
@@ -56,21 +57,26 @@ export default function (AB, init_settings) {
        * 								isFieldAddable: bool
        * 							}
        */
-      constructor(settings = {}) {
-         super("abd_work_object_workspace", {
+      constructor(base, settings = {}) {
+         super(base, {
             // component: `${base}_component`,
 
             buttonAddField: "",
             buttonDeleteSelected: "",
+            buttonDeleteSelectedSpacer: "",
             buttonExport: "",
             buttonImport: "",
             buttonFieldsVisible: "",
+            buttonFieldsVisibleSpacer: "",
             buttonFilter: "",
             buttonFrozen: "",
+            buttonFrozenSpacer: "",
             buttonLabel: "",
             buttonMassUpdate: "",
+            buttonMassUpdateSpacer: "",
             buttonRowNew: "",
             buttonSort: "",
+            buttonSortSpacer: "",
 
             listIndex: "",
             buttonIndex: "",
@@ -97,10 +103,14 @@ export default function (AB, init_settings) {
          // settings.isEditable = settings.isEditable ?? true;
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
+         settings.isReadOnly = settings.isReadOnly ?? false;
+         // settings.isLabelEditable = settings.isLabelEditable ?? true;
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
-         // this.settings = settings;
+         this.settings = settings;
 
-         this.workspaceViews = FWorkspaceViews(AB);
+         this.workspaceViews = FWorkspaceViews(AB, `${base}_views`, {
+            isReadOnly: this.settings.isReadOnly,
+         });
 
          this.hashViews = {};
          // {hash}  { view.id : webix_component }
@@ -138,57 +148,92 @@ export default function (AB, init_settings) {
          // The Kanban Object View.
          this.hashViews["kanban"] = Kanban;
 
-         this.PopupCustomIndex = new FPopupCustomIndex(AB);
+         this.PopupCustomIndex = new FPopupCustomIndex(
+            AB,
+            `${base}_customIndex`
+         );
          this.PopupCustomIndex.on("changed", () => {
             this.refreshIndexes();
          });
 
          // // Various Popups on our page:
-         this.PopupHeaderEditMenu = FPopupHeaderEditMenu(AB);
+         this.PopupHeaderEditMenu = FPopupHeaderEditMenu(
+            AB,
+            `${base}_headerEditMenu`
+         );
          this.PopupHeaderEditMenu.on("click", (action, field, node) => {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
-         this.PopupDefineLabelComponent = new FPopupDefineLabel(AB);
-         this.PopupDefineLabelComponent.on("changed", () => {
-            this.callbackDefineLabel();
-         });
-
+         if (!this.settings.isReadOnly) {
+            this.PopupDefineLabelComponent = new FPopupDefineLabel(
+               AB,
+               `${base}_defineLabel`
+            );
+            this.PopupDefineLabelComponent.on("changed", () => {
+               this.callbackDefineLabel();
+            });
+         }
          // var PopupFilterDataTableComponent = new ABPopupFilterDataTable(
          //    App,
          //    idBase
          // );
 
-         this.PopupFrozenColumnsComponent = new FPopupFrozenColumns(AB);
+         this.PopupFrozenColumnsComponent = new FPopupFrozenColumns(
+            AB,
+            `${base}_frozenFields`
+         );
          this.PopupFrozenColumnsComponent.on("changed", (settings) => {
             this.callbackFrozenColumns(settings);
          });
 
-         this.PopupHideFieldComponent = FPopupHideFields(AB);
+         this.PopupHideFieldComponent = FPopupHideFields(
+            AB,
+            `${base}_hideFields`
+         );
          this.PopupHideFieldComponent.on("changed", (settings) => {
             this.callbackFieldsVisible(settings);
          });
 
          // var PopupMassUpdateComponent = new ABPopupMassUpdate(App, idBase);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent = FPopupNewDataField(
+               AB,
+               `${base}_popupNewDataField`
+            );
+         }
 
-         this.PopupNewDataFieldComponent = FPopupNewDataField(AB);
-
-         this.PopupSortFieldComponent = FPopupSortField(AB);
+         this.PopupSortFieldComponent = FPopupSortField(
+            AB,
+            `${base}_sortFields`
+         );
          this.PopupSortFieldComponent.on("changed", (settings) => {
             this.callbackSortFields(settings);
          });
 
-         this.PopupExportObjectComponent = new FPopupExport(AB);
+         this.PopupExportObjectComponent = new FPopupExport(
+            AB,
+            `${base}_export`
+         );
 
-         this.PopupImportObjectComponent = new FPopupImport(AB);
+         this.PopupImportObjectComponent = new FPopupImport(
+            AB,
+            `${base}_import`
+         );
          // this.PopupImportObjectComponent.on("done", () => {
          //    this.populateObjectWorkspace(this.CurrentObject);
          // });
 
-         this.PopupViewSettingsComponent = FPopupViewSettings(AB);
-         this.PopupViewSettingsComponent.on("new.field", (key) => {
-            this.PopupNewDataFieldComponent.show(null, key);
-         });
+         this.PopupViewSettingsComponent = FPopupViewSettings(
+            AB,
+            `${base}_popupAddView`,
+            { isReadOnly: this.settings.isReadOnly }
+         );
+         if (!this.settings.isReadOnly) {
+            this.PopupViewSettingsComponent.on("new.field", (key) => {
+               this.PopupNewDataFieldComponent.show(null, key);
+            });
+         }
 
          // create ABViewDataCollection
          this.CurrentDatacollection = null;
@@ -216,9 +261,9 @@ export default function (AB, init_settings) {
             view: "button",
             type: "icon",
             autowidth: true,
-            css: "webix_primary",
+            css: "webix_transparent",
             label: L("New view"),
-            icon: "fa fa-plus",
+            icon: "fa fa-plus-circle",
             align: "center",
             click: () => {
                this.PopupViewSettingsComponent.show();
@@ -297,14 +342,14 @@ export default function (AB, init_settings) {
                         icon: "fa fa-plus",
                         css: "webix_transparent",
                         type: "icon",
-                        hidden: false, // !this.settings.isFieldAddable,
+                        hidden: this.settings.isReadOnly,
                         // minWidth: 115,
                         // autowidth: true,
                         click: function () {
                            _logic.toolbarAddFields(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      {
                         view: view,
                         id: ids.buttonFieldsVisible,
@@ -319,7 +364,7 @@ export default function (AB, init_settings) {
                            _logic.toolbarFieldsVisible(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonFieldsVisibleSpacer },
                      {
                         view: view,
                         id: ids.buttonFilter,
@@ -349,7 +394,7 @@ export default function (AB, init_settings) {
                            _logic.toolbarSort(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonSortSpacer },
                      {
                         view: view,
                         id: ids.buttonFrozen,
@@ -364,7 +409,7 @@ export default function (AB, init_settings) {
                            _logic.toolbarFrozen(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", id: ids.buttonFrozenSpacer },
                      {
                         view: view,
                         id: ids.buttonLabel,
@@ -372,13 +417,12 @@ export default function (AB, init_settings) {
                         icon: "fa fa-crosshairs",
                         css: "webix_transparent",
                         type: "icon",
-                        // minWidth: 75,
-                        // autowidth: true,
+                        hidden: this.settings.isReadOnly,
                         click: function () {
                            _logic.toolbarDefineLabel(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      // {
                      //  view: view,
                      //  label: L("Permission"),
@@ -398,11 +442,12 @@ export default function (AB, init_settings) {
                         css: "webix_transparent",
                         type: "icon",
                         // minWidth: 80,
+                        hidden: this.settings.isReadOnly,
                         click: function () {
                            _logic.toolbarButtonImport();
                         },
                      },
-                     { responsive: "hide" },
+                     { responsive: "hide", hidden: this.settings.isReadOnly },
                      {
                         view: view,
                         id: ids.buttonExport,
@@ -432,7 +477,11 @@ export default function (AB, init_settings) {
                            _logic.toolbarMassUpdate(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     {
+                        responsive: "hide",
+                        hidden: true,
+                        id: ids.buttonMassUpdateSpacer,
+                     },
                      {
                         view: view,
                         id: ids.buttonDeleteSelected,
@@ -448,11 +497,16 @@ export default function (AB, init_settings) {
                            _logic.toolbarDeleteSelected(this.$view);
                         },
                      },
-                     { responsive: "hide" },
+                     {
+                        responsive: "hide",
+                        hidden: true,
+                        id: ids.buttonDeleteSelectedSpacer,
+                     },
                   ],
                },
                {
                   css: { "background-color": "#747d84 !important" },
+                  hidden: this.settings.isReadOnly,
                   cols: [
                      {
                         view: view,
@@ -481,6 +535,7 @@ export default function (AB, init_settings) {
          return {
             view: "multiview",
             id: ids.component,
+            borderless: true,
             rows: [
                {
                   id: ids.error,
@@ -573,6 +628,7 @@ export default function (AB, init_settings) {
                               id: ids.buttonRowNew,
                               css: "webix_primary",
                               value: L("Add new row"),
+                              hidden: this.settings.isReadOnly,
                               click: () => {
                                  this.rowAdd();
                               },
@@ -618,7 +674,9 @@ export default function (AB, init_settings) {
 
          allInits.push(this.PopupHeaderEditMenu.init(AB));
 
-         allInits.push(this.PopupDefineLabelComponent.init(AB));
+         if (!this.settings.isReadOnly) {
+            allInits.push(this.PopupDefineLabelComponent.init(AB));
+         }
 
          // PopupFilterDataTableComponent.init({
          //    onChange: _logic.callbackFilterDataTable, // be notified when there is a change in the filters
@@ -637,11 +695,13 @@ export default function (AB, init_settings) {
          //       onSave: _logic.callbackAddFields, // be notified when a new Field is created & saved
          //    });
          // }
-         allInits.push(this.PopupNewDataFieldComponent.init(AB));
-         this.PopupNewDataFieldComponent.on("save", (...params) => {
-            this.callbackAddFields(...params);
-            this.PopupViewSettingsComponent.emit("field.added", params[0]);
-         });
+         if (!this.settings.isReadOnly) {
+            allInits.push(this.PopupNewDataFieldComponent.init(AB));
+            this.PopupNewDataFieldComponent.on("save", (...params) => {
+               this.callbackAddFields(...params);
+               this.PopupViewSettingsComponent.emit("field.added", params[0]);
+            });
+         }
 
          // // ?? what is this for ??
          // // var fieldList = Datatable.getFieldList();
@@ -675,7 +735,9 @@ export default function (AB, init_settings) {
        */
       applicationLoad(application) {
          super.applicationLoad(application);
-         this.PopupNewDataFieldComponent.applicationLoad(application);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent.applicationLoad(application);
+         }
 
          // this.CurrentDatacollection.application = CurrentApplication;
       }
@@ -869,7 +931,9 @@ export default function (AB, init_settings) {
                break;
             case "edit":
                // pass control on to our Popup:
-               this.PopupNewDataFieldComponent.show(field);
+               if (!this.settings.isReadOnly) {
+                  this.PopupNewDataFieldComponent.show(field);
+               }
                break;
 
             case "delete":
@@ -996,7 +1060,9 @@ export default function (AB, init_settings) {
       enableUpdateDelete() {
          var ids = this.ids;
          $$(ids.buttonMassUpdate).show();
+         $$(ids.buttonMassUpdateSpacer).show();
          $$(ids.buttonDeleteSelected).show();
+         $$(ids.buttonDeleteSelectedSpacer).show();
       }
 
       /**
@@ -1008,7 +1074,9 @@ export default function (AB, init_settings) {
       disableUpdateDelete() {
          var ids = this.ids;
          $$(ids.buttonMassUpdate).hide();
+         $$(ids.buttonMassUpdateSpacer).hide();
          $$(ids.buttonDeleteSelected).hide();
+         $$(ids.buttonDeleteSelectedSpacer).hide();
       }
 
       /**
@@ -1138,7 +1206,7 @@ export default function (AB, init_settings) {
        * Show this component.
        */
       show() {
-         $$(ids.component).show();
+         $$(this.ids.component).show();
       }
 
       /**
@@ -1230,7 +1298,7 @@ export default function (AB, init_settings) {
          $$(this.ids.selectedObject).show();
 
          this.CurrentObjectID = objectID;
-         var object = this.AB.objectByID(objectID);
+         var object = this.CurrentObject;
 
          // get current view from object
          this.workspaceViews.objectLoad(object);
@@ -1239,35 +1307,16 @@ export default function (AB, init_settings) {
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid | ABViewKanBan | ABViewGantt}
 
-         // // get defined views
-         // // update the view picker in the toolbar
-
-         // // get toolbar config
-         // // update toolbar with approved tools
-
-         // /// still working with DataTable
-         // // initial data
-         // _logic.loadData();
-
-         // // the replicated tables are read only
-         // if (this.CurrentObject.isReadOnly) {
-         //    DataTable.readonly();
-
-         //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).disable();
-         // } else {
-         //    DataTable.editable();
-
-         //    if ($$(ids.buttonRowNew)) $$(ids.buttonRowNew).enable();
-         // }
-
          this.CurrentDatacollection.datasource = object;
 
          Datatable.objectLoad(object);
          Kanban.objectLoad(object);
          Gantt.objectLoad(object);
 
-         this.PopupNewDataFieldComponent.objectLoad(object);
-         this.PopupDefineLabelComponent.objectLoad(object);
+         if (!this.settings.isReadOnly) {
+            this.PopupNewDataFieldComponent.objectLoad(object);
+            this.PopupDefineLabelComponent.objectLoad(object);
+         }
          // PopupFilterDataTableComponent.objectLoad(object);
          this.PopupFrozenColumnsComponent.objectLoad(object);
 
@@ -1334,9 +1383,14 @@ export default function (AB, init_settings) {
          $$(this.ids.noSelection).show(false, false);
       }
 
-      get CurrentObject() {
-         return this.AB.objectByID(this.CurrentObjectID);
+      queryLoad(query) {
+         // attempt to use a query as an object
+         this.objectLoad(query);
       }
+
+      // get CurrentObject() {
+      //    return this.AB.objectByID(this.CurrentObjectID);
+      // }
 
       /**
        * @function loadAll
@@ -1458,11 +1512,17 @@ export default function (AB, init_settings) {
                $$(ids.buttonFieldsVisible).show();
                $$(ids.buttonFrozen).show();
                $$(ids.buttonSort).show();
+               $$(ids.buttonFieldsVisibleSpacer).show();
+               $$(ids.buttonFrozenSpacer).show();
+               $$(ids.buttonSortSpacer).show();
                break;
             case "kanban":
                $$(ids.buttonFieldsVisible).hide();
                $$(ids.buttonFrozen).hide();
                $$(ids.buttonSort).hide();
+               $$(ids.buttonFieldsVisibleSpacer).hide();
+               $$(ids.buttonFrozenSpacer).hide();
+               $$(ids.buttonSortSpacer).hide();
                break;
          }
 
@@ -1551,5 +1611,5 @@ export default function (AB, init_settings) {
       }
    }
 
-   return new UIWorkObjectWorkspace(init_settings);
+   return new UIWorkObjectWorkspace(ibase, init_settings);
 }
