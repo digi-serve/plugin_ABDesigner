@@ -20,7 +20,6 @@ export default function (AB) {
    var L = UIClass.L();
 
    class UI_Work_Interface extends UIClass {
-
       constructor() {
          super("ab_work_interface");
       }
@@ -83,7 +82,7 @@ export default function (AB) {
          if (this.CurrentApplication) {
             InterfaceList?.applicationLoad(this.CurrentApplication);
          }
-         InterfaceList?.ready();
+         // InterfaceList?.ready();
       }
    }
 

@@ -13374,7 +13374,6 @@ __webpack_require__.r(__webpack_exports__);
    var L = UIClass.L();
 
    class UI_Work_Interface extends UIClass {
-
       constructor() {
          super("ab_work_interface");
       }
@@ -13437,7 +13436,7 @@ __webpack_require__.r(__webpack_exports__);
          if (this.CurrentApplication) {
             InterfaceList?.applicationLoad(this.CurrentApplication);
          }
-         InterfaceList?.ready();
+         // InterfaceList?.ready();
       }
    }
 
@@ -14628,8 +14627,9 @@ __webpack_require__.r(__webpack_exports__);
             form: "",
             buttonSave: "",
             buttonCancel: "",
+            parentList: "",
          });
-         this.ids.parentList = {};
+         // this.ids.parentList = {};
       }
 
       ui() {
