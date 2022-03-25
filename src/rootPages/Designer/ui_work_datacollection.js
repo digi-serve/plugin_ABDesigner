@@ -47,6 +47,10 @@ export default function (AB) {
          // Our init() function for setting up our UI
          DataCollectionList.on("selected", this.select);
 
+         DataCollectionWorkspace.on("addNew", (selectNew) => {
+            DataCollectionList.emit("addNew", selectNew);
+         });
+
          await DataCollectionWorkspace.init(AB);
          await DataCollectionList.init(AB);
       }
@@ -57,9 +61,14 @@ export default function (AB) {
        * @param {ABApplication} application
        */
       applicationLoad(application) {
+         const oldAppID = this.CurrentApplicationID;
+
          super.applicationLoad(application);
 
-         DataCollectionWorkspace.clearWorkspace();
+         if (oldAppID != this.CurrentApplicationID) {
+            DataCollectionWorkspace.clearWorkspace();
+         }
+
          DataCollectionList.applicationLoad(application);
          DataCollectionWorkspace.applicationLoad(application);
       }
@@ -70,9 +79,9 @@ export default function (AB) {
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         const ids = this.ids;
 
-         // DataCollectionList.busy();
+         $$(ids.component).show();
 
          const application = this.CurrentApplication;
          if (application) {
@@ -83,7 +92,7 @@ export default function (AB) {
       }
 
       async select(dc) {
-         DataCollectionWorkspace.clearWorkspace();
+         if (dc == null) DataCollectionWorkspace.clearWorkspace();
          await DataCollectionWorkspace.populateWorkspace(dc);
       }
    }

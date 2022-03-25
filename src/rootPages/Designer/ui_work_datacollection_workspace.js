@@ -1,5 +1,5 @@
 import UI_Class from "./ui_class";
-import FWorkspaceViews from "./ui_work_datacollection_workspace_workspaceviews";
+import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 import FWorkspaceDisplay from "./ui_work_object_workspace_view_grid";
 import FWorkspaceProperty from "./ui_work_datacollection_workspace_properties";
 
@@ -59,10 +59,10 @@ export default function (AB, init_settings) {
                            {
                               view: "button",
                               css: "webix_primary",
-                              label: L("Add new data view"),
+                              label: L("Add new data collection"),
                               type: "form",
                               autowidth: true,
-                              click: function () {
+                              click: () => {
                                  this.emit("addNew", true);
                               },
                            },
@@ -101,6 +101,10 @@ export default function (AB, init_settings) {
 
          this.workspaceViews.init(AB);
 
+         Property.on("save", async (datacollection) => {
+            await this.populateWorkspace(datacollection);
+         });
+
          await Datatable.init(AB);
          Property.init(AB);
 
@@ -108,6 +112,7 @@ export default function (AB, init_settings) {
          this.CurrentDatacollection.init();
 
          Datatable.datacollectionLoad(this.CurrentDatacollection);
+         Property.datacollectionLoad(this.CurrentDatacollection);
 
          $$(ids.noSelection).show();
       }
@@ -117,6 +122,14 @@ export default function (AB, init_settings) {
 
          Datatable.applicationLoad(application);
          Property.applicationLoad(application);
+      }
+
+      datacollectionLoad(datacollection) {
+         super.datacollectionLoad(datacollection);
+
+         this.CurrentDatacollection = this.AB.datacollectionByID(
+            this.CurrentDatacollectionID
+         );
       }
 
       /**
@@ -130,37 +143,15 @@ export default function (AB, init_settings) {
 
       loadData() {
          // update ABViewDataCollection settings
-         var wheres = {
-            glue: "and",
-            rules: [],
-         };
-         // if (this.workspaceViews?.filterConditions?.rules?.length > 0) {
-         //    wheres = this.workspaceViews.filterConditions;
-         // }
-
-         var sorts = [];
-         if (this.workspaceViews?.sortFields?.length > 0) {
-            sorts = this.workspaceViews?.sortFields;
-         }
-
-         this.CurrentDatacollection.fromValues({
-            settings: {
-               objectWorkspace: {
-                  filterConditions: wheres,
-                  sortFields: sorts,
-               },
-            },
-         });
-
-         this.CurrentDatacollection.refreshFilterConditions(wheres);
          this.CurrentDatacollection.clearAll();
-
          // WORKAROUND: load all data becuase kanban does not support pagination now
-         this.CurrentDatacollection.loadData(0, 30).catch((err) => {
+         try {
+            this.CurrentDatacollection.loadData(0, 20);
+         } catch (err) {
             let message = err.toString();
             if (typeof err == "string") {
                try {
-                  var jErr = JSON.parse(err);
+                  const jErr = JSON.parse(err);
                   if (jErr.data && jErr.data.sqlMessage) {
                      message = jErr.data.sqlMessage;
                   }
@@ -169,23 +160,12 @@ export default function (AB, init_settings) {
                }
             }
 
-            const ids = this.ids;
-            $$(ids.error).show();
-            $$(ids.error_msg).define("label", message);
-            $$(ids.error_msg).refresh();
-
-            // webix.alert({
-            //     title: "Error loading object Values ",
-            //     ok: "fix it",
-            //     text: message,
-            //     type: "alert-error"
-            // });
             this.AB.notify.developer(err, {
                context: "ui_work_datacollection_workspace.loadData()",
                message,
                datacollection: this.CurrentDatacollection.toObj(),
             });
-         });
+         }
       }
 
       clearWorkspace() {
@@ -197,17 +177,17 @@ export default function (AB, init_settings) {
       async populateWorkspace(datacollection) {
          const ids = this.ids;
 
-         this.CurrentDatacollection = datacollection;
+         this.datacollectionLoad(datacollection);
 
          // get current view from object
-         this.workspaceViews.datacollectionLoad(datacollection);
+         this.workspaceViews.objectLoad(this.CurrentDatacollection.datasource);
          const currentView = this.workspaceViews.getCurrentView();
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid}
 
-         Datatable.datacollectionLoad(datacollection);
-         Property.datacollectionLoad(datacollection);
+         Datatable.datacollectionLoad(this.CurrentDatacollection);
+         Property.datacollectionLoad(this.CurrentDatacollection);
 
          if (this.hashViewsGrid) {
             this.workspaceViews.setCurrentView(currentView.id);
@@ -215,7 +195,7 @@ export default function (AB, init_settings) {
          }
 
          // save current view
-         this.workspaceViews.save();
+         await this.workspaceViews.save();
 
          this.loadData();
 

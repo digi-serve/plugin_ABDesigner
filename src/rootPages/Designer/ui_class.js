@@ -32,6 +32,10 @@ export default function (AB) {
             this.CurrentQueryID = null;
             // {string}
             // the ABObjectQuery.id of the query we are working with.
+
+            this.CurrentDatacollectionID = null;
+            // {string}
+            // the ABDataCollection.id of the datacollection we are working with.
          }
 
          static L() {
@@ -66,13 +70,10 @@ export default function (AB) {
             this.CurrentQueryID = query?.id;
          }
 
-<<<<<<< HEAD
          datacollectionLoad(dc) {
             this.CurrentDatacollectionID = dc?.id;
          }
 
-=======
->>>>>>> master
          /**
           * @method CurrentObject()
           * A helper to return the current ABObject we are working with.

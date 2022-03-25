@@ -10690,9 +10690,116 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************************************!*\
   !*** ./src/rootPages/Designer/ui_class.js ***!
   \********************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-throw new Error("Module parse failed: Unexpected token (69:0)\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\n|          }\n| \n> <<<<<<< HEAD\n|          datacollectionLoad(dc) {\n|             this.CurrentDatacollectionID = dc?.id;");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * ui_class
+ *
+ * A common UI object for our UI pages.
+ *
+
+ */
+
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      myClass = class UI extends AB.ClassUI {
+         constructor(...params) {
+            super(...params);
+
+            this.AB = AB;
+            // {ABFactory}
+            // Our common ABFactory for our application.
+
+            this.CurrentApplicationID = null;
+            // {string} uuid
+            // The current ABApplication.id we are working with.
+
+            this.CurrentObjectID = null;
+            // {string}
+            // the ABObject.id of the object we are working with.
+
+            this.CurrentQueryID = null;
+            // {string}
+            // the ABObjectQuery.id of the query we are working with.
+
+            this.CurrentDatacollectionID = null;
+            // {string}
+            // the ABDataCollection.id of the datacollection we are working with.
+         }
+
+         static L() {
+            return function (...params) {
+               return AB.Multilingual.labelPlugin("ABDesigner", ...params);
+            };
+         }
+
+         /**
+          * @method CurrentApplication
+          * return the current ABApplication being worked on.
+          * @return {ABApplication} application
+          */
+         get CurrentApplication() {
+            return this.AB.applicationByID(this.CurrentApplicationID);
+         }
+
+         /**
+          * @function applicationLoad
+          * save the ABApplication.id of the current application.
+          * @param {ABApplication} app
+          */
+         applicationLoad(app) {
+            this.CurrentApplicationID = app?.id;
+         }
+
+         objectLoad(obj) {
+            this.CurrentObjectID = obj?.id;
+         }
+
+         queryLoad(query) {
+            this.CurrentQueryID = query?.id;
+         }
+
+         datacollectionLoad(dc) {
+            this.CurrentDatacollectionID = dc?.id;
+         }
+
+         /**
+          * @method CurrentObject()
+          * A helper to return the current ABObject we are working with.
+          * @return {ABObject}
+          */
+         get CurrentObject() {
+            let obj = this.AB.objectByID(this.CurrentObjectID);
+            if (!obj) {
+               obj = this.AB.queryByID(this.CurrentObjectID);
+            }
+            return obj;
+         }
+
+         /**
+          * @method CurrentQuery()
+          * A helper to return the current ABObjectQuery we are working with.
+          * @return {ABObjectQuery}
+          */
+         get CurrentQuery() {
+            return this.AB.queryByID(this.CurrentQueryID);
+         }
+      };
+   }
+
+   return myClass;
+}
+
 
 /***/ }),
 
@@ -12130,6 +12237,10 @@ __webpack_require__.r(__webpack_exports__);
          // Our init() function for setting up our UI
          DataCollectionList.on("selected", this.select);
 
+         DataCollectionWorkspace.on("addNew", (selectNew) => {
+            DataCollectionList.emit("addNew", selectNew);
+         });
+
          await DataCollectionWorkspace.init(AB);
          await DataCollectionList.init(AB);
       }
@@ -12140,9 +12251,14 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABApplication} application
        */
       applicationLoad(application) {
+         const oldAppID = this.CurrentApplicationID;
+
          super.applicationLoad(application);
 
-         DataCollectionWorkspace.clearWorkspace();
+         if (oldAppID != this.CurrentApplicationID) {
+            DataCollectionWorkspace.clearWorkspace();
+         }
+
          DataCollectionList.applicationLoad(application);
          DataCollectionWorkspace.applicationLoad(application);
       }
@@ -12153,9 +12269,9 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         const ids = this.ids;
 
-         // DataCollectionList.busy();
+         $$(ids.component).show();
 
          const application = this.CurrentApplication;
          if (application) {
@@ -12166,7 +12282,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       async select(dc) {
-         DataCollectionWorkspace.clearWorkspace();
+         if (dc == null) DataCollectionWorkspace.clearWorkspace();
          await DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
@@ -12203,6 +12319,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+
+   const AddForm = (0,_ui_work_datacollection_list_newDatacollection__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+
    class UI_Work_Datacollection_List extends UIClass {
       constructor() {
          super("ui_work_datacollection_list");
@@ -12245,7 +12364,6 @@ __webpack_require__.r(__webpack_exports__);
                         </div>`;
             },
          });
-         this.AddForm = (0,_ui_work_datacollection_list_newDatacollection__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
       }
 
       // Our webix UI definition:
@@ -12286,13 +12404,13 @@ __webpack_require__.r(__webpack_exports__);
          //
          // Add Form
          //
-         await this.AddForm.init(AB);
+         await AddForm.init(AB);
 
-         this.AddForm.on("cancel", () => {
-            this.AddForm.hide();
+         AddForm.on("cancel", () => {
+            AddForm.hide();
          });
 
-         this.AddForm.on("save", (q /* , select */) => {
+         AddForm.on("save", (q /* , select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
@@ -12322,7 +12440,7 @@ __webpack_require__.r(__webpack_exports__);
          this.ListComponent.dataLoad(application?.datacollectionsIncluded());
 
          // prepare our Popup with the current Application
-         this.AddForm.applicationLoad(application);
+         AddForm.applicationLoad(application);
       }
 
       /**
@@ -12353,7 +12471,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       clickNewDataCollection(/* selectNew */) {
          // show the new popup
-         this.AddForm.show();
+         AddForm.show();
       }
    }
 
@@ -13212,7 +13330,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ui_work_datacollection_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_datacollection_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_datacollection_workspace_workspaceviews.js");
+/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
 /* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
 /* harmony import */ var _ui_work_datacollection_workspace_properties__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_datacollection_workspace_properties */ "./src/rootPages/Designer/ui_work_datacollection_workspace_properties.js");
 
@@ -13240,7 +13358,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.settings = settings;
 
-         this.workspaceViews = (0,_ui_work_datacollection_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${base}_views`, settings);
+         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${base}_views`, settings);
          this.hashViewsGrid = Datatable;
       }
 
@@ -13276,10 +13394,10 @@ __webpack_require__.r(__webpack_exports__);
                            {
                               view: "button",
                               css: "webix_primary",
-                              label: L("Add new data view"),
+                              label: L("Add new data collection"),
                               type: "form",
                               autowidth: true,
-                              click: function () {
+                              click: () => {
                                  this.emit("addNew", true);
                               },
                            },
@@ -13318,6 +13436,10 @@ __webpack_require__.r(__webpack_exports__);
 
          this.workspaceViews.init(AB);
 
+         Property.on("save", async (datacollection) => {
+            await this.populateWorkspace(datacollection);
+         });
+
          await Datatable.init(AB);
          Property.init(AB);
 
@@ -13325,6 +13447,7 @@ __webpack_require__.r(__webpack_exports__);
          this.CurrentDatacollection.init();
 
          Datatable.datacollectionLoad(this.CurrentDatacollection);
+         Property.datacollectionLoad(this.CurrentDatacollection);
 
          $$(ids.noSelection).show();
       }
@@ -13334,6 +13457,14 @@ __webpack_require__.r(__webpack_exports__);
 
          Datatable.applicationLoad(application);
          Property.applicationLoad(application);
+      }
+
+      datacollectionLoad(datacollection) {
+         super.datacollectionLoad(datacollection);
+
+         this.CurrentDatacollection = this.AB.datacollectionByID(
+            this.CurrentDatacollectionID
+         );
       }
 
       /**
@@ -13347,37 +13478,15 @@ __webpack_require__.r(__webpack_exports__);
 
       loadData() {
          // update ABViewDataCollection settings
-         var wheres = {
-            glue: "and",
-            rules: [],
-         };
-         // if (this.workspaceViews?.filterConditions?.rules?.length > 0) {
-         //    wheres = this.workspaceViews.filterConditions;
-         // }
-
-         var sorts = [];
-         if (this.workspaceViews?.sortFields?.length > 0) {
-            sorts = this.workspaceViews?.sortFields;
-         }
-
-         this.CurrentDatacollection.fromValues({
-            settings: {
-               objectWorkspace: {
-                  filterConditions: wheres,
-                  sortFields: sorts,
-               },
-            },
-         });
-
-         this.CurrentDatacollection.refreshFilterConditions(wheres);
          this.CurrentDatacollection.clearAll();
-
          // WORKAROUND: load all data becuase kanban does not support pagination now
-         this.CurrentDatacollection.loadData(0, 30).catch((err) => {
+         try {
+            this.CurrentDatacollection.loadData(0, 20);
+         } catch (err) {
             let message = err.toString();
             if (typeof err == "string") {
                try {
-                  var jErr = JSON.parse(err);
+                  const jErr = JSON.parse(err);
                   if (jErr.data && jErr.data.sqlMessage) {
                      message = jErr.data.sqlMessage;
                   }
@@ -13386,23 +13495,12 @@ __webpack_require__.r(__webpack_exports__);
                }
             }
 
-            const ids = this.ids;
-            $$(ids.error).show();
-            $$(ids.error_msg).define("label", message);
-            $$(ids.error_msg).refresh();
-
-            // webix.alert({
-            //     title: "Error loading object Values ",
-            //     ok: "fix it",
-            //     text: message,
-            //     type: "alert-error"
-            // });
             this.AB.notify.developer(err, {
                context: "ui_work_datacollection_workspace.loadData()",
                message,
                datacollection: this.CurrentDatacollection.toObj(),
             });
-         });
+         }
       }
 
       clearWorkspace() {
@@ -13414,17 +13512,17 @@ __webpack_require__.r(__webpack_exports__);
       async populateWorkspace(datacollection) {
          const ids = this.ids;
 
-         this.CurrentDatacollection = datacollection;
+         this.datacollectionLoad(datacollection);
 
          // get current view from object
-         this.workspaceViews.datacollectionLoad(datacollection);
+         this.workspaceViews.objectLoad(this.CurrentDatacollection.datasource);
          const currentView = this.workspaceViews.getCurrentView();
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid}
 
-         Datatable.datacollectionLoad(datacollection);
-         Property.datacollectionLoad(datacollection);
+         Datatable.datacollectionLoad(this.CurrentDatacollection);
+         Property.datacollectionLoad(this.CurrentDatacollection);
 
          if (this.hashViewsGrid) {
             this.workspaceViews.setCurrentView(currentView.id);
@@ -13432,7 +13530,7 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          // save current view
-         this.workspaceViews.save();
+         await this.workspaceViews.save();
 
          this.loadData();
 
@@ -13520,6 +13618,18 @@ __webpack_require__.r(__webpack_exports__);
 
          this.viewList = null;
 
+         this.FilterComponent = this.AB.rowfilterNew(null, this.ids.filter);
+         this.FilterComponent.on("changed", () => {
+            this.onFilterChange();
+         });
+
+         this.filter_popup = webix.ui({
+            view: "popup",
+            width: 800,
+            hidden: true,
+            body: this.FilterComponent.ui,
+         });
+
          this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_1__["default"])(this.AB);
          this.PopupSortFieldComponent.ids = new UIClass(
             "ui_work_datacollection_workspace_popupSortFields",
@@ -13577,7 +13687,6 @@ __webpack_require__.r(__webpack_exports__);
                                     on: {
                                        onChange: (newv, oldv) => {
                                           if (newv == oldv) return;
-
                                           this.selectSource(newv, oldv);
                                        },
                                     },
@@ -13783,7 +13892,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.initPopupEditors();
       }
-/////////////////////////////////////////////////////////+++++
+
       /**
        * @function onAfterSelect()
        *
@@ -13800,20 +13909,13 @@ __webpack_require__.r(__webpack_exports__);
             this.AB.actions.populateInterfaceWorkspace(viewObj);
          }, 50);
       }
-/////////////////////////////////////////////////////////-----
-/////////////////////////////////////////////////////////+++++
+
       applicationLoad(application) {
          super.applicationLoad(application);
 
          const ids = this.ids;
 
          this.refreshDataSourceOptions();
-
-         // if (this.FilterComponent) {
-         //    this.FilterComponent.applicationLoad(this.CurrentApplication);
-         // } else {
-         //    console.error(".applicationLoad() called before .initPopupEditors");
-         // }
 
          this.listBusy();
 
@@ -13887,17 +13989,29 @@ __webpack_require__.r(__webpack_exports__);
 
          this.listReady();
       }
-/////////////////////////////////////////////////////////-----
+
       datacollectionLoad(datacollection) {
          const ids = this.ids;
          super.datacollectionLoad(datacollection);
 
-         this.CurrentDatacollection = datacollection;
+         this.CurrentDatacollection = this.AB.datacollectionByID(
+            this.CurrentDatacollectionID
+         );
 
          let settings = {};
 
          if (this.CurrentDatacollection) {
             settings = this.CurrentDatacollection.settings || {};
+
+            this.CurrentDatacollection.removeListener(
+               "loadData",
+               (rowsData) => {
+                  this.populateFixSelector(rowsData);
+               }
+            );
+            this.CurrentDatacollection.on("loadData", (rowsData) => {
+               this.populateFixSelector(rowsData);
+            });
          }
 
          // populate link data collection options
@@ -13913,25 +14027,14 @@ __webpack_require__.r(__webpack_exports__);
 
          this.populateBadgeNumber();
 
-         // populate data items to fix select options
-         this.populateFixSelector();
-         if (this.CurrentDatacollection) {
-            this.CurrentDatacollection.removeListener(
-               "loadData",
-               this.populateFixSelector
-            );
-            this.CurrentDatacollection.on("loadData", this.populateFixSelector);
+         // if selected soruce is a query, then hide advanced options UI
+         if (settings.isQuery) {
+            $$(ids.filterPanel).hide();
+            $$(ids.sortPanel).hide();
+         } else {
+            $$(ids.filterPanel).show();
+            $$(ids.sortPanel).show();
          }
-
-         // // if selected soruce is a query, then hide advanced options UI
-         // if (settings.isQuery) {
-         // 	$$(ids.filterPanel).hide();
-         // 	$$(ids.sortPanel).hide();
-         // }
-         // else {
-         // 	$$(ids.filterPanel).show();
-         // 	$$(ids.sortPanel).show();
-         // }
 
          this.refreshDataSourceOptions();
          $$(ids.dataSource).define("value", settings.datasourceID);
@@ -14073,11 +14176,9 @@ __webpack_require__.r(__webpack_exports__);
                })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
-
+                  this.emit("save", this.CurrentDatacollection);
                   this.ready();
-
                   this.callbacks.onSave(this.CurrentDatacollection);
-
                   resolve();
                });
          });
@@ -14087,9 +14188,7 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
 
          // get linked data collection list
-         const objSource = this.CurrentDatacollection
-            ? this.CurrentDatacollection.datasource
-            : null;
+         const objSource = this.CurrentDatacollection?.datasource || null;
 
          if (objSource) {
             const linkFields = objSource.connectFields();
@@ -14126,9 +14225,8 @@ __webpack_require__.r(__webpack_exports__);
                $$(ids.linkDatacollection).define("options", linkDvOptions);
                $$(ids.linkDatacollection).define(
                   "value",
-                  this.CurrentDatacollection
-                     ? this.CurrentDatacollection.settings.linkDatacollectionID
-                     : ""
+                  this.CurrentDatacollection?.settings?.linkDatacollectionID ||
+                     ""
                );
                $$(ids.linkDatacollection).refresh();
             } else {
@@ -14273,81 +14371,64 @@ __webpack_require__.r(__webpack_exports__);
          }
       }
 
-      populateFixSelector() {
+      populateFixSelector(rowsData) {
          const ids = this.ids;
 
-         let dataItems = [];
          let fixSelect = "";
 
-         if (
-            this.CurrentDatacollection &&
-            this.CurrentDatacollection.datasource
-         ) {
-            const datasource = this.CurrentDatacollection.datasource;
+         const datasource = this.CurrentDatacollection.datasource;
 
-            dataItems = this.CurrentDatacollection.getData().map((item) => {
+         const dataItems =
+            rowsData?.data?.map((item) => {
                return {
                   id: item.id,
                   value: datasource ? datasource.displayData(item) : "",
                };
-            });
+            }) || [];
 
-            // Add a current user option to allow select first row that match the current user
-            if (datasource) {
-               const userFields = datasource.fields((f) => f.key == "user");
-               if (userFields.length > 0)
-                  dataItems.unshift({
-                     id: "_CurrentUser",
-                     value: L("[Current User]"),
-                  });
+         // Add a current user option to allow select first row that match the current user
+         if (datasource) {
+            const userFields = datasource.fields((f) => f.key == "user");
+            if (userFields.length > 0)
+               dataItems.unshift({
+                  id: "_CurrentUser",
+                  value: L("[Current User]"),
+               });
 
-               // Add a first record option to allow select first row
-               dataItems.unshift(
-                  {
-                     id: "_FirstRecord",
-                     value: L("[First Record]"),
-                  },
-                  {
-                     id: "_FirstRecordDefault",
-                     value: L("[Default to First Record]"),
-                  }
-               );
-            }
-
-            dataItems.unshift({
-               id: "_SelectFixCursor",
-               value: L("Select fix cursor"),
-            });
-
-            fixSelect = this.CurrentDatacollection.settings.fixSelect || "";
+            // Add a first record option to allow select first row
+            dataItems.unshift(
+               {
+                  id: "_FirstRecord",
+                  value: L("[First Record]"),
+               },
+               {
+                  id: "_FirstRecordDefault",
+                  value: L("[Default to First Record]"),
+               }
+            );
          }
+
+         dataItems.unshift({
+            id: "",
+            value: L("Select fix cursor"),
+         });
+
+         fixSelect = this.CurrentDatacollection.settings.fixSelect || "";
 
          $$(ids.fixSelect).define("options", dataItems);
          $$(ids.fixSelect).define("value", fixSelect);
          $$(ids.fixSelect).refresh();
       }
-/////////////////////////////////////////////////////////+++++
+
       initPopupEditors() {
-         const ids = this.ids;
-
-         this.FilterComponent = this.AB.rowfilterNew(this.AB._App, ids.filter);
-
-         // this.FilterComponent.applicationLoad(this.CurrentApplication);
          this.FilterComponent.init({
             // when we make a change in the popups we want to make sure we save the new workspace to the properties to do so just fire an onChange event
             onChange: this.onFilterChange,
          });
 
-         this.filter_popup = webix.ui({
-            view: "popup",
-            width: 800,
-            hidden: true,
-            body: this.FilterComponent.ui,
-         });
-
          this.PopupSortFieldComponent.init(this.AB);
       }
-////////////////////////////////////-----
+
       selectSource(datasourceID, oldId) {
          const ids = this.ids;
          const selectedDatasource = $$(ids.dataSource)
@@ -14361,33 +14442,44 @@ __webpack_require__.r(__webpack_exports__);
             $$(ids.dataSource).unblockEvent();
          }
 
-         const datacollection = this.CurrentDatacollection;
+         // Set settings.datasourceID
+         const dcSettings = this.CurrentDatacollection.toObj() || {};
 
-         let datasource;
-
-         if (datacollection) {
-            datasource = datacollection.datasource;
-
-            // Set settings.datasourceID
-            const dcSettings = datacollection.toObj() || {};
+         if (!selectedDatasource.isQuery) {
             dcSettings.settings = dcSettings.settings || {};
             dcSettings.settings.datasourceID = datasourceID;
-            datacollection.fromValues(dcSettings);
-         }
+            dcSettings.settings.fixSelect = "";
+            dcSettings.settings.linkDatacollectionID = "";
+            dcSettings.settings.linkFieldID = "";
+            dcSettings.settings.objectWorkspace = {
+               filterConditions: {
+                  glue: "and",
+                  rules: [],
+               },
+               sortFields: [],
+            };
+            this.CurrentDatacollection.fromValues(dcSettings);
 
-         if (datasource instanceof this.AB.Class.ABObject) {
-            // populate fix selector
-            this.populateFixSelector();
+            // populate link data collection options
+            this.initLinkDatacollectionOptions();
+
+            // populate link fields
+            this.initLinkFieldOptions(
+               this.CurrentDatacollection?.datacollectionLink?.id || null
+            );
 
             // re-create filter & sort popups
             this.initPopupEditors();
 
+            // populate filter & sort popups
             this.populatePopupEditors();
+
+            this.populateBadgeNumber();
 
             // show options
             $$(ids.filterPanel).show();
             $$(ids.sortPanel).show();
-         } else if (datasource instanceof this.AB.Class.ABObjectQuery) {
+         } else {
             // hide options
             $$(ids.filterPanel).hide();
             $$(ids.sortPanel).hide();
@@ -14413,7 +14505,7 @@ __webpack_require__.r(__webpack_exports__);
          const filterValues = this.FilterComponent.getValue();
 
          datacollection.settings.objectWorkspace.filterConditions =
-            filterValues;
+            filterValues || { glue: "and", rules: [] };
 
          let allCompconste = true;
          filterValues.rules.forEach((f) => {
@@ -14516,185 +14608,6 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return new UI_Work_Datacollection_Workspace_Properties();
-}
-
-
-/***/ }),
-
-/***/ "./src/rootPages/Designer/ui_work_datacollection_workspace_workspaceviews.js":
-/*!***********************************************************************************!*\
-  !*** ./src/rootPages/Designer/ui_work_datacollection_workspace_workspaceviews.js ***!
-  \***********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
-// ABObjectWorkspaceViewCollection.js
-//
-// Manages the settings for a collection of views in the AppBuilder Object
-// Workspace
-//
-// Within the workspace, we offer the ability to view the current ABObject in
-// different ways: Grid, KanBan, Gantt
-//
-// We can define multiple views for each method, and each view will allow you
-// to customize certain view settings: Hidden Fields, Filters, Sorts, Frozen
-// columns, etc...
-//
-//
-
-
-
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase, isettings) {
-   ibase = ibase || "ui_work_datacollection_workspace_workspaceviews";
-   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // var L = UIClass.L();
-
-   const Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${ibase}_grid`, isettings);
-
-   const hashViewComponentGrid = Datatable;
-
-   const defaultAttributes = {
-      currentViewID: undefined,
-      list: [],
-   };
-
-   class ABObjectWorkspaceViewCollection extends UIClass {
-      constructor(base) {
-         super(base);
-
-         this.AB = AB;
-         // {ABFactory}
-
-         this._settings = null;
-         // {hash} { ABDataCollection.id  : {collection} }
-         // The data structure we are using to manage the different
-         // Views for each of our ABDataCollections.
-      }
-
-      async init(AB) {
-         this.AB = AB;
-
-         hashViewComponentGrid.init(AB);
-
-         // load in the stored View data.
-         this._settings = (await this.AB.Storage.get("workspaceviews")) || {};
-      }
-
-      datacollectionLoad(dc) {
-         if (this.CurrentDatacollectionID) {
-            // save current data:
-            this._settings[this.CurrentDatacollectionID] = this.toObj();
-         }
-         super.datacollectionLoad(dc);
-
-         hashViewComponentGrid.datacollectionLoad(dc);
-
-         this.fromObj(this._settings[this.CurrentDatacollectionID]);
-      }
-
-      /**
-       * @method fromObj
-       * take our persisted data, and properly load it
-       * into this object instance.
-       * @param {json} data  the persisted data
-       */
-      fromObj(data) {
-         data = data || AB.cloneDeep(defaultAttributes);
-
-         if ((data?.list ?? []).length === 0) {
-            // We should always have at least one default grid view. So if this list
-            // is empty we can assume we're 'upgrading' from the old single-view workspace...
-
-            const defaultGrid = Datatable.defaultSettings();
-            defaultGrid.isDefaultView = true;
-            data.list.unshift(defaultGrid);
-         } else {
-            // For our ABDesigner Datacollection workspace, these settings are
-            // enabled:
-            for (let i = 0; i < data.list.length; i++) {
-               for (const key in isettings)
-                  if (
-                     Object.prototype.hasOwnProperty.call(
-                        data.list[i].component.settings,
-                        key
-                     )
-                  )
-                     data.list[i].component.settings[key] = isettings[key];
-            }
-         }
-
-         this.importViews(data);
-
-         this.currentViewID = data.currentViewID;
-         if (!this.currentViewID) {
-            this.currentViewID = this.list()[0].id;
-         }
-      }
-
-      /**
-       * @method toObj()
-       *
-       * properly compile the current state of this ABApplication instance
-       * into the values needed for saving to the DB.
-       *
-       * Most of the instance data is stored in .json field, so be sure to
-       * update that from all the current values of our child fields.
-       *
-       * @return {json}
-       */
-      toObj() {
-         return {
-            currentViewID: this.currentViewID,
-            list: this._views,
-         };
-      }
-
-      list(fn = () => true) {
-         return this._views.filter(fn);
-      }
-
-      importViews(viewSettings) {
-         this._views = [];
-         viewSettings.list.forEach((view) => {
-            this.viewAdd(view, false);
-         });
-      }
-
-      getCurrentView() {
-         return this._views.find((v) => v.id == this.currentViewID);
-      }
-
-      setCurrentView(viewID) {
-         this.currentViewID = viewID;
-         this._currentView = this.getCurrentView();
-      }
-
-      async viewAdd(view, save = true) {
-         // var newView = new hashViewProperties[view.type](view, this);
-         this._views.push(view);
-         if (save) {
-            await this.save();
-         }
-         return view;
-      }
-
-      /**
-       * @method save()
-       * Persist our settings to local storage.
-       * @return {Promise}
-       */
-      async save() {
-         this._settings[this.CurrentDatacollectionID] = this.toObj();
-         await this.AB.Storage.set("workspaceviews", this._settings);
-      }
-   }
-   return new ABObjectWorkspaceViewCollection(ibase);
 }
 
 

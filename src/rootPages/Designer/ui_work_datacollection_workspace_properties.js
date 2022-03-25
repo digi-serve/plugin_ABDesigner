@@ -59,6 +59,18 @@ export default function (AB) {
 
          this.viewList = null;
 
+         this.FilterComponent = this.AB.rowfilterNew(null, this.ids.filter);
+         this.FilterComponent.on("changed", () => {
+            this.onFilterChange();
+         });
+
+         this.filter_popup = webix.ui({
+            view: "popup",
+            width: 800,
+            hidden: true,
+            body: this.FilterComponent.ui,
+         });
+
          this.PopupSortFieldComponent = FPopupSortField(this.AB);
          this.PopupSortFieldComponent.ids = new UIClass(
             "ui_work_datacollection_workspace_popupSortFields",
@@ -116,7 +128,6 @@ export default function (AB) {
                                     on: {
                                        onChange: (newv, oldv) => {
                                           if (newv == oldv) return;
-
                                           this.selectSource(newv, oldv);
                                        },
                                     },
@@ -322,7 +333,7 @@ export default function (AB) {
 
          this.initPopupEditors();
       }
-/////////////////////////////////////////////////////////+++++
+
       /**
        * @function onAfterSelect()
        *
@@ -339,20 +350,13 @@ export default function (AB) {
             this.AB.actions.populateInterfaceWorkspace(viewObj);
          }, 50);
       }
-/////////////////////////////////////////////////////////-----
-/////////////////////////////////////////////////////////+++++
+
       applicationLoad(application) {
          super.applicationLoad(application);
 
          const ids = this.ids;
 
          this.refreshDataSourceOptions();
-
-         // if (this.FilterComponent) {
-         //    this.FilterComponent.applicationLoad(this.CurrentApplication);
-         // } else {
-         //    console.error(".applicationLoad() called before .initPopupEditors");
-         // }
 
          this.listBusy();
 
@@ -426,17 +430,29 @@ export default function (AB) {
 
          this.listReady();
       }
-/////////////////////////////////////////////////////////-----
+
       datacollectionLoad(datacollection) {
          const ids = this.ids;
          super.datacollectionLoad(datacollection);
 
-         this.CurrentDatacollection = datacollection;
+         this.CurrentDatacollection = this.AB.datacollectionByID(
+            this.CurrentDatacollectionID
+         );
 
          let settings = {};
 
          if (this.CurrentDatacollection) {
             settings = this.CurrentDatacollection.settings || {};
+
+            this.CurrentDatacollection.removeListener(
+               "loadData",
+               (rowsData) => {
+                  this.populateFixSelector(rowsData);
+               }
+            );
+            this.CurrentDatacollection.on("loadData", (rowsData) => {
+               this.populateFixSelector(rowsData);
+            });
          }
 
          // populate link data collection options
@@ -452,25 +468,14 @@ export default function (AB) {
 
          this.populateBadgeNumber();
 
-         // populate data items to fix select options
-         this.populateFixSelector();
-         if (this.CurrentDatacollection) {
-            this.CurrentDatacollection.removeListener(
-               "loadData",
-               this.populateFixSelector
-            );
-            this.CurrentDatacollection.on("loadData", this.populateFixSelector);
+         // if selected soruce is a query, then hide advanced options UI
+         if (settings.isQuery) {
+            $$(ids.filterPanel).hide();
+            $$(ids.sortPanel).hide();
+         } else {
+            $$(ids.filterPanel).show();
+            $$(ids.sortPanel).show();
          }
-
-         // // if selected soruce is a query, then hide advanced options UI
-         // if (settings.isQuery) {
-         // 	$$(ids.filterPanel).hide();
-         // 	$$(ids.sortPanel).hide();
-         // }
-         // else {
-         // 	$$(ids.filterPanel).show();
-         // 	$$(ids.sortPanel).show();
-         // }
 
          this.refreshDataSourceOptions();
          $$(ids.dataSource).define("value", settings.datasourceID);
@@ -612,11 +617,9 @@ export default function (AB) {
                })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
-
+                  this.emit("save", this.CurrentDatacollection);
                   this.ready();
-
                   this.callbacks.onSave(this.CurrentDatacollection);
-
                   resolve();
                });
          });
@@ -626,9 +629,7 @@ export default function (AB) {
          const ids = this.ids;
 
          // get linked data collection list
-         const objSource = this.CurrentDatacollection
-            ? this.CurrentDatacollection.datasource
-            : null;
+         const objSource = this.CurrentDatacollection?.datasource || null;
 
          if (objSource) {
             const linkFields = objSource.connectFields();
@@ -665,9 +666,8 @@ export default function (AB) {
                $$(ids.linkDatacollection).define("options", linkDvOptions);
                $$(ids.linkDatacollection).define(
                   "value",
-                  this.CurrentDatacollection
-                     ? this.CurrentDatacollection.settings.linkDatacollectionID
-                     : ""
+                  this.CurrentDatacollection?.settings?.linkDatacollectionID ||
+                     ""
                );
                $$(ids.linkDatacollection).refresh();
             } else {
@@ -812,81 +812,64 @@ export default function (AB) {
          }
       }
 
-      populateFixSelector() {
+      populateFixSelector(rowsData) {
          const ids = this.ids;
 
-         let dataItems = [];
          let fixSelect = "";
 
-         if (
-            this.CurrentDatacollection &&
-            this.CurrentDatacollection.datasource
-         ) {
-            const datasource = this.CurrentDatacollection.datasource;
+         const datasource = this.CurrentDatacollection.datasource;
 
-            dataItems = this.CurrentDatacollection.getData().map((item) => {
+         const dataItems =
+            rowsData?.data?.map((item) => {
                return {
                   id: item.id,
                   value: datasource ? datasource.displayData(item) : "",
                };
-            });
+            }) || [];
 
-            // Add a current user option to allow select first row that match the current user
-            if (datasource) {
-               const userFields = datasource.fields((f) => f.key == "user");
-               if (userFields.length > 0)
-                  dataItems.unshift({
-                     id: "_CurrentUser",
-                     value: L("[Current User]"),
-                  });
+         // Add a current user option to allow select first row that match the current user
+         if (datasource) {
+            const userFields = datasource.fields((f) => f.key == "user");
+            if (userFields.length > 0)
+               dataItems.unshift({
+                  id: "_CurrentUser",
+                  value: L("[Current User]"),
+               });
 
-               // Add a first record option to allow select first row
-               dataItems.unshift(
-                  {
-                     id: "_FirstRecord",
-                     value: L("[First Record]"),
-                  },
-                  {
-                     id: "_FirstRecordDefault",
-                     value: L("[Default to First Record]"),
-                  }
-               );
-            }
-
-            dataItems.unshift({
-               id: "_SelectFixCursor",
-               value: L("Select fix cursor"),
-            });
-
-            fixSelect = this.CurrentDatacollection.settings.fixSelect || "";
+            // Add a first record option to allow select first row
+            dataItems.unshift(
+               {
+                  id: "_FirstRecord",
+                  value: L("[First Record]"),
+               },
+               {
+                  id: "_FirstRecordDefault",
+                  value: L("[Default to First Record]"),
+               }
+            );
          }
+
+         dataItems.unshift({
+            id: "",
+            value: L("Select fix cursor"),
+         });
+
+         fixSelect = this.CurrentDatacollection.settings.fixSelect || "";
 
          $$(ids.fixSelect).define("options", dataItems);
          $$(ids.fixSelect).define("value", fixSelect);
          $$(ids.fixSelect).refresh();
       }
-/////////////////////////////////////////////////////////+++++
+
       initPopupEditors() {
-         const ids = this.ids;
-
-         this.FilterComponent = this.AB.rowfilterNew(this.AB._App, ids.filter);
-
-         // this.FilterComponent.applicationLoad(this.CurrentApplication);
          this.FilterComponent.init({
             // when we make a change in the popups we want to make sure we save the new workspace to the properties to do so just fire an onChange event
             onChange: this.onFilterChange,
          });
 
-         this.filter_popup = webix.ui({
-            view: "popup",
-            width: 800,
-            hidden: true,
-            body: this.FilterComponent.ui,
-         });
-
          this.PopupSortFieldComponent.init(this.AB);
       }
-////////////////////////////////////-----
+
       selectSource(datasourceID, oldId) {
          const ids = this.ids;
          const selectedDatasource = $$(ids.dataSource)
@@ -900,33 +883,44 @@ export default function (AB) {
             $$(ids.dataSource).unblockEvent();
          }
 
-         const datacollection = this.CurrentDatacollection;
+         // Set settings.datasourceID
+         const dcSettings = this.CurrentDatacollection.toObj() || {};
 
-         let datasource;
-
-         if (datacollection) {
-            datasource = datacollection.datasource;
-
-            // Set settings.datasourceID
-            const dcSettings = datacollection.toObj() || {};
+         if (!selectedDatasource.isQuery) {
             dcSettings.settings = dcSettings.settings || {};
             dcSettings.settings.datasourceID = datasourceID;
-            datacollection.fromValues(dcSettings);
-         }
+            dcSettings.settings.fixSelect = "";
+            dcSettings.settings.linkDatacollectionID = "";
+            dcSettings.settings.linkFieldID = "";
+            dcSettings.settings.objectWorkspace = {
+               filterConditions: {
+                  glue: "and",
+                  rules: [],
+               },
+               sortFields: [],
+            };
+            this.CurrentDatacollection.fromValues(dcSettings);
 
-         if (datasource instanceof this.AB.Class.ABObject) {
-            // populate fix selector
-            this.populateFixSelector();
+            // populate link data collection options
+            this.initLinkDatacollectionOptions();
+
+            // populate link fields
+            this.initLinkFieldOptions(
+               this.CurrentDatacollection?.datacollectionLink?.id || null
+            );
 
             // re-create filter & sort popups
             this.initPopupEditors();
 
+            // populate filter & sort popups
             this.populatePopupEditors();
+
+            this.populateBadgeNumber();
 
             // show options
             $$(ids.filterPanel).show();
             $$(ids.sortPanel).show();
-         } else if (datasource instanceof this.AB.Class.ABObjectQuery) {
+         } else {
             // hide options
             $$(ids.filterPanel).hide();
             $$(ids.sortPanel).hide();
@@ -952,7 +946,7 @@ export default function (AB) {
          const filterValues = this.FilterComponent.getValue();
 
          datacollection.settings.objectWorkspace.filterConditions =
-            filterValues;
+            filterValues || { glue: "and", rules: [] };
 
          let allCompconste = true;
          filterValues.rules.forEach((f) => {
