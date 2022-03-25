@@ -41,19 +41,21 @@ export default function (AB, init_settings) {
          // the ABObjectQuery.id of the query we are working with.
 
          // TODO: once FilterComplex is merged into our core repo
+         // change this to:
          // this.DataFilter = AB.filterComplexNew(this.ids.filter);
          this.DataFilter = AB.rowfilterNew(null, this.ids.filter);
          this.DataFilter.init({ showObjectName: true });
          this.DataFilter.on("change", () => {
-            // if (this.DataFilter.isComplete()) {
-            if (!this.__saveInProcess) {
-               // prevent multiple "change" events from firing off
-               // a save()
-               this.__saveInProcess = this.save().finally(() => {
-                  this.__saveInProcess = null;
-               });
+            // don't bother saving if the filter condition is incomplete.
+            if (this.DataFilter.isComplete()) {
+               if (!this.__saveInProcess) {
+                  // prevent multiple "change" events from firing off
+                  // a save()
+                  this.__saveInProcess = this.save().finally(() => {
+                     this.__saveInProcess = null;
+                  });
+               }
             }
-            // }
          });
       }
 

@@ -8773,6 +8773,9 @@ __webpack_require__.r(__webpack_exports__);
          AppWorkspace.on("view.chooser", () => {
             AppChooser.show();
          });
+         AppWorkspace.on("warnings", () => {
+            AppChooser.emit("warnings");
+         });
 
          await Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]);
 
@@ -8861,6 +8864,11 @@ __webpack_require__.r(__webpack_exports__);
 
       async init(AB) {
          this.AB = AB;
+
+         this.warningsPropogate([AppList, AppForm]);
+         this.on("warnings", () => {
+            AppList.refreshList();
+         });
 
          AppList.on("view.workplace", (application) => {
             this.emit("view.workplace", application);
@@ -10811,6 +10819,29 @@ var myClass = null;
          get CurrentQuery() {
             return this.AB.queryByID(this.CurrentQueryID);
          }
+
+         /**
+          * @method refreshWarnings()
+          * reset the warnings on the provided ABObject and then start propogating
+          * the "warnings" display updates.
+          */
+         warningsRefresh(ABObject) {
+            ABObject.warningsEval();
+            this.emit("warnings");
+         }
+
+         /**
+          * @method warningsPropogate()
+          * If any of the passed in ui elements issue a "warnings" event, we will
+          * propogate that upwards.
+          */
+         warningsPropogate(elements = []) {
+            elements.forEach((e) => {
+               e.on("warnings", () => {
+                  this.emit("warnings");
+               });
+            });
+         }
       };
    }
 
@@ -12128,6 +12159,16 @@ __webpack_require__.r(__webpack_exports__);
       async init(AB) {
          this.AB = AB;
 
+         this.warningsPropogate([
+            AppObjectWorkspace,
+            AppQueryWorkspace,
+            AppDataCollectionWorkspace,
+            AppProcessWorkspace,
+         ]);
+         this.on("warnings", () => {
+            this.refreshSideBar(this.CurrentApplication);
+         });
+
          AppObjectWorkspace.init(AB);
          AppQueryWorkspace.init(AB);
          AppDataCollectionWorkspace.init(AB);
@@ -12187,6 +12228,13 @@ __webpack_require__.r(__webpack_exports__);
          this.tabSwitch(tabId);
       }
 
+      refreshSideBar(application) {
+         let $tabbar = $$(this.ids.tabbar);
+         let sidebarItems = this.sidebarItems(application);
+         $tabbar?.define("data", sidebarItems);
+         $tabbar?.refresh();
+      }
+
       /**
        * @method transitionWorkspace
        * Switch the UI to view the App Workspace screen.
@@ -12203,10 +12251,7 @@ __webpack_require__.r(__webpack_exports__);
          AppProcessWorkspace.applicationLoad(application);
          // AppInterfaceWorkspace.applicationLoad(application);
 
-         let $tabbar = $$(this.ids.tabbar);
-         let sidebarItems = this.sidebarItems(application);
-         $tabbar?.define("data", sidebarItems);
-         $tabbar?.refresh();
+         this.refreshSideBar(application);
 
          this.show();
       }
@@ -13487,6 +13532,11 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
 
          // Our init() function for setting up our UI
+
+         this.warningsPropogate([ObjectList, ObjectWorkspace]);
+         this.on("warnings", () => {
+            ObjectList.applicationLoad(this.CurrentApplication);
+         });
 
          ObjectList.on("selected", (objID) => {
             if (objID == null) ObjectWorkspace.clearObjectWorkspace();
@@ -15993,6 +16043,7 @@ __webpack_require__.r(__webpack_exports__);
 
       refreshView() {
          var ids = this.ids;
+         this.warningsRefresh(this.CurrentObject);
          var currentView = this.workspaceViews.getCurrentView();
          switch (currentView.type) {
             case "gantt":
@@ -16056,12 +16107,15 @@ __webpack_require__.r(__webpack_exports__);
                this.getBadgeHiddenFields();
                this.getBadgeFrozenColumn();
                break;
+
             case "filter":
                _logic.toolbarFilter($$(ids.buttonFilter).$view, field.id);
                break;
+
             case "sort":
                this.toolbarSort($$(this.ids.buttonSort).$view, field.id);
                break;
+
             case "freeze":
                var currentView = this.workspaceViews.getCurrentView();
                currentView.frozenColumnID = field.columnName;
@@ -16079,6 +16133,7 @@ __webpack_require__.r(__webpack_exports__);
                this.refreshView();
                this.getBadgeFrozenColumn();
                break;
+
             case "edit":
                // pass control on to our Popup:
                if (!this.settings.isReadOnly) {
@@ -16676,7 +16731,7 @@ __webpack_require__.r(__webpack_exports__);
                break;
          }
 
-         // get badge counts for server side components
+         // get badge counts
          this.getBadgeHiddenFields();
          this.getBadgeFrozenColumn();
          this.getBadgeSortFields();
@@ -22080,6 +22135,12 @@ __webpack_require__.r(__webpack_exports__);
             this.QueryList.emit("addNew");
          });
 
+         this.warningsPropogate([this.QueryList, this.QueryWorkspace]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            this.QueryList.applicationLoad(this.CurrentApplication);
+         });
+
          return Promise.all([
             this.QueryWorkspace.init(AB),
             this.QueryList.init(AB),
@@ -23135,7 +23196,7 @@ __webpack_require__.r(__webpack_exports__);
    const uiConfig = AB.Config.uiSettings();
    var L = UIClass.L();
 
-   const iBase = "ab_work_query_workspace";
+   const iBase = "ui_work_query_workspace";
    const QueryDesignComponent = (0,_ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
    const QueryDisplayComponent = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${iBase}_display`, {
       isReadOnly: true,
@@ -23283,6 +23344,11 @@ __webpack_require__.r(__webpack_exports__);
       init(AB) {
          this.AB = AB;
 
+         this.warningsPropogate([QueryDesignComponent, QueryDisplayComponent]);
+         this.on("warnings", () => {
+            this.refreshWarnings(this.CurrentQuery);
+         });
+
          return Promise.all([
             QueryDesignComponent.init(AB),
             QueryDisplayComponent.init(AB),
@@ -23344,9 +23410,7 @@ __webpack_require__.r(__webpack_exports__);
          QueryDisplayComponent.loadAll();
       }
 
-      queryLoad(query) {
-         super.queryLoad(query);
-
+      refreshWarnings(query) {
          var messages = (query?.warnings() ?? []).map((w) => w.message);
          let $warnings = $$(this.ids.warnings);
          if (messages.length) {
@@ -23356,6 +23420,12 @@ __webpack_require__.r(__webpack_exports__);
             $warnings.setValue("");
             $warnings.hide();
          }
+      }
+
+      queryLoad(query) {
+         super.queryLoad(query);
+
+         this.refreshWarnings(query);
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);
@@ -23437,12 +23507,22 @@ __webpack_require__.r(__webpack_exports__);
          // {string}
          // the ABObjectQuery.id of the query we are working with.
 
+         // TODO: once FilterComplex is merged into our core repo
+         // change this to:
+         // this.DataFilter = AB.filterComplexNew(this.ids.filter);
          this.DataFilter = AB.rowfilterNew(null, this.ids.filter);
-         this.DataFilter.init({
-            onChange: () => {
-               this.save();
-            },
-            showObjectName: true,
+         this.DataFilter.init({ showObjectName: true });
+         this.DataFilter.on("change", () => {
+            // don't bother saving if the filter condition is incomplete.
+            if (this.DataFilter.isComplete()) {
+               if (!this.__saveInProcess) {
+                  // prevent multiple "change" events from firing off
+                  // a save()
+                  this.__saveInProcess = this.save().finally(() => {
+                     this.__saveInProcess = null;
+                  });
+               }
+            }
          });
       }
 
@@ -24090,6 +24170,7 @@ __webpack_require__.r(__webpack_exports__);
                .then(() => {
                   // refresh data
                   this.refreshDataTable();
+                  this.warningsRefresh(CurrentQuery);
                   resolve();
                })
                .catch((err) => {
@@ -24307,18 +24388,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       refreshTree() {
-         // return new Promise((resolve, reject) => {
-         // Relationship Depth
-         // $$(ids.depth).blockEvent(); // prevents endless loop
-
-         // if (CurrentQuery.objectWorkspace.depth) {
-         // 	$$(ids.depth).setValue(CurrentQuery.objectWorkspace.depth);
-         // } else {
-         // 	$$(ids.depth).setValue(5);
-         // }
-
-         // $$(ids.depth).unblockEvent();
-
          let fnCheckItem = (treeStore, object, links, parentId = 0) => {
             (links || []).forEach((link) => {
                // NOTE: query v1
@@ -24384,10 +24453,6 @@ __webpack_require__.r(__webpack_exports__);
          // show loading cursor
          $$(ids.tree).showProgress({ type: "icon" });
 
-         // NOTE: render the tree component in Promise to prevent freeze UI.
-         // populate tree store
-
-         // Transition v2: testing w/o Promise here
          if (objBase) {
             let result = this.getChildItems(objBase.id);
 
@@ -24398,24 +24463,6 @@ __webpack_require__.r(__webpack_exports__);
             // show loading cursor
             $$(ids.tree).hideProgress();
          }
-
-         /* if (objBase) {
-                     _logic
-                        .getChildItems(objBase.id)
-                        .catch(reject)
-                        .then((result) => {
-                           $$(ids.tree).parse(result.treeItems);
-
-                           fnCheckItem($$(ids.tree), objBase, links);
-
-                           // show loading cursor
-                           $$(ids.tree).hideProgress({ type: "icon" });
-
-                           resolve();
-                        });
-                  }
-                  */
-         // });
       }
 
       refreshFilter() {
@@ -24434,8 +24481,6 @@ __webpack_require__.r(__webpack_exports__);
          if (this.CurrentDatacollection == null) return;
          let CurrentQuery = this.CurrentQuery;
          if (!CurrentQuery) return;
-
-         // console.log("Refresh data table *******");
 
          let DataTable = $$(this.ids.datatable);
          DataTable.clearAll();
@@ -24474,20 +24519,8 @@ __webpack_require__.r(__webpack_exports__);
          // set data:
          this.CurrentDatacollection.loadData(0, 50, () => {}).then(() => {
             this.CurrentDatacollection.bind(DataTable);
-            // DataTable.hideProgress();
+            // DataTable.hideProgress(); <-- happens on the .bind()
          });
-         // CurrentQuery.model().findAll({ limit: 20, where: CurrentQuery.workspaceViews.getCurrentView().filterConditions, sort: CurrentQuery.workspaceViews.getCurrentView().sortFields })
-         // 	.then((response) => {
-
-         // 		DataTable.clearAll();
-
-         // 		response.data.forEach((d) => {
-         // 			DataTable.add(d);
-         // 		})
-         // 	})
-         // 	.catch((err) => {
-         // 		OP.Error.log('Error running Query:', { error: err, query: CurrentQuery });
-         // 	});
       }
 
       getObject(objectId) {
