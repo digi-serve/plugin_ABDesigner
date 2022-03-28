@@ -8913,7 +8913,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./properties/process/ABProcessParticipant_selectManagersUI.js */ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js");
+/* harmony import */ var _ui_warnings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_warnings */ "./src/rootPages/Designer/ui_warnings.js");
+/* harmony import */ var _properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./properties/process/ABProcessParticipant_selectManagersUI.js */ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js");
 /*
  * AB Choose Form
  *
@@ -8921,22 +8922,24 @@ __webpack_require__.r(__webpack_exports__);
  *
  */
 
+
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
 
 
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
-   const ClassSelectManagersUI = (0,_properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const ClassSelectManagersUI = (0,_properties_process_ABProcessParticipant_selectManagersUI_js__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+
+   var Warnings = (0,_ui_warnings__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `view_warnings`, init_settings);
 
    class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
 
       constructor() {
          super("abd_choose_form", {
-            warnings: "",
             form: "",
             appFormPermissionList: "",
             appFormCreateRoleButton: "",
@@ -8973,10 +8976,7 @@ __webpack_require__.r(__webpack_exports__);
                         {
                            responsiveCell: false,
                            rows: [
-                              {
-                                 maxHeight: uiConfig.appListSpacerRowHeight,
-                                 hidden: uiConfig.hideMobile,
-                              },
+                              Warnings.ui(),
                               {
                                  view: "toolbar",
                                  css: "webix_dark",
@@ -9333,17 +9333,10 @@ __webpack_require__.r(__webpack_exports__);
                                           },
                                        ],
                                     },
-                                    {
-                                       height: 25,
-                                    },
-                                    {
-                                       id: this.ids.warnings,
-                                       view: "template",
-                                       autoheight: true,
-                                       template: "",
-                                       css: "webix_message webix_debug",
-                                    },
                                  ],
+                              },
+                              {
+                                 view: "spacer",
                               },
                            ],
                         },
@@ -9642,18 +9635,6 @@ __webpack_require__.r(__webpack_exports__);
                }
             });
 
-            var messages = this.CurrentApplication.warnings().map(
-               (w) => `<h5>${w.message}</h5>${this.objToString(w.data)}`
-            );
-            let $warnings = $$(this.ids.warnings);
-            if (messages.length) {
-               $warnings.setHTML(messages.join("</br>"));
-               $warnings.show();
-            } else {
-               $warnings.setHTML("");
-               $warnings.hide();
-            }
-
             // populate access manager ui
             var $accessManager = $$(this.ids.accessManager);
             $accessManager.removeView($accessManager.getChildViews()[0]);
@@ -9697,8 +9678,6 @@ __webpack_require__.r(__webpack_exports__);
 
          this.$form.clear();
          this.$form.clearValidation();
-
-         $$(this.ids.warnings).setHTML("");
 
          this.permissionPopulate(); // leave empty to clear selections.
 
@@ -9796,22 +9775,6 @@ __webpack_require__.r(__webpack_exports__);
          values.accessManagers = this.accessManagerUI.values();
          values.translationManagers = this.translationManagerUI.values();
          return values;
-      }
-
-      /**
-       * @function objToString()
-       *
-       * return a readable string from an object for warnings display
-       *
-       * @return {string}
-       */
-      objToString(obj) {
-         let str = "<div>";
-         for (const [p, val] of Object.entries(obj)) {
-            str += `<strong>${p}:</strong> ${val}</br>`;
-         }
-         str += "</div>";
-         return str;
       }
 
       /**
@@ -10105,6 +10068,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       show() {
          $$(this.ids.component).show();
+         Warnings.show(this.CurrentApplication);
       }
 
       /*
@@ -11969,12 +11933,15 @@ __webpack_require__.r(__webpack_exports__);
                   id: ids.warnings,
                   view: "scrollview",
                   scroll: "y",
+                  css: "webix_theme_dark",
+                  minHeight: 300,
                   body: {
                      rows: [
                         {
                            id: ids.warningsScroll,
                            template: "Here are my warnings",
                            autoheight: true,
+                           css: "webix_theme_dark",
                         },
                      ],
                   },
@@ -11995,10 +11962,11 @@ __webpack_require__.r(__webpack_exports__);
 
          let warningsAll = currentObject?.warningsAll();
          if (warningsAll?.length) {
-            let message = "";
+            let message = "<ul class='warningslist'>";
             warningsAll.forEach((issue) => {
-               message += `${issue.message}<br/>`;
+               message += `<li><i class="warningtext fa fa-warning"></i> ${issue.message}</li>`;
             });
+            message += `</ul>`;
             $$(ids.warningsScroll).setHTML(message);
             if ($$(ids.warnings).isVisible()) {
                $$(ids.buttonWarning).hide();

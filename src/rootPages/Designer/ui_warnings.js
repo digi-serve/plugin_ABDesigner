@@ -56,12 +56,15 @@ export default function (AB, iBase, iSettings) {
                   id: ids.warnings,
                   view: "scrollview",
                   scroll: "y",
+                  css: "webix_theme_dark",
+                  minHeight: 300,
                   body: {
                      rows: [
                         {
                            id: ids.warningsScroll,
                            template: "Here are my warnings",
                            autoheight: true,
+                           css: "webix_theme_dark",
                         },
                      ],
                   },
@@ -82,10 +85,11 @@ export default function (AB, iBase, iSettings) {
 
          let warningsAll = currentObject?.warningsAll();
          if (warningsAll?.length) {
-            let message = "";
+            let message = "<ul class='warningslist'>";
             warningsAll.forEach((issue) => {
-               message += `${issue.message}<br/>`;
+               message += `<li><i class="warningtext fa fa-warning"></i> ${issue.message}</li>`;
             });
+            message += `</ul>`;
             $$(ids.warningsScroll).setHTML(message);
             if ($$(ids.warnings).isVisible()) {
                $$(ids.buttonWarning).hide();

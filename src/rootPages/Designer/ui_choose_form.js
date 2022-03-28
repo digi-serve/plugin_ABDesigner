@@ -5,22 +5,24 @@
  *
  */
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
 import ABProcessParticipant_selectManagersUI from "./properties/process/ABProcessParticipant_selectManagersUI.js";
 
-export default function (AB) {
+export default function (AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
    const ClassSelectManagersUI = ABProcessParticipant_selectManagersUI(AB);
+
+   var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
 
    class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
 
       constructor() {
          super("abd_choose_form", {
-            warnings: "",
             form: "",
             appFormPermissionList: "",
             appFormCreateRoleButton: "",
@@ -57,10 +59,7 @@ export default function (AB) {
                         {
                            responsiveCell: false,
                            rows: [
-                              {
-                                 maxHeight: uiConfig.appListSpacerRowHeight,
-                                 hidden: uiConfig.hideMobile,
-                              },
+                              Warnings.ui(),
                               {
                                  view: "toolbar",
                                  css: "webix_dark",
@@ -417,17 +416,10 @@ export default function (AB) {
                                           },
                                        ],
                                     },
-                                    {
-                                       height: 25,
-                                    },
-                                    {
-                                       id: this.ids.warnings,
-                                       view: "template",
-                                       autoheight: true,
-                                       template: "",
-                                       css: "webix_message webix_debug",
-                                    },
                                  ],
+                              },
+                              {
+                                 view: "spacer",
                               },
                            ],
                         },
@@ -726,18 +718,6 @@ export default function (AB) {
                }
             });
 
-            var messages = this.CurrentApplication.warnings().map(
-               (w) => `<h5>${w.message}</h5>${this.objToString(w.data)}`
-            );
-            let $warnings = $$(this.ids.warnings);
-            if (messages.length) {
-               $warnings.setHTML(messages.join("</br>"));
-               $warnings.show();
-            } else {
-               $warnings.setHTML("");
-               $warnings.hide();
-            }
-
             // populate access manager ui
             var $accessManager = $$(this.ids.accessManager);
             $accessManager.removeView($accessManager.getChildViews()[0]);
@@ -781,8 +761,6 @@ export default function (AB) {
 
          this.$form.clear();
          this.$form.clearValidation();
-
-         $$(this.ids.warnings).setHTML("");
 
          this.permissionPopulate(); // leave empty to clear selections.
 
@@ -880,22 +858,6 @@ export default function (AB) {
          values.accessManagers = this.accessManagerUI.values();
          values.translationManagers = this.translationManagerUI.values();
          return values;
-      }
-
-      /**
-       * @function objToString()
-       *
-       * return a readable string from an object for warnings display
-       *
-       * @return {string}
-       */
-      objToString(obj) {
-         let str = "<div>";
-         for (const [p, val] of Object.entries(obj)) {
-            str += `<strong>${p}:</strong> ${val}</br>`;
-         }
-         str += "</div>";
-         return str;
       }
 
       /**
@@ -1189,6 +1151,7 @@ export default function (AB) {
        */
       show() {
          $$(this.ids.component).show();
+         Warnings.show(this.CurrentApplication);
       }
 
       /*
