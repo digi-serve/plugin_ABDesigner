@@ -2,6 +2,8 @@ import definitions from "./src/definitions.js";
 import ApplicationFactory from "./src/application.js";
 import Labels from "./src/labels/labels.js";
 
+import designerCSS from "./styles/Designer.css";
+
 if (window.__ABBS) {
    window.__ABBS.addPlugin({
       version: "0.0.0",
