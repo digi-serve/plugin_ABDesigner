@@ -60,7 +60,7 @@ export default function (AB, iBase, iSettings) {
                      rows: [
                         {
                            id: ids.warningsScroll,
-                           template: "Here are my warnings",
+                           template: "",
                            autoheight: true,
                         },
                      ],

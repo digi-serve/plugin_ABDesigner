@@ -11973,7 +11973,7 @@ __webpack_require__.r(__webpack_exports__);
                      rows: [
                         {
                            id: ids.warningsScroll,
-                           template: "Here are my warnings",
+                           template: "",
                            autoheight: true,
                         },
                      ],
