@@ -34,6 +34,11 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
+         this.warningsPropogate([AppList, AppForm]);
+         this.on("warnings", () => {
+            AppList.refreshList();
+         });
+
          AppList.on("view.workplace", (application) => {
             this.emit("view.workplace", application);
          });

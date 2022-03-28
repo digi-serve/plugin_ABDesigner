@@ -36,6 +36,11 @@ export default function (AB) {
 
          // Our init() function for setting up our UI
 
+         this.warningsPropogate([ObjectList, ObjectWorkspace]);
+         this.on("warnings", () => {
+            ObjectList.applicationLoad(this.CurrentApplication);
+         });
+
          ObjectList.on("selected", (objID) => {
             if (objID == null) ObjectWorkspace.clearObjectWorkspace();
             else ObjectWorkspace.populateObjectWorkspace(objID);

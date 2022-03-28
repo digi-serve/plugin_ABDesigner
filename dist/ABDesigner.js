@@ -8773,6 +8773,9 @@ __webpack_require__.r(__webpack_exports__);
          AppWorkspace.on("view.chooser", () => {
             AppChooser.show();
          });
+         AppWorkspace.on("warnings", () => {
+            AppChooser.emit("warnings");
+         });
 
          await Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]);
 
@@ -8861,6 +8864,11 @@ __webpack_require__.r(__webpack_exports__);
 
       async init(AB) {
          this.AB = AB;
+
+         this.warningsPropogate([AppList, AppForm]);
+         this.on("warnings", () => {
+            AppList.refreshList();
+         });
 
          AppList.on("view.workplace", (application) => {
             this.emit("view.workplace", application);
@@ -10317,6 +10325,9 @@ __webpack_require__.r(__webpack_exports__);
                         template: (obj, common) => {
                            return this.templateListItem(obj, common);
                         },
+                        tooltip: (obj) => {
+                           return this.toolTipListItem(obj);
+                        },
                         type: {
                            height: uiConfig.appListRowHeight, // Defines item height
                            iconGear: function (app) {
@@ -10678,17 +10689,33 @@ __webpack_require__.r(__webpack_exports__);
          //    this object and any of it's sub objects.
          //
          //
-         var numWarnings = (obj.warningsAll() || []).length;
+         var warnings = {
+            icon: "",
+            count: 0,
+         };
+         if (obj.warningsAll().length) {
+            warnings.icon = `<span class="webix_icon fa fa-warning pulseLight smalltext"></span>`;
+            warnings.count = obj.warningsAll().length;
+         }
          return `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>
-      <div class='ab-app-list-name'>${common.iconAdmin(obj)}${obj.label ?? ""
-            }(${numWarnings})</div>
+      <div class='ab-app-list-name'>${common.iconAdmin(obj)}${
+            obj.label ?? ""
+         }</div>
       <div class='ab-app-list-description'>${obj.description ?? ""}</div>
    </div>
    <div class='ab-app-list-edit'>
+      ${warnings.icon}
       ${common.iconGear(obj)}
    </div>
 </div>`;
+      }
+
+      toolTipListItem(obj) {
+         let issues = $$(this.ids.list)
+            .data.getItem(obj.id)
+            .warningsAll().length;
+         return issues ? `${issues} issues` : "";
       }
    }
    return new UIChooseList();
@@ -10796,6 +10823,29 @@ var myClass = null;
           */
          get CurrentQuery() {
             return this.AB.queryByID(this.CurrentQueryID);
+         }
+
+         /**
+          * @method refreshWarnings()
+          * reset the warnings on the provided ABObject and then start propogating
+          * the "warnings" display updates.
+          */
+         warningsRefresh(ABObject) {
+            ABObject.warningsEval();
+            this.emit("warnings");
+         }
+
+         /**
+          * @method warningsPropogate()
+          * If any of the passed in ui elements issue a "warnings" event, we will
+          * propogate that upwards.
+          */
+         warningsPropogate(elements = []) {
+            elements.forEach((e) => {
+               e.on("warnings", () => {
+                  this.emit("warnings");
+               });
+            });
          }
       };
    }
@@ -10940,6 +10990,9 @@ __webpack_require__.r(__webpack_exports__);
                   },
                   template: (obj, common) => {
                      return this.templateListItem(obj, common);
+                  },
+                  tooltip: (obj) => {
+                     return this.toolTipListItem(obj);
                   },
                   type: {
                      height: 35,
@@ -11435,7 +11488,7 @@ __webpack_require__.r(__webpack_exports__);
          if (typeof this._templateListItem == "string") {
             var warnText = "";
             if (warnings.length > 0) {
-               warnText = `(${warnings.length})`;
+               warnText = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>`;
             }
 
             return this._templateListItem
@@ -11445,6 +11498,21 @@ __webpack_require__.r(__webpack_exports__);
          }
          // else they sent in a function()
          return this._templateListItem(obj, common, warnings);
+      }
+
+      /**
+       * @function templateListItem
+       *
+       * Defines the template for each row of our ProcessList.
+       *
+       * @param {obj} obj the current instance of ABProcess for the row.
+       * @param {?} common the webix.common icon data structure
+       * @return {string}
+       */
+      toolTipListItem(obj) {
+         let issues = $$(this.ids.list).data.getItem(obj.id).warnings().length;
+
+         return issues ? `${issues} issues` : "";
       }
 
       /**
@@ -11838,14 +11906,15 @@ __webpack_require__.r(__webpack_exports__);
 
       scanTopic(app, key) {
          let countObjects = 0;
-         let warnObjects = "";
+         let warnObjects = {};
          if (app) {
             app[key]().forEach((o) => {
                countObjects += (o.warningsAll() || []).length;
             });
          }
          if (countObjects) {
-            warnObjects = ` (${countObjects})`;
+            warnObjects.icon = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseDark smalltext"></span>`;
+            warnObjects.count = countObjects;
          }
          return warnObjects;
       }
@@ -11856,13 +11925,15 @@ __webpack_require__.r(__webpack_exports__);
          var sidebarItems = [
             {
                id: this.ids.tab_object,
-               value: `${L("Objects")}${warnObjects}`,
+               value: `${L("Objects")}`,
                icon: "fa fa-fw fa-database",
+               issues: warnObjects,
             },
             {
                id: this.ids.tab_query,
-               value: `${L("Queries")}${warnQueries}`,
+               value: `${L("Queries")}`,
                icon: "fa fa-fw fa-filter",
+               issues: warnQueries,
             },
             {
                id: this.ids.tab_datacollection,
@@ -12005,6 +12076,26 @@ __webpack_require__.r(__webpack_exports__);
                               }
                            },
                         },
+                        template: function (obj, common) {
+                           if (common.collapsed) {
+                              return common.icon(obj, common);
+                           } else {
+                              return (
+                                 (obj.issues?.icon || "") +
+                                 common.icon(obj, common) +
+                                 "<span>" +
+                                 obj.value +
+                                 "</span>"
+                              );
+                           }
+                        },
+                        tooltip: {
+                           template: function (obj) {
+                              return obj.issues?.count
+                                 ? `${obj.issues?.count} issues`
+                                 : "";
+                           },
+                        },
                      },
                      {
                         id: this.ids.workspace,
@@ -12030,6 +12121,16 @@ __webpack_require__.r(__webpack_exports__);
        */
       async init(AB) {
          this.AB = AB;
+
+         this.warningsPropogate([
+            AppObjectWorkspace,
+            AppQueryWorkspace,
+            AppDataCollectionWorkspace,
+            AppProcessWorkspace,
+         ]);
+         this.on("warnings", () => {
+            this.refreshSideBar(this.CurrentApplication);
+         });
 
          AppObjectWorkspace.init(AB);
          AppQueryWorkspace.init(AB);
@@ -12090,6 +12191,13 @@ __webpack_require__.r(__webpack_exports__);
          this.tabSwitch(tabId);
       }
 
+      refreshSideBar(application) {
+         let $tabbar = $$(this.ids.tabbar);
+         let sidebarItems = this.sidebarItems(application);
+         $tabbar?.define("data", sidebarItems);
+         $tabbar?.refresh();
+      }
+
       /**
        * @method transitionWorkspace
        * Switch the UI to view the App Workspace screen.
@@ -12106,10 +12214,7 @@ __webpack_require__.r(__webpack_exports__);
          AppProcessWorkspace.applicationLoad(application);
          AppInterfaceWorkspace.applicationLoad(application);
 
-         let $tabbar = $$(this.ids.tabbar);
-         let sidebarItems = this.sidebarItems(application);
-         $tabbar?.define("data", sidebarItems);
-         $tabbar?.refresh();
+         this.refreshSideBar(application);
 
          this.show();
       }
@@ -14945,6 +15050,11 @@ __webpack_require__.r(__webpack_exports__);
 
          // Our init() function for setting up our UI
 
+         this.warningsPropogate([ObjectList, ObjectWorkspace]);
+         this.on("warnings", () => {
+            ObjectList.applicationLoad(this.CurrentApplication);
+         });
+
          ObjectList.on("selected", (objID) => {
             if (objID == null) ObjectWorkspace.clearObjectWorkspace();
             else ObjectWorkspace.populateObjectWorkspace(objID);
@@ -17450,6 +17560,7 @@ __webpack_require__.r(__webpack_exports__);
 
       refreshView() {
          var ids = this.ids;
+         this.warningsRefresh(this.CurrentObject);
          var currentView = this.workspaceViews.getCurrentView();
          switch (currentView.type) {
             case "gantt":
@@ -17513,12 +17624,15 @@ __webpack_require__.r(__webpack_exports__);
                this.getBadgeHiddenFields();
                this.getBadgeFrozenColumn();
                break;
+
             case "filter":
                _logic.toolbarFilter($$(ids.buttonFilter).$view, field.id);
                break;
+
             case "sort":
                this.toolbarSort($$(this.ids.buttonSort).$view, field.id);
                break;
+
             case "freeze":
                var currentView = this.workspaceViews.getCurrentView();
                currentView.frozenColumnID = field.columnName;
@@ -17536,6 +17650,7 @@ __webpack_require__.r(__webpack_exports__);
                this.refreshView();
                this.getBadgeFrozenColumn();
                break;
+
             case "edit":
                // pass control on to our Popup:
                if (!this.settings.isReadOnly) {
@@ -18133,7 +18248,7 @@ __webpack_require__.r(__webpack_exports__);
                break;
          }
 
-         // get badge counts for server side components
+         // get badge counts
          this.getBadgeHiddenFields();
          this.getBadgeFrozenColumn();
          this.getBadgeSortFields();
@@ -23537,6 +23652,12 @@ __webpack_require__.r(__webpack_exports__);
             this.QueryList.emit("addNew");
          });
 
+         this.warningsPropogate([this.QueryList, this.QueryWorkspace]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            this.QueryList.applicationLoad(this.CurrentApplication);
+         });
+
          return Promise.all([
             this.QueryWorkspace.init(AB),
             this.QueryList.init(AB),
@@ -24592,7 +24713,7 @@ __webpack_require__.r(__webpack_exports__);
    const uiConfig = AB.Config.uiSettings();
    var L = UIClass.L();
 
-   const iBase = "ab_work_query_workspace";
+   const iBase = "ui_work_query_workspace";
    const QueryDesignComponent = (0,_ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
    const QueryDisplayComponent = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${iBase}_display`, {
       isReadOnly: true,
@@ -24740,6 +24861,11 @@ __webpack_require__.r(__webpack_exports__);
       init(AB) {
          this.AB = AB;
 
+         this.warningsPropogate([QueryDesignComponent, QueryDisplayComponent]);
+         this.on("warnings", () => {
+            this.refreshWarnings(this.CurrentQuery);
+         });
+
          return Promise.all([
             QueryDesignComponent.init(AB),
             QueryDisplayComponent.init(AB),
@@ -24801,9 +24927,7 @@ __webpack_require__.r(__webpack_exports__);
          QueryDisplayComponent.loadAll();
       }
 
-      queryLoad(query) {
-         super.queryLoad(query);
-
+      refreshWarnings(query) {
          var messages = (query?.warnings() ?? []).map((w) => w.message);
          let $warnings = $$(this.ids.warnings);
          if (messages.length) {
@@ -24813,6 +24937,12 @@ __webpack_require__.r(__webpack_exports__);
             $warnings.setValue("");
             $warnings.hide();
          }
+      }
+
+      queryLoad(query) {
+         super.queryLoad(query);
+
+         this.refreshWarnings(query);
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);
@@ -24894,12 +25024,22 @@ __webpack_require__.r(__webpack_exports__);
          // {string}
          // the ABObjectQuery.id of the query we are working with.
 
+         // TODO: once FilterComplex is merged into our core repo
+         // change this to:
+         // this.DataFilter = AB.filterComplexNew(this.ids.filter);
          this.DataFilter = AB.rowfilterNew(null, this.ids.filter);
-         this.DataFilter.init({
-            onChange: () => {
-               this.save();
-            },
-            showObjectName: true,
+         this.DataFilter.init({ showObjectName: true });
+         this.DataFilter.on("change", () => {
+            // don't bother saving if the filter condition is incomplete.
+            if (this.DataFilter.isComplete()) {
+               if (!this.__saveInProcess) {
+                  // prevent multiple "change" events from firing off
+                  // a save()
+                  this.__saveInProcess = this.save().finally(() => {
+                     this.__saveInProcess = null;
+                  });
+               }
+            }
          });
       }
 
@@ -25547,6 +25687,7 @@ __webpack_require__.r(__webpack_exports__);
                .then(() => {
                   // refresh data
                   this.refreshDataTable();
+                  this.warningsRefresh(CurrentQuery);
                   resolve();
                })
                .catch((err) => {
@@ -25764,18 +25905,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       refreshTree() {
-         // return new Promise((resolve, reject) => {
-         // Relationship Depth
-         // $$(ids.depth).blockEvent(); // prevents endless loop
-
-         // if (CurrentQuery.objectWorkspace.depth) {
-         // 	$$(ids.depth).setValue(CurrentQuery.objectWorkspace.depth);
-         // } else {
-         // 	$$(ids.depth).setValue(5);
-         // }
-
-         // $$(ids.depth).unblockEvent();
-
          let fnCheckItem = (treeStore, object, links, parentId = 0) => {
             (links || []).forEach((link) => {
                // NOTE: query v1
@@ -25841,10 +25970,6 @@ __webpack_require__.r(__webpack_exports__);
          // show loading cursor
          $$(ids.tree).showProgress({ type: "icon" });
 
-         // NOTE: render the tree component in Promise to prevent freeze UI.
-         // populate tree store
-
-         // Transition v2: testing w/o Promise here
          if (objBase) {
             let result = this.getChildItems(objBase.id);
 
@@ -25855,24 +25980,6 @@ __webpack_require__.r(__webpack_exports__);
             // show loading cursor
             $$(ids.tree).hideProgress();
          }
-
-         /* if (objBase) {
-                     _logic
-                        .getChildItems(objBase.id)
-                        .catch(reject)
-                        .then((result) => {
-                           $$(ids.tree).parse(result.treeItems);
-
-                           fnCheckItem($$(ids.tree), objBase, links);
-
-                           // show loading cursor
-                           $$(ids.tree).hideProgress({ type: "icon" });
-
-                           resolve();
-                        });
-                  }
-                  */
-         // });
       }
 
       refreshFilter() {
@@ -25891,8 +25998,6 @@ __webpack_require__.r(__webpack_exports__);
          if (this.CurrentDatacollection == null) return;
          let CurrentQuery = this.CurrentQuery;
          if (!CurrentQuery) return;
-
-         // console.log("Refresh data table *******");
 
          let DataTable = $$(this.ids.datatable);
          DataTable.clearAll();
@@ -25931,20 +26036,8 @@ __webpack_require__.r(__webpack_exports__);
          // set data:
          this.CurrentDatacollection.loadData(0, 50, () => {}).then(() => {
             this.CurrentDatacollection.bind(DataTable);
-            // DataTable.hideProgress();
+            // DataTable.hideProgress(); <-- happens on the .bind()
          });
-         // CurrentQuery.model().findAll({ limit: 20, where: CurrentQuery.workspaceViews.getCurrentView().filterConditions, sort: CurrentQuery.workspaceViews.getCurrentView().sortFields })
-         // 	.then((response) => {
-
-         // 		DataTable.clearAll();
-
-         // 		response.data.forEach((d) => {
-         // 			DataTable.add(d);
-         // 		})
-         // 	})
-         // 	.catch((err) => {
-         // 		OP.Error.log('Error running Query:', { error: err, query: CurrentQuery });
-         // 	});
       }
 
       getObject(objectId) {

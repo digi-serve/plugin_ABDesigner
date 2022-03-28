@@ -843,6 +843,7 @@ export default function (AB, ibase, init_settings) {
 
       refreshView() {
          var ids = this.ids;
+         this.warningsRefresh(this.CurrentObject);
          var currentView = this.workspaceViews.getCurrentView();
          switch (currentView.type) {
             case "gantt":
@@ -906,12 +907,15 @@ export default function (AB, ibase, init_settings) {
                this.getBadgeHiddenFields();
                this.getBadgeFrozenColumn();
                break;
+
             case "filter":
                _logic.toolbarFilter($$(ids.buttonFilter).$view, field.id);
                break;
+
             case "sort":
                this.toolbarSort($$(this.ids.buttonSort).$view, field.id);
                break;
+
             case "freeze":
                var currentView = this.workspaceViews.getCurrentView();
                currentView.frozenColumnID = field.columnName;
@@ -929,6 +933,7 @@ export default function (AB, ibase, init_settings) {
                this.refreshView();
                this.getBadgeFrozenColumn();
                break;
+
             case "edit":
                // pass control on to our Popup:
                if (!this.settings.isReadOnly) {
@@ -1526,7 +1531,7 @@ export default function (AB, ibase, init_settings) {
                break;
          }
 
-         // get badge counts for server side components
+         // get badge counts
          this.getBadgeHiddenFields();
          this.getBadgeFrozenColumn();
          this.getBadgeSortFields();

@@ -87,6 +87,29 @@ export default function (AB) {
          get CurrentQuery() {
             return this.AB.queryByID(this.CurrentQueryID);
          }
+
+         /**
+          * @method refreshWarnings()
+          * reset the warnings on the provided ABObject and then start propogating
+          * the "warnings" display updates.
+          */
+         warningsRefresh(ABObject) {
+            ABObject.warningsEval();
+            this.emit("warnings");
+         }
+
+         /**
+          * @method warningsPropogate()
+          * If any of the passed in ui elements issue a "warnings" event, we will
+          * propogate that upwards.
+          */
+         warningsPropogate(elements = []) {
+            elements.forEach((e) => {
+               e.on("warnings", () => {
+                  this.emit("warnings");
+               });
+            });
+         }
       };
    }
 

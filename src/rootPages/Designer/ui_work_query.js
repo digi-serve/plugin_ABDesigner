@@ -44,6 +44,12 @@ export default function (AB) {
             this.QueryList.emit("addNew");
          });
 
+         this.warningsPropogate([this.QueryList, this.QueryWorkspace]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            this.QueryList.applicationLoad(this.CurrentApplication);
+         });
+
          return Promise.all([
             this.QueryWorkspace.init(AB),
             this.QueryList.init(AB),

@@ -36,8 +36,8 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             listSort: L("ab.object.list.sort", "*Sort"),
             listAsc: L("ab.object.list.sort.asc", "*A -> Z"),
             listDesc: L("ab.object.list.sort.desc", "*Z -> A"),
-            listGroup: L("ab.object.list.group", "*Group")
-         }
+            listGroup: L("ab.object.list.group", "*Group"),
+         },
       };
 
       // internal list of Webix IDs to reference our UI components.
@@ -49,7 +49,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
          searchText: this.unique("searchText"),
          sort: this.unique("sort"),
          group: this.unique("group"),
-         buttonNew: this.unique("buttonNew")
+         buttonNew: this.unique("buttonNew"),
       };
 
       // There is a Popup for adding a new Object:
@@ -86,7 +86,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                   height: 35,
                   headerHeight: 35,
                   iconGear:
-                     "<div class='ab-object-list-edit'><span class='webix_icon fa fa-cog'></span></div>"
+                     "<div class='ab-object-list-edit'><span class='webix_icon fa fa-cog'></span></div>",
                },
                on: {
                   onAfterSelect: function (id) {
@@ -97,13 +97,13 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                   },
                   onAfterEditStop: function (state, editor, ignoreUpdate) {
                      _logic.onAfterEditStop(state, editor, ignoreUpdate);
-                  }
+                  },
                },
                onClick: {
                   "ab-object-list-edit": function (e, id, trg) {
                      _logic.clickEditMenu(e, id, trg);
-                  }
-               }
+                  },
+               },
             },
             {
                view: "accordion",
@@ -131,8 +131,8 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                                  onTimedKeyPress: function () {
                                     _logic.listSearch();
                                     _logic.save();
-                                 }
-                              }
+                                 },
+                              },
                            },
                            {
                               id: ids.sort,
@@ -143,19 +143,19 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                               options: [
                                  {
                                     id: "asc",
-                                    value: labels.component.listAsc
+                                    value: labels.component.listAsc,
                                  },
                                  {
                                     id: "desc",
-                                    value: labels.component.listDesc
-                                 }
+                                    value: labels.component.listDesc,
+                                 },
                               ],
                               on: {
                                  onChange: (newVal, oldVal) => {
                                     _logic.listSort(newVal);
                                     _logic.save();
-                                 }
-                              }
+                                 },
+                              },
                            },
                            {
                               id: ids.group,
@@ -166,12 +166,12 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                                  onChange: (newVal, oldVal) => {
                                     _logic.listGroup(newVal);
                                     _logic.save();
-                                 }
-                              }
-                           }
-                        ]
-                     }
-                  }
+                                 },
+                              },
+                           },
+                        ],
+                     },
+                  },
                ],
                on: {
                   onAfterCollapse: (id) => {
@@ -181,8 +181,8 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                   onAfterExpand: (id) => {
                      _logic.listSettingExpand();
                      _logic.save();
-                  }
-               }
+                  },
+               },
             },
             {
                view: "button",
@@ -192,9 +192,9 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                type: "form",
                click: function () {
                   _logic.clickNewObject(true); // pass true so it will select the new object after you created it
-               }
-            }
-         ]
+               },
+            },
+         ],
       };
 
       var CurrentApplication = null;
@@ -218,19 +218,19 @@ module.exports = class AB_Work_Object_List extends ABComponent {
          }
 
          PopupNewObjectComponent.init({
-            onDone: _logic.callbackNewObject
+            onDone: _logic.callbackNewObject,
          });
 
          PopupEditObjectComponent.init({
             onClick: _logic.callbackObjectEditorMenu,
-            hideCopy: true
+            hideCopy: true,
          });
 
          _settings = webix.storage.local.get("object_settings") || {
             objectlistIsOpen: false,
             objectlistSearchText: "",
             objectlistSortDirection: "",
-            objectlistIsGroup: false
+            objectlistIsGroup: false,
          };
 
          // mark initialed
@@ -278,21 +278,17 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                });
             }
             objectList = new webix.DataCollection({
-               data: includedObjects
+               data: includedObjects,
             });
 
             // setup object list settings
-            $$(ids.listSetting)
-               .getParentView()
-               .blockEvent();
+            $$(ids.listSetting).getParentView().blockEvent();
             $$(ids.listSetting).define(
                "collapsed",
                _settings.objectlistIsOpen != true
             );
             $$(ids.listSetting).refresh();
-            $$(ids.listSetting)
-               .getParentView()
-               .unblockEvent();
+            $$(ids.listSetting).getParentView().unblockEvent();
 
             $$(ids.searchText).blockEvent();
             $$(ids.searchText).setValue(_settings.objectlistSearchText);
@@ -363,9 +359,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
          },
 
          listSearch: function () {
-            var searchText = $$(ids.searchText)
-               .getValue()
-               .toLowerCase();
+            var searchText = $$(ids.searchText).getValue().toLowerCase();
 
             $$(ids.list).filter(function (item) {
                return (
@@ -442,7 +436,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                         text: labels.common.renameErrorMessage.replace(
                            "{0}",
                            state.old
-                        )
+                        ),
                      });
                   })
                   .then(function () {
@@ -453,7 +447,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                         text: labels.common.renameSuccessMessage.replace(
                            "{0}",
                            state.value
-                        )
+                        ),
                      });
                   });
             }
@@ -639,11 +633,11 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                               title: "Error removing object",
                               ok: "fix it",
                               text: strError,
-                              type: "alert-error"
+                              type: "alert-error",
                            });
                         });
                   }
-               }
+               },
             });
          },
 
@@ -659,7 +653,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
                   _logic.remove();
                   break;
             }
-         }
+         },
       });
 
       /*
@@ -671,7 +665,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
          "<div class='ab-object-list-item'>",
          "#label#",
          "{common.iconGear}",
-         "</div>"
+         "</div>",
       ].join("");
 
       // Expose any globally accessible Actions:
@@ -688,7 +682,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
 
          addNewObject: function (selectNew, callback) {
             _logic.clickNewObject(selectNew, callback);
-         }
+         },
       });
 
       //
