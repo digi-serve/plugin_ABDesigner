@@ -101,8 +101,13 @@ export default function (AB, init_settings) {
 
          this.workspaceViews.init(AB);
 
-         Property.on("save", async (datacollection) => {
-            await this.populateWorkspace(datacollection);
+         Property.on("save", async (datacollectionID) => {
+            // refresh grid view
+            if (this.hashViewsGrid) {
+               await this.hashViewsGrid.show(Datatable.defaultSettings());
+            }
+
+            await this.populateWorkspace(datacollectionID);
          });
 
          await Datatable.init(AB);
@@ -124,14 +129,6 @@ export default function (AB, init_settings) {
          Property.applicationLoad(application);
       }
 
-      datacollectionLoad(datacollection) {
-         super.datacollectionLoad(datacollection);
-
-         this.CurrentDatacollection = this.AB.datacollectionByID(
-            this.CurrentDatacollectionID
-         );
-      }
-
       /**
        * @function loadAll
        * Load all records
@@ -142,7 +139,6 @@ export default function (AB, init_settings) {
       }
 
       loadData() {
-         // update ABViewDataCollection settings
          this.CurrentDatacollection.clearAll();
          // WORKAROUND: load all data becuase kanban does not support pagination now
          try {
@@ -174,14 +170,19 @@ export default function (AB, init_settings) {
          $$(ids.noSelection).show(false, false);
       }
 
-      async populateWorkspace(datacollection) {
+      async populateWorkspace(datacollectionID) {
          const ids = this.ids;
 
-         this.datacollectionLoad(datacollection);
+         $$(ids.workspace).show();
+
+         this.CurrentDatacollectionID = datacollectionID;
+         this.CurrentDatacollection =
+            this.AB.datacollectionByID(datacollectionID);
 
          // get current view from object
          this.workspaceViews.objectLoad(this.CurrentDatacollection.datasource);
          const currentView = this.workspaceViews.getCurrentView();
+
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid}
@@ -191,6 +192,7 @@ export default function (AB, init_settings) {
 
          if (this.hashViewsGrid) {
             this.workspaceViews.setCurrentView(currentView.id);
+
             await this.hashViewsGrid.show(currentView);
          }
 
@@ -198,8 +200,6 @@ export default function (AB, init_settings) {
          await this.workspaceViews.save();
 
          this.loadData();
-
-         $$(ids.workspace).show();
       }
    }
 

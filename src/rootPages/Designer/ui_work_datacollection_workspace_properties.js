@@ -81,6 +81,7 @@ export default function (AB) {
          ).ids;
          this.PopupSortFieldComponent.on("changed", (sortSettings) => {
             this.onSortChange(sortSettings);
+            this.save();
          });
       }
 
@@ -129,6 +130,7 @@ export default function (AB) {
                                        onChange: (newv, oldv) => {
                                           if (newv == oldv) return;
                                           this.selectSource(newv, oldv);
+                                          this.save();
                                        },
                                     },
                                  },
@@ -617,7 +619,7 @@ export default function (AB) {
                })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
-                  this.emit("save", this.CurrentDatacollection);
+                  this.emit("save", this.CurrentDatacollection.id);
                   this.ready();
                   this.callbacks.onSave(this.CurrentDatacollection);
                   resolve();
@@ -883,24 +885,7 @@ export default function (AB) {
             $$(ids.dataSource).unblockEvent();
          }
 
-         // Set settings.datasourceID
-         const dcSettings = this.CurrentDatacollection.toObj() || {};
-
          if (!selectedDatasource.isQuery) {
-            dcSettings.settings = dcSettings.settings || {};
-            dcSettings.settings.datasourceID = datasourceID;
-            dcSettings.settings.fixSelect = "";
-            dcSettings.settings.linkDatacollectionID = "";
-            dcSettings.settings.linkFieldID = "";
-            dcSettings.settings.objectWorkspace = {
-               filterConditions: {
-                  glue: "and",
-                  rules: [],
-               },
-               sortFields: [],
-            };
-            this.CurrentDatacollection.fromValues(dcSettings);
-
             // populate link data collection options
             this.initLinkDatacollectionOptions();
 
@@ -925,8 +910,6 @@ export default function (AB) {
             $$(ids.filterPanel).hide();
             $$(ids.sortPanel).hide();
          }
-
-         this.save();
       }
 
       showFilterPopup($button) {
@@ -998,7 +981,6 @@ export default function (AB) {
             sortSettings || [];
 
          this.populateBadgeNumber();
-         this.save();
       }
 
       /**

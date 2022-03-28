@@ -74,10 +74,10 @@ export default function (AB) {
          //
          // List of Processes
          //
-         await this.ListComponent.init(AB);
+         this.ListComponent.init(AB);
 
          this.ListComponent.on("selected", (item) => {
-            this.emit("selected", item);
+            this.emit("selected", item.id);
          });
 
          this.ListComponent.on("addNew", (selectNew) => {

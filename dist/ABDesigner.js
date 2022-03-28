@@ -12269,7 +12269,10 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         DataCollectionList.on("selected", this.select);
+         DataCollectionList.on("selected", (dcID) => {
+            if (dcID == null) DataCollectionWorkspace.clearWorkspace();
+            else DataCollectionWorkspace.populateWorkspace(dcID);
+         });
 
          DataCollectionWorkspace.on("addNew", (selectNew) => {
             DataCollectionList.emit("addNew", selectNew);
@@ -12313,11 +12316,6 @@ __webpack_require__.r(__webpack_exports__);
             DataCollectionList.applicationLoad(application);
          }
          DataCollectionList.ready();
-      }
-
-      async select(dc) {
-         if (dc == null) DataCollectionWorkspace.clearWorkspace();
-         await DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
 
@@ -12417,10 +12415,10 @@ __webpack_require__.r(__webpack_exports__);
          //
          // List of Processes
          //
-         await this.ListComponent.init(AB);
+         this.ListComponent.init(AB);
 
          this.ListComponent.on("selected", (item) => {
-            this.emit("selected", item);
+            this.emit("selected", item.id);
          });
 
          this.ListComponent.on("addNew", (selectNew) => {
@@ -13470,8 +13468,13 @@ __webpack_require__.r(__webpack_exports__);
 
          this.workspaceViews.init(AB);
 
-         Property.on("save", async (datacollection) => {
-            await this.populateWorkspace(datacollection);
+         Property.on("save", async (datacollectionID) => {
+            // refresh grid view
+            if (this.hashViewsGrid) {
+               await this.hashViewsGrid.show(Datatable.defaultSettings());
+            }
+
+            await this.populateWorkspace(datacollectionID);
          });
 
          await Datatable.init(AB);
@@ -13493,14 +13496,6 @@ __webpack_require__.r(__webpack_exports__);
          Property.applicationLoad(application);
       }
 
-      datacollectionLoad(datacollection) {
-         super.datacollectionLoad(datacollection);
-
-         this.CurrentDatacollection = this.AB.datacollectionByID(
-            this.CurrentDatacollectionID
-         );
-      }
-
       /**
        * @function loadAll
        * Load all records
@@ -13511,7 +13506,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       loadData() {
-         // update ABViewDataCollection settings
          this.CurrentDatacollection.clearAll();
          // WORKAROUND: load all data becuase kanban does not support pagination now
          try {
@@ -13543,14 +13537,19 @@ __webpack_require__.r(__webpack_exports__);
          $$(ids.noSelection).show(false, false);
       }
 
-      async populateWorkspace(datacollection) {
+      async populateWorkspace(datacollectionID) {
          const ids = this.ids;
 
-         this.datacollectionLoad(datacollection);
+         $$(ids.workspace).show();
+
+         this.CurrentDatacollectionID = datacollectionID;
+         this.CurrentDatacollection =
+            this.AB.datacollectionByID(datacollectionID);
 
          // get current view from object
          this.workspaceViews.objectLoad(this.CurrentDatacollection.datasource);
          const currentView = this.workspaceViews.getCurrentView();
+
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid}
@@ -13560,6 +13559,7 @@ __webpack_require__.r(__webpack_exports__);
 
          if (this.hashViewsGrid) {
             this.workspaceViews.setCurrentView(currentView.id);
+
             await this.hashViewsGrid.show(currentView);
          }
 
@@ -13567,8 +13567,6 @@ __webpack_require__.r(__webpack_exports__);
          await this.workspaceViews.save();
 
          this.loadData();
-
-         $$(ids.workspace).show();
       }
    }
 
@@ -13674,6 +13672,7 @@ __webpack_require__.r(__webpack_exports__);
          ).ids;
          this.PopupSortFieldComponent.on("changed", (sortSettings) => {
             this.onSortChange(sortSettings);
+            this.save();
          });
       }
 
@@ -13722,6 +13721,7 @@ __webpack_require__.r(__webpack_exports__);
                                        onChange: (newv, oldv) => {
                                           if (newv == oldv) return;
                                           this.selectSource(newv, oldv);
+                                          this.save();
                                        },
                                     },
                                  },
@@ -14210,7 +14210,7 @@ __webpack_require__.r(__webpack_exports__);
                })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
-                  this.emit("save", this.CurrentDatacollection);
+                  this.emit("save", this.CurrentDatacollection.id);
                   this.ready();
                   this.callbacks.onSave(this.CurrentDatacollection);
                   resolve();
@@ -14476,24 +14476,7 @@ __webpack_require__.r(__webpack_exports__);
             $$(ids.dataSource).unblockEvent();
          }
 
-         // Set settings.datasourceID
-         const dcSettings = this.CurrentDatacollection.toObj() || {};
-
          if (!selectedDatasource.isQuery) {
-            dcSettings.settings = dcSettings.settings || {};
-            dcSettings.settings.datasourceID = datasourceID;
-            dcSettings.settings.fixSelect = "";
-            dcSettings.settings.linkDatacollectionID = "";
-            dcSettings.settings.linkFieldID = "";
-            dcSettings.settings.objectWorkspace = {
-               filterConditions: {
-                  glue: "and",
-                  rules: [],
-               },
-               sortFields: [],
-            };
-            this.CurrentDatacollection.fromValues(dcSettings);
-
             // populate link data collection options
             this.initLinkDatacollectionOptions();
 
@@ -14518,8 +14501,6 @@ __webpack_require__.r(__webpack_exports__);
             $$(ids.filterPanel).hide();
             $$(ids.sortPanel).hide();
          }
-
-         this.save();
       }
 
       showFilterPopup($button) {
@@ -14591,7 +14572,6 @@ __webpack_require__.r(__webpack_exports__);
             sortSettings || [];
 
          this.populateBadgeNumber();
-         this.save();
       }
 
       /**
