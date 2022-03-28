@@ -8981,17 +8981,13 @@ __webpack_require__.r(__webpack_exports__);
                                  view: "toolbar",
                                  css: "webix_dark",
                                  cols: [
+                                    { view: "spacer", width: 10 },
                                     {
                                        view: "label",
                                        label: L("Application Info"), //labels.component.formHeader,
                                        fillspace: true,
                                     },
                                  ],
-                              },
-                              {
-                                 id: this.ids.warnings,
-                                 view: "label",
-                                 label: "",
                               },
                               {
                                  view: "form",
@@ -9337,10 +9333,17 @@ __webpack_require__.r(__webpack_exports__);
                                           },
                                        ],
                                     },
+                                    {
+                                       height: 25,
+                                    },
+                                    {
+                                       id: this.ids.warnings,
+                                       view: "template",
+                                       autoheight: true,
+                                       template: "",
+                                       css: "webix_message webix_debug",
+                                    },
                                  ],
-                              },
-                              {
-                                 hidden: uiConfig.hideMobile,
                               },
                            ],
                         },
@@ -9640,14 +9643,14 @@ __webpack_require__.r(__webpack_exports__);
             });
 
             var messages = this.CurrentApplication.warnings().map(
-               (w) => w.message
+               (w) => `<h5>${w.message}</h5>${this.objToString(w.data)}`
             );
             let $warnings = $$(this.ids.warnings);
             if (messages.length) {
-               $warnings.setValue(messages.join("\n"));
+               $warnings.setHTML(messages.join("</br>"));
                $warnings.show();
             } else {
-               $warnings.setValue("");
+               $warnings.setHTML("");
                $warnings.hide();
             }
 
@@ -9695,7 +9698,7 @@ __webpack_require__.r(__webpack_exports__);
          this.$form.clear();
          this.$form.clearValidation();
 
-         $$(this.ids.warnings).setValue("");
+         $$(this.ids.warnings).setHTML("");
 
          this.permissionPopulate(); // leave empty to clear selections.
 
@@ -9793,6 +9796,22 @@ __webpack_require__.r(__webpack_exports__);
          values.accessManagers = this.accessManagerUI.values();
          values.translationManagers = this.translationManagerUI.values();
          return values;
+      }
+
+      /**
+       * @function objToString()
+       *
+       * return a readable string from an object for warnings display
+       *
+       * @return {string}
+       */
+      objToString(obj) {
+         let str = "<div>";
+         for (const [p, val] of Object.entries(obj)) {
+            str += `<strong>${p}:</strong> ${val}</br>`;
+         }
+         str += "</div>";
+         return str;
       }
 
       /**
@@ -11505,7 +11524,9 @@ __webpack_require__.r(__webpack_exports__);
        * @return {string}
        */
       toolTipListItem(obj) {
-         let issues = $$(this.ids.list).data.getItem(obj.id).warnings().length;
+         let issues = $$(this.ids.list)
+            .data.getItem(obj.id)
+            .warningsAll().length;
 
          return issues ? `${issues} issues` : "";
       }
@@ -11873,6 +11894,128 @@ var myClass = null;
 
    // NOTE: return JUST the class definition.
    return myClass;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_warnings.js":
+/*!***********************************************!*\
+  !*** ./src/rootPages/Designer/ui_warnings.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * UI Warnings
+ *
+ * Display the warnings console
+ *
+ */
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, iBase, iSettings) {
+   iBase = iBase || "ui_warnings";
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Warnings extends UIClass {
+      constructor(idBase, settings = {}) {
+         super(idBase, {
+            buttonWarning: "",
+            buttonWarningHide: "",
+            warnings: "",
+            warningsScroll: "",
+         });
+      }
+
+      ui() {
+         var ids = this.ids;
+
+         return {
+            rows: [
+               {
+                  view: "button",
+                  type: "form",
+                  id: ids.buttonWarning,
+                  css: "webix_primary darkorange",
+                  value: `<i class="fa fa-warning"></i> ${L("Show Issues")}`,
+                  hidden: true,
+                  click: () => {
+                     $$(ids.warnings).show();
+                     $$(ids.buttonWarning).hide();
+                     $$(ids.buttonWarningHide).show();
+                  },
+               },
+               {
+                  view: "button",
+                  type: "form",
+                  id: ids.buttonWarningHide,
+                  css: "webix_primary darkorange",
+                  value: `<i class="fa fa-warning"></i> ${L("Hide Issues")}`,
+                  hidden: true,
+                  click: () => {
+                     $$(ids.warnings).hide();
+                     $$(ids.buttonWarningHide).hide();
+                     $$(ids.buttonWarning).show();
+                  },
+               },
+               {
+                  id: ids.warnings,
+                  view: "scrollview",
+                  scroll: "y",
+                  body: {
+                     rows: [
+                        {
+                           id: ids.warningsScroll,
+                           template: "Here are my warnings",
+                           autoheight: true,
+                        },
+                     ],
+                  },
+                  hidden: true,
+               },
+            ],
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+      }
+
+      show(currentObject) {
+         super.show();
+
+         var ids = this.ids;
+
+         let warningsAll = currentObject?.warningsAll();
+         if (warningsAll?.length) {
+            let message = "";
+            warningsAll.forEach((issue) => {
+               message += `${issue.message}<br/>`;
+            });
+            $$(ids.warningsScroll).setHTML(message);
+            if ($$(ids.warnings).isVisible()) {
+               $$(ids.buttonWarning).hide();
+               $$(ids.buttonWarningHide).show();
+            } else {
+               $$(ids.buttonWarning).show();
+               $$(ids.buttonWarningHide).hide();
+            }
+         } else {
+            $$(ids.warningsScroll).setHTML("");
+            $$(ids.warnings).hide();
+            $$(ids.buttonWarning).hide();
+            $$(ids.buttonWarningHide).hide();
+         }
+      }
+   }
+   return new UI_Warnings(iBase, iSettings);
 }
 
 
@@ -15183,26 +15326,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_popupCustomIndex */ "./src/rootPages/Designer/ui_work_object_workspace_popupCustomIndex.js");
-/* harmony import */ var _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_popupDefineLabel */ "./src/rootPages/Designer/ui_work_object_workspace_popupDefineLabel.js");
-/* harmony import */ var _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace_popupExport */ "./src/rootPages/Designer/ui_work_object_workspace_popupExport.js");
-/* harmony import */ var _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui_work_object_workspace_popupFrozenColumns */ "./src/rootPages/Designer/ui_work_object_workspace_popupFrozenColumns.js");
-/* harmony import */ var _ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHeaderEditMenu */ "./src/rootPages/Designer/ui_work_object_workspace_popupHeaderEditMenu.js");
-/* harmony import */ var _ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHideFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupHideFields.js");
-/* harmony import */ var _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ui_work_object_workspace_popupImport */ "./src/rootPages/Designer/ui_work_object_workspace_popupImport.js");
-/* harmony import */ var _ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ui_work_object_workspace_popupNewDataField */ "./src/rootPages/Designer/ui_work_object_workspace_popupNewDataField.js");
-/* harmony import */ var _ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ui_work_object_workspace_popupSortFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupSortFields.js");
-/* harmony import */ var _ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ui_work_object_workspace_popupViewSettings */ "./src/rootPages/Designer/ui_work_object_workspace_popupViewSettings.js");
-/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
-/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
-/* harmony import */ var _ui_work_object_workspace_view_gantt__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ui_work_object_workspace_view_gantt */ "./src/rootPages/Designer/ui_work_object_workspace_view_gantt.js");
-/* harmony import */ var _ui_work_object_workspace_view_kanban__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./ui_work_object_workspace_view_kanban */ "./src/rootPages/Designer/ui_work_object_workspace_view_kanban.js");
-/* harmony import */ var _ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./ui_work_object_workspace_popupTrack */ "./src/rootPages/Designer/ui_work_object_workspace_popupTrack.js");
+/* harmony import */ var _ui_warnings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_warnings */ "./src/rootPages/Designer/ui_warnings.js");
+/* harmony import */ var _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_popupCustomIndex */ "./src/rootPages/Designer/ui_work_object_workspace_popupCustomIndex.js");
+/* harmony import */ var _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace_popupDefineLabel */ "./src/rootPages/Designer/ui_work_object_workspace_popupDefineLabel.js");
+/* harmony import */ var _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui_work_object_workspace_popupExport */ "./src/rootPages/Designer/ui_work_object_workspace_popupExport.js");
+/* harmony import */ var _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ui_work_object_workspace_popupFrozenColumns */ "./src/rootPages/Designer/ui_work_object_workspace_popupFrozenColumns.js");
+/* harmony import */ var _ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHeaderEditMenu */ "./src/rootPages/Designer/ui_work_object_workspace_popupHeaderEditMenu.js");
+/* harmony import */ var _ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ui_work_object_workspace_popupHideFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupHideFields.js");
+/* harmony import */ var _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ui_work_object_workspace_popupImport */ "./src/rootPages/Designer/ui_work_object_workspace_popupImport.js");
+/* harmony import */ var _ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ui_work_object_workspace_popupNewDataField */ "./src/rootPages/Designer/ui_work_object_workspace_popupNewDataField.js");
+/* harmony import */ var _ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ui_work_object_workspace_popupSortFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupSortFields.js");
+/* harmony import */ var _ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ui_work_object_workspace_popupViewSettings */ "./src/rootPages/Designer/ui_work_object_workspace_popupViewSettings.js");
+/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
+/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
+/* harmony import */ var _ui_work_object_workspace_view_gantt__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./ui_work_object_workspace_view_gantt */ "./src/rootPages/Designer/ui_work_object_workspace_view_gantt.js");
+/* harmony import */ var _ui_work_object_workspace_view_kanban__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./ui_work_object_workspace_view_kanban */ "./src/rootPages/Designer/ui_work_object_workspace_view_kanban.js");
+/* harmony import */ var _ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./ui_work_object_workspace_popupTrack */ "./src/rootPages/Designer/ui_work_object_workspace_popupTrack.js");
 /*
  * ui_work_object_workspace
  *
  * Manage the Object Workspace area.
  */
+
 
 // const ABWorkspaceGantt = require("./ab_work_object_workspace_gantt");
 
@@ -15235,11 +15380,13 @@ __webpack_require__.r(__webpack_exports__);
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    var L = UIClass.L();
 
-   var Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_12__["default"])(AB, `${ibase}_view_grid`, init_settings);
-   var Gantt = (0,_ui_work_object_workspace_view_gantt__WEBPACK_IMPORTED_MODULE_13__["default"])(AB, `${ibase}_view_gantt`);
-   var Kanban = (0,_ui_work_object_workspace_view_kanban__WEBPACK_IMPORTED_MODULE_14__["default"])(AB, `${ibase}_view_kanban`);
+   var Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_13__["default"])(AB, `${ibase}_view_grid`, init_settings);
+   var Gantt = (0,_ui_work_object_workspace_view_gantt__WEBPACK_IMPORTED_MODULE_14__["default"])(AB, `${ibase}_view_gantt`);
+   var Kanban = (0,_ui_work_object_workspace_view_kanban__WEBPACK_IMPORTED_MODULE_15__["default"])(AB, `${ibase}_view_kanban`);
 
-   var Track = (0,_ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_15__["default"])(AB, `${ibase}_track`);
+   var Warnings = (0,_ui_warnings__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${ibase}_view_warnings`, init_settings);
+
+   var Track = (0,_ui_work_object_workspace_popupTrack__WEBPACK_IMPORTED_MODULE_16__["default"])(AB, `${ibase}_track`);
 
    class UIWorkObjectWorkspace extends UIClass {
       /**
@@ -15308,7 +15455,7 @@ __webpack_require__.r(__webpack_exports__);
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
          this.settings = settings;
 
-         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_11__["default"])(AB, `${base}_views`, {
+         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_12__["default"])(AB, `${base}_views`, {
             isReadOnly: this.settings.isReadOnly,
          });
 
@@ -15348,7 +15495,7 @@ __webpack_require__.r(__webpack_exports__);
          // The Kanban Object View.
          this.hashViews["kanban"] = Kanban;
 
-         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_1__["default"](
+         this.PopupCustomIndex = new _ui_work_object_workspace_popupCustomIndex__WEBPACK_IMPORTED_MODULE_2__["default"](
             AB,
             `${base}_customIndex`
          );
@@ -15357,7 +15504,7 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          // // Various Popups on our page:
-         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_5__["default"])(
+         this.PopupHeaderEditMenu = (0,_ui_work_object_workspace_popupHeaderEditMenu__WEBPACK_IMPORTED_MODULE_6__["default"])(
             AB,
             `${base}_headerEditMenu`
          );
@@ -15366,7 +15513,7 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          if (!this.settings.isReadOnly) {
-            this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_2__["default"](
+            this.PopupDefineLabelComponent = new _ui_work_object_workspace_popupDefineLabel__WEBPACK_IMPORTED_MODULE_3__["default"](
                AB,
                `${base}_defineLabel`
             );
@@ -15379,7 +15526,7 @@ __webpack_require__.r(__webpack_exports__);
          //    idBase
          // );
 
-         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_4__["default"](
+         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_5__["default"](
             AB,
             `${base}_frozenFields`
          );
@@ -15387,7 +15534,7 @@ __webpack_require__.r(__webpack_exports__);
             this.callbackFrozenColumns(settings);
          });
 
-         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_6__["default"])(
+         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_7__["default"])(
             AB,
             `${base}_hideFields`
          );
@@ -15397,13 +15544,13 @@ __webpack_require__.r(__webpack_exports__);
 
          // var PopupMassUpdateComponent = new ABPopupMassUpdate(App, idBase);
          if (!this.settings.isReadOnly) {
-            this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_8__["default"])(
+            this.PopupNewDataFieldComponent = (0,_ui_work_object_workspace_popupNewDataField__WEBPACK_IMPORTED_MODULE_9__["default"])(
                AB,
                `${base}_popupNewDataField`
             );
          }
 
-         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_9__["default"])(
+         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_10__["default"])(
             AB,
             `${base}_sortFields`
          );
@@ -15411,12 +15558,12 @@ __webpack_require__.r(__webpack_exports__);
             this.callbackSortFields(settings);
          });
 
-         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_3__["default"](
+         this.PopupExportObjectComponent = new _ui_work_object_workspace_popupExport__WEBPACK_IMPORTED_MODULE_4__["default"](
             AB,
             `${base}_export`
          );
 
-         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_7__["default"](
+         this.PopupImportObjectComponent = new _ui_work_object_workspace_popupImport__WEBPACK_IMPORTED_MODULE_8__["default"](
             AB,
             `${base}_import`
          );
@@ -15424,7 +15571,7 @@ __webpack_require__.r(__webpack_exports__);
          //    this.populateObjectWorkspace(this.CurrentObject);
          // });
 
-         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_10__["default"])(
+         this.PopupViewSettingsComponent = (0,_ui_work_object_workspace_popupViewSettings__WEBPACK_IMPORTED_MODULE_11__["default"])(
             AB,
             `${base}_popupAddView`,
             { isReadOnly: this.settings.isReadOnly }
@@ -15833,6 +15980,7 @@ __webpack_require__.r(__webpack_exports__);
                                  this.rowAdd();
                               },
                            },
+                           Warnings.ui(),
                            // : {
                            //      view: "layout",
                            //      rows: [],
@@ -16063,6 +16211,8 @@ __webpack_require__.r(__webpack_exports__);
                Kanban.show(currentView);
                break;
          }
+
+         Warnings.show(this.CurrentObject);
       }
 
       /**
@@ -23184,8 +23334,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_query_workspace_design */ "./src/rootPages/Designer/ui_work_query_workspace_design.js");
-/* harmony import */ var _ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace */ "./src/rootPages/Designer/ui_work_object_workspace.js");
+/* harmony import */ var _ui_warnings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_warnings */ "./src/rootPages/Designer/ui_warnings.js");
+/* harmony import */ var _ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_query_workspace_design */ "./src/rootPages/Designer/ui_work_query_workspace_design.js");
+/* harmony import */ var _ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace */ "./src/rootPages/Designer/ui_work_object_workspace.js");
+
 
 
 
@@ -23197,10 +23349,12 @@ __webpack_require__.r(__webpack_exports__);
    var L = UIClass.L();
 
    const iBase = "ui_work_query_workspace";
-   const QueryDesignComponent = (0,_ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-   const QueryDisplayComponent = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${iBase}_display`, {
+   const QueryDesignComponent = (0,_ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+   const QueryDisplayComponent = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_3__["default"])(AB, `${iBase}_display`, {
       isReadOnly: true,
    });
+
+   var Warnings = (0,_ui_warnings__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${iBase}_view_warnings`, init_settings);
 
    class UI_Work_Query_Workspace extends UIClass {
       constructor(settings = {}) {
@@ -23212,7 +23366,6 @@ __webpack_require__.r(__webpack_exports__);
             noSelection: "",
             run: "",
             design: "",
-            warnings: "",
          });
 
          this.settings = settings;
@@ -23270,11 +23423,6 @@ __webpack_require__.r(__webpack_exports__);
                   id: ids.component,
                   rows: [
                      {
-                        id: ids.warnings,
-                        view: "label",
-                        label: "",
-                     },
-                     {
                         id: ids.toolbar,
                         view: "tabbar",
                         // hidden: true,
@@ -23324,6 +23472,7 @@ __webpack_require__.r(__webpack_exports__);
                            QueryDisplayComponent.ui(),
                         ],
                      },
+                     Warnings.ui(),
                      // {
                      //    id: ids.loadAllButton,
                      //    view: "button",
@@ -23346,7 +23495,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.warningsPropogate([QueryDesignComponent, QueryDisplayComponent]);
          this.on("warnings", () => {
-            this.refreshWarnings(this.CurrentQuery);
+            Warnings.show(this.CurrentQuery);
          });
 
          return Promise.all([
@@ -23410,22 +23559,10 @@ __webpack_require__.r(__webpack_exports__);
          QueryDisplayComponent.loadAll();
       }
 
-      refreshWarnings(query) {
-         var messages = (query?.warnings() ?? []).map((w) => w.message);
-         let $warnings = $$(this.ids.warnings);
-         if (messages.length) {
-            $warnings.setValue(messages.join("\n"));
-            $warnings.show();
-         } else {
-            $warnings.setValue("");
-            $warnings.hide();
-         }
-      }
-
       queryLoad(query) {
          super.queryLoad(query);
 
-         this.refreshWarnings(query);
+         Warnings.show(query);
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);

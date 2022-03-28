@@ -1,4 +1,5 @@
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 
 import FWorkspaceDesign from "./ui_work_query_workspace_design";
 import FWorkspaceDisplay from "./ui_work_object_workspace";
@@ -14,6 +15,8 @@ export default function (AB, init_settings) {
       isReadOnly: true,
    });
 
+   var Warnings = UI_Warnings(AB, `${iBase}_view_warnings`, init_settings);
+
    class UI_Work_Query_Workspace extends UIClass {
       constructor(settings = {}) {
          super(iBase, {
@@ -24,7 +27,6 @@ export default function (AB, init_settings) {
             noSelection: "",
             run: "",
             design: "",
-            warnings: "",
          });
 
          this.settings = settings;
@@ -82,11 +84,6 @@ export default function (AB, init_settings) {
                   id: ids.component,
                   rows: [
                      {
-                        id: ids.warnings,
-                        view: "label",
-                        label: "",
-                     },
-                     {
                         id: ids.toolbar,
                         view: "tabbar",
                         // hidden: true,
@@ -136,6 +133,7 @@ export default function (AB, init_settings) {
                            QueryDisplayComponent.ui(),
                         ],
                      },
+                     Warnings.ui(),
                      // {
                      //    id: ids.loadAllButton,
                      //    view: "button",
@@ -158,7 +156,7 @@ export default function (AB, init_settings) {
 
          this.warningsPropogate([QueryDesignComponent, QueryDisplayComponent]);
          this.on("warnings", () => {
-            this.refreshWarnings(this.CurrentQuery);
+            Warnings.show(this.CurrentQuery);
          });
 
          return Promise.all([
@@ -222,22 +220,10 @@ export default function (AB, init_settings) {
          QueryDisplayComponent.loadAll();
       }
 
-      refreshWarnings(query) {
-         var messages = (query?.warnings() ?? []).map((w) => w.message);
-         let $warnings = $$(this.ids.warnings);
-         if (messages.length) {
-            $warnings.setValue(messages.join("\n"));
-            $warnings.show();
-         } else {
-            $warnings.setValue("");
-            $warnings.hide();
-         }
-      }
-
       queryLoad(query) {
          super.queryLoad(query);
 
-         this.refreshWarnings(query);
+         Warnings.show(query);
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);

@@ -65,17 +65,13 @@ export default function (AB) {
                                  view: "toolbar",
                                  css: "webix_dark",
                                  cols: [
+                                    { view: "spacer", width: 10 },
                                     {
                                        view: "label",
                                        label: L("Application Info"), //labels.component.formHeader,
                                        fillspace: true,
                                     },
                                  ],
-                              },
-                              {
-                                 id: this.ids.warnings,
-                                 view: "label",
-                                 label: "",
                               },
                               {
                                  view: "form",
@@ -421,10 +417,17 @@ export default function (AB) {
                                           },
                                        ],
                                     },
+                                    {
+                                       height: 25,
+                                    },
+                                    {
+                                       id: this.ids.warnings,
+                                       view: "template",
+                                       autoheight: true,
+                                       template: "",
+                                       css: "webix_message webix_debug",
+                                    },
                                  ],
-                              },
-                              {
-                                 hidden: uiConfig.hideMobile,
                               },
                            ],
                         },
@@ -724,14 +727,14 @@ export default function (AB) {
             });
 
             var messages = this.CurrentApplication.warnings().map(
-               (w) => w.message
+               (w) => `<h5>${w.message}</h5>${this.objToString(w.data)}`
             );
             let $warnings = $$(this.ids.warnings);
             if (messages.length) {
-               $warnings.setValue(messages.join("\n"));
+               $warnings.setHTML(messages.join("</br>"));
                $warnings.show();
             } else {
-               $warnings.setValue("");
+               $warnings.setHTML("");
                $warnings.hide();
             }
 
@@ -779,7 +782,7 @@ export default function (AB) {
          this.$form.clear();
          this.$form.clearValidation();
 
-         $$(this.ids.warnings).setValue("");
+         $$(this.ids.warnings).setHTML("");
 
          this.permissionPopulate(); // leave empty to clear selections.
 
@@ -877,6 +880,22 @@ export default function (AB) {
          values.accessManagers = this.accessManagerUI.values();
          values.translationManagers = this.translationManagerUI.values();
          return values;
+      }
+
+      /**
+       * @function objToString()
+       *
+       * return a readable string from an object for warnings display
+       *
+       * @return {string}
+       */
+      objToString(obj) {
+         let str = "<div>";
+         for (const [p, val] of Object.entries(obj)) {
+            str += `<strong>${p}:</strong> ${val}</br>`;
+         }
+         str += "</div>";
+         return str;
       }
 
       /**

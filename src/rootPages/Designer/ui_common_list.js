@@ -640,7 +640,9 @@ export default function (AB, options) {
        * @return {string}
        */
       toolTipListItem(obj) {
-         let issues = $$(this.ids.list).data.getItem(obj.id).warnings().length;
+         let issues = $$(this.ids.list)
+            .data.getItem(obj.id)
+            .warningsAll().length;
 
          return issues ? `${issues} issues` : "";
       }
