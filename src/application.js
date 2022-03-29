@@ -6,6 +6,7 @@ export default function (AB) {
    var application = {
       id: "ABDesigner",
       label: "AB Designer", // How to get Multilingual?
+      icon: "fa-connectdevelop",
       // {string} the AB.Multilingual.Label(Key)
       isPlugin: true,
 

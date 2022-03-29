@@ -21,7 +21,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -559,6 +559,7 @@ __webpack_require__.r(__webpack_exports__);
    var application = {
       id: "ABDesigner",
       label: "AB Designer", // How to get Multilingual?
+      icon: "fa-connectdevelop",
       // {string} the AB.Multilingual.Label(Key)
       isPlugin: true,
 
@@ -9255,6 +9256,7 @@ __webpack_require__.r(__webpack_exports__);
       constructor() {
          super("abd");
          this.id = this.ids.component;
+         this.icon = "connectdevelop";
       }
 
       label() {
@@ -9554,6 +9556,21 @@ __webpack_require__.r(__webpack_exports__);
                                              AB.ClassUI.CYPRESS_REF(
                                                 this,
                                                 "abd_choose_form_label"
+                                             );
+                                          },
+                                       },
+                                    },
+                                    {
+                                       name: "icon",
+                                       view: "text",
+                                       label: L("Icon"),
+                                       placeholder: L("Menu Icon"),
+                                       labelWidth: 100,
+                                       on: {
+                                          onAfterRender() {
+                                             AB.ClassUI.CYPRESS_REF(
+                                                this,
+                                                "abd_choose_form_icon"
                                              );
                                           },
                                        },
@@ -10164,6 +10181,7 @@ __webpack_require__.r(__webpack_exports__);
             [
                "label",
                "description",
+               "icon",
                "isSystemObj",
                "isAccessManaged",
                "isTranslationManaged",
@@ -11215,9 +11233,9 @@ __webpack_require__.r(__webpack_exports__);
          }
          return `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>
-      <div class='ab-app-list-name'>${common.iconAdmin(obj)}${
-            obj.label ?? ""
-         }</div>
+      <div class='ab-app-list-name'><i class="lighten fa-fw fa ${
+         obj.icon
+      }"></i> ${common.iconAdmin(obj)}${obj.label ?? ""}</div>
       <div class='ab-app-list-description'>${obj.description ?? ""}</div>
    </div>
    <div class='ab-app-list-edit'>

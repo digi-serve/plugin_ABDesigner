@@ -103,6 +103,21 @@ export default function (AB, init_settings) {
                                           },
                                        },
                                     },
+                                    {
+                                       name: "icon",
+                                       view: "text",
+                                       label: L("Icon"),
+                                       placeholder: L("Menu Icon"),
+                                       labelWidth: 100,
+                                       on: {
+                                          onAfterRender() {
+                                             AB.ClassUI.CYPRESS_REF(
+                                                this,
+                                                "abd_choose_form_icon"
+                                             );
+                                          },
+                                       },
+                                    },
                                     { height: uiConfig.smallSpacer },
                                     {
                                        name: "description",
@@ -709,6 +724,7 @@ export default function (AB, init_settings) {
             [
                "label",
                "description",
+               "icon",
                "isSystemObj",
                "isAccessManaged",
                "isTranslationManaged",

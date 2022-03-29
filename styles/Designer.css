@@ -72,3 +72,6 @@
 .webix_theme_dark {
    background-color: #4a4e58;
 }
+.lighten {
+   opacity: 0.4;
+}
