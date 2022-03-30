@@ -16405,6 +16405,7 @@ __webpack_require__.r(__webpack_exports__);
          // Our webix UI definition:
          return {
             view: "multiview",
+            animate: false,
             id: ids.component,
             borderless: true,
             rows: [
@@ -16489,6 +16490,7 @@ __webpack_require__.r(__webpack_exports__);
                         rows: [
                            {
                               view: "multiview",
+                              animate: false,
                               cells: [Datatable.ui(), Kanban.ui(), Gantt.ui()],
                            },
                            // this.settings.isInsertable
@@ -23900,6 +23902,7 @@ __webpack_require__.r(__webpack_exports__);
 
          return {
             view: "multiview",
+            animate: false,
             cells: [
                {
                   id: ids.noSelection,
@@ -23991,6 +23994,7 @@ __webpack_require__.r(__webpack_exports__);
                      {
                         id: ids.multiview,
                         view: "multiview",
+                        animate: false,
                         cells: [
                            QueryDesignComponent.ui(),
                            QueryDisplayComponent.ui(),
@@ -24312,6 +24316,7 @@ __webpack_require__.r(__webpack_exports__);
                                           {}, // require
                                        ],
                                        multiview: {
+                                          animate: false,
                                           on: {
                                              onViewChange: (prevId, nextId) => {
                                                 this.setSelectedFields(nextId);

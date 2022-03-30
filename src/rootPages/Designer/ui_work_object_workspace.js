@@ -537,6 +537,7 @@ export default function (AB, ibase, init_settings) {
          // Our webix UI definition:
          return {
             view: "multiview",
+            animate: false,
             id: ids.component,
             borderless: true,
             rows: [
@@ -621,6 +622,7 @@ export default function (AB, ibase, init_settings) {
                         rows: [
                            {
                               view: "multiview",
+                              animate: false,
                               cells: [Datatable.ui(), Kanban.ui(), Gantt.ui()],
                            },
                            // this.settings.isInsertable

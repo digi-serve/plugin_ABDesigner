@@ -37,6 +37,7 @@ export default function (AB, init_settings) {
 
          return {
             view: "multiview",
+            animate: false,
             cells: [
                {
                   id: ids.noSelection,
@@ -128,6 +129,7 @@ export default function (AB, init_settings) {
                      {
                         id: ids.multiview,
                         view: "multiview",
+                        animate: false,
                         cells: [
                            QueryDesignComponent.ui(),
                            QueryDisplayComponent.ui(),
