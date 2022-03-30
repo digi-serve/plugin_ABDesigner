@@ -26,7 +26,15 @@ var baseConfig = {
          // },
          {
             test: /\.css$/,
-            use: ["style-loader", "css-loader?url=false"],
+            use: ["style-loader"],
+            // use: ["style-loader", "css-loader?url=false"],
+         },
+         {
+            test: /\.css$/,
+            loader: "css-loader",
+            options: {
+               url: false,
+            },
          },
          {
             test: /\.(eot|woff|woff2|svg|ttf)([\?]?.*)$/,

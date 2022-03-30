@@ -22,6 +22,7 @@ export default function (AB) {
       constructor() {
          super("abd");
          this.id = this.ids.component;
+         this.icon = "connectdevelop";
       }
 
       label() {
@@ -77,6 +78,9 @@ export default function (AB) {
 
          AppWorkspace.on("view.chooser", () => {
             AppChooser.show();
+         });
+         AppWorkspace.on("warnings", () => {
+            AppChooser.emit("warnings");
          });
 
          await Promise.all([AppChooser.init(AB), AppWorkspace.init(AB)]);

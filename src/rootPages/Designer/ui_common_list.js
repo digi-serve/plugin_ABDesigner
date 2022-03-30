@@ -121,6 +121,9 @@ export default function (AB, options) {
                   template: (obj, common) => {
                      return this.templateListItem(obj, common);
                   },
+                  tooltip: (obj) => {
+                     return this.toolTipListItem(obj);
+                  },
                   type: {
                      height: 35,
                      headerHeight: 35,
@@ -615,7 +618,7 @@ export default function (AB, options) {
          if (typeof this._templateListItem == "string") {
             var warnText = "";
             if (warnings.length > 0) {
-               warnText = `(${warnings.length})`;
+               warnText = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>`;
             }
 
             return this._templateListItem
@@ -625,6 +628,23 @@ export default function (AB, options) {
          }
          // else they sent in a function()
          return this._templateListItem(obj, common, warnings);
+      }
+
+      /**
+       * @function templateListItem
+       *
+       * Defines the template for each row of our ProcessList.
+       *
+       * @param {obj} obj the current instance of ABProcess for the row.
+       * @param {?} common the webix.common icon data structure
+       * @return {string}
+       */
+      toolTipListItem(obj) {
+         let issues = $$(this.ids.list)
+            .data.getItem(obj.id)
+            .warningsAll().length;
+
+         return issues ? `${issues} issues` : "";
       }
 
       /**

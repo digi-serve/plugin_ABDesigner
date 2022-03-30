@@ -4,6 +4,7 @@
  * Manage the Object Workspace area.
  */
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 // const ABWorkspaceGantt = require("./ab_work_object_workspace_gantt");
 
 // const ABWorkspaceIndex = require("./ab_work_object_workspace_index");
@@ -38,6 +39,8 @@ export default function (AB, ibase, init_settings) {
    var Datatable = FWorkspaceDatatable(AB, `${ibase}_view_grid`, init_settings);
    var Gantt = FWorkspaceGantt(AB, `${ibase}_view_gantt`);
    var Kanban = FWorkspaceKanban(AB, `${ibase}_view_kanban`);
+
+   var Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, init_settings);
 
    var Track = FWorkspaceTrack(AB, `${ibase}_track`);
 
@@ -633,6 +636,7 @@ export default function (AB, ibase, init_settings) {
                                  this.rowAdd();
                               },
                            },
+                           Warnings.ui(),
                            // : {
                            //      view: "layout",
                            //      rows: [],
@@ -843,6 +847,7 @@ export default function (AB, ibase, init_settings) {
 
       refreshView() {
          var ids = this.ids;
+         this.warningsRefresh(this.CurrentObject);
          var currentView = this.workspaceViews.getCurrentView();
          switch (currentView.type) {
             case "gantt":
@@ -862,6 +867,8 @@ export default function (AB, ibase, init_settings) {
                Kanban.show(currentView);
                break;
          }
+
+         Warnings.show(this.CurrentObject);
       }
 
       /**
@@ -906,12 +913,15 @@ export default function (AB, ibase, init_settings) {
                this.getBadgeHiddenFields();
                this.getBadgeFrozenColumn();
                break;
+
             case "filter":
                _logic.toolbarFilter($$(ids.buttonFilter).$view, field.id);
                break;
+
             case "sort":
                this.toolbarSort($$(this.ids.buttonSort).$view, field.id);
                break;
+
             case "freeze":
                var currentView = this.workspaceViews.getCurrentView();
                currentView.frozenColumnID = field.columnName;
@@ -929,6 +939,7 @@ export default function (AB, ibase, init_settings) {
                this.refreshView();
                this.getBadgeFrozenColumn();
                break;
+
             case "edit":
                // pass control on to our Popup:
                if (!this.settings.isReadOnly) {
@@ -1526,7 +1537,7 @@ export default function (AB, ibase, init_settings) {
                break;
          }
 
-         // get badge counts for server side components
+         // get badge counts
          this.getBadgeHiddenFields();
          this.getBadgeFrozenColumn();
          this.getBadgeSortFields();
