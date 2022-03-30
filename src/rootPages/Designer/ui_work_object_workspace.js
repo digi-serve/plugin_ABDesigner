@@ -107,6 +107,8 @@ export default function (AB, ibase, init_settings) {
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
          settings.isReadOnly = settings.isReadOnly ?? false;
+         settings.showWarnings = settings.showWarnings ?? true;
+
          // settings.isLabelEditable = settings.isLabelEditable ?? true;
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
          this.settings = settings;
@@ -535,7 +537,7 @@ export default function (AB, ibase, init_settings) {
          };
 
          // Our webix UI definition:
-         return {
+         let UI = {
             view: "multiview",
             id: ids.component,
             borderless: true,
@@ -636,18 +638,19 @@ export default function (AB, ibase, init_settings) {
                                  this.rowAdd();
                               },
                            },
-                           Warnings.ui(),
-                           // : {
-                           //      view: "layout",
-                           //      rows: [],
-                           //      hidden: true,
-                           //   },
+                           // { WARNINGS ADDED HERE IF ENABLED },
                         ],
                      },
                   ],
                },
             ],
          };
+
+         if (this.settings.showWarnings) {
+            UI.rows[2].rows[2].rows.push(Warnings.ui());
+         }
+
+         return UI;
       } // ui()
 
       // Our init() function for setting up our UI
@@ -867,8 +870,9 @@ export default function (AB, ibase, init_settings) {
                Kanban.show(currentView);
                break;
          }
-
-         Warnings.show(this.CurrentObject);
+         if (this.settings.showWarnings) {
+            Warnings.show(this.CurrentObject);
+         }
       }
 
       /**
