@@ -9516,6 +9516,7 @@ __webpack_require__.r(__webpack_exports__);
                         {
                            responsiveCell: false,
                            rows: [
+                              {},
                               Warnings.ui(),
                               {
                                  view: "toolbar",

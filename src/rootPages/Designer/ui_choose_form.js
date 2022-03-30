@@ -59,6 +59,7 @@ export default function (AB, init_settings) {
                         {
                            responsiveCell: false,
                            rows: [
+                              {},
                               Warnings.ui(),
                               {
                                  view: "toolbar",
