@@ -62,7 +62,7 @@ export default function (AB) {
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          // this.DataCollectionList.busy();
 

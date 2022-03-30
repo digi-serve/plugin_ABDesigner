@@ -191,6 +191,7 @@ export default function (AB) {
                         id: this.ids.tabbar,
                         css: "webix_dark",
                         view: "sidebar",
+                        animate: false,
                         width: 160,
                         data: sidebarItems.concat(collapseMenu),
                         on: {

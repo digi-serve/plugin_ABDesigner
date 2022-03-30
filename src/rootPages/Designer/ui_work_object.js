@@ -77,7 +77,7 @@ export default function (AB) {
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          // if (this.CurrentApplicationID) {
          //    ObjectList?.applicationLoad(this.CurrentApplicationID);

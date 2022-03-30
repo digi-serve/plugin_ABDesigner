@@ -12754,6 +12754,7 @@ __webpack_require__.r(__webpack_exports__);
                         id: this.ids.tabbar,
                         css: "webix_dark",
                         view: "sidebar",
+                        animate: false,
                         width: 160,
                         data: sidebarItems.concat(collapseMenu),
                         on: {
@@ -13049,7 +13050,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          // this.DataCollectionList.busy();
 
@@ -14241,7 +14242,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          // if (this.CurrentApplicationID) {
          //    ObjectList?.applicationLoad(this.CurrentApplicationID);
@@ -22285,7 +22286,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          var app = this.CurrentApplication;
          if (app && (!app.loadedProcesss || this.ProcessList?.count() < 1)) {
@@ -22848,7 +22849,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          var app = this.CurrentApplication;
          if (app) {
