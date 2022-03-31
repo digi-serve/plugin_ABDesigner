@@ -1464,6 +1464,9 @@ export default function (AB, ibase, init_settings) {
                      }
                   } catch (e) {}
                }
+               if (err.message) {
+                  message = err.message;
+               }
                var ids = this.ids;
                $$(ids.error).show();
                $$(ids.error_msg).define("label", message);
