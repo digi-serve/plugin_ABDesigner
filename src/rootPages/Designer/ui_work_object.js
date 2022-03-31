@@ -38,7 +38,7 @@ export default function (AB) {
 
          this.warningsPropogate([ObjectList, ObjectWorkspace]);
          this.on("warnings", () => {
-            ObjectList.applicationLoad(this.CurrentApplication);
+            ObjectList.warningsRefresh();
          });
 
          ObjectList.on("selected", (objID) => {

@@ -6130,7 +6130,7 @@ __webpack_require__.r(__webpack_exports__);
                      name: "typeFormat",
                      value: "none",
                      labelWidth: uiConfig.labelWidthXLarge,
-                     options: FC.formatList(),
+                     options: FC.formatList(L),
                      on: {
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
@@ -14204,7 +14204,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.warningsPropogate([ObjectList, ObjectWorkspace]);
          this.on("warnings", () => {
-            ObjectList.applicationLoad(this.CurrentApplication);
+            ObjectList.warningsRefresh();
          });
 
          ObjectList.on("selected", (objID) => {
@@ -14418,6 +14418,22 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          AddForm.applicationLoad(application);
+      }
+
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            // NOTE: only include System Objects if the user has permission
+            var f = (obj) => !obj.isSystemObject;
+            if (this.AB.Account.isSystemDesigner()) {
+               f = () => true;
+            }
+
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.objectsIncluded(f)
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
       }
 
       /**
@@ -17334,6 +17350,9 @@ __webpack_require__.r(__webpack_exports__);
                      }
                   } catch (e) {}
                }
+               if (err.message) {
+                  message = err.message;
+               }
                var ids = this.ids;
                $$(ids.error).show();
                $$(ids.error_msg).define("label", message);
@@ -17658,7 +17677,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       open(object, index) {
-         this.CurrentObject = object;
+         this.CurrentObjectID = object.id;
          this.CurrentIndex = index;
 
          let ids = this.ids;
@@ -22820,7 +22839,7 @@ __webpack_require__.r(__webpack_exports__);
          this.warningsPropogate([this.QueryList, this.QueryWorkspace]);
          this.on("warnings", () => {
             // make sure our list refreshes it's display
-            this.QueryList.applicationLoad(this.CurrentApplication);
+            this.QueryList.warningsRefresh();
          });
 
          return Promise.all([
@@ -23001,6 +23020,16 @@ __webpack_require__.r(__webpack_exports__);
          super.applicationLoad(application);
          this.ListComponent.dataLoad(application?.queriesIncluded());
          this.AddForm.applicationLoad(application);
+      }
+
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.queriesIncluded()
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
       }
 
       /**
