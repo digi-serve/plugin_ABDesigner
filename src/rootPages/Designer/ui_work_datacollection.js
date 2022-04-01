@@ -89,7 +89,7 @@ export default function (AB) {
       show() {
          const ids = this.ids;
 
-         $$(ids.component).show();
+         $$(ids.component).show(false, false);
 
          const application = this.CurrentApplication;
          if (application) {

@@ -88,7 +88,7 @@ export default function (AB) {
                      name: "typeFormat",
                      value: "none",
                      labelWidth: uiConfig.labelWidthXLarge,
-                     options: FC.formatList(),
+                     options: FC.formatList(L),
                      on: {
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);

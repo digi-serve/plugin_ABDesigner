@@ -38,7 +38,7 @@ export default function (AB) {
 
          this.warningsPropogate([ObjectList, ObjectWorkspace]);
          this.on("warnings", () => {
-            ObjectList.applicationLoad(this.CurrentApplication);
+            ObjectList.warningsRefresh();
          });
 
          ObjectList.on("selected", (objID) => {
@@ -77,7 +77,7 @@ export default function (AB) {
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          // if (this.CurrentApplicationID) {
          //    ObjectList?.applicationLoad(this.CurrentApplicationID);

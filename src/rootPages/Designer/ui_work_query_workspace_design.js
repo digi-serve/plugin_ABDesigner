@@ -184,6 +184,7 @@ export default function (AB, init_settings) {
                                           {}, // require
                                        ],
                                        multiview: {
+                                          animate: false,
                                           on: {
                                              onViewChange: (prevId, nextId) => {
                                                 this.setSelectedFields(nextId);

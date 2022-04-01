@@ -146,6 +146,22 @@ export default function (AB) {
          AddForm.applicationLoad(application);
       }
 
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            // NOTE: only include System Objects if the user has permission
+            var f = (obj) => !obj.isSystemObject;
+            if (this.AB.Account.isSystemDesigner()) {
+               f = () => true;
+            }
+
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.objectsIncluded(f)
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
+      }
+
       /**
        * @function clickNewProcess
        * Manages initiating the transition to the new Process Popup window
