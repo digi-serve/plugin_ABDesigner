@@ -108,6 +108,16 @@ export default function (AB) {
          this.AddForm.applicationLoad(application);
       }
 
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.queriesIncluded()
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
+      }
+
       /**
        * @function clickNewQuery
        *

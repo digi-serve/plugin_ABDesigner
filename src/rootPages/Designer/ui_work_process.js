@@ -68,7 +68,7 @@ export default function (AB) {
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          var app = this.CurrentApplication;
          if (app && (!app.loadedProcesss || this.ProcessList?.count() < 1)) {

@@ -140,7 +140,7 @@ export default function (AB, ibase) {
       }
 
       open(object, index) {
-         this.CurrentObject = object;
+         this.CurrentObjectID = object.id;
          this.CurrentIndex = index;
 
          let ids = this.ids;

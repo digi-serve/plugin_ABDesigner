@@ -13,6 +13,7 @@ export default function (AB, init_settings) {
    const QueryDesignComponent = FWorkspaceDesign(AB);
    const QueryDisplayComponent = FWorkspaceDisplay(AB, `${iBase}_display`, {
       isReadOnly: true,
+      showWarnings: false,
    });
 
    var Warnings = UI_Warnings(AB, `${iBase}_view_warnings`, init_settings);
@@ -37,6 +38,7 @@ export default function (AB, init_settings) {
 
          return {
             view: "multiview",
+            animate: false,
             cells: [
                {
                   id: ids.noSelection,
@@ -128,6 +130,7 @@ export default function (AB, init_settings) {
                      {
                         id: ids.multiview,
                         view: "multiview",
+                        animate: false,
                         cells: [
                            QueryDesignComponent.ui(),
                            QueryDisplayComponent.ui(),

@@ -6130,7 +6130,7 @@ __webpack_require__.r(__webpack_exports__);
                      name: "typeFormat",
                      value: "none",
                      labelWidth: uiConfig.labelWidthXLarge,
-                     options: FC.formatList(),
+                     options: FC.formatList(L),
                      on: {
                         onAfterRender() {
                            AB.ClassUI.CYPRESS_REF(this);
@@ -9516,6 +9516,7 @@ __webpack_require__.r(__webpack_exports__);
                         {
                            responsiveCell: false,
                            rows: [
+                              {},
                               Warnings.ui(),
                               {
                                  view: "toolbar",
@@ -12771,6 +12772,7 @@ __webpack_require__.r(__webpack_exports__);
                         id: this.ids.tabbar,
                         css: "webix_dark",
                         view: "sidebar",
+                        animate: false,
                         width: 160,
                         data: sidebarItems.concat(collapseMenu),
                         on: {
@@ -13093,9 +13095,10 @@ __webpack_require__.r(__webpack_exports__);
       show() {
          const ids = this.ids;
 
-         $$(ids.component).show();
+         $$(ids.component).show(false, false);
 
          const application = this.CurrentApplication;
+
          if (application) {
             DataCollectionWorkspace.applicationLoad(application);
             DataCollectionList.applicationLoad(application);
@@ -15500,7 +15503,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.warningsPropogate([ObjectList, ObjectWorkspace]);
          this.on("warnings", () => {
-            ObjectList.applicationLoad(this.CurrentApplication);
+            ObjectList.warningsRefresh();
          });
 
          ObjectList.on("selected", (objID) => {
@@ -15539,7 +15542,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          // if (this.CurrentApplicationID) {
          //    ObjectList?.applicationLoad(this.CurrentApplicationID);
@@ -15714,6 +15717,22 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          AddForm.applicationLoad(application);
+      }
+
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            // NOTE: only include System Objects if the user has permission
+            var f = (obj) => !obj.isSystemObject;
+            if (this.AB.Account.isSystemDesigner()) {
+               f = () => true;
+            }
+
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.objectsIncluded(f)
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
       }
 
       /**
@@ -17273,6 +17292,8 @@ __webpack_require__.r(__webpack_exports__);
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
          settings.isReadOnly = settings.isReadOnly ?? false;
+         settings.showWarnings = settings.showWarnings ?? true;
+
          // settings.isLabelEditable = settings.isLabelEditable ?? true;
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
          this.settings = settings;
@@ -17701,8 +17722,9 @@ __webpack_require__.r(__webpack_exports__);
          };
 
          // Our webix UI definition:
-         return {
+         let UI = {
             view: "multiview",
+            animate: false,
             id: ids.component,
             borderless: true,
             rows: [
@@ -17787,6 +17809,7 @@ __webpack_require__.r(__webpack_exports__);
                         rows: [
                            {
                               view: "multiview",
+                              animate: false,
                               cells: [Datatable.ui(), Kanban.ui(), Gantt.ui()],
                            },
                            // this.settings.isInsertable
@@ -17802,18 +17825,19 @@ __webpack_require__.r(__webpack_exports__);
                                  this.rowAdd();
                               },
                            },
-                           Warnings.ui(),
-                           // : {
-                           //      view: "layout",
-                           //      rows: [],
-                           //      hidden: true,
-                           //   },
+                           // { WARNINGS ADDED HERE IF ENABLED },
                         ],
                      },
                   ],
                },
             ],
          };
+
+         if (this.settings.showWarnings) {
+            UI.rows[2].rows[2].rows.push(Warnings.ui());
+         }
+
+         return UI;
       } // ui()
 
       // Our init() function for setting up our UI
@@ -18033,8 +18057,9 @@ __webpack_require__.r(__webpack_exports__);
                Kanban.show(currentView);
                break;
          }
-
-         Warnings.show(this.CurrentObject);
+         if (this.settings.showWarnings) {
+            Warnings.show(this.CurrentObject);
+         }
       }
 
       /**
@@ -18624,6 +18649,9 @@ __webpack_require__.r(__webpack_exports__);
                      }
                   } catch (e) {}
                }
+               if (err.message) {
+                  message = err.message;
+               }
                var ids = this.ids;
                $$(ids.error).show();
                $$(ids.error_msg).define("label", message);
@@ -18948,7 +18976,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       open(object, index) {
-         this.CurrentObject = object;
+         this.CurrentObjectID = object.id;
          this.CurrentIndex = index;
 
          let ids = this.ids;
@@ -23577,7 +23605,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          var app = this.CurrentApplication;
          if (app && (!app.loadedProcesss || this.ProcessList?.count() < 1)) {
@@ -24110,7 +24138,7 @@ __webpack_require__.r(__webpack_exports__);
          this.warningsPropogate([this.QueryList, this.QueryWorkspace]);
          this.on("warnings", () => {
             // make sure our list refreshes it's display
-            this.QueryList.applicationLoad(this.CurrentApplication);
+            this.QueryList.warningsRefresh();
          });
 
          return Promise.all([
@@ -24140,7 +24168,7 @@ __webpack_require__.r(__webpack_exports__);
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show();
+         $$(this.ids.component).show(false, false);
 
          var app = this.CurrentApplication;
          if (app) {
@@ -24291,6 +24319,16 @@ __webpack_require__.r(__webpack_exports__);
          super.applicationLoad(application);
          this.ListComponent.dataLoad(application?.queriesIncluded());
          this.AddForm.applicationLoad(application);
+      }
+
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.queriesIncluded()
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
       }
 
       /**
@@ -25174,6 +25212,7 @@ __webpack_require__.r(__webpack_exports__);
    const QueryDesignComponent = (0,_ui_work_query_workspace_design__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
    const QueryDisplayComponent = (0,_ui_work_object_workspace__WEBPACK_IMPORTED_MODULE_3__["default"])(AB, `${iBase}_display`, {
       isReadOnly: true,
+      showWarnings: false,
    });
 
    var Warnings = (0,_ui_warnings__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${iBase}_view_warnings`, init_settings);
@@ -25198,6 +25237,7 @@ __webpack_require__.r(__webpack_exports__);
 
          return {
             view: "multiview",
+            animate: false,
             cells: [
                {
                   id: ids.noSelection,
@@ -25289,6 +25329,7 @@ __webpack_require__.r(__webpack_exports__);
                      {
                         id: ids.multiview,
                         view: "multiview",
+                        animate: false,
                         cells: [
                            QueryDesignComponent.ui(),
                            QueryDisplayComponent.ui(),
@@ -25610,6 +25651,7 @@ __webpack_require__.r(__webpack_exports__);
                                           {}, // require
                                        ],
                                        multiview: {
+                                          animate: false,
                                           on: {
                                              onViewChange: (prevId, nextId) => {
                                                 this.setSelectedFields(nextId);
