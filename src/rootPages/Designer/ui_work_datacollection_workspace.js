@@ -1,4 +1,6 @@
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
+
 import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 import FWorkspaceDisplay from "./ui_work_object_workspace_view_grid";
 import FWorkspaceProperty from "./ui_work_datacollection_workspace_properties";
@@ -11,6 +13,8 @@ export default function (AB, init_settings) {
 
    const Datatable = FWorkspaceDisplay(AB, `${ibase}_view_grid`, init_settings);
    const Property = FWorkspaceProperty(AB);
+
+   const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, init_settings);
 
    class UI_Work_Datacollection_Workspace extends UIClass {
       constructor(base, settings = {}) {
@@ -75,19 +79,22 @@ export default function (AB, init_settings) {
                      },
                   ],
                },
-
-               // Workspace
                {
                   id: ids.workspace,
                   view: "layout",
-                  cols: [
-                     // Workspace
-                     Datatable.ui(),
+                  rows: [
+                     {
+                        cols: [
+                           // Workspace
+                           Datatable.ui(),
 
-                     { view: "resizer", css: "bg_gray", width: 11 },
+                           { view: "resizer", css: "bg_gray", width: 11 },
 
-                     // Property
-                     Property.ui(),
+                           // Property
+                           Property.ui(),
+                        ],
+                     },
+                     Warnings.ui(),
                   ],
                },
             ],
@@ -99,15 +106,22 @@ export default function (AB, init_settings) {
 
          this.AB = AB;
 
+         this.warningsPropogate([Property, Datatable]);
+         this.on("warnings", () => {
+            Warnings.show(this.CurrentDatacollection);
+         });
+
          this.workspaceViews.init(AB);
 
-         Property.on("save", async (datacollectionID) => {
+         Property.on("save", async (datacollection) => {
+            this.datacollectionLoad(datacollection);
+
             // refresh grid view
             if (this.hashViewsGrid) {
                await this.hashViewsGrid.show(Datatable.defaultSettings());
             }
 
-            await this.populateWorkspace(datacollectionID);
+            await this.populateWorkspace(datacollection);
          });
 
          await Datatable.init(AB);
@@ -127,6 +141,19 @@ export default function (AB, init_settings) {
 
          Datatable.applicationLoad(application);
          Property.applicationLoad(application);
+      }
+
+      datacollectionLoad(datacollection) {
+         super.datacollectionLoad(datacollection);
+
+         Warnings.show(datacollection);
+
+         Datatable.datacollectionLoad(datacollection);
+         Property.datacollectionLoad(datacollection);
+
+         if (!datacollection) {
+            this.clearWorkspace();
+         }
       }
 
       /**
@@ -170,14 +197,12 @@ export default function (AB, init_settings) {
          $$(ids.noSelection).show(false, false);
       }
 
-      async populateWorkspace(datacollectionID) {
+      async populateWorkspace(datacollection) {
          const ids = this.ids;
 
          $$(ids.workspace).show();
 
-         this.CurrentDatacollectionID = datacollectionID;
-         this.CurrentDatacollection =
-            this.AB.datacollectionByID(datacollectionID);
+         this.CurrentDatacollection = datacollection;
 
          // get current view from object
          this.workspaceViews.objectLoad(this.CurrentDatacollection.datasource);
@@ -186,10 +211,6 @@ export default function (AB, init_settings) {
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid}
-
-         Datatable.datacollectionLoad(this.CurrentDatacollection);
-         Property.datacollectionLoad(this.CurrentDatacollection);
-
          if (this.hashViewsGrid) {
             this.workspaceViews.setCurrentView(currentView.id);
 
@@ -200,6 +221,8 @@ export default function (AB, init_settings) {
          await this.workspaceViews.save();
 
          this.loadData();
+
+         this.warningsRefresh(datacollection);
       }
    }
 

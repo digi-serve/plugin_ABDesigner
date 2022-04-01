@@ -437,10 +437,6 @@ export default function (AB) {
          const ids = this.ids;
          super.datacollectionLoad(datacollection);
 
-         this.CurrentDatacollection = this.AB.datacollectionByID(
-            this.CurrentDatacollectionID
-         );
-
          let settings = {};
 
          if (this.CurrentDatacollection) {
@@ -619,7 +615,7 @@ export default function (AB) {
                })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
-                  this.emit("save", this.CurrentDatacollection.id);
+                  this.emit("save", this.CurrentDatacollection);
                   this.ready();
                   this.callbacks.onSave(this.CurrentDatacollection);
                   resolve();
@@ -884,6 +880,12 @@ export default function (AB) {
             $$(ids.dataSource).setValue(oldId || "");
             $$(ids.dataSource).unblockEvent();
          }
+
+         // Set settings.datasourceID
+         const dcSettings = this.CurrentDatacollection.toObj() || {};
+         dcSettings.settings = dcSettings.settings || {};
+         dcSettings.settings.datasourceID = datasourceID;
+         this.CurrentDatacollection.fromValues(dcSettings);
 
          if (!selectedDatasource.isQuery) {
             // populate link data collection options

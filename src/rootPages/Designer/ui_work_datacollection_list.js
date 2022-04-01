@@ -40,19 +40,21 @@ export default function (AB) {
              * @return {string}
              */
             templateListItem: function (datacollection, common, warnings) {
-               var warnIcon = "";
+               let warnIcon = "";
                if (warnings?.length > 0) {
-                  warnIcon = `(${warnings.length})`;
+                  warnIcon =
+                     '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
                }
                return `<div class='ab-datacollection-list-item'>
-                        <i class="fa ${
-                           datacollection.settings.isQuery
-                              ? "fa-filter"
-                              : "fa-database"
-                        }"></i>
-                        ${datacollection.label || "??label??"}${warnIcon}
-                        ${common.iconGear(datacollection)} 
-                        </div>`;
+                  <i class="fa ${
+                     datacollection.settings.isQuery
+                        ? "fa-filter"
+                        : "fa-database"
+                  }"></i>
+                  ${datacollection.label || "??label??"}
+                  ${warnIcon}
+                  ${common.iconGear(datacollection)}
+               </div>`;
             },
          });
       }
@@ -77,7 +79,7 @@ export default function (AB) {
          this.ListComponent.init(AB);
 
          this.ListComponent.on("selected", (item) => {
-            this.emit("selected", item.id);
+            this.emit("selected", item);
          });
 
          this.ListComponent.on("addNew", (selectNew) => {

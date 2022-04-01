@@ -21,7 +21,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -11343,6 +11343,10 @@ var myClass = null;
 
          datacollectionLoad(dc) {
             this.CurrentDatacollectionID = dc?.id;
+
+            this.CurrentDatacollection = this.AB.datacollectionByID(
+               this.CurrentDatacollectionID
+            );
          }
 
          /**
@@ -12632,6 +12636,10 @@ __webpack_require__.r(__webpack_exports__);
       sidebarItems(app) {
          let warnObjects = this.scanTopic(app, "objectsIncluded");
          let warnQueries = this.scanTopic(app, "queriesIncluded");
+         const warnDatacollections = this.scanTopic(
+            app,
+            "datacollectionsIncluded"
+         );
 
          var sidebarItems = [
             {
@@ -12650,6 +12658,7 @@ __webpack_require__.r(__webpack_exports__);
                id: this.ids.tab_datacollection,
                value: L("Data Collections"),
                icon: "fa fa-fw fa-table",
+               issues: warnDatacollections,
             },
             {
                id: this.ids.tab_processview,
@@ -13040,13 +13049,18 @@ __webpack_require__.r(__webpack_exports__);
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         DataCollectionList.on("selected", (dcID) => {
-            if (dcID == null) DataCollectionWorkspace.clearWorkspace();
-            else DataCollectionWorkspace.populateWorkspace(dcID);
+         DataCollectionList.on("selected", (dc) => {
+            this.select(dc);
          });
 
          DataCollectionWorkspace.on("addNew", (selectNew) => {
             DataCollectionList.emit("addNew", selectNew);
+         });
+
+         this.warningsPropogate([DataCollectionList, DataCollectionWorkspace]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            DataCollectionList.applicationLoad(this.CurrentApplication);
          });
 
          await DataCollectionWorkspace.init(AB);
@@ -13087,6 +13101,12 @@ __webpack_require__.r(__webpack_exports__);
             DataCollectionList.applicationLoad(application);
          }
          DataCollectionList.ready();
+      }
+
+      select(dc) {
+         if (dc == null) DataCollectionWorkspace.clearWorkspace();
+         DataCollectionWorkspace.datacollectionLoad(dc);
+         DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
 
@@ -13152,19 +13172,21 @@ __webpack_require__.r(__webpack_exports__);
              * @return {string}
              */
             templateListItem: function (datacollection, common, warnings) {
-               var warnIcon = "";
+               let warnIcon = "";
                if (warnings?.length > 0) {
-                  warnIcon = `(${warnings.length})`;
+                  warnIcon =
+                     '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
                }
                return `<div class='ab-datacollection-list-item'>
-                        <i class="fa ${
-                           datacollection.settings.isQuery
-                              ? "fa-filter"
-                              : "fa-database"
-                        }"></i>
-                        ${datacollection.label || "??label??"}${warnIcon}
-                        ${common.iconGear(datacollection)} 
-                        </div>`;
+                  <i class="fa ${
+                     datacollection.settings.isQuery
+                        ? "fa-filter"
+                        : "fa-database"
+                  }"></i>
+                  ${datacollection.label || "??label??"}
+                  ${warnIcon}
+                  ${common.iconGear(datacollection)}
+               </div>`;
             },
          });
       }
@@ -13189,7 +13211,7 @@ __webpack_require__.r(__webpack_exports__);
          this.ListComponent.init(AB);
 
          this.ListComponent.on("selected", (item) => {
-            this.emit("selected", item.id);
+            this.emit("selected", item);
          });
 
          this.ListComponent.on("addNew", (selectNew) => {
@@ -14133,9 +14155,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
-/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
-/* harmony import */ var _ui_work_datacollection_workspace_properties__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_datacollection_workspace_properties */ "./src/rootPages/Designer/ui_work_datacollection_workspace_properties.js");
+/* harmony import */ var _ui_warnings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_warnings */ "./src/rootPages/Designer/ui_warnings.js");
+/* harmony import */ var _ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_object_workspace_workspaceviews */ "./src/rootPages/Designer/ui_work_object_workspace_workspaceviews.js");
+/* harmony import */ var _ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_work_object_workspace_view_grid */ "./src/rootPages/Designer/ui_work_object_workspace_view_grid.js");
+/* harmony import */ var _ui_work_datacollection_workspace_properties__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui_work_datacollection_workspace_properties */ "./src/rootPages/Designer/ui_work_datacollection_workspace_properties.js");
+
+
 
 
 
@@ -14147,8 +14172,10 @@ __webpack_require__.r(__webpack_exports__);
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const L = UIClass.L();
 
-   const Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${ibase}_view_grid`, init_settings);
-   const Property = (0,_ui_work_datacollection_workspace_properties__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
+   const Datatable = (0,_ui_work_object_workspace_view_grid__WEBPACK_IMPORTED_MODULE_3__["default"])(AB, `${ibase}_view_grid`, init_settings);
+   const Property = (0,_ui_work_datacollection_workspace_properties__WEBPACK_IMPORTED_MODULE_4__["default"])(AB);
+
+   const Warnings = (0,_ui_warnings__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${ibase}_view_warnings`, init_settings);
 
    class UI_Work_Datacollection_Workspace extends UIClass {
       constructor(base, settings = {}) {
@@ -14161,7 +14188,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.settings = settings;
 
-         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, `${base}_views`, settings);
+         this.workspaceViews = (0,_ui_work_object_workspace_workspaceviews__WEBPACK_IMPORTED_MODULE_2__["default"])(AB, `${base}_views`, settings);
          this.hashViewsGrid = Datatable;
       }
 
@@ -14213,19 +14240,22 @@ __webpack_require__.r(__webpack_exports__);
                      },
                   ],
                },
-
-               // Workspace
                {
                   id: ids.workspace,
                   view: "layout",
-                  cols: [
-                     // Workspace
-                     Datatable.ui(),
+                  rows: [
+                     {
+                        cols: [
+                           // Workspace
+                           Datatable.ui(),
 
-                     { view: "resizer", css: "bg_gray", width: 11 },
+                           { view: "resizer", css: "bg_gray", width: 11 },
 
-                     // Property
-                     Property.ui(),
+                           // Property
+                           Property.ui(),
+                        ],
+                     },
+                     Warnings.ui(),
                   ],
                },
             ],
@@ -14237,15 +14267,22 @@ __webpack_require__.r(__webpack_exports__);
 
          this.AB = AB;
 
+         this.warningsPropogate([Property, Datatable]);
+         this.on("warnings", () => {
+            Warnings.show(this.CurrentDatacollection);
+         });
+
          this.workspaceViews.init(AB);
 
-         Property.on("save", async (datacollectionID) => {
+         Property.on("save", async (datacollection) => {
+            this.datacollectionLoad(datacollection);
+
             // refresh grid view
             if (this.hashViewsGrid) {
                await this.hashViewsGrid.show(Datatable.defaultSettings());
             }
 
-            await this.populateWorkspace(datacollectionID);
+            await this.populateWorkspace(datacollection);
          });
 
          await Datatable.init(AB);
@@ -14265,6 +14302,19 @@ __webpack_require__.r(__webpack_exports__);
 
          Datatable.applicationLoad(application);
          Property.applicationLoad(application);
+      }
+
+      datacollectionLoad(datacollection) {
+         super.datacollectionLoad(datacollection);
+
+         Warnings.show(datacollection);
+
+         Datatable.datacollectionLoad(datacollection);
+         Property.datacollectionLoad(datacollection);
+
+         if (!datacollection) {
+            this.clearWorkspace();
+         }
       }
 
       /**
@@ -14308,14 +14358,12 @@ __webpack_require__.r(__webpack_exports__);
          $$(ids.noSelection).show(false, false);
       }
 
-      async populateWorkspace(datacollectionID) {
+      async populateWorkspace(datacollection) {
          const ids = this.ids;
 
          $$(ids.workspace).show();
 
-         this.CurrentDatacollectionID = datacollectionID;
-         this.CurrentDatacollection =
-            this.AB.datacollectionByID(datacollectionID);
+         this.CurrentDatacollection = datacollection;
 
          // get current view from object
          this.workspaceViews.objectLoad(this.CurrentDatacollection.datasource);
@@ -14324,10 +14372,6 @@ __webpack_require__.r(__webpack_exports__);
          // {WorkspaceView}
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid}
-
-         Datatable.datacollectionLoad(this.CurrentDatacollection);
-         Property.datacollectionLoad(this.CurrentDatacollection);
-
          if (this.hashViewsGrid) {
             this.workspaceViews.setCurrentView(currentView.id);
 
@@ -14338,6 +14382,8 @@ __webpack_require__.r(__webpack_exports__);
          await this.workspaceViews.save();
 
          this.loadData();
+
+         this.warningsRefresh(datacollection);
       }
    }
 
@@ -14799,10 +14845,6 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
          super.datacollectionLoad(datacollection);
 
-         this.CurrentDatacollection = this.AB.datacollectionByID(
-            this.CurrentDatacollectionID
-         );
-
          let settings = {};
 
          if (this.CurrentDatacollection) {
@@ -14981,7 +15023,7 @@ __webpack_require__.r(__webpack_exports__);
                })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
-                  this.emit("save", this.CurrentDatacollection.id);
+                  this.emit("save", this.CurrentDatacollection);
                   this.ready();
                   this.callbacks.onSave(this.CurrentDatacollection);
                   resolve();
@@ -15246,6 +15288,12 @@ __webpack_require__.r(__webpack_exports__);
             $$(ids.dataSource).setValue(oldId || "");
             $$(ids.dataSource).unblockEvent();
          }
+
+         // Set settings.datasourceID
+         const dcSettings = this.CurrentDatacollection.toObj() || {};
+         dcSettings.settings = dcSettings.settings || {};
+         dcSettings.settings.datasourceID = datasourceID;
+         this.CurrentDatacollection.fromValues(dcSettings);
 
          if (!selectedDatasource.isQuery) {
             // populate link data collection options
