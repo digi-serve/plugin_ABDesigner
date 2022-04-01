@@ -72,6 +72,10 @@ export default function (AB) {
 
          datacollectionLoad(dc) {
             this.CurrentDatacollectionID = dc?.id;
+
+            this.CurrentDatacollection = this.AB.datacollectionByID(
+               this.CurrentDatacollectionID
+            );
          }
 
          /**

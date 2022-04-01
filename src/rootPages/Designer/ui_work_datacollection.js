@@ -45,13 +45,18 @@ export default function (AB) {
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         DataCollectionList.on("selected", (dcID) => {
-            if (dcID == null) DataCollectionWorkspace.clearWorkspace();
-            else DataCollectionWorkspace.populateWorkspace(dcID);
+         DataCollectionList.on("selected", (dc) => {
+            this.select(dc);
          });
 
          DataCollectionWorkspace.on("addNew", (selectNew) => {
             DataCollectionList.emit("addNew", selectNew);
+         });
+
+         this.warningsPropogate([DataCollectionList, DataCollectionWorkspace]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            DataCollectionList.applicationLoad(this.CurrentApplication);
          });
 
          await DataCollectionWorkspace.init(AB);
@@ -92,6 +97,12 @@ export default function (AB) {
             DataCollectionList.applicationLoad(application);
          }
          DataCollectionList.ready();
+      }
+
+      select(dc) {
+         if (dc == null) DataCollectionWorkspace.clearWorkspace();
+         DataCollectionWorkspace.datacollectionLoad(dc);
+         DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
 

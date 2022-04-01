@@ -52,6 +52,9 @@
 .ab-object-list-item .webix_sidebar_dir_icon {
    margin-right: 20px;
 }
+.ab-datacollection-list-item .webix_sidebar_dir_icon {
+   margin-right: 20px;
+}
 .darkorange .webix_button {
    background-color: darkorange !important;
 }
