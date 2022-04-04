@@ -14418,6 +14418,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const ibase = "ui_work_datacollection_workspace_properties";
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const uiConfig = AB.Config.uiSettings();
    const uiCustom = AB.custom;
@@ -14425,7 +14426,7 @@ __webpack_require__.r(__webpack_exports__);
 
    class UI_Work_Datacollection_Workspace_Properties extends UIClass {
       constructor() {
-         super("ui_work_datacollection_workspace_properties", {
+         super(ibase, {
             propertyPanel: "",
 
             dataSource: "",
@@ -14478,14 +14479,7 @@ __webpack_require__.r(__webpack_exports__);
             body: this.FilterComponent.ui,
          });
 
-         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_1__["default"])(this.AB);
-         this.PopupSortFieldComponent.ids = new UIClass(
-            "ui_work_datacollection_workspace_popupSortFields",
-            {
-               list: "",
-               form: "",
-            }
-         ).ids;
+         this.PopupSortFieldComponent = (0,_ui_work_object_workspace_popupSortFields__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, ibase);
          this.PopupSortFieldComponent.on("changed", (sortSettings) => {
             this.onSortChange(sortSettings);
             this.save();

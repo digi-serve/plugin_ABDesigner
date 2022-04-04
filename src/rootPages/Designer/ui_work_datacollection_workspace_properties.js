@@ -8,6 +8,7 @@ import UI_Class from "./ui_class";
 import FPopupSortField from "./ui_work_object_workspace_popupSortFields";
 
 export default function (AB) {
+   const ibase = "ui_work_datacollection_workspace_properties";
    const UIClass = UI_Class(AB);
    const uiConfig = AB.Config.uiSettings();
    const uiCustom = AB.custom;
@@ -15,7 +16,7 @@ export default function (AB) {
 
    class UI_Work_Datacollection_Workspace_Properties extends UIClass {
       constructor() {
-         super("ui_work_datacollection_workspace_properties", {
+         super(ibase, {
             propertyPanel: "",
 
             dataSource: "",
@@ -68,14 +69,7 @@ export default function (AB) {
             body: this.FilterComponent.ui,
          });
 
-         this.PopupSortFieldComponent = FPopupSortField(this.AB);
-         this.PopupSortFieldComponent.ids = new UIClass(
-            "ui_work_datacollection_workspace_popupSortFields",
-            {
-               list: "",
-               form: "",
-            }
-         ).ids;
+         this.PopupSortFieldComponent = FPopupSortField(AB, ibase);
          this.PopupSortFieldComponent.on("changed", (sortSettings) => {
             this.onSortChange(sortSettings);
             this.save();
