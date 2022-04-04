@@ -125,7 +125,7 @@ export default function (AB, init_settings) {
          });
 
          await Datatable.init(AB);
-         Property.init(AB);
+         await Property.init(AB);
 
          this.CurrentDatacollection = this.AB.datacollectionNew({});
          this.CurrentDatacollection.init();

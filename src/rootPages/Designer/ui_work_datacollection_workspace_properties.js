@@ -307,7 +307,7 @@ export default function (AB) {
          };
       }
 
-      init(AB) {
+      async init(AB) {
          this.AB = AB;
 
          const ids = this.ids;

@@ -14288,7 +14288,7 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          await Datatable.init(AB);
-         Property.init(AB);
+         await Property.init(AB);
 
          this.CurrentDatacollection = this.AB.datacollectionNew({});
          this.CurrentDatacollection.init();
@@ -14717,7 +14717,7 @@ __webpack_require__.r(__webpack_exports__);
          };
       }
 
-      init(AB) {
+      async init(AB) {
          this.AB = AB;
 
          const ids = this.ids;
