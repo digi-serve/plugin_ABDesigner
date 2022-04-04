@@ -40,12 +40,6 @@ export default function (AB) {
          this.AB = AB;
          // {ABFactory}
 
-         this.callbacks = {
-            onSave: function (/* datacollection */) {
-               // Do nothing
-            },
-         };
-
          /*
           * _templateListItem
           *
@@ -320,10 +314,6 @@ export default function (AB) {
          this.AB = AB;
 
          const ids = this.ids;
-         // register our callbacks:
-         for (const c in this.callbacks) {
-            this.callbacks[c] = AB[c] || this.callbacks[c];
-         }
 
          if ($$(ids.list)) {
             webix.extend($$(ids.list), webix.ProgressBar);
@@ -615,9 +605,8 @@ export default function (AB) {
                })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
-                  this.emit("save", this.CurrentDatacollection);
                   this.ready();
-                  this.callbacks.onSave(this.CurrentDatacollection);
+                  this.emit("save", this.CurrentDatacollection);
                   resolve();
                });
          });
