@@ -14463,6 +14463,9 @@ __webpack_require__.r(__webpack_exports__);
 
          this.viewList = null;
 
+         // TODO: once FilterComplex is merged into our core repo
+         // change this to:
+         // this.FilterComponent = this.AB.filterComplexNew(this.ids.filter);
          this.FilterComponent = this.AB.rowfilterNew(null, this.ids.filter);
          this.FilterComponent.on("changed", () => {
             this.onFilterChange();
