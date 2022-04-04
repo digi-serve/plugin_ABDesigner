@@ -319,9 +319,7 @@ export default function (AB) {
          // verify they mean to do this:
          webix.confirm({
             title: L("Delete Page"),
-            text: L("Are you sure you wish to delete this page?", [
-               selectedPage?.label,
-            ]),
+            text: L("Are you sure you wish to delete this page?"),
             ok: L("Yes"),
             cancel: L("No"),
             callback: async (isOK) => {
