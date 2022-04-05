@@ -316,13 +316,15 @@ export default function (AB) {
 
          const ids = this.ids;
 
-         if ($$(ids.list)) {
-            webix.extend($$(ids.list), webix.ProgressBar);
-            $$(ids.list).adjust();
+         const $list = $$(ids.list);
+         const $propertyPanel = $$(ids.propertyPanel);
+
+         if ($list) {
+            webix.extend($list, webix.ProgressBar);
+            $list.adjust();
          }
 
-         if ($$(ids.propertyPanel))
-            webix.extend($$(ids.propertyPanel), webix.ProgressBar);
+         if ($propertyPanel) webix.extend($propertyPanel, webix.ProgressBar);
 
          this.initPopupEditors();
 
@@ -416,14 +418,14 @@ export default function (AB) {
          });
 
          // clear our list and display our objects:
-         const List = $$(ids.list);
+         const $list = $$(ids.list);
 
-         List.clearAll();
-         List.data.unsync();
-         List.data.sync(this.viewList);
-         List.refresh();
-         List.parse(this.viewList);
-         List.unselectAll();
+         $list.clearAll();
+         $list.data.unsync();
+         $list.data.sync(this.viewList);
+         $list.refresh();
+         $list.parse(this.viewList);
+         $list.unselectAll();
 
          this.listReady();
       }
@@ -433,6 +435,16 @@ export default function (AB) {
          super.datacollectionLoad(datacollection);
 
          let settings = {};
+
+         const $filterPanel =$$(ids.filterPanel);
+         const $sortPanel = $$(ids.sortPanel);
+         const $dataSource = $$(ids.dataSource);
+         const $linkDatacollection = $$(ids.linkDatacollection);
+         const $linkField = $$(ids.linkField);
+         const $loadAll = $$(ids.loadAll);
+         const $fixSelect = $$(ids.fixSelect);
+         const $preventPopulate = $$(ids.preventPopulate);
+         const $list = $$(ids.list);
 
          if (this.CurrentDatacollection) {
             settings = this.CurrentDatacollection.settings || {};
@@ -459,31 +471,28 @@ export default function (AB) {
 
          // if selected soruce is a query, then hide advanced options UI
          if (settings.isQuery) {
-            $$(ids.filterPanel).hide();
-            $$(ids.sortPanel).hide();
+            $filterPanel.hide();
+            $sortPanel.hide();
          } else {
-            $$(ids.filterPanel).show();
-            $$(ids.sortPanel).show();
+            $filterPanel.show();
+            $sortPanel.show();
          }
 
          this.refreshDataSourceOptions();
-         $$(ids.dataSource).define("value", settings.datasourceID);
-         $$(ids.linkDatacollection).define(
-            "value",
-            settings.linkDatacollectionID
-         );
-         $$(ids.linkField).define("value", settings.linkFieldID);
-         $$(ids.loadAll).define("value", settings.loadAll);
-         $$(ids.fixSelect).define("value", settings.fixSelect);
-         $$(ids.preventPopulate).define("value", settings.preventPopulate);
+         $dataSource.define("value", settings.datasourceID);
+         $linkDatacollection.define("value", settings.linkDatacollectionID);
+         $linkField.define("value", settings.linkFieldID);
+         $loadAll.define("value", settings.loadAll);
+         $fixSelect.define("value", settings.fixSelect);
+         $preventPopulate.define("value", settings.preventPopulate);
 
-         $$(ids.dataSource).refresh();
-         $$(ids.linkDatacollection).refresh();
-         $$(ids.linkField).refresh();
-         $$(ids.loadAll).refresh();
-         $$(ids.preventPopulate).refresh();
-         $$(ids.fixSelect).refresh();
-         $$(ids.list).openAll();
+         $dataSource.refresh();
+         $linkDatacollection.refresh();
+         $linkField.refresh();
+         $loadAll.refresh();
+         $fixSelect.refresh();
+         $preventPopulate.refresh();
+         $list.openAll();
       }
 
       refreshDataSourceOptions() {
@@ -544,13 +553,19 @@ export default function (AB) {
       }
 
       busy() {
-         const $propertyPanel = $$(this.ids.propertyPanel);
+         const ids = this.ids;
+
+         const $propertyPanel = $$(ids.propertyPanel);
+
          if ($propertyPanel && $propertyPanel.showProgress)
             $propertyPanel.showProgress({ type: "icon" });
       }
 
       ready() {
-         const $propertyPanel = $$(this.ids.propertyPanel);
+         const ids = this.ids;
+
+         const $propertyPanel = $$(ids.propertyPanel);
+
          if ($propertyPanel && $propertyPanel.hideProgress)
             $propertyPanel.hideProgress();
       }
@@ -617,6 +632,9 @@ export default function (AB) {
          // get linked data collection list
          const objSource = this.CurrentDatacollection?.datasource || null;
 
+         const $linkDatacollection = $$(ids.linkDatacollection);
+         const $linkField = $$(ids.linkField);
+
          if (objSource) {
             const linkFields = objSource.connectFields();
             const linkObjectIds = linkFields.map((f) => f.settings.linkObject);
@@ -643,23 +661,23 @@ export default function (AB) {
                   value: L("Select a link source"),
                });
 
-               $$(ids.linkDatacollection).show();
-               $$(ids.linkDatacollection).define("options", linkDvOptions);
-               $$(ids.linkDatacollection).define(
+               $linkDatacollection.show();
+               $linkDatacollection.define("options", linkDvOptions);
+               $linkDatacollection.define(
                   "value",
                   this.CurrentDatacollection?.settings?.linkDatacollectionID ||
                      ""
                );
-               $$(ids.linkDatacollection).refresh();
+               $linkDatacollection.refresh();
             } else {
                // hide options
-               $$(ids.linkDatacollection).hide();
-               $$(ids.linkField).hide();
+               $linkDatacollection.hide();
+               $linkField.hide();
             }
          } else {
             // hide options
-            $$(ids.linkDatacollection).hide();
-            $$(ids.linkField).hide();
+            $linkDatacollection.hide();
+            $linkField.hide();
          }
       }
 
@@ -691,8 +709,10 @@ export default function (AB) {
             });
          }
 
-         if (linkFieldOptions.length > 0) $$(ids.linkField).show();
-         else $$(ids.linkField).hide();
+         const $linkField = $$(ids.linkField);
+
+         if (linkFieldOptions.length > 0) $linkField.show();
+         else $linkField.hide();
 
          let linkFieldId = linkFieldOptions[0] ? linkFieldOptions[0].id : "";
 
@@ -703,9 +723,9 @@ export default function (AB) {
             linkFieldId = this.CurrentDatacollection.settings.linkFieldID;
          }
 
-         $$(ids.linkField).define("options", linkFieldOptions);
-         $$(ids.linkField).define("value", linkFieldId);
-         $$(ids.linkField).refresh();
+         $linkField.define("options", linkFieldOptions);
+         $linkField.define("value", linkFieldId);
+         $linkField.refresh();
       }
 
       populatePopupEditors() {
@@ -758,6 +778,9 @@ export default function (AB) {
          const ids = this.ids;
          const datacollection = this.CurrentDatacollection;
 
+         const $buttonFilter = $$(ids.buttonFilter);
+         const $buttonSort = $$(ids.buttonSort);
+
          if (
             datacollection &&
             datacollection.settings &&
@@ -765,15 +788,15 @@ export default function (AB) {
             datacollection.settings.objectWorkspace.filterConditions &&
             datacollection.settings.objectWorkspace.filterConditions.rules
          ) {
-            $$(ids.buttonFilter).define(
+            $buttonFilter.define(
                "badge",
                datacollection.settings.objectWorkspace.filterConditions.rules
                   .length || null
             );
-            $$(ids.buttonFilter).refresh();
+            $buttonFilter.refresh();
          } else {
-            $$(ids.buttonFilter).define("badge", null);
-            $$(ids.buttonFilter).refresh();
+            $buttonFilter.define("badge", null);
+            $buttonFilter.refresh();
          }
 
          if (
@@ -782,14 +805,14 @@ export default function (AB) {
             datacollection.settings.objectWorkspace &&
             datacollection.settings.objectWorkspace.sortFields
          ) {
-            $$(ids.buttonSort).define(
+            $buttonSort.define(
                "badge",
                datacollection.settings.objectWorkspace.sortFields.length || null
             );
-            $$(ids.buttonSort).refresh();
+            $buttonSort.refresh();
          } else {
-            $$(ids.buttonSort).define("badge", null);
-            $$(ids.buttonSort).refresh();
+            $buttonSort.define("badge", null);
+            $buttonSort.refresh();
          }
       }
 
@@ -837,9 +860,11 @@ export default function (AB) {
 
          fixSelect = this.CurrentDatacollection.settings.fixSelect || "";
 
-         $$(ids.fixSelect).define("options", dataItems);
-         $$(ids.fixSelect).define("value", fixSelect);
-         $$(ids.fixSelect).refresh();
+         const $fixSelect = $$(ids.fixSelect);
+
+         $fixSelect.define("options", dataItems);
+         $fixSelect.define("value", fixSelect);
+         $fixSelect.refresh();
       }
 
       initPopupEditors() {
@@ -857,11 +882,13 @@ export default function (AB) {
             .getList()
             .getItem(datasourceID);
 
+         const $dataSource = $$(ids.dataSource);
+
          if (selectedDatasource && selectedDatasource.disabled) {
             // prevents re-calling onChange from itself
-            $$(ids.dataSource).blockEvent();
-            $$(ids.dataSource).setValue(oldId || "");
-            $$(ids.dataSource).unblockEvent();
+            $dataSource.blockEvent();
+            $dataSource.setValue(oldId || "");
+            $dataSource.unblockEvent();
          }
 
          // Set settings.datasourceID
@@ -869,6 +896,9 @@ export default function (AB) {
          dcSettings.settings = dcSettings.settings || {};
          dcSettings.settings.datasourceID = datasourceID;
          this.CurrentDatacollection.fromValues(dcSettings);
+
+         const $filterPanel = $$(ids.filterPanel);
+         const $sortPanel = $$(ids.sortPanel);
 
          if (!selectedDatasource.isQuery) {
             // populate link data collection options
@@ -888,12 +918,12 @@ export default function (AB) {
             this.populateBadgeNumber();
 
             // show options
-            $$(ids.filterPanel).show();
-            $$(ids.sortPanel).show();
+            $filterPanel.show();
+            $sortPanel.show();
          } else {
             // hide options
-            $$(ids.filterPanel).hide();
-            $$(ids.sortPanel).hide();
+            $filterPanel.hide();
+            $sortPanel.hide();
          }
       }
 
@@ -1007,15 +1037,17 @@ export default function (AB) {
       listBusy() {
          const ids = this.ids;
 
-         if ($$(ids.list) && $$(ids.list).showProgress)
-            $$(ids.list).showProgress({ type: "icon" });
+         const $list = $$(ids.list);
+
+         if ($list && $list.showProgress) $list.showProgress({ type: "icon" });
       }
 
       listReady() {
          const ids = this.ids;
 
-         if ($$(ids.list) && $$(ids.list).hideProgress)
-            $$(ids.list).hideProgress();
+         const $list = $$(ids.list);
+
+         if ($list && $list.hideProgress) $list.hideProgress();
       }
    }
 
