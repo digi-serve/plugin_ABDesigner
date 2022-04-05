@@ -69,6 +69,10 @@ export default function (AB) {
             body: this.FilterComponent.ui,
          });
 
+         this._handler_loadData = (rowsData) => {
+            this.populateFixSelector(rowsData);
+         };
+
          this.PopupSortFieldComponent = FPopupSortField(AB, ibase);
          this.PopupSortFieldComponent.on("changed", (sortSettings) => {
             this.onSortChange(sortSettings);
@@ -435,13 +439,9 @@ export default function (AB) {
 
             this.CurrentDatacollection.removeListener(
                "loadData",
-               (rowsData) => {
-                  this.populateFixSelector(rowsData);
-               }
+               this._handler_loadData
             );
-            this.CurrentDatacollection.on("loadData", (rowsData) => {
-               this.populateFixSelector(rowsData);
-            });
+            this.CurrentDatacollection.on("loadData", this._handler_loadData);
          }
 
          // populate link data collection options
@@ -494,24 +494,22 @@ export default function (AB) {
          let datasources = [];
 
          // Objects
-         const objects = this.CurrentApplication.objectIDs.map((id) => {
-            const obj = this.AB.objectByID(id);
-
-            if (obj)
-               return {
-                  id: obj.id,
-                  value: obj.label,
-                  isQuery: false,
-                  icon: "fa fa-database",
-               };
-            else return null;
-         });
+         const objects = this.CurrentApplication.objectsIncluded().map(
+            (obj) => {
+               if (obj)
+                  return {
+                     id: obj.id,
+                     value: obj.label,
+                     isQuery: false,
+                     icon: "fa fa-database",
+                  };
+               else return null;
+            }
+         );
          datasources = datasources.concat(objects);
 
          // Queries
-         const queries = this.CurrentApplication.queryIDs.map((id) => {
-            const qr = this.AB.queryByID(id);
-
+         const queries = this.CurrentApplication.queriesIncluded().map((qr) => {
             if (qr)
                return {
                   id: qr.id,
@@ -600,15 +598,15 @@ export default function (AB) {
 
          return new Promise((resolve, reject) => {
             this.CurrentDatacollection.save()
-               .catch((err) => {
-                  this.ready();
-                  reject(err);
-               })
                .then(() => {
                   this.CurrentDatacollection.clearAll();
                   this.ready();
                   this.emit("save", this.CurrentDatacollection);
                   resolve();
+               })
+               .catch((err) => {
+                  this.ready();
+                  reject(err);
                });
          });
       }
@@ -626,15 +624,10 @@ export default function (AB) {
             const linkDvOptions = [];
 
             // pull data collections that are link to object
-            const linkDCs = this.CurrentApplication.datacollectionIDs
-               .filter((id) => {
-                  const dc = this.AB.datacollectionByID(id);
-
-                  return linkObjectIds.includes(
-                     dc?.settings.datasourceID || null
-                  );
-               })
-               .map((id) => this.AB.datacollectionByID(id));
+            const linkDCs =
+               this.CurrentApplication.datacollectionsIncluded().filter((dc) =>
+                  linkObjectIds.includes(dc?.settings.datasourceID)
+               );
 
             if (linkDCs && linkDCs.length > 0) {
                // set data collections to options
