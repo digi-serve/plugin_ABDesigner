@@ -14967,7 +14967,7 @@ __webpack_require__.r(__webpack_exports__);
 
          const $propertyPanel = $$(ids.propertyPanel);
 
-         if ($propertyPanel && $propertyPanel.showProgress)
+         if ($propertyPanel?.showProgress)
             $propertyPanel.showProgress({ type: "icon" });
       }
 
@@ -14976,8 +14976,7 @@ __webpack_require__.r(__webpack_exports__);
 
          const $propertyPanel = $$(ids.propertyPanel);
 
-         if ($propertyPanel && $propertyPanel.hideProgress)
-            $propertyPanel.hideProgress();
+         if ($propertyPanel?.hideProgress) $propertyPanel.hideProgress();
       }
 
       save() {
@@ -15057,7 +15056,7 @@ __webpack_require__.r(__webpack_exports__);
                   linkObjectIds.includes(dc?.settings.datasourceID)
                );
 
-            if (linkDCs && linkDCs.length > 0) {
+            if (linkDCs?.length > 0) {
                // set data collections to options
                linkDCs.forEach((dc) => {
                   linkDvOptions.push({
@@ -15126,10 +15125,7 @@ __webpack_require__.r(__webpack_exports__);
 
          let linkFieldId = linkFieldOptions[0] ? linkFieldOptions[0].id : "";
 
-         if (
-            this.CurrentDatacollection &&
-            this.CurrentDatacollection.settings
-         ) {
+         if (this.CurrentDatacollection?.settings) {
             linkFieldId = this.CurrentDatacollection.settings.linkFieldID;
          }
 
@@ -15139,10 +15135,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       populatePopupEditors() {
-         if (
-            this.CurrentDatacollection &&
-            this.CurrentDatacollection.datasource
-         ) {
+         if (this.CurrentDatacollection?.datasource) {
             const datasource = this.CurrentDatacollection.datasource;
 
             // array of filters to apply to the data table
@@ -15192,11 +15185,7 @@ __webpack_require__.r(__webpack_exports__);
          const $buttonSort = $$(ids.buttonSort);
 
          if (
-            datacollection &&
-            datacollection.settings &&
-            datacollection.settings.objectWorkspace &&
-            datacollection.settings.objectWorkspace.filterConditions &&
-            datacollection.settings.objectWorkspace.filterConditions.rules
+            datacollection?.settings?.objectWorkspace?.filterConditions?.rules
          ) {
             $buttonFilter.define(
                "badge",
@@ -15209,12 +15198,7 @@ __webpack_require__.r(__webpack_exports__);
             $buttonFilter.refresh();
          }
 
-         if (
-            datacollection &&
-            datacollection.settings &&
-            datacollection.settings.objectWorkspace &&
-            datacollection.settings.objectWorkspace.sortFields
-         ) {
+         if (datacollection?.settings?.objectWorkspace?.sortFields) {
             $buttonSort.define(
                "badge",
                datacollection.settings.objectWorkspace.sortFields.length || null
@@ -15294,7 +15278,7 @@ __webpack_require__.r(__webpack_exports__);
 
          const $dataSource = $$(ids.dataSource);
 
-         if (selectedDatasource && selectedDatasource.disabled) {
+         if (selectedDatasource?.disabled) {
             // prevents re-calling onChange from itself
             $dataSource.blockEvent();
             $dataSource.setValue(oldId || "");
@@ -15427,8 +15411,7 @@ __webpack_require__.r(__webpack_exports__);
          let hasDataCollection = "";
          if (
             item.datacollection &&
-            this.CurrentDatacollection &&
-            this.CurrentDatacollection.id &&
+            this.CurrentDatacollection?.id &&
             item.datacollection.id == this.CurrentDatacollection.id
          ) {
             hasDataCollection =
@@ -15449,7 +15432,7 @@ __webpack_require__.r(__webpack_exports__);
 
          const $list = $$(ids.list);
 
-         if ($list && $list.showProgress) $list.showProgress({ type: "icon" });
+         if ($list?.showProgress) $list.showProgress({ type: "icon" });
       }
 
       listReady() {
@@ -15457,7 +15440,7 @@ __webpack_require__.r(__webpack_exports__);
 
          const $list = $$(ids.list);
 
-         if ($list && $list.hideProgress) $list.hideProgress();
+         if ($list?.hideProgress) $list.hideProgress();
       }
    }
 
