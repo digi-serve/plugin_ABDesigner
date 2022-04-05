@@ -14724,13 +14724,17 @@ __webpack_require__.r(__webpack_exports__);
 
          if ($$(ids.list)) {
             webix.extend($$(ids.list), webix.ProgressBar);
-            $$(this.ids.list).adjust();
+            $$(ids.list).adjust();
          }
 
          if ($$(ids.propertyPanel))
             webix.extend($$(ids.propertyPanel), webix.ProgressBar);
 
          this.initPopupEditors();
+
+         // Interface.on("interface", (viewObj) => {
+         //    this.switchTab(viewObj)
+         // });
       }
 
       /**
@@ -14739,14 +14743,14 @@ __webpack_require__.r(__webpack_exports__);
        * Perform these actions when a View is selected in the List.
        */
       onAfterSelect(id) {
-         const view = $$(this.ids.list).getItem(id);
+         const ids = this.ids;
+         const view = $$(ids.list).getItem(id);
          const viewObj = this.CurrentApplication.views(
             (v) => v.id == view.id
          )[0];
 
          setTimeout(() => {
-            this.AB.actions.tabSwitch("interface");
-            this.AB.actions.populateInterfaceWorkspace(viewObj);
+            this.emit("interface", viewObj);
          }, 50);
       }
 
@@ -15379,6 +15383,10 @@ __webpack_require__.r(__webpack_exports__);
             sortSettings || [];
 
          this.populateBadgeNumber();
+      }
+
+      switchTab(viewObj) {
+         // Interface.populateWorkspace(viewObj);
       }
 
       /**
