@@ -1,11 +1,6 @@
-// const ABComponent = require("../classes/platform/ABComponent");
-// const ABPopupSortField = require("./ab_work_object_workspace_popupSortFields");
-// const ABViewTab = require("../classes/platform/views/ABViewTab");
-// const ABViewDetail = require("../classes/platform/views/ABViewDetail");
-// const RowFilter = require("../classes/platform/RowFilter");
-
 import UI_Class from "./ui_class";
 import FPopupSortField from "./ui_work_object_workspace_popupSortFields";
+// import ... form "ui_work_interface...";
 
 export default function (AB) {
    const ibase = "ui_work_datacollection_workspace_properties";
@@ -13,6 +8,8 @@ export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
    const uiCustom = AB.custom;
    const L = UIClass.L();
+
+   // const Interface = ...
 
    class UI_Work_Datacollection_Workspace_Properties extends UIClass {
       constructor() {
@@ -52,32 +49,13 @@ export default function (AB) {
             "</div>",
          ].join("");
 
-         this.viewList = null;
-
-         // TODO: once FilterComplex is merged into our core repo
-         // change this to:
-         // this.FilterComponent = this.AB.filterComplexNew(this.ids.filter);
-         this.FilterComponent = this.AB.rowfilterNew(null, this.ids.filter);
-         this.FilterComponent.on("changed", () => {
-            this.onFilterChange();
-         });
-
-         this.filter_popup = webix.ui({
-            view: "popup",
-            width: 800,
-            hidden: true,
-            body: this.FilterComponent.ui,
-         });
-
          this._handler_loadData = (rowsData) => {
             this.populateFixSelector(rowsData);
          };
 
+         this.viewList = null;
+         this.FilterComponent = this.AB.filterComplexNew(this.ids.filter);
          this.PopupSortFieldComponent = FPopupSortField(AB, ibase);
-         this.PopupSortFieldComponent.on("changed", (sortSettings) => {
-            this.onSortChange(sortSettings);
-            this.save();
-         });
       }
 
       ui() {
@@ -328,6 +306,24 @@ export default function (AB) {
 
          this.initPopupEditors();
 
+         this.FilterComponent.myPopup = webix.ui({
+            view: "popup",
+            height: 240,
+            width: 480,
+            hidden: true,
+            body: this.FilterComponent.ui,
+         });
+
+         this.FilterComponent.on("save", () => {
+            this.onFilterChange();
+            this.save();
+         });
+
+         this.PopupSortFieldComponent.on("changed", (sortSettings) => {
+            this.onSortChange(sortSettings);
+            this.save();
+         });
+
          // Interface.on("interface", (viewObj) => {
          //    this.switchTab(viewObj)
          // });
@@ -436,7 +432,7 @@ export default function (AB) {
 
          let settings = {};
 
-         const $filterPanel =$$(ids.filterPanel);
+         const $filterPanel = $$(ids.filterPanel);
          const $sortPanel = $$(ids.sortPanel);
          const $dataSource = $$(ids.dataSource);
          const $linkDatacollection = $$(ids.linkDatacollection);
@@ -725,33 +721,16 @@ export default function (AB) {
       }
 
       populatePopupEditors() {
-         if (this.CurrentDatacollection?.datasource) {
-            const datasource = this.CurrentDatacollection.datasource;
+         const datacollection = this.CurrentDatacollection || null;
+         const datasource = datacollection?.datasource || null;
 
+         if (datasource) {
             // array of filters to apply to the data table
-            let filterConditions = {
-               glue: "and",
-               rules: [],
-            };
+            const filterConditions = datacollection?.settings?.objectWorkspace
+               ?.filterConditions || { glue: "and", rules: [] };
 
-            let sortConditions = [];
-
-            if (this.CurrentDatacollection.settings.objectWorkspace) {
-               if (
-                  this.CurrentDatacollection.settings.objectWorkspace
-                     .filterConditions
-               )
-                  filterConditions =
-                     this.CurrentDatacollection.settings.objectWorkspace
-                        .filterConditions;
-
-               if (
-                  this.CurrentDatacollection.settings.objectWorkspace.sortFields
-               )
-                  sortConditions =
-                     this.CurrentDatacollection.settings.objectWorkspace
-                        .sortFields;
-            }
+            const sortConditions =
+               datacollection?.settings?.objectWorkspace?.sortFields || [];
 
             // Populate data to popups
             this.FilterComponent.fieldsLoad(
@@ -780,7 +759,7 @@ export default function (AB) {
             $buttonFilter.define(
                "badge",
                datacollection.settings.objectWorkspace.filterConditions.rules
-                  .length || null
+                  ?.length || null
             );
             $buttonFilter.refresh();
          } else {
@@ -821,18 +800,18 @@ export default function (AB) {
             if (userFields.length > 0)
                dataItems.unshift({
                   id: "_CurrentUser",
-                  value: L("[Current User]"),
+                  value: L("Current User"),
                });
 
             // Add a first record option to allow select first row
             dataItems.unshift(
                {
                   id: "_FirstRecord",
-                  value: L("[First Record]"),
+                  value: L("First Record"),
                },
                {
                   id: "_FirstRecordDefault",
-                  value: L("[Default to First Record]"),
+                  value: L("Default to First Record"),
                }
             );
          }
@@ -852,11 +831,7 @@ export default function (AB) {
       }
 
       initPopupEditors() {
-         this.FilterComponent.init({
-            // when we make a change in the popups we want to make sure we save the new workspace to the properties to do so just fire an onChange event
-            onChange: this.onFilterChange,
-         });
-
+         this.FilterComponent.init();
          this.PopupSortFieldComponent.init(this.AB);
       }
 
@@ -912,7 +887,7 @@ export default function (AB) {
       }
 
       showFilterPopup($button) {
-         this.filter_popup.show($button, null, { pos: "top" });
+         this.FilterComponent.popUp($button, null, { pos: "top" });
       }
 
       showSortPopup($button) {
@@ -926,46 +901,14 @@ export default function (AB) {
          if (!datacollection) return;
 
          const filterValues = this.FilterComponent.getValue();
+         const isComplete =
+            this.FilterComponent.isConditionComplete(filterValues);
 
-         datacollection.settings.objectWorkspace.filterConditions =
-            filterValues || { glue: "and", rules: [] };
+         // only perform the update if a complete row is specified:
+         if (!isComplete)
+            this.FilterComponent.setValue({ glue: "and", rules: [] });
 
-         let allCompconste = true;
-         filterValues.rules.forEach((f) => {
-            // if all 3 fields are present, we are good.
-            if (
-               f.key &&
-               f.rule &&
-               (f.value ||
-                  // these rules do not have input value
-                  f.rule == "is_current_user" ||
-                  f.rule == "is_not_current_user" ||
-                  f.rule == "contain_current_user" ||
-                  f.rule == "not_contain_current_user" ||
-                  f.rule == "same_as_user" ||
-                  f.rule == "not_same_as_user" ||
-                  f.rule == "less_current" ||
-                  f.rule == "greater_current" ||
-                  f.rule == "less_or_equal_current" ||
-                  f.rule == "greater_or_equal_current" ||
-                  f.rule == "is_empty" ||
-                  f.rule == "is_not_empty")
-            ) {
-               allCompconste = allCompconste && true;
-            } else {
-               // else, we found an entry that wasn't compconste:
-               allCompconste = false;
-            }
-         });
-
-         // only perform the update if a compconste row is specified:
-         if (allCompconste) {
-            // we want to call .save() but give webix a chance to properly update it's
-            // select boxes before this call causes them to be removed:
-            setTimeout(() => {
-               this.save();
-            }, 10);
-         }
+         this.populateBadgeNumber();
       }
 
       onSortChange(sortSettings) {
