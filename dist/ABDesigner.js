@@ -14453,11 +14453,11 @@ __webpack_require__.r(__webpack_exports__);
           *
           * The Object Row template definition.
           */
-         this._templateListItem = [
-            "<div class='ab-page-list-item'>",
-            "{common.icon()} <span class='webix_icon fa fa-#typeIcon#'></span> #label# #hasDataCollection#",
-            "</div>",
-         ].join("");
+         this._templateListItem = `
+            <div class='ab-page-list-item'>
+               {common.icon()} <span class='webix_icon fa fa-#typeIcon#'></span> #label# #hasDataCollection#
+            </div>
+         `;
 
          this._handler_loadData = (rowsData) => {
             this.populateFixSelector(rowsData);
