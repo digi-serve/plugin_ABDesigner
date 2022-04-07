@@ -10,37 +10,57 @@ import UI_Work_DataCollection_Workspace from "./ui_work_datacollection_workspace
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
+
+   const DataCollectionList = UI_Work_DataCollection_List(AB);
+   const DataCollectionWorkspace = UI_Work_DataCollection_Workspace(AB, {
+      allowDelete: 0,
+      configureHeaders: false,
+      detailsView: "",
+      editView: "",
+      isEditable: 0,
+      massUpdate: 0,
+      isReadOnly: true,
+   });
+
    class UI_Work_DataCollection extends UIClass {
       constructor() {
          super("ui_work_datacollection");
-
-         this.DataCollectionList = UI_Work_DataCollection_List(AB);
-         this.DataCollectionWorkspace = UI_Work_DataCollection_Workspace(AB);
       }
 
       ui() {
+         const ids = this.ids;
          // Our webix UI definition:
          return {
-            id: this.ids.component,
+            id: ids.component,
             type: "space",
             cols: [
-               this.DataCollectionList.ui(),
+               DataCollectionList.ui(),
                { view: "resizer", width: 11 },
-               this.DataCollectionWorkspace.ui(),
+               DataCollectionWorkspace.ui(),
             ],
          };
       }
 
-      init(AB) {
+      async init(AB) {
          this.AB = AB;
 
          // Our init() function for setting up our UI
-         this.DataCollectionList.on("selected", this.select);
+         DataCollectionList.on("selected", (dc) => {
+            this.select(dc);
+         });
 
-         return Promise.all([
-            this.DataCollectionWorkspace.init(AB),
-            this.DataCollectionList.init(AB),
-         ]);
+         DataCollectionWorkspace.on("addNew", (selectNew) => {
+            DataCollectionList.emit("addNew", selectNew);
+         });
+
+         this.warningsPropogate([DataCollectionList, DataCollectionWorkspace]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            DataCollectionList.applicationLoad(this.CurrentApplication);
+         });
+
+         await DataCollectionWorkspace.init(AB);
+         await DataCollectionList.init(AB);
       }
 
       /**
@@ -49,11 +69,16 @@ export default function (AB) {
        * @param {ABApplication} application
        */
       applicationLoad(application) {
+         const oldAppID = this.CurrentApplicationID;
+
          super.applicationLoad(application);
 
-         this.DataCollectionWorkspace.clearWorkspace();
-         this.DataCollectionList.applicationLoad(application);
-         this.DataCollectionWorkspace.applicationLoad(application);
+         if (oldAppID != this.CurrentApplicationID) {
+            DataCollectionWorkspace.clearWorkspace();
+         }
+
+         DataCollectionList.applicationLoad(application);
+         DataCollectionWorkspace.applicationLoad(application);
       }
 
       /**
@@ -62,21 +87,22 @@ export default function (AB) {
        * Show this component.
        */
       show() {
-         $$(this.ids.component).show(false, false);
+         const ids = this.ids;
 
-         // this.DataCollectionList.busy();
+         $$(ids.component).show(false, false);
 
-         var app = this.CurrentApplication;
-         if (app) {
-            this.DataCollectionWorkspace.applicationLoad(app);
-            this.DataCollectionList.applicationLoad(app);
+         const application = this.CurrentApplication;
+         if (application) {
+            DataCollectionWorkspace.applicationLoad(application);
+            DataCollectionList.applicationLoad(application);
          }
-         this.DataCollectionList.ready();
+         DataCollectionList.ready();
       }
 
       select(dc) {
-         this.DataCollectionWorkspace.clearWorkspace();
-         this.DataCollectionWorkspace.populateWorkspace(dc);
+         if (dc == null) DataCollectionWorkspace.clearWorkspace();
+         DataCollectionWorkspace.datacollectionLoad(dc);
+         DataCollectionWorkspace.populateWorkspace(dc);
       }
    }
 

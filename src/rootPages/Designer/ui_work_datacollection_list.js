@@ -10,6 +10,9 @@ import UI_ADD_FORM from "./ui_work_datacollection_list_newDatacollection";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
+
+   const AddForm = UI_ADD_FORM(AB);
+
    class UI_Work_Datacollection_List extends UIClass {
       constructor() {
          super("ui_work_datacollection_list");
@@ -37,22 +40,23 @@ export default function (AB) {
              * @return {string}
              */
             templateListItem: function (datacollection, common, warnings) {
-               var warnIcon = "";
+               let warnIcon = "";
                if (warnings?.length > 0) {
-                  warnIcon = `(${warnings.length})`;
+                  warnIcon =
+                     '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
                }
                return `<div class='ab-datacollection-list-item'>
-                        <i class="fa ${
-                           datacollection.settings.isQuery
-                              ? "fa-filter"
-                              : "fa-database"
-                        }"></i>
-                        ${datacollection.label || "??label??"}${warnIcon}
-                        ${common.iconGear(datacollection)} 
-                        </div>`;
+                  <i class="fa ${
+                     datacollection.settings.isQuery
+                        ? "fa-filter"
+                        : "fa-database"
+                  }"></i>
+                  ${datacollection.label || "??label??"}
+                  ${warnIcon}
+                  ${common.iconGear(datacollection)}
+               </div>`;
             },
          });
-         this.AddForm = UI_ADD_FORM(AB);
       }
 
       // Our webix UI definition:
@@ -93,13 +97,13 @@ export default function (AB) {
          //
          // Add Form
          //
-         await this.AddForm.init(AB);
+         await AddForm.init(AB);
 
-         this.AddForm.on("cancel", () => {
-            this.AddForm.hide();
+         AddForm.on("cancel", () => {
+            AddForm.hide();
          });
 
-         this.AddForm.on("save", (q /* , select */) => {
+         AddForm.on("save", (q /* , select */) => {
             // the AddForm already takes care of updating the
             // CurrentApplication.
 
@@ -129,7 +133,7 @@ export default function (AB) {
          this.ListComponent.dataLoad(application?.datacollectionsIncluded());
 
          // prepare our Popup with the current Application
-         this.AddForm.applicationLoad(application);
+         AddForm.applicationLoad(application);
       }
 
       /**
@@ -160,7 +164,7 @@ export default function (AB) {
        */
       clickNewDataCollection(/* selectNew */) {
          // show the new popup
-         this.AddForm.show();
+         AddForm.show();
       }
    }
 
