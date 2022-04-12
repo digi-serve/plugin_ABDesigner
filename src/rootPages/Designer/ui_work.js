@@ -62,6 +62,10 @@ export default function (AB) {
       sidebarItems(app) {
          let warnObjects = this.scanTopic(app, "objectsIncluded");
          let warnQueries = this.scanTopic(app, "queriesIncluded");
+         const warnDatacollections = this.scanTopic(
+            app,
+            "datacollectionsIncluded"
+         );
 
          var sidebarItems = [
             {
@@ -80,6 +84,7 @@ export default function (AB) {
                id: this.ids.tab_datacollection,
                value: L("Data Collections"),
                icon: "fa fa-fw fa-table",
+               issues: warnDatacollections,
             },
             {
                id: this.ids.tab_processview,
@@ -191,6 +196,7 @@ export default function (AB) {
                         id: this.ids.tabbar,
                         css: "webix_dark",
                         view: "sidebar",
+                        animate: false,
                         width: 160,
                         data: sidebarItems.concat(collapseMenu),
                         on: {

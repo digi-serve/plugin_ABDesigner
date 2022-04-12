@@ -566,9 +566,9 @@ export default function (AB) {
          }
          return `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>
-      <div class='ab-app-list-name'>${common.iconAdmin(obj)}${
-            obj.label ?? ""
-         }</div>
+      <div class='ab-app-list-name'><i class="lighten fa-fw fa ${
+         obj.icon
+      }"></i> ${common.iconAdmin(obj)}${obj.label ?? ""}</div>
       <div class='ab-app-list-description'>${obj.description ?? ""}</div>
    </div>
    <div class='ab-app-list-edit'>

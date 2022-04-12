@@ -22,6 +22,7 @@ export default function (AB) {
       constructor() {
          super("abd");
          this.id = this.ids.component;
+         this.icon = "connectdevelop";
       }
 
       label() {

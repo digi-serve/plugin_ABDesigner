@@ -32,6 +32,10 @@ export default function (AB) {
             this.CurrentQueryID = null;
             // {string}
             // the ABObjectQuery.id of the query we are working with.
+
+            this.CurrentDatacollectionID = null;
+            // {string}
+            // the ABDataCollection.id of the datacollection we are working with.
          }
 
          static L() {
@@ -64,6 +68,14 @@ export default function (AB) {
 
          queryLoad(query) {
             this.CurrentQueryID = query?.id;
+         }
+
+         datacollectionLoad(dc) {
+            this.CurrentDatacollectionID = dc?.id;
+
+            this.CurrentDatacollection = this.AB.datacollectionByID(
+               this.CurrentDatacollectionID
+            );
          }
 
          /**

@@ -4,6 +4,7 @@
  * Manage the Object Workspace area.
  */
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 // const ABWorkspaceGantt = require("./ab_work_object_workspace_gantt");
 
 // const ABWorkspaceIndex = require("./ab_work_object_workspace_index");
@@ -38,6 +39,8 @@ export default function (AB, ibase, init_settings) {
    var Datatable = FWorkspaceDatatable(AB, `${ibase}_view_grid`, init_settings);
    var Gantt = FWorkspaceGantt(AB, `${ibase}_view_gantt`);
    var Kanban = FWorkspaceKanban(AB, `${ibase}_view_kanban`);
+
+   var Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, init_settings);
 
    var Track = FWorkspaceTrack(AB, `${ibase}_track`);
 
@@ -104,6 +107,8 @@ export default function (AB, ibase, init_settings) {
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
          settings.isReadOnly = settings.isReadOnly ?? false;
+         settings.showWarnings = settings.showWarnings ?? true;
+
          // settings.isLabelEditable = settings.isLabelEditable ?? true;
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
          this.settings = settings;
@@ -532,8 +537,9 @@ export default function (AB, ibase, init_settings) {
          };
 
          // Our webix UI definition:
-         return {
+         let UI = {
             view: "multiview",
+            animate: false,
             id: ids.component,
             borderless: true,
             rows: [
@@ -618,6 +624,7 @@ export default function (AB, ibase, init_settings) {
                         rows: [
                            {
                               view: "multiview",
+                              animate: false,
                               cells: [Datatable.ui(), Kanban.ui(), Gantt.ui()],
                            },
                            // this.settings.isInsertable
@@ -633,17 +640,19 @@ export default function (AB, ibase, init_settings) {
                                  this.rowAdd();
                               },
                            },
-                           // : {
-                           //      view: "layout",
-                           //      rows: [],
-                           //      hidden: true,
-                           //   },
+                           // { WARNINGS ADDED HERE IF ENABLED },
                         ],
                      },
                   ],
                },
             ],
          };
+
+         if (this.settings.showWarnings) {
+            UI.rows[2].rows[2].rows.push(Warnings.ui());
+         }
+
+         return UI;
       } // ui()
 
       // Our init() function for setting up our UI
@@ -862,6 +871,9 @@ export default function (AB, ibase, init_settings) {
             case "kanban":
                Kanban.show(currentView);
                break;
+         }
+         if (this.settings.showWarnings) {
+            Warnings.show(this.CurrentObject);
          }
       }
 
@@ -1451,6 +1463,9 @@ export default function (AB, ibase, init_settings) {
                         message = jErr.data.sqlMessage;
                      }
                   } catch (e) {}
+               }
+               if (err.message) {
+                  message = err.message;
                }
                var ids = this.ids;
                $$(ids.error).show();

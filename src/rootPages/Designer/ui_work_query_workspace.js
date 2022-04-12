@@ -1,4 +1,5 @@
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 
 import FWorkspaceDesign from "./ui_work_query_workspace_design";
 import FWorkspaceDisplay from "./ui_work_object_workspace";
@@ -12,7 +13,10 @@ export default function (AB, init_settings) {
    const QueryDesignComponent = FWorkspaceDesign(AB);
    const QueryDisplayComponent = FWorkspaceDisplay(AB, `${iBase}_display`, {
       isReadOnly: true,
+      showWarnings: false,
    });
+
+   var Warnings = UI_Warnings(AB, `${iBase}_view_warnings`, init_settings);
 
    class UI_Work_Query_Workspace extends UIClass {
       constructor(settings = {}) {
@@ -24,7 +28,6 @@ export default function (AB, init_settings) {
             noSelection: "",
             run: "",
             design: "",
-            warnings: "",
          });
 
          this.settings = settings;
@@ -35,6 +38,7 @@ export default function (AB, init_settings) {
 
          return {
             view: "multiview",
+            animate: false,
             cells: [
                {
                   id: ids.noSelection,
@@ -82,11 +86,6 @@ export default function (AB, init_settings) {
                   id: ids.component,
                   rows: [
                      {
-                        id: ids.warnings,
-                        view: "label",
-                        label: "",
-                     },
-                     {
                         id: ids.toolbar,
                         view: "tabbar",
                         // hidden: true,
@@ -131,11 +130,13 @@ export default function (AB, init_settings) {
                      {
                         id: ids.multiview,
                         view: "multiview",
+                        animate: false,
                         cells: [
                            QueryDesignComponent.ui(),
                            QueryDisplayComponent.ui(),
                         ],
                      },
+                     Warnings.ui(),
                      // {
                      //    id: ids.loadAllButton,
                      //    view: "button",
@@ -158,7 +159,7 @@ export default function (AB, init_settings) {
 
          this.warningsPropogate([QueryDesignComponent, QueryDisplayComponent]);
          this.on("warnings", () => {
-            this.refreshWarnings(this.CurrentQuery);
+            Warnings.show(this.CurrentQuery);
          });
 
          return Promise.all([
@@ -222,22 +223,10 @@ export default function (AB, init_settings) {
          QueryDisplayComponent.loadAll();
       }
 
-      refreshWarnings(query) {
-         var messages = (query?.warnings() ?? []).map((w) => w.message);
-         let $warnings = $$(this.ids.warnings);
-         if (messages.length) {
-            $warnings.setValue(messages.join("\n"));
-            $warnings.show();
-         } else {
-            $warnings.setValue("");
-            $warnings.hide();
-         }
-      }
-
       queryLoad(query) {
          super.queryLoad(query);
 
-         this.refreshWarnings(query);
+         Warnings.show(query);
 
          QueryDesignComponent.queryLoad(query);
          QueryDisplayComponent.queryLoad(query);

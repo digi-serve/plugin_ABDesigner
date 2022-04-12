@@ -5,22 +5,24 @@
  *
  */
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
 import ABProcessParticipant_selectManagersUI from "./properties/process/ABProcessParticipant_selectManagersUI.js";
 
-export default function (AB) {
+export default function (AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
    const ClassSelectManagersUI = ABProcessParticipant_selectManagersUI(AB);
+
+   var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
 
    class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
 
       constructor() {
          super("abd_choose_form", {
-            warnings: "",
             form: "",
             appFormPermissionList: "",
             appFormCreateRoleButton: "",
@@ -57,25 +59,19 @@ export default function (AB) {
                         {
                            responsiveCell: false,
                            rows: [
-                              {
-                                 maxHeight: uiConfig.appListSpacerRowHeight,
-                                 hidden: uiConfig.hideMobile,
-                              },
+                              {},
+                              Warnings.ui(),
                               {
                                  view: "toolbar",
                                  css: "webix_dark",
                                  cols: [
+                                    { view: "spacer", width: 10 },
                                     {
                                        view: "label",
                                        label: L("Application Info"), //labels.component.formHeader,
                                        fillspace: true,
                                     },
                                  ],
-                              },
-                              {
-                                 id: this.ids.warnings,
-                                 view: "label",
-                                 label: "",
                               },
                               {
                                  view: "form",
@@ -104,6 +100,21 @@ export default function (AB) {
                                              AB.ClassUI.CYPRESS_REF(
                                                 this,
                                                 "abd_choose_form_label"
+                                             );
+                                          },
+                                       },
+                                    },
+                                    {
+                                       name: "icon",
+                                       view: "text",
+                                       label: L("Icon"),
+                                       placeholder: L("Menu Icon"),
+                                       labelWidth: 100,
+                                       on: {
+                                          onAfterRender() {
+                                             AB.ClassUI.CYPRESS_REF(
+                                                this,
+                                                "abd_choose_form_icon"
                                              );
                                           },
                                        },
@@ -424,7 +435,7 @@ export default function (AB) {
                                  ],
                               },
                               {
-                                 hidden: uiConfig.hideMobile,
+                                 view: "spacer",
                               },
                            ],
                         },
@@ -714,6 +725,7 @@ export default function (AB) {
             [
                "label",
                "description",
+               "icon",
                "isSystemObj",
                "isAccessManaged",
                "isTranslationManaged",
@@ -722,18 +734,6 @@ export default function (AB) {
                   this.$form.elements[f].setValue(application[f]);
                }
             });
-
-            var messages = this.CurrentApplication.warnings().map(
-               (w) => w.message
-            );
-            let $warnings = $$(this.ids.warnings);
-            if (messages.length) {
-               $warnings.setValue(messages.join("\n"));
-               $warnings.show();
-            } else {
-               $warnings.setValue("");
-               $warnings.hide();
-            }
 
             // populate access manager ui
             var $accessManager = $$(this.ids.accessManager);
@@ -778,8 +778,6 @@ export default function (AB) {
 
          this.$form.clear();
          this.$form.clearValidation();
-
-         $$(this.ids.warnings).setValue("");
 
          this.permissionPopulate(); // leave empty to clear selections.
 
@@ -1170,6 +1168,7 @@ export default function (AB) {
        */
       show() {
          $$(this.ids.component).show();
+         Warnings.show(this.CurrentApplication);
       }
 
       /*
