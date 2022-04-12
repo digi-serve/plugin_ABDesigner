@@ -55,7 +55,7 @@ export default function (AB) {
                      label: L("Parent Page"),
                      name: "parent",
                      options: [],
-                     placeholder: L("[ Root Page ]"),
+                     placeholder: L("Root Page"),
                      labelWidth: 110,
                   },
                   {
@@ -146,7 +146,7 @@ export default function (AB) {
        */
       applicationLoad(application) {
          super.applicationLoad(application)
-         var options = [{ id: "-", value: L("[Root page]") }];
+         var options = [{ id: "-", value: L("Root page") }];
 
          var addPage = function (page, indent) {
             indent = indent || "";

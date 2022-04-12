@@ -13887,9 +13887,7 @@ __webpack_require__.r(__webpack_exports__);
          // verify they mean to do this:
          webix.confirm({
             title: L("Delete Page"),
-            text: L("Are you sure you wish to delete this page?", [
-               selectedPage?.label,
-            ]),
+            text: L("Are you sure you wish to delete this page?"),
             ok: L("Yes"),
             cancel: L("No"),
             callback: async (isOK) => {
@@ -14129,7 +14127,7 @@ __webpack_require__.r(__webpack_exports__);
                      label: L("Parent Page"),
                      name: "parent",
                      options: [],
-                     placeholder: L("[ Root Page ]"),
+                     placeholder: L("Root Page"),
                      labelWidth: 110,
                   },
                   {
@@ -14220,7 +14218,7 @@ __webpack_require__.r(__webpack_exports__);
        */
       applicationLoad(application) {
          super.applicationLoad(application)
-         var options = [{ id: "-", value: L("[Root page]") }];
+         var options = [{ id: "-", value: L("Root page") }];
 
          var addPage = function (page, indent) {
             indent = indent || "";
@@ -14759,7 +14757,7 @@ __webpack_require__.r(__webpack_exports__);
                      name: "parent",
                      options: [],
                      //
-                     placeholder: L("[Root Page]"),
+                     placeholder: L("Root Page"),
                      labelWidth: 110,
                      // on: {
                      //   onAfterRender() {
@@ -14859,7 +14857,7 @@ __webpack_require__.r(__webpack_exports__);
       applicationLoad(application) {
          super.applicationLoad(application);
 
-         var options = [{ id: "-", value: L("[Root page]") }];
+         var options = [{ id: "-", value: L("Root page") }];
 
          var addPage = function (page, indent) {
             indent = indent || "";
