@@ -21,7 +21,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -12605,6 +12605,8 @@ __webpack_require__.r(__webpack_exports__);
             app,
             "datacollectionsIncluded"
          );
+         // TODO
+         // const warnInterfaces = this.scanTopic(app, "interfacesIncluded");
 
          var sidebarItems = [
             {
@@ -12634,6 +12636,8 @@ __webpack_require__.r(__webpack_exports__);
                id: this.ids.tab_interface,
                value: L("Interface"),
                icon: "fa fa-fw fa-id-card-o",
+               // TODO
+               // issues: warnInterfaces,
             },
          ];
 
@@ -15351,6 +15355,1574 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return new UI_Work_Datacollection_Workspace_Properties();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_interface.js":
+/*!*****************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_interface.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_interface_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_interface_list */ "./src/rootPages/Designer/ui_work_interface_list.js");
+/*
+ * ui_work_interface
+ *
+ * Display the Interface Tab UI:
+ *
+ */
+
+
+
+//import UI_Work_Interface_Workspace_Class from "./ui_work_interface_workspace";
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var InterfaceList = (0,_ui_work_interface_list__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   //  var InterfaceWorkspace = UI_Work_Interface_Workspace_Class(
+   //     AB
+   //     /* leave empty for default settings */
+   //  );
+
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Interface extends UIClass {
+      constructor() {
+         super("ab_work_interface");
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            type: "space",
+            margin: 10,
+            cols: [InterfaceList.ui(), { view: "resizer" }, {}], // ,InterfaceWorkspace.ui()
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         // Our init() function for setting up our UI
+
+         InterfaceList.on("selected", (page) => {
+            console.log("this is unfinished");
+            // TODO
+            // this.select(page);
+         });
+
+         //  InterfaceWorkspace.on("addNew", (selectNew) => {
+         //     InterfaceList.emit("addNew", selectNew);
+         //  });
+         this.warningsPropogate([InterfaceList, InterfaceList]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            InterfaceList.applicationLoad(this.CurrentApplication);
+         });
+
+         return Promise.all([
+            //InterfaceWorkspace.init(AB),
+            InterfaceList.init(AB),
+         ]);
+      }
+
+      /**
+       * @function applicationLoad
+       *
+       * Initialize the Interface Workspace with the given ABApplication.
+       *
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application);
+
+         //  InterfaceWorkspace.clearInterfaceWorkspace();
+         InterfaceList.applicationLoad(application);
+         //  InterfaceWorkspace.applicationLoad(application);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         $$(this.ids.component).show();
+
+         if (this.CurrentApplication) {
+            InterfaceList?.applicationLoad(this.CurrentApplication);
+         }
+         // InterfaceList?.ready();
+      }
+
+      select(page) {
+         // TODO: This
+         // if (page == null) InterfaceWorkspace.clearWorkspace();
+         // InterfaceWorkspace.datacollectionLoad(page);
+         // InterfaceWorkspace.populateWorkspace(page);
+      }
+   }
+
+   return new UI_Work_Interface();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_interface_list.js":
+/*!**********************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_interface_list.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ui_work_interface_list_newPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_work_interface_list_newPage */ "./src/rootPages/Designer/ui_work_interface_list_newPage.js");
+/* harmony import */ var _ui_work_interface_list_copyPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui_work_interface_list_copyPage */ "./src/rootPages/Designer/ui_work_interface_list_copyPage.js");
+/* harmony import */ var _ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ui_common_popupEditMenu */ "./src/rootPages/Designer/ui_common_popupEditMenu.js");
+/*
+ * ui_work_interface_list
+ *
+ * Manage the ABInterface List
+ *
+ */
+
+
+
+
+
+//import UI_Work_Interface_List_NewPage from "./ui_work_interface_list_newPage";
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var PopupEditPageComponent = (0,_ui_common_popupEditMenu__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
+
+   var AddForm = new _ui_work_interface_list_newPage__WEBPACK_IMPORTED_MODULE_1__["default"](AB);
+   var CopyForm = new _ui_work_interface_list_copyPage__WEBPACK_IMPORTED_MODULE_2__["default"](AB);
+   // the popup form for adding a new page
+
+   const uiConfig = AB.Config.uiSettings();
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+   class UI_Work_Interface_List extends UIClass {
+      constructor() {
+         var base = "ui_work_interface_list";
+         super(base, {
+            list: "",
+            buttonNew: "",
+         });
+
+         this.EditPopup = new PopupEditPageComponent(base);
+
+         this.viewList = new webix.TreeCollection();
+      }
+
+      // Our webix UI definition:
+      ui() {
+         var ids = this.ids;
+         // Our webix UI definition:
+         return {
+            id: ids.component,
+            rows: [
+               {
+                  view: "unitlist",
+                  uniteBy: L("Pages"),
+                  height: 34,
+                  data: [" "],
+                  type: {
+                     height: 0,
+                     headerHeight: 35,
+                  },
+               },
+               {
+                  view: AB._App.custom.edittree.view, // "edittree",
+                  id: ids.list,
+                  width: uiConfig.columnWidthLarge,
+
+                  select: true,
+
+                  editaction: "custom",
+                  editable: true,
+                  editor: "text",
+                  editValue: "label",
+                  css: "ab-tree-ui",
+
+                  template: (obj, common) => {
+                     return this.templateListItem(obj, common);
+                  },
+                  type: {
+                     iconGear: "<span class='webix_icon fa fa-cog'></span>",
+                  },
+                  on: {
+                     onAfterRender: () => {
+                        this.onAfterRender();
+                     },
+                     onAfterSelect: (id) => {
+                        this.onAfterSelect(id);
+                     },
+                     onAfterOpen: () => {
+                        this.onAfterOpen();
+                     },
+                     onAfterClose: () => {
+                        this.onAfterClose();
+                     },
+                     onBeforeEditStop: (state, editor) => {
+                        this.onBeforeEditStop(state, editor);
+                     },
+                     onAfterEditStop: (state, editor, ignoreUpdate) => {
+                        this.onAfterEditStop(state, editor, ignoreUpdate);
+                     },
+                  },
+                  onClick: {
+                     "ab-page-list-edit": (e, id, trg) => {
+                        this.clickEditMenu(e, id, trg);
+                     },
+                  },
+               },
+               {
+                  view: "button",
+                  css: "webix_primary",
+                  id: ids.buttonNew,
+                  type: "form",
+                  value: L("Add new Page"), //labels.component.addNew,
+                  click: () => {
+                     this.emit("clickNewView");
+                  },
+               },
+            ],
+         };
+         // Making custom UI settings above
+         // return this.ListComponent.ui();
+      }
+
+      // Our init() function for setting up our UI
+      async init(AB, options) {
+         this.AB = AB;
+
+         this.on("clickNewView", (selectNew) => {
+            // if we receive a signal to add a new Interface from another source
+            // like the blank interface workspace offering an Add New button:
+            this.clickNewView(selectNew);
+         });
+
+         if ($$(this.ids.component)) $$(this.ids.component).adjust();
+
+         let $List = $$(this.ids.list);
+         this.ListComponent = $List;
+
+         if ($List) {
+            webix.extend($List, webix.ProgressBar);
+            $List.data.unsync();
+            $List.data.sync(this.viewList);
+            $List.adjust();
+         }
+
+         await this.EditPopup.init(AB, {
+            hideExclude: true,
+         });
+
+         this.EditPopup.menuOptions([
+            {
+               label: L("Rename"),
+               icon: "fa fa-pencil-square-o",
+               command: "rename",
+            },
+            {
+               label: L("Copy"),
+               icon: "fa fa-files-o",
+               command: "copy",
+            },
+            {
+               label: L("Delete"),
+               icon: "fa fa-trash",
+               command: "delete",
+            },
+         ]);
+
+         this.EditPopup.on("delete", () => {
+            this.remove();
+         });
+
+         this.EditPopup.on("copy", () => {
+            this.copy();
+         });
+
+         this.EditPopup.on("rename", () => {
+            this.rename();
+         });
+
+         await AddForm.init(AB);
+
+         AddForm.on("cancel", () => {
+            AddForm.hide();
+         });
+
+         AddForm.on("save", (obj, select) => {
+            // the PopupEditPageComponent already takes care of updating the
+            // CurrentApplication.
+
+            // we just need to update our list of interfaces
+            this.applicationLoad(this.CurrentApplication);
+
+            // if (select) {
+            this.ListComponent.select(obj.id);
+            // }
+         });
+         CopyForm.on("save", (obj) => {
+            // the PopupEditPageComponent already takes care of updating the
+            // CurrentApplication.
+
+            // we just need to update our list of interfaces
+            this.applicationLoad(this.CurrentApplication);
+            this.callbackNewPage(obj);
+
+            // Select the new page
+            this.ListComponent.select(obj.id);
+            this.listReady();
+         });
+
+         CopyForm.on("cancel", () => {
+            CopyForm.hide();
+            this.listReady();
+         });
+
+      }
+
+      addNew() {
+         this.clickNewView(true);
+      }
+
+      /**
+       * @function applicationLoad
+       * Initialize the List from the provided ABApplication
+       * If no ABApplication is provided, then show an empty form. (create operation)
+       * @param {ABApplication} application
+       *        [optional] The current ABApplication we are working with.
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application);
+
+         this.listBusy();
+         // this so it looks right/indented in a tree view:
+         this.viewList.clearAll();
+
+         var addPage = (page, index, parentId) => {
+            if (!page) return;
+
+            this.viewList.add(page, index, parentId);
+
+            page.pages().forEach((childPage, childIndex) => {
+               addPage(childPage, childIndex, page.id);
+            });
+         };
+         application.pages().forEach((p, index) => {
+            addPage(p, index);
+         });
+
+         // clear our list and display our objects:
+         var List = $$(this.ids.list);
+         List.refresh();
+         List.unselectAll();
+
+         //
+         this.listReady();
+
+         // // prepare our Popup with the current Application
+         AddForm.applicationLoad(application);
+         CopyForm.applicationLoad(application);
+         // this.EditPopup.applicationLoad(application);
+      }
+
+      /**
+       * @function clickNewView
+       *
+       * Manages initiating the transition to the new Page Popup window
+       */
+      clickNewView(selectNew) {
+         // show the new popup
+         AddForm.show();
+      }
+
+      showGear(id) {
+         var domNode = $$(this.ids.list).getItemNode(id);
+         if (domNode) {
+            var gearIcon = domNode.querySelector(".ab-page-list-edit");
+            gearIcon.style.visibility = "visible";
+            gearIcon.style.display = "block";
+         }
+      }
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         $$(this.ids.component).show();
+      }
+
+      refreshTemplateItem(view) {
+         // make sure this item is updated in our list:
+         view = view.updateIcon(view);
+         this.viewList.updateItem(view.id, view);
+      }
+      rename() {
+         var pageID = $$(this.ids.list).getSelectedId(false);
+         $$(this.ids.list).edit(pageID);
+      }
+      /*
+       * @function copy
+       * make a copy of the current selected item.
+       *
+       * copies should have all the same sub-page data,
+       * but will need unique names, and ids.
+       *
+       * we start the process by making a copy and then
+       * having the user enter a new label/name for it.
+       *
+       * our .afterEdit() routines will detect it is a copy
+       * then alert the parent UI component of the "copied" data
+       */
+      copy() {
+         var selectedPage = $$(this.ids.list).getSelectedItem(false);
+         // show loading cursor
+         this.listBusy();
+
+         CopyForm.init(AB, selectedPage);
+
+         // Data must be loaded AFTER init, as it populates the form immediatly
+         CopyForm.applicationLoad(this.CurrentApplication);
+
+         CopyForm.show();
+      }
+      remove() {
+         var selectedPage = $$(this.ids.list).getSelectedItem(false);
+         if (!selectedPage) return;
+
+         // verify they mean to do this:
+         webix.confirm({
+            title: L("Delete Page"),
+            text: L("Are you sure you wish to delete this page?"),
+            ok: L("Yes"),
+            cancel: L("No"),
+            callback: async (isOK) => {
+               if (isOK) {
+                  this.listBusy();
+
+                  try {
+                     await selectedPage.destroy();
+                     this.listReady();
+                     $$(this.ids.list).remove($$(this.ids.list).getSelectedId());
+                     // let the calling component know about
+                     // the deletion:
+                     this.emit("deleted", selectedPage);
+
+                     // clear object workspace
+                     this.emit("selected", null);
+                  } catch (e) {
+                     this.AB.notify.developer(e, {
+                        context: "ui_interface_list:remove(): error removing item",
+                        base: selectedPage,
+                     });
+                     this.listReady();
+                  }
+               }
+            },
+         });
+      }
+      clickEditMenu(e, id, trg) {
+         // Show menu
+         this.EditPopup.show(trg);
+
+         return false;
+      }
+      /**
+       * @function callbackNewObject
+       *
+       * Once a New Page was created in the Popup, follow up with it here.
+       */
+      callbackNewPage(page) {
+         var parentPage = page.pageParent() || page.parent;
+         var parentPageId = parentPage.id != page.id ? parentPage.id : null;
+         if (!this.viewList.exists(page.id))
+            this.viewList.add(page, null, parentPageId);
+
+         // add sub-pages to tree-view
+         page.pages().forEach((p, index) => {
+            if (!this.viewList.exists(p.id)) this.viewList.add(p, index, page.id);
+         });
+
+         $$(this.ids.list).refresh();
+
+         if (parentPageId) $$(this.ids.list).open(parentPageId);
+
+         $$(this.ids.list).select(page.id);
+
+         AddForm.hide();
+      }
+      listBusy() {
+         $$(this.ids.list)?.showProgress?.({ type: "icon" });
+      }
+
+      listReady() {
+         $$(this.ids.list)?.hideProgress?.();
+      }
+
+      templateListItem(item, common, warnings) {
+         let warnIcon = "";
+         if (warnings?.length > 0) {
+            warnIcon =
+               '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
+         }
+         var template = `<div class='ab-page-list-item'>
+            ${common.icon(item)} <span class='webix_icon fa fa-${item.icon || item.viewIcon()
+            }'></span> ${item.label}${warnIcon}<div class='ab-page-list-edit'>${common.iconGear
+            }</div>
+            </div>`;
+
+         // now register a callback to update this display when this view is updated:
+         item
+            .removeListener("properties.updated", this.refreshTemplateItem)
+            .once("properties.updated", this.refreshTemplateItem);
+
+         return template;
+      }
+      onAfterOpen() {
+         var id = $$(this.ids.list).getSelectedId(false);
+         if (id) {
+            this.showGear(id);
+         }
+      }
+
+      onAfterRender() {
+         var id = $$(this.ids.list).getSelectedId(false);
+         if (id) {
+            this.showGear(id);
+         }
+      }
+
+      /**
+       * @function onAfterSelect()
+       *
+       * Perform these actions when a View is selected in the List.
+       */
+      onAfterSelect(id) {
+         // var view = $$(this.ids.list).getItem(id);
+         // AB.actions.populateInterfaceWorkspace(view);
+
+         this.showGear(id);
+      }
+      onBeforeEditStop(state /*, editor */) {
+         var selectedItem = $$(this.ids.list).getSelectedItem(false);
+         selectedItem.label = state.value;
+
+         // if this item supports isValid()
+         if (selectedItem.isValid) {
+            var validator = selectedItem.isValid();
+            if (validator.fail()) {
+               selectedItem.label = state.old;
+
+               return false; // stop here.
+            }
+         }
+
+         return true;
+      }
+      onAfterEditStop(state, editor, ignoreUpdate) {
+         this.showGear(editor.id);
+
+         if (state.value != state.old) {
+            this.listBusy();
+
+            var selectedPage = $$(this.ids.list).getSelectedItem(false);
+            selectedPage.label = state.value;
+
+            // Call server to rename
+            selectedPage
+               .save()
+               .then(() => {
+                  this.listReady();
+
+                  // refresh the root page list
+                  AddForm.applicationLoad(this.CurrentApplication);
+
+                  // TODO : should use message box
+                  webix.alert({
+                     text: L("<b>{0}</b> is renamed.", [state.value]),
+                  });
+               })
+               .catch((err) => {
+                  this.listReady();
+                  this.AB.notify.developer(err, {
+                     context: "ABFieldProperty: isValid()",
+                     base: state.value,
+                  });
+                  webix.alert({
+                     text: L("System could not rename <b>{0}</b>.", [state.value]),
+                  });
+               });
+         }
+      }
+      onAfterClose() {
+         var selectedIds = $$(this.ids.list).getSelectedId(true);
+
+         // Show gear icon
+         selectedIds.forEach((id) => {
+            this.showGear(id);
+         });
+      }
+   }
+   return new UI_Work_Interface_List();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_interface_list_copyPage.js":
+/*!*******************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_interface_list_copyPage.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * UI_Work_Interface_List_CopyPage
+ *
+ * Display the form for copying a Page.  This Popup will allow user to rename and set parent.
+ *
+ * The sub components will gather the data for the object and do basic form
+ * validations on their interface.
+ *
+ * when ready, this component will manage the actual final object validation,
+ * and save to this.application.
+ *
+ * On success, "save" will be emitted, with obj passed so it can be selected in parent view
+ *
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Interface_List_NewPage extends UIClass {
+      constructor() {
+         var base = "ab_work_interface_list_copyInterface";
+         super(base, {
+            form: "",
+            buttonSave: "",
+            buttonCancel: "",
+         });
+         this.ids.parentList = {};
+      }
+
+      ui(oldName) {
+         // Our webix UI definition:
+         return {
+            view: "window",
+            id: this.ids.component,
+            width: 400,
+            position: "center",
+            modal: true,
+            head: L("Copy interface"),
+            selectNewInterface: true,
+            body: {
+               view: "form",
+               id: this.ids.form,
+               rules: {
+                  // TODO:
+                  // name: inputValidator.rules.validatePageName
+               },
+               elements: [
+                  {
+                     view: "select",
+                     id: this.ids.parentList,
+                     label: L("Parent Page"),
+                     name: "parent",
+                     options: [],
+                     placeholder: L("Root Page"),
+                     labelWidth: 110,
+                  },
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: `${L("{0} - copy", [oldName])}`,
+                     labelWidth: 110,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_interface_list_newPage_blank_name"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.cancel();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Paste Page"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              return this.save();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            }
+         };
+      }
+
+      async init(AB, data) {
+         this.AB = AB;
+         this.data = data;
+         console.log(data);
+
+         webix.ui(this.ui(data.name));
+         webix.extend($$(this.ids.component), webix.ProgressBar);
+
+         this.$form = $$(this.ids.form);
+
+         this.$component = $$(this.ids.component);
+
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.onError(err);
+         });
+
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+      }
+
+      /**
+       * @method applicationLoad()
+       * prepare ourself with the current application
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application)
+         var options = [{ id: "-", value: L("Root page") }];
+
+         var addPage = function (page, indent) {
+            indent = indent || "";
+            options.push({
+               id: page.id,
+               value: indent + page.label,
+            });
+            page
+               // .pages((p) => p instanceof AB.Class.ABViewPage)
+               .pages()
+               .forEach(function (p) {
+                  addPage(p, indent + "-");
+               });
+         };
+         // this.CurrentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
+         application.pages().forEach(function (page) {
+            addPage(page, "");
+         });
+
+         $$(this.ids?.parentList)?.define("options", options);
+         $$(this.ids?.parentList)?.refresh();
+      }
+
+      /**
+       * @function hide()
+       *
+       * remove the busy indicator from the form.
+       */
+      hide() {
+         this?.$component?.hide();
+      }
+
+      /**
+       * @function cancel()
+       *
+       * remove the form.
+       */
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      /**
+       * Show the busy indicator
+       */
+      busy() {
+         this?.$component?.showProgress();
+      }
+
+      /**
+       * Hide the busy indicator
+       */
+      ready() {
+         this?.$component?.hideProgress();
+      }
+
+      /**
+       * @method done()
+       * Finished saving, so hide the popup and clean up.
+       * @param {interface} obj
+       */
+      done(obj) {
+         this.ready();
+         this.hide(); // hide our popup
+         this.emit("save", obj); // tell parent component we're done
+      }
+
+      /**
+       * @method save
+       * verify the current info is ok, package it, and return it to be
+       * added to the application.createModel() method.
+       * then take the data gathered, and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @return {Promise}
+       */
+      async save() {
+         var saveButton = $$(this.ids.buttonSave);
+         saveButton.disable();
+         // show progress
+         this.busy();
+
+         var Form = this.$form;
+
+         Form.clearValidation();
+
+         // if it doesn't pass the basic form validation, return:
+         if (!Form.validate()) {
+            saveButton.enable();
+            this.ready();
+            return false;
+         }
+
+         var values = Form.getValues();
+
+         // must have an application set.
+         if (!this.CurrentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            this.emit("save.error", true);
+            return false;
+         }
+
+         if (!values) {
+            // SaveButton.enable();
+            // CurrentEditor.formReady();
+            return;
+         }
+
+         if (values.parent === "-") {
+            values.parent = null;
+         } else if (values.parent) {
+            // convert a url string to the object of the parent
+            values.parent = this.CurrentApplication.urlResolve(values.parent);
+         }
+
+         var newPage = this.data;
+
+         let copiedPage = await newPage.copy(null, values.parent, { newName: values.name })
+            .catch((err) => {
+               this.ready();
+               this.AB.notify.developer(err, {
+                  context: "ui_interface_list_copyPage:save(): Error saving copied page",
+                  base: newPage,
+               });
+            });
+
+         this.emit("save.successful", copiedPage);
+         this.done(copiedPage);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         this?.$component?.show();
+      }
+
+      formClear() {
+         this?.$form.clearValidation();
+         this?.$form.clear();
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_interface_list_newPage object had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of objects:
+       *        - A javascript Error() object
+       *        - An ABValidation object returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            var message = L("the entered data is invalid");
+            // if this was our Validation() object:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            var values = this.$form.getValues();
+
+            this.AB.notify.developer(err, {
+               context: "ui_interace_list: error",
+               base: values,
+            });
+
+            webix.alert({
+               title: L("Error creating Page: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         $$(this.ids.buttonSave).enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_interface_list_newPage successfully saved the values.
+       */
+      onSuccess() {
+         this.formClear();
+         $$(this.ids.buttonSave).enable();
+      }
+   }
+
+   return new UI_Work_Interface_List_NewPage();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_interface_list_newPage.js":
+/*!******************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_interface_list_newPage.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_work_interface_list_newPage_blank__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_work_interface_list_newPage_blank */ "./src/rootPages/Designer/ui_work_interface_list_newPage_blank.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * UI_Work_Interface_List_NewPage
+ *
+ * Display the form for creating a new Page.  This Popup will manage several
+ * different sub components for gathering Page data for saving.
+ *
+ * The sub components will gather the data for the page and do basic form
+ * validations on their interface.
+ *
+ * when ready, the sub component will emit "save" with the values gathered by
+ * the form.  This component will manage the actual final page validation,
+ * and saving to this application.
+ *
+ * On success, "save.success" will be emitted on the sub-component, and this
+ * component.
+ *
+ * On Error, "save.error" will be emitted on the sub-component.
+ *
+ */
+
+
+
+//import UIQuickPage from "./ui_work_interface_list_newPage_quick"
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Interface_List_NewPage extends UIClass {
+
+      constructor() {
+         var base = "ab_work_interface_list_newInterface";
+         super(base, {
+            tab: "",
+         });
+
+         this.selectNew = true;
+         // {bool} do we select a new interface after it is created.
+
+         // var callback = null;
+
+         this.BlankTab = new _ui_work_interface_list_newPage_blank__WEBPACK_IMPORTED_MODULE_0__["default"](AB);
+         //this.QuickTab = new UIQuickPage(AB);
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            view: "window",
+            id: this.ids.component,
+            // width: 400,
+            position: "center",
+            modal: true,
+            head: L("Add new interface"),
+            selectNewInterface: true,
+            body: {
+               view: "tabview",
+               id: this.ids.tab,
+               cells: [
+                  this.BlankTab.ui(),
+                  //this.QuickTab.ui(),
+               ],
+               tabbar: {
+                  on: {
+                     onAfterTabClick: (id) => {
+                        this.switchTab(id);
+                     },
+                     onAfterRender() {
+                        this.$view
+                           .querySelectorAll(".webix_item_tab")
+                           .forEach((t) => {
+                              var tid = t.getAttribute("button_id");
+                              AB.ClassUI.CYPRESS_REF(t, `${tid}_tab`);
+                           });
+                     },
+                  },
+               },
+            },
+            on: {
+               onBeforeShow: () => {
+                  var id = $$(this.ids.tab).getValue();
+                  this.switchTab(id);
+               },
+            },
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         webix.ui(this.ui());
+         webix.extend($$(this.ids.component), webix.ProgressBar);
+
+         this.$component = $$(this.ids.component);
+         this.$form = $$(this.ids.form);
+
+         var allInits = [];
+         ["BlankTab" /*, "QuickTab" */].forEach((k) => {
+            allInits.push(this[k].init(AB));
+            this[k].on("cancel", () => {
+               this.emit("cancel");
+            });
+            this[k].on("save", (values) => {
+               this.save(values, k);
+            });
+         });
+
+         await Promise.all(allInits);
+      }
+
+      /**
+       * @method applicationLoad()
+       * prepare ourself with the current application
+       * @param {ABApplication} application
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application); // remember our current Application.
+         this.BlankTab.applicationLoad(application); // send so parent pagelist can be made
+         //  this.QuickTab.applicationLoad(application);
+      }
+
+      /**
+       * @function hide()
+       *
+       * remove the busy indicator from the form.
+       */
+      hide() {
+         this?.$component?.hide();
+      }
+
+      /**
+       * Show the busy indicator
+       */
+      busy() {
+         this?.$component?.showProgress();
+      }
+
+      /**
+       * Hide the busy indicator
+       */
+      ready() {
+         this?.$component?.hideProgress();
+      }
+
+      /**
+       * @method done()
+       * Finished saving, so hide the popup and clean up.
+       * @param {interface} obj
+       */
+      done(obj) {
+         this.ready();
+         this.hide(); // hide our popup
+         this.emit("save", obj, this.selectNew); // tell parent component we're done
+      }
+
+      /**
+       * @method save
+       * take the data gathered by our child creation tabs, and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @param {string}  tabKey
+       *        the "key" of the tab initiating the save.
+       * @return {Promise}
+       */
+      async save(values, tabKey) {
+         // must have an application set.
+         if (!this.CurrentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            this[tabKey].emit("save.error", true);
+            return false;
+         }
+
+         if (!values) {
+            // SaveButton.enable();
+            // CurrentEditor.formReady();
+            return;
+         }
+
+         // create a new (unsaved) instance of our interface:
+         // this interface only creates Root Pages, or pages related to
+         var newInterface = null;
+         if (values.useParent && values.parent) {
+            // ?????????????????
+            newInterface = values.parent;
+         } else if (values.parent) {
+            newInterface = values.parent.pageNew(values);
+         } else {
+            //page = CurrentApplication.pageNew(values);
+            newInterface = this.CurrentApplication.pageNew(values);
+         }
+         //
+
+         // have newInterface validate it's values.
+         // if this item supports isValid()
+         if (newInterface.isValid) {
+            var validator = newInterface.isValid();
+            if (validator.fail()) {
+               // cb(validator); // tell current Tab component the errors
+               this[tabKey].emit("save.error", validator);
+               return false; // stop here.
+            }
+         }
+
+         if (!newInterface.createdInAppID) {
+            newInterface.createdInAppID = this.CurrentApplication.id;
+         }
+
+         // show progress
+         this.busy();
+
+         // if we get here, save the new Page
+         try {
+            var obj = await newInterface.save();
+            // await this.CurrentApplication.pageInsert(obj);
+            this[tabKey].emit("save.successful", obj);
+            this.done(obj);
+         } catch (err) {
+            // hide progress
+            this.ready();
+
+            // an error happend during the server side creation.
+            // so remove this page from the current interface list of
+            // the CurrentApplication.
+            await this.CurrentApplication.pageRemove(newInterface);
+
+            // tell current Tab component there was an error
+            this[tabKey].emit("save.error", err);
+         }
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         this.$component?.show();
+      }
+
+      //  ui is now a method. 
+      // TODO refactor this to pick a better value to send in for tabId
+      switchTab(tabId) {
+         // if (tabId == this.BlankTab?.ui?.body?.id) {
+         //    this.BlankTab?.onShow?.(this.CurrentApplication);
+         // } else if (tabId == this.QuickTab?.ui?.body?.id) {
+         //    this.QuickTab?.onShow?.(this.CurrentApplication);
+         // }
+      }
+   }
+
+   return new UI_Work_Interface_List_NewPage();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_interface_list_newPage_blank.js":
+/*!************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_interface_list_newPage_blank.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ui_work_interface_list_newPage_blank
+ *
+ * Display the form for creating a new ABPage.
+ */
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Interface_List_NewPage_Blank extends UIClass {
+      constructor() {
+         var base = "ui_work_interface_list_newPage_blank";
+         super(base, {
+            form: "",
+            buttonSave: "",
+            buttonCancel: "",
+            parentList: "",
+         });
+         // this.ids.parentList = {};
+      }
+
+      ui() {
+         // Our webix UI definition:
+         return {
+            id: this.ids.component,
+            header: L("Blank"),
+            body: {
+               view: "form",
+               id: this.ids.form,
+               width: 400,
+               rules: {
+                  // TODO:
+                  // name: inputValidator.rules.validatePageName
+               },
+               elements: [
+                  {
+                     view: "select",
+                     id: this.ids.parentList,
+                     // label: labels.component.parentPage,
+                     label: L("Parent Page"),
+                     name: "parent",
+                     options: [],
+                     //
+                     placeholder: L("Root Page"),
+                     labelWidth: 110,
+                     // on: {
+                     //   onAfterRender() {
+                     //       AB.ClassUI.CYPRESS_REF(
+                     //         this,
+                     //         "ui_work_interface_list_newPage_blank_name"
+                     //       );
+                     //   },
+                     // },
+                  },
+                  {
+                     view: "text",
+                     label: L("Name"),
+                     name: "name",
+                     required: true,
+                     placeholder: L("Page name"),
+                     labelWidth: 110,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(
+                              this,
+                              "ui_work_interface_list_newPage_blank_name"
+                           );
+                        },
+                     },
+                  },
+                  {
+                     margin: 5,
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           id: this.ids.buttonCancel,
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.cancel();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                        {
+                           view: "button",
+                           id: this.ids.buttonSave,
+                           css: "webix_primary",
+                           value: L("Add Page"),
+                           autowidth: true,
+                           type: "form",
+                           click: () => {
+                              return this.save();
+                           },
+                           on: {
+                              onAfterRender() {
+                                 AB.ClassUI.CYPRESS_REF(this);
+                              },
+                           },
+                        },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         this.$form = $$(this.ids.form);
+
+         // "save.error" is triggered by the ui_work_interface_list_newPage
+         // if there was an error saving the values from our form.
+         this.on("save.error", (err) => {
+            this.AB.notify.developer(err, {
+               context: "ui_work_interface_list_newPage:init(): there was an error saving the values from our form."
+            });
+         });
+
+         // "save.successful" is triggered by the ui_work_interface_list_newPage
+         // if the values we provided were successfully saved.
+         this.on("save.successful", () => {
+            this.onSuccess();
+         });
+
+         // init() routines are always considered async so:
+         return Promise.resolve();
+      }
+
+      /**
+       * @function applicationLoad()
+       *
+       * Prepare our New Popups with the current Application
+       */
+      applicationLoad(application) {
+         super.applicationLoad(application);
+
+         var options = [{ id: "-", value: L("Root page") }];
+
+         var addPage = function (page, indent) {
+            indent = indent || "";
+            options.push({
+               id: page.urlPointer(),
+               value: indent + page.label,
+            });
+            page
+               .pages()
+               .forEach(function (p) {
+                  addPage(p, indent + "-");
+               });
+         };
+         // this.CurrentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
+         application.pages().forEach(function (page) {
+            addPage(page, "");
+         });
+
+         if ($$(this.ids?.parentList)?.define) {
+            // $$(this.ids.parentList).define("options", options);
+            $$(this.ids.parentList).define("options", options);
+            $$(this.ids.parentList).refresh();
+         }
+      }
+
+      cancel() {
+         this.formClear();
+         this.emit("cancel");
+      }
+
+      formClear() {
+         this.$form.clearValidation();
+         this.$form.clear();
+      }
+
+      /**
+       * @method onError()
+       * Our Error handler when the data we provided our parent
+       * ui_work_interface_list_newPage object had an error saving
+       * the values.
+       * @param {Error|ABValidation|other} err
+       *        The error information returned. This can be several
+       *        different types of objects:
+       *        - A javascript Error() object
+       *        - An ABValidation object returned from our .isValid()
+       *          method
+       *        - An error response from our API call.
+       */
+      onError(err) {
+         if (err) {
+            console.error(err);
+            var message = L("the entered data is invalid");
+            // if this was our Validation() object:
+            if (err.updateForm) {
+               err.updateForm(this.$form);
+            } else {
+               if (err.code && err.data) {
+                  message = err.data?.sqlMessage ?? message;
+               } else {
+                  message = err?.message ?? message;
+               }
+            }
+
+            var values = this.$form.getValues();
+            this.AB.notify.developer(err, {
+               context: "ui_work_interface_list_newPage: the entered data is invalid",
+               base: values,
+            });
+            webix.alert({
+               title: L("Error creating Page: {0}", [values.name]),
+               ok: L("fix it"),
+               text: message,
+               type: "alert-error",
+            });
+         }
+         // get notified if there was an error saving.
+         $$(this.ids.buttonSave).enable();
+      }
+
+      /**
+       * @method onSuccess()
+       * Our success handler when the data we provided our parent
+       * ui_work_interface_list_newPage successfully saved the values.
+       */
+      onSuccess() {
+         this.formClear();
+         $$(this.ids.buttonSave).enable();
+      }
+
+      /**
+       * @function save
+       *
+       * verify the current info is ok, package it, and return it to be
+       * added to the application.createModel() method.
+       */
+      save() {
+         var saveButton = $$(this.ids.buttonSave);
+         saveButton.disable();
+
+         var Form = this.$form;
+
+         Form.clearValidation();
+
+         // if it doesn't pass the basic form validation, return:
+         if (!Form.validate()) {
+            saveButton.enable();
+            return false;
+         }
+
+         var values = Form.getValues();
+
+         if (values.parent === "-") {
+            values.parent = null;
+         } else if (values.parent) {
+            values.parent = this.CurrentApplication.urlResolve(values.parent);
+         }
+
+         // set uuid to be primary column
+         values.primaryColumnName = "uuid";
+
+         this.emit("save", values);
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       */
+      show() {
+         if ($$(this.ids.component)) $$(this.ids.component).show();
+      }
+   }
+   return new UI_Work_Interface_List_NewPage_Blank();
 }
 
 

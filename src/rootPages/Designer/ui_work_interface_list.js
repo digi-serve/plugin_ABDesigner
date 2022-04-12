@@ -385,10 +385,15 @@ export default function (AB) {
          $$(this.ids.list)?.hideProgress?.();
       }
 
-      templateListItem(item, common) {
+      templateListItem(item, common, warnings) {
+         let warnIcon = "";
+         if (warnings?.length > 0) {
+            warnIcon =
+               '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
+         }
          var template = `<div class='ab-page-list-item'>
             ${common.icon(item)} <span class='webix_icon fa fa-${item.icon || item.viewIcon()
-            }'></span> ${item.label} <div class='ab-page-list-edit'>${common.iconGear
+            }'></span> ${item.label}${warnIcon}<div class='ab-page-list-edit'>${common.iconGear
             }</div>
             </div>`;
 

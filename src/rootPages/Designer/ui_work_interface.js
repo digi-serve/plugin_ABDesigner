@@ -39,16 +39,20 @@ export default function (AB) {
 
          // Our init() function for setting up our UI
 
-         InterfaceList.on("selected", (obj) => {
+         InterfaceList.on("selected", (page) => {
             console.log("this is unfinished");
             // TODO
-            // if (obj == null) InterfaceWorkspace.clearInterfaceWorkspace();
-            // else InterfaceWorkspace.populateInterfaceWorkspace(obj);
+            // this.select(page);
          });
 
          //  InterfaceWorkspace.on("addNew", (selectNew) => {
          //     InterfaceList.emit("addNew", selectNew);
          //  });
+         this.warningsPropogate([InterfaceList, InterfaceList]);
+         this.on("warnings", () => {
+            // make sure our list refreshes it's display
+            InterfaceList.applicationLoad(this.CurrentApplication);
+         });
 
          return Promise.all([
             //InterfaceWorkspace.init(AB),
@@ -83,6 +87,13 @@ export default function (AB) {
             InterfaceList?.applicationLoad(this.CurrentApplication);
          }
          // InterfaceList?.ready();
+      }
+
+      select(page) {
+         // TODO: This
+         // if (page == null) InterfaceWorkspace.clearWorkspace();
+         // InterfaceWorkspace.datacollectionLoad(page);
+         // InterfaceWorkspace.populateWorkspace(page);
       }
    }
 

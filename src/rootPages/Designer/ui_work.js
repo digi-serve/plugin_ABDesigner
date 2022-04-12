@@ -66,6 +66,8 @@ export default function (AB) {
             app,
             "datacollectionsIncluded"
          );
+         // TODO
+         // const warnInterfaces = this.scanTopic(app, "interfacesIncluded");
 
          var sidebarItems = [
             {
@@ -95,6 +97,8 @@ export default function (AB) {
                id: this.ids.tab_interface,
                value: L("Interface"),
                icon: "fa fa-fw fa-id-card-o",
+               // TODO
+               // issues: warnInterfaces,
             },
          ];
 
