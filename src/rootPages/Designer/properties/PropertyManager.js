@@ -29,8 +29,18 @@ export default function (AB) {
       require("./dataFields/ABFieldTree"),
       require("./dataFields/ABFieldUser"),
    ].forEach((F) => {
-      var Klass = F.default(AB);
+      let Klass = F.default(AB);
       Fields.push(new Klass());
+   });
+
+   var Processes = [];
+   [
+      require("./process/ABProcessEnd.js"),
+      require("./process/ABProcessTaskEmail.js"),
+      require("./process/ABProcessTriggerLifecycle.js"),
+   ].forEach((P) => {
+      let Klass = P.default(AB);
+      Processes.push(Klass);
    });
 
    return {
@@ -43,6 +53,10 @@ export default function (AB) {
        */
       fields: function (f = () => true) {
          return Fields.filter(f);
+      },
+
+      processElements: function (f = () => true) {
+         return Processes.filter(f);
       },
    };
 }

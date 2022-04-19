@@ -48,7 +48,9 @@ export default function (AB) {
             this.ProcessList.clickNewProcess(true);
          });
 
-         this.ProcessList.on("selected", this.select);
+         this.ProcessList.on("selected", (process) => {
+            this.select(process);
+         });
 
          this.ProcessList.on("deleted", (process) => {
             if (this.CurrentProcessID == process.id) {
@@ -60,6 +62,13 @@ export default function (AB) {
             this.ProcessWorkspace.init(AB),
             this.ProcessList.init(AB),
          ]);
+      }
+
+      applicationLoad(application) {
+         super.applicationLoad(application);
+
+         this.ProcessWorkspace.applicationLoad(application);
+         this.ProcessList.applicationLoad(application);
       }
 
       /**
@@ -82,7 +91,7 @@ export default function (AB) {
          this.CurrentProcessID = process?.id;
 
          if (!process) this.ProcessWorkspace?.clearWorkspace();
-         else this.ProcessWorkspace?.populateWorkspace(process);
+         else this.ProcessWorkspace?.processLoad(process);
       }
    }
 

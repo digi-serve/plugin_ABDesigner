@@ -29,6 +29,10 @@ export default function (AB) {
             // {string}
             // the ABObject.id of the object we are working with.
 
+            this.CurrentProcessID = null;
+            // {string}
+            // the ABProcess.id of the process we are working with.
+
             this.CurrentQueryID = null;
             // {string}
             // the ABObjectQuery.id of the query we are working with.
@@ -66,6 +70,10 @@ export default function (AB) {
             this.CurrentObjectID = obj?.id;
          }
 
+         processLoad(process) {
+            this.CurrentProcessID = process?.id;
+         }
+
          queryLoad(query) {
             this.CurrentQueryID = query?.id;
          }
@@ -89,6 +97,15 @@ export default function (AB) {
                obj = this.AB.queryByID(this.CurrentObjectID);
             }
             return obj;
+         }
+
+         /**
+          * @method CurrentProcess()
+          * A helper to return the current ABProcess we are working with.
+          * @return {ABProcess}
+          */
+         get CurrentProcess() {
+            return this.AB.processByID(this.CurrentProcessID);
          }
 
          /**
