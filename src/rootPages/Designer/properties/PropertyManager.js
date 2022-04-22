@@ -36,6 +36,7 @@ export default function (AB) {
    var Processes = [];
    [
       require("./process/ABProcessEnd.js"),
+      require("./process/ABProcessParticipant.js"),
       require("./process/ABProcessTaskEmail.js"),
       require("./process/ABProcessTriggerLifecycle.js"),
    ].forEach((P) => {

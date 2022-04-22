@@ -631,8 +631,13 @@ export default function (AB) {
 
       action = action || replaceAction;
 
+      let label = definition.label;
+      if (typeof definition.label == "function") {
+         label = definition.label(element);
+      }
+
       var menuEntry = {
-         label: translate(definition.label),
+         label: translate(label),
          className: definition.className,
          id: definition.actionName,
          action: action,

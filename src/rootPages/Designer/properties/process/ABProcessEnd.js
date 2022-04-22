@@ -26,15 +26,24 @@ export default function (AB) {
       ui() {
          let ids = this.ids;
          return {
-            view: "form",
             id: ids.component,
-            elements: [
+            rows: [
+               { view: "label", label: L("Terminate End Event") },
                {
-                  id: ids.name,
-                  view: "text",
-                  label: L("Name"),
-                  name: "name",
-                  value: "",
+                  view: "label",
+                  label: L("Stops the flow of the process."),
+               },
+               {
+                  view: "form",
+                  elements: [
+                     {
+                        id: ids.name,
+                        view: "text",
+                        label: L("Name"),
+                        name: "name",
+                        value: "",
+                     },
+                  ],
                },
             ],
          };
@@ -45,7 +54,6 @@ export default function (AB) {
 
          return Promise.resolve();
       }
-
 
       populate(element) {
          let ids = this.ids;

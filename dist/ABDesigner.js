@@ -68699,6 +68699,7 @@ __webpack_require__.r(__webpack_exports__);
    var Processes = [];
    [
       __webpack_require__(/*! ./process/ABProcessEnd.js */ "./src/rootPages/Designer/properties/process/ABProcessEnd.js"),
+      __webpack_require__(/*! ./process/ABProcessParticipant.js */ "./src/rootPages/Designer/properties/process/ABProcessParticipant.js"),
       __webpack_require__(/*! ./process/ABProcessTaskEmail.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskEmail.js"),
       __webpack_require__(/*! ./process/ABProcessTriggerLifecycle.js */ "./src/rootPages/Designer/properties/process/ABProcessTriggerLifecycle.js"),
    ].forEach((P) => {
@@ -75173,15 +75174,24 @@ __webpack_require__.r(__webpack_exports__);
       ui() {
          let ids = this.ids;
          return {
-            view: "form",
             id: ids.component,
-            elements: [
+            rows: [
+               { view: "label", label: L("Terminate End Event") },
                {
-                  id: ids.name,
-                  view: "text",
-                  label: L("Name"),
-                  name: "name",
-                  value: "",
+                  view: "label",
+                  label: L("Stops the flow of the process."),
+               },
+               {
+                  view: "form",
+                  elements: [
+                     {
+                        id: ids.name,
+                        view: "text",
+                        label: L("Name"),
+                        name: "name",
+                        value: "",
+                     },
+                  ],
                },
             ],
          };
@@ -75192,7 +75202,6 @@ __webpack_require__.r(__webpack_exports__);
 
          return Promise.resolve();
       }
-
 
       populate(element) {
          let ids = this.ids;
@@ -75213,6 +75222,171 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return UIProcessEnd;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/process/ABProcessParticipant.js":
+/*!***************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/process/ABProcessParticipant.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ABProcessParticipant_selectManagersUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ABProcessParticipant_selectManagersUI */ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js");
+/*
+ * ABProcessparticipant
+ *
+ * Display the form for entering the properties for a Process
+ * Participant Element
+ *
+ * @return {ClassUI} The Class Definition for this UI widget.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   const ABProcessParticipantUsers = (0,_ABProcessParticipant_selectManagersUI__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+
+   class ABProcessparticipant extends UIClass {
+      constructor() {
+         super("properties_process_participant", {
+            name: "",
+            users: "",
+         });
+
+         this.users = new ABProcessParticipantUsers(
+            this.ids.component + "_users_"
+         );
+      }
+
+      static key = "process.participant";
+      // {string}
+      // This should match the ABProcessParticipant.defaults().key value.
+
+      uiUser(obj) {
+         var usersUI = this.users.ui(obj ?? {});
+         return {
+            id: this.ids.users,
+            rows: [usersUI],
+            paddingY: 10,
+         };
+      }
+
+      ui(obj) {
+         // we are creating these on the fly, and should have CurrentApplication
+         // defined already.
+
+         let ids = this.ids;
+         let ui = {
+            id: ids.component,
+            rows: [
+               { view: "label", label: L("Process Participant:") },
+               {
+                  view: "label",
+                  label: L(
+                     "This element defines a group of users that are responsible for the tasks contained within."
+                  ),
+               },
+               {
+                  view: "form",
+                  id: ids.form,
+                  // width: 300,
+                  elements: [
+                     {
+                        id: ids.name,
+                        view: "text",
+                        label: L("Name"),
+                        name: "name",
+                        value: this.name,
+                     },
+                     // Select Users Template Goes here
+                  ],
+               },
+            ],
+         };
+         let usersUI = { id: ids.users };
+         // If we don't have any sub lanes, then offer the select user options:
+         if (obj?.laneIDs && obj?.laneIDs.length == 0) {
+            usersUI = this.uiUser(obj ?? {});
+         }
+         ui.rows[2].elements.push(usersUI);
+
+         return ui;
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         return Promise.resolve();
+      }
+
+      // applicationLoad(application) {
+      //    super.applicationLoad(application);
+
+      //    $$(this.ids.objList).define("data", listObj);
+      //    $$(this.ids.objList).refresh();
+      // }
+
+      // show() {
+      //    super.show();
+      //    AppList.show();
+      // }
+
+      populate(obj) {
+         let ids = this.ids;
+
+         $$(ids.name).setValue(obj.name);
+
+         if (obj.laneIDs && obj.laneIDs.length == 0) {
+            var usersUI = this.uiUser(obj ?? {});
+            webix.ui(usersUI, $$(ids.users));
+         }
+      }
+
+      /**
+       * values()
+       * return an object hash representing the values for this component.
+       * @return {json}
+       */
+      // values() {
+      //    var obj = {};
+      //    var ids = this.ids;
+
+      //    obj.label = $$(ids.name)?.getValue();
+      //    obj.objectID = $$(ids.objList)?.getValue();
+      //    obj.lifecycleKey = $$(ids.lifecycleList).getValue();
+      //    obj.triggerKey = `${obj.objectID}.${obj.lifecycleKey}`;
+
+      //    return obj;
+      // }
+
+      values() {
+         var obj = {};
+         var ids = this.ids;
+
+         obj.label = $$(ids.name).getValue();
+
+         // if (obj.laneIDs.length == 0) {
+         var userDef = this.users.values();
+         Object.keys(userDef).forEach((k) => {
+            obj[k] = userDef[k];
+         });
+         // }
+         return obj;
+      }
+   }
+
+   return ABProcessparticipant;
 }
 
 
@@ -75551,152 +75725,162 @@ __webpack_require__.r(__webpack_exports__);
          let ids = this.ids;
          return {
             id: ids.component,
-            view: "form",
-            elements: [
+            rows: [
+               { view: "label", label: L("Send Email:") },
                {
-                  id: ids.name,
-                  view: "text",
-                  label: L("Name"),
-                  name: "name",
-                  value: this.name,
+                  view: "label",
+                  label: L("Generate an Email message to be sent."),
                },
                {
-                  id: ids.to,
-                  view: "select",
-                  label: L("To"),
-                  name: "to",
-                  value: this.to,
-                  options: [
+                  // id: ids.component,
+                  view: "form",
+                  elements: [
                      {
-                        id: 0,
-                        value: L("Next Participant"),
+                        id: ids.name,
+                        view: "text",
+                        label: L("Name"),
+                        name: "name",
+                        value: this.name,
                      },
                      {
-                        id: 1,
-                        value: L("Select Role or User"),
+                        id: ids.to,
+                        view: "select",
+                        label: L("To"),
+                        name: "to",
+                        value: this.to,
+                        options: [
+                           {
+                              id: 0,
+                              value: L("Next Participant"),
+                           },
+                           {
+                              id: 1,
+                              value: L("Select Role or User"),
+                           },
+                           {
+                              id: 2,
+                              value: L("Custom"),
+                           },
+                        ],
+                        on: {
+                           onChange: (val) => {
+                              if (parseInt(val) == 1) {
+                                 $$(ids.toUser).show();
+                                 $$(ids.toCustom).hide();
+                              } else if (parseInt(val) == 2) {
+                                 $$(ids.toUser).hide();
+                                 $$(ids.toCustom).show();
+                              } else {
+                                 $$(ids.toUser).hide();
+                                 $$(ids.toCustom).hide();
+                              }
+                           },
+                        },
                      },
                      {
-                        id: 2,
-                        value: L("Custom"),
-                     },
-                  ],
-                  on: {
-                     onChange: (val) => {
-                        if (parseInt(val) == 1) {
-                           $$(ids.toUser).show();
-                           $$(ids.toCustom).hide();
-                        } else if (parseInt(val) == 2) {
-                           $$(ids.toUser).hide();
-                           $$(ids.toCustom).show();
-                        } else {
-                           $$(ids.toUser).hide();
-                           $$(ids.toCustom).hide();
-                        }
-                     },
-                  },
-               },
-               {
-                  id: ids.toUser,
-                  rows: [toUserUI],
-                  paddingY: 10,
-                  hidden: parseInt(this.to) == 1 ? false : true,
-               },
-               {
-                  id: ids.toCustom,
-                  view: "text",
-                  label: L("Email"),
-                  placeholder: L("Type email address here..."),
-                  name: "toCustom",
-                  value: this.toCustom,
-                  hidden: parseInt(this.to) == 2 ? false : true,
-               },
-               {
-                  id: ids.from,
-                  view: "select",
-                  label: L("From"),
-                  name: "from",
-                  value: this.from,
-                  options: [
-                     {
-                        id: 0,
-                        value: L("Current Participant"),
+                        id: ids.toUser,
+                        rows: [toUserUI],
+                        paddingY: 10,
+                        hidden: parseInt(this.to) == 1 ? false : true,
                      },
                      {
-                        id: 1,
-                        value: L("Select Role or User"),
+                        id: ids.toCustom,
+                        view: "text",
+                        label: L("Email"),
+                        placeholder: L("Type email address here..."),
+                        name: "toCustom",
+                        value: this.toCustom,
+                        hidden: parseInt(this.to) == 2 ? false : true,
                      },
                      {
-                        id: 2,
-                        value: L("Custom"),
+                        id: ids.from,
+                        view: "select",
+                        label: L("From"),
+                        name: "from",
+                        value: this.from,
+                        options: [
+                           {
+                              id: 0,
+                              value: L("Current Participant"),
+                           },
+                           {
+                              id: 1,
+                              value: L("Select Role or User"),
+                           },
+                           {
+                              id: 2,
+                              value: L("Custom"),
+                           },
+                        ],
+                        on: {
+                           onChange: (val) => {
+                              if (parseInt(val) == 1) {
+                                 $$(ids.fromUser).show();
+                                 $$(ids.fromCustom).hide();
+                              } else if (parseInt(val) == 2) {
+                                 $$(ids.fromUser).hide();
+                                 $$(ids.fromCustom).show();
+                              } else {
+                                 $$(ids.fromUser).hide();
+                                 $$(ids.fromCustom).hide();
+                              }
+                           },
+                        },
                      },
-                  ],
-                  on: {
-                     onChange: (val) => {
-                        if (parseInt(val) == 1) {
-                           $$(ids.fromUser).show();
-                           $$(ids.fromCustom).hide();
-                        } else if (parseInt(val) == 2) {
-                           $$(ids.fromUser).hide();
-                           $$(ids.fromCustom).show();
-                        } else {
-                           $$(ids.fromUser).hide();
-                           $$(ids.fromCustom).hide();
-                        }
+                     {
+                        id: ids.fromUser,
+                        rows: [fromUserUI],
+                        paddingY: 10,
+                        hidden: parseInt(this.from) == 1 ? false : true,
                      },
-                  },
-               },
-               {
-                  id: ids.fromUser,
-                  rows: [fromUserUI],
-                  paddingY: 10,
-                  hidden: parseInt(this.from) == 1 ? false : true,
-               },
-               {
-                  id: ids.fromCustom,
-                  view: "text",
-                  label: L("Email"),
-                  placeholder: L("Type email address here..."),
-                  name: "fromCustom",
-                  value: this.fromCustom,
-                  hidden: parseInt(this.from) == 2 ? false : true,
-               },
-               {
-                  id: ids.subject,
-                  view: "text",
-                  label: L("Subject"),
-                  name: "subject",
-                  value: this.subject,
-               },
-               {
-                  view: "spacer",
-                  height: 10,
-               },
-               {
-                  id: ids.message,
-                  view: "tinymce-editor",
-                  label: L("Message"),
-                  name: "message",
-                  value: this.message,
-                  borderless: true,
-                  minHeight: 500,
-                  config: {
-                     plugins: [
-                        "advlist autolink lists link image charmap print preview anchor",
-                        "searchreplace visualblocks code fullscreen",
-                        "insertdatetime media table contextmenu paste imagetools wordcount",
-                     ],
-                     toolbar:
-                        "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-                     // init_instance_callback: (editor) => {
-                     //    editor.on("KeyUp", (event) => {
-                     //       // _logic.onChange();
-                     //    });
+                     {
+                        id: ids.fromCustom,
+                        view: "text",
+                        label: L("Email"),
+                        placeholder: L("Type email address here..."),
+                        name: "fromCustom",
+                        value: this.fromCustom,
+                        hidden: parseInt(this.from) == 2 ? false : true,
+                     },
+                     {
+                        id: ids.subject,
+                        view: "text",
+                        label: L("Subject"),
+                        name: "subject",
+                        value: this.subject,
+                     },
+                     {
+                        view: "spacer",
+                        height: 10,
+                     },
+                     {
+                        id: ids.message,
+                        view: "tinymce-editor",
+                        label: L("Message"),
+                        name: "message",
+                        value: this.message,
+                        borderless: true,
+                        minHeight: 500,
+                        config: {
+                           plugins: [
+                              "advlist autolink lists link image charmap print preview anchor",
+                              "searchreplace visualblocks code fullscreen",
+                              "insertdatetime media table contextmenu paste imagetools wordcount",
+                           ],
+                           toolbar:
+                              "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                           // init_instance_callback: (editor) => {
+                           //    editor.on("KeyUp", (event) => {
+                           //       // _logic.onChange();
+                           //    });
 
-                     //    editor.on("Change", function (event) {
-                     //       // _logic.onChange();
-                     //    });
-                     // },
-                  },
+                           //    editor.on("Change", function (event) {
+                           //       // _logic.onChange();
+                           //    });
+                           // },
+                        },
+                     },
+                  ],
                },
             ],
          };
@@ -75737,7 +75921,7 @@ __webpack_require__.r(__webpack_exports__);
             rows: [$toUser],
             paddingY: 10,
             hidden: parseInt(obj.to) == 1 ? false : true,
-         }
+         };
          webix.ui($newToUser, $$(ids.toUser));
 
          // obj.toUsers = this.toUser.values();
@@ -75748,7 +75932,7 @@ __webpack_require__.r(__webpack_exports__);
             rows: [$fromUser],
             paddingY: 10,
             hidden: parseInt(obj.from) == 1 ? false : true,
-         }
+         };
          webix.ui($newFromUser, $$(ids.fromUser));
       }
 
@@ -75833,7 +76017,6 @@ __webpack_require__.r(__webpack_exports__);
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
       ui() {
-
          // we are creating these on the fly, and should have CurrentApplication
          // defined already.
 
@@ -75845,32 +76028,44 @@ __webpack_require__.r(__webpack_exports__);
 
          let ids = this.ids;
          return {
-            view: "form",
             id: ids.component,
-            elements: [
+            rows: [
+               { view: "label", label: L("Object Lifecycle Trigger:") },
                {
-                  id: ids.name,
-                  view: "text",
-                  label: L("Name"),
-                  name: "name",
-                  value: "",
+                  view: "label",
+                  label: L(
+                     "Begins a process when an object's data is Added, Updated or Deleted."
+                  ),
                },
                {
-                  id: ids.objList,
-                  view: "select",
-                  label: L("Object"),
-                  // value: this.objectID,
-                  options: listObj,
-               },
-               {
-                  id: ids.lifecycleList,
-                  view: "select",
-                  label: L("lifecycle"),
-                  // value: this.lifecycleKey,
-                  options: [
-                     { id: "added", value: L("after Add") },
-                     { id: "updated", value: L("after Update") },
-                     { id: "deleted", value: L("after Delete") },
+                  view: "form",
+                  id: ids.component,
+                  elements: [
+                     {
+                        id: ids.name,
+                        view: "text",
+                        label: L("Name"),
+                        name: "name",
+                        value: "",
+                     },
+                     {
+                        id: ids.objList,
+                        view: "select",
+                        label: L("Object"),
+                        // value: this.objectID,
+                        options: listObj,
+                     },
+                     {
+                        id: ids.lifecycleList,
+                        view: "select",
+                        label: L("lifecycle"),
+                        // value: this.lifecycleKey,
+                        options: [
+                           { id: "added", value: L("after Add") },
+                           { id: "updated", value: L("after Update") },
+                           { id: "deleted", value: L("after Delete") },
+                        ],
+                     },
                   ],
                },
             ],
@@ -75885,8 +76080,6 @@ __webpack_require__.r(__webpack_exports__);
 
       // applicationLoad(application) {
       //    super.applicationLoad(application);
-
-
 
       //    $$(this.ids.objList).define("data", listObj);
       //    $$(this.ids.objList).refresh();
@@ -93765,8 +93958,13 @@ __webpack_require__.r(__webpack_exports__);
 
       action = action || replaceAction;
 
+      let label = definition.label;
+      if (typeof definition.label == "function") {
+         label = definition.label(element);
+      }
+
       var menuEntry = {
-         label: translate(definition.label),
+         label: translate(label),
          className: definition.className,
          id: definition.actionName,
          action: action,

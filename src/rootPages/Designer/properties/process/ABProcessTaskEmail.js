@@ -49,152 +49,162 @@ export default function (AB) {
          let ids = this.ids;
          return {
             id: ids.component,
-            view: "form",
-            elements: [
+            rows: [
+               { view: "label", label: L("Send Email:") },
                {
-                  id: ids.name,
-                  view: "text",
-                  label: L("Name"),
-                  name: "name",
-                  value: this.name,
+                  view: "label",
+                  label: L("Generate an Email message to be sent."),
                },
                {
-                  id: ids.to,
-                  view: "select",
-                  label: L("To"),
-                  name: "to",
-                  value: this.to,
-                  options: [
+                  // id: ids.component,
+                  view: "form",
+                  elements: [
                      {
-                        id: 0,
-                        value: L("Next Participant"),
+                        id: ids.name,
+                        view: "text",
+                        label: L("Name"),
+                        name: "name",
+                        value: this.name,
                      },
                      {
-                        id: 1,
-                        value: L("Select Role or User"),
+                        id: ids.to,
+                        view: "select",
+                        label: L("To"),
+                        name: "to",
+                        value: this.to,
+                        options: [
+                           {
+                              id: 0,
+                              value: L("Next Participant"),
+                           },
+                           {
+                              id: 1,
+                              value: L("Select Role or User"),
+                           },
+                           {
+                              id: 2,
+                              value: L("Custom"),
+                           },
+                        ],
+                        on: {
+                           onChange: (val) => {
+                              if (parseInt(val) == 1) {
+                                 $$(ids.toUser).show();
+                                 $$(ids.toCustom).hide();
+                              } else if (parseInt(val) == 2) {
+                                 $$(ids.toUser).hide();
+                                 $$(ids.toCustom).show();
+                              } else {
+                                 $$(ids.toUser).hide();
+                                 $$(ids.toCustom).hide();
+                              }
+                           },
+                        },
                      },
                      {
-                        id: 2,
-                        value: L("Custom"),
-                     },
-                  ],
-                  on: {
-                     onChange: (val) => {
-                        if (parseInt(val) == 1) {
-                           $$(ids.toUser).show();
-                           $$(ids.toCustom).hide();
-                        } else if (parseInt(val) == 2) {
-                           $$(ids.toUser).hide();
-                           $$(ids.toCustom).show();
-                        } else {
-                           $$(ids.toUser).hide();
-                           $$(ids.toCustom).hide();
-                        }
-                     },
-                  },
-               },
-               {
-                  id: ids.toUser,
-                  rows: [toUserUI],
-                  paddingY: 10,
-                  hidden: parseInt(this.to) == 1 ? false : true,
-               },
-               {
-                  id: ids.toCustom,
-                  view: "text",
-                  label: L("Email"),
-                  placeholder: L("Type email address here..."),
-                  name: "toCustom",
-                  value: this.toCustom,
-                  hidden: parseInt(this.to) == 2 ? false : true,
-               },
-               {
-                  id: ids.from,
-                  view: "select",
-                  label: L("From"),
-                  name: "from",
-                  value: this.from,
-                  options: [
-                     {
-                        id: 0,
-                        value: L("Current Participant"),
+                        id: ids.toUser,
+                        rows: [toUserUI],
+                        paddingY: 10,
+                        hidden: parseInt(this.to) == 1 ? false : true,
                      },
                      {
-                        id: 1,
-                        value: L("Select Role or User"),
+                        id: ids.toCustom,
+                        view: "text",
+                        label: L("Email"),
+                        placeholder: L("Type email address here..."),
+                        name: "toCustom",
+                        value: this.toCustom,
+                        hidden: parseInt(this.to) == 2 ? false : true,
                      },
                      {
-                        id: 2,
-                        value: L("Custom"),
+                        id: ids.from,
+                        view: "select",
+                        label: L("From"),
+                        name: "from",
+                        value: this.from,
+                        options: [
+                           {
+                              id: 0,
+                              value: L("Current Participant"),
+                           },
+                           {
+                              id: 1,
+                              value: L("Select Role or User"),
+                           },
+                           {
+                              id: 2,
+                              value: L("Custom"),
+                           },
+                        ],
+                        on: {
+                           onChange: (val) => {
+                              if (parseInt(val) == 1) {
+                                 $$(ids.fromUser).show();
+                                 $$(ids.fromCustom).hide();
+                              } else if (parseInt(val) == 2) {
+                                 $$(ids.fromUser).hide();
+                                 $$(ids.fromCustom).show();
+                              } else {
+                                 $$(ids.fromUser).hide();
+                                 $$(ids.fromCustom).hide();
+                              }
+                           },
+                        },
                      },
-                  ],
-                  on: {
-                     onChange: (val) => {
-                        if (parseInt(val) == 1) {
-                           $$(ids.fromUser).show();
-                           $$(ids.fromCustom).hide();
-                        } else if (parseInt(val) == 2) {
-                           $$(ids.fromUser).hide();
-                           $$(ids.fromCustom).show();
-                        } else {
-                           $$(ids.fromUser).hide();
-                           $$(ids.fromCustom).hide();
-                        }
+                     {
+                        id: ids.fromUser,
+                        rows: [fromUserUI],
+                        paddingY: 10,
+                        hidden: parseInt(this.from) == 1 ? false : true,
                      },
-                  },
-               },
-               {
-                  id: ids.fromUser,
-                  rows: [fromUserUI],
-                  paddingY: 10,
-                  hidden: parseInt(this.from) == 1 ? false : true,
-               },
-               {
-                  id: ids.fromCustom,
-                  view: "text",
-                  label: L("Email"),
-                  placeholder: L("Type email address here..."),
-                  name: "fromCustom",
-                  value: this.fromCustom,
-                  hidden: parseInt(this.from) == 2 ? false : true,
-               },
-               {
-                  id: ids.subject,
-                  view: "text",
-                  label: L("Subject"),
-                  name: "subject",
-                  value: this.subject,
-               },
-               {
-                  view: "spacer",
-                  height: 10,
-               },
-               {
-                  id: ids.message,
-                  view: "tinymce-editor",
-                  label: L("Message"),
-                  name: "message",
-                  value: this.message,
-                  borderless: true,
-                  minHeight: 500,
-                  config: {
-                     plugins: [
-                        "advlist autolink lists link image charmap print preview anchor",
-                        "searchreplace visualblocks code fullscreen",
-                        "insertdatetime media table contextmenu paste imagetools wordcount",
-                     ],
-                     toolbar:
-                        "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-                     // init_instance_callback: (editor) => {
-                     //    editor.on("KeyUp", (event) => {
-                     //       // _logic.onChange();
-                     //    });
+                     {
+                        id: ids.fromCustom,
+                        view: "text",
+                        label: L("Email"),
+                        placeholder: L("Type email address here..."),
+                        name: "fromCustom",
+                        value: this.fromCustom,
+                        hidden: parseInt(this.from) == 2 ? false : true,
+                     },
+                     {
+                        id: ids.subject,
+                        view: "text",
+                        label: L("Subject"),
+                        name: "subject",
+                        value: this.subject,
+                     },
+                     {
+                        view: "spacer",
+                        height: 10,
+                     },
+                     {
+                        id: ids.message,
+                        view: "tinymce-editor",
+                        label: L("Message"),
+                        name: "message",
+                        value: this.message,
+                        borderless: true,
+                        minHeight: 500,
+                        config: {
+                           plugins: [
+                              "advlist autolink lists link image charmap print preview anchor",
+                              "searchreplace visualblocks code fullscreen",
+                              "insertdatetime media table contextmenu paste imagetools wordcount",
+                           ],
+                           toolbar:
+                              "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                           // init_instance_callback: (editor) => {
+                           //    editor.on("KeyUp", (event) => {
+                           //       // _logic.onChange();
+                           //    });
 
-                     //    editor.on("Change", function (event) {
-                     //       // _logic.onChange();
-                     //    });
-                     // },
-                  },
+                           //    editor.on("Change", function (event) {
+                           //       // _logic.onChange();
+                           //    });
+                           // },
+                        },
+                     },
+                  ],
                },
             ],
          };
@@ -235,7 +245,7 @@ export default function (AB) {
             rows: [$toUser],
             paddingY: 10,
             hidden: parseInt(obj.to) == 1 ? false : true,
-         }
+         };
          webix.ui($newToUser, $$(ids.toUser));
 
          // obj.toUsers = this.toUser.values();
@@ -246,7 +256,7 @@ export default function (AB) {
             rows: [$fromUser],
             paddingY: 10,
             hidden: parseInt(obj.from) == 1 ? false : true,
-         }
+         };
          webix.ui($newFromUser, $$(ids.fromUser));
       }
 

@@ -26,7 +26,6 @@ export default function (AB) {
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
       ui() {
-
          // we are creating these on the fly, and should have CurrentApplication
          // defined already.
 
@@ -38,32 +37,44 @@ export default function (AB) {
 
          let ids = this.ids;
          return {
-            view: "form",
             id: ids.component,
-            elements: [
+            rows: [
+               { view: "label", label: L("Object Lifecycle Trigger:") },
                {
-                  id: ids.name,
-                  view: "text",
-                  label: L("Name"),
-                  name: "name",
-                  value: "",
+                  view: "label",
+                  label: L(
+                     "Begins a process when an object's data is Added, Updated or Deleted."
+                  ),
                },
                {
-                  id: ids.objList,
-                  view: "select",
-                  label: L("Object"),
-                  // value: this.objectID,
-                  options: listObj,
-               },
-               {
-                  id: ids.lifecycleList,
-                  view: "select",
-                  label: L("lifecycle"),
-                  // value: this.lifecycleKey,
-                  options: [
-                     { id: "added", value: L("after Add") },
-                     { id: "updated", value: L("after Update") },
-                     { id: "deleted", value: L("after Delete") },
+                  view: "form",
+                  id: ids.component,
+                  elements: [
+                     {
+                        id: ids.name,
+                        view: "text",
+                        label: L("Name"),
+                        name: "name",
+                        value: "",
+                     },
+                     {
+                        id: ids.objList,
+                        view: "select",
+                        label: L("Object"),
+                        // value: this.objectID,
+                        options: listObj,
+                     },
+                     {
+                        id: ids.lifecycleList,
+                        view: "select",
+                        label: L("lifecycle"),
+                        // value: this.lifecycleKey,
+                        options: [
+                           { id: "added", value: L("after Add") },
+                           { id: "updated", value: L("after Update") },
+                           { id: "deleted", value: L("after Delete") },
+                        ],
+                     },
                   ],
                },
             ],
@@ -78,8 +89,6 @@ export default function (AB) {
 
       // applicationLoad(application) {
       //    super.applicationLoad(application);
-
-
 
       //    $$(this.ids.objList).define("data", listObj);
       //    $$(this.ids.objList).refresh();
