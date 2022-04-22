@@ -243,7 +243,7 @@ module.exports = class AB_Work_Object_List extends ABComponent {
             /**
              * @function onChange
              */
-            onChange: function () {},
+            onChange: function () { }
          },
 
          /**

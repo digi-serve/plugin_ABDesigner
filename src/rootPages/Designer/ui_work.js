@@ -7,6 +7,7 @@
 import UI_Class from "./ui_class";
 import UI_Work_Object from "./ui_work_object";
 import UI_Work_Query from "./ui_work_query";
+import UI_Work_Interface from "./ui_work_interface";
 import UI_Work_Datacollection from "./ui_work_datacollection";
 import UI_Work_Process from "./ui_work_process";
 // const AB_Work_Interface = require("./ab_work_interface");
@@ -19,7 +20,7 @@ export default function (AB) {
    const AppQueryWorkspace = UI_Work_Query(AB);
    const AppDataCollectionWorkspace = UI_Work_Datacollection(AB);
    const AppProcessWorkspace = UI_Work_Process(AB);
-   // var AppInterfaceWorkspace = new AB_Work_Interface(App);
+   var AppInterfaceWorkspace = UI_Work_Interface(AB);
 
    class UI_Work extends UIClass {
       constructor(options = {}) {
@@ -65,6 +66,8 @@ export default function (AB) {
             app,
             "datacollectionsIncluded"
          );
+         // TODO
+         // const warnInterfaces = this.scanTopic(app, "interfacesIncluded");
 
          var sidebarItems = [
             {
@@ -94,6 +97,8 @@ export default function (AB) {
                id: this.ids.tab_interface,
                value: L("Interface"),
                icon: "fa fa-fw fa-id-card-o",
+               // TODO
+               // issues: warnInterfaces,
             },
          ];
 
@@ -135,7 +140,6 @@ export default function (AB) {
                         autowidth: true,
                         type: "icon",
                         icon: "fa fa-arrow-left",
-                        align: "left",
                         hidden: this.options?.IsBackHidden ?? false, // hide this button in the admin lve page
                         click: () => {
                            this.emit("view.chooser");
@@ -251,7 +255,7 @@ export default function (AB) {
                            AppQueryWorkspace.ui(),
                            AppDataCollectionWorkspace.ui(),
                            AppProcessWorkspace.ui(),
-                           // AppInterfaceWorkspace.ui,
+                           AppInterfaceWorkspace.ui(),
                         ],
                      },
                   ],
@@ -283,7 +287,7 @@ export default function (AB) {
          AppQueryWorkspace.init(AB);
          AppDataCollectionWorkspace.init(AB);
          AppProcessWorkspace.init(AB);
-         // AppInterfaceWorkspace.init(AB);
+         AppInterfaceWorkspace.init(AB);
 
          this.$tabbar = $$(this.ids.tabbar);
 
@@ -359,7 +363,7 @@ export default function (AB) {
          AppQueryWorkspace.applicationLoad(application);
          AppDataCollectionWorkspace.applicationLoad(application);
          AppProcessWorkspace.applicationLoad(application);
-         // AppInterfaceWorkspace.applicationLoad(application);
+         AppInterfaceWorkspace.applicationLoad(application);
 
          this.refreshSideBar(application);
 

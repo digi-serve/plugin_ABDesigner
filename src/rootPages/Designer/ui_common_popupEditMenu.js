@@ -30,33 +30,8 @@ export default function (AB) {
                delete: L("Delete"),
             };
 
-            // var labels = {
-            //    common: App.labels,
-
-            //    component: {
-            //       copy: L("ab.page.copy", "*Copy"),
-            //       exclude: L("ab.object.exclude", "*Exclude"),
-
-            //       menu: L("ab.application.menu", "*Application Menu"),
-            //       confirmDeleteTitle: L(
-            //          "ab.application.delete.title",
-            //          "*Delete application"
-            //       ),
-            //       confirmDeleteMessage: L(
-            //          "ab.application.delete.message",
-            //          "*Do you want to delete <b>{0}</b>?"
-            //       )
-            //    }
-            // };
-
             // since multiple instances of this component can exists, we need to
-            // make each instance have unique ids => so add webix.uid() to them:
-            // var uid = webix.uid();
-            // var ids = {
-            //    menu: this.unique("menu") + uid,
-            //    list: this.unique("list") + uid
-            // };
-
+            // make each instance have unique ids => so add contextID to them:
             this.ids.menu = `${idBase}_menu_${contextID}`;
             this.ids.list = `${idBase}_list_${contextID}`;
 
@@ -103,7 +78,8 @@ export default function (AB) {
                   select: false,
                   on: {
                      onItemClick: (timestamp, e, trg) => {
-                        return this.onItemClick(trg);
+                        // we need to process which node was clicked before emitting
+                        return this.trigger(trg);
                      },
                   },
                },
@@ -121,13 +97,6 @@ export default function (AB) {
             this.hide();
             this.menuOptions(this._menuOptions);
 
-            // register our callbacks:
-            // for (var c in _logic.callbacks) {
-            //    if (options && options[c]) {
-            //       _logic.callbacks[c] = options[c] || _logic.callbacks[c];
-            //    }
-            // }
-
             // hide "copy" item
             if (options.hideCopy) {
                let itemCopy = this.$list.data.find(
@@ -137,16 +106,16 @@ export default function (AB) {
                   this.$list.remove(itemCopy.id);
                   this.$list.refresh();
                }
-            }
 
-            // hide "exclude" item
-            if (options.hideExclude) {
-               let hideExclude = this.$list.data.find(
-                  (item) => item.label == this.labels.exclude
-               )[0];
-               if (hideExclude) {
-                  this.$list.remove(hideExclude.id);
-                  this.$list.refresh();
+               // hide "exclude" item
+               if (options.hideExclude) {
+                  let hideExclude = this.$list.data.find(
+                     (item) => item.label == this.labels.exclude
+                  )[0];
+                  if (hideExclude) {
+                     this.$list.remove(hideExclude.id);
+                     this.$list.refresh();
+                  }
                }
             }
          }
@@ -171,47 +140,35 @@ export default function (AB) {
             this.$list.refresh();
          }
 
-         /**
-          * @function onItemClick
-          * process which item in our popup was selected.
-          */
-         onItemClick(itemNode) {
-            // hide our popup before we trigger any other possible UI animation: (like .edit)
-            // NOTE: if the UI is animating another component, and we do .hide()
-            // while it is in progress, the UI will glitch and give the user whiplash.
-
-            var label = itemNode.textContent.trim();
-            var option = this._menuOptions.filter((mo) => {
-               return mo.label == label;
-            })[0];
-
-            // NOTE: .hide() the popup before .trigger() so we don't auto
-            // close any popups that get triggered.
-            this.hide();
-
-            if (option) {
-               // this._logic.callbacks.onClick(option.command);
-               this.trigger(option.command);
-            }
-
-            return false;
-         }
-
          show(itemNode) {
-            if (this.Popup && itemNode) this.Popup.show(itemNode);
+            this.Popup?.show(itemNode);
          }
 
          /**
           * @method trigger()
+          * process which item in our popup was selected, then
           * emit the selected command.
           * NOTE: this can be overridden by child objects
+          * @param {itemNode} div.webix_list_item: we get the label then pass this up,
+          * The itemNode contains the 'page' the user wants to edit
           */
-         trigger(command) {
-            this.emit("click", command);
+         trigger(itemNode) {
+            // hide our popup before we trigger any other possible UI animation: (like .edit)
+            // NOTE: if the UI is animating another component, and we do .hide()
+            // while it is in progress, the UI will glitch and give the user whiplash.
+            var label = itemNode.textContent.trim();
+            var option = this._menuOptions.filter((mo) => {
+               return mo.label == label;
+            })[0];
+            if (option) {
+               this.emit(option.command);
+               this.hide();
+               return false;
+            }
          }
 
          hide() {
-            if (this.Popup) this.Popup.hide();
+            this.Popup?.hide();
          }
       };
    }
