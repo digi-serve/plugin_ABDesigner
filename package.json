@@ -17,16 +17,21 @@
     "@babel/preset-env": "^7.15.8",
     "@babel/register": "^7.15.3",
     "css-loader": "^6.7.1",
+    "eslint": "^8.13.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "esm": "^3.2.25",
     "jsdom": "^18.0.0",
     "mocha": "^9.1.2",
     "postcss": "^8.4.12",
+    "prettier": "^2.6.2",
     "sinon": "^11.1.2",
     "style-loader": "^3.3.1",
     "webpack": "^5.51.2",
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
+    "bpmn-js": "^9.0.3",
     "path": "^0.12.7"
   }
 }

@@ -1,5 +1,5 @@
 /*
- * UIProcessParticipant_SelectManagersUI
+ * ABProcessParticipant_SelectManagersUI
  *
  * Display the form for entering how to select "managers".
  * this form allows you to choose Roles, or Users directly.

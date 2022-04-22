@@ -141,7 +141,7 @@ export default function (AB, init_settings) {
                                     },
                                     { height: uiConfig.smallSpacer },
                                     {
-                                       name: "isSystemObj",
+                                       name: "isSystemObject",
                                        view: "checkbox",
                                        labelRight: L(
                                           "is this a System Object?"
@@ -726,7 +726,7 @@ export default function (AB, init_settings) {
                "label",
                "description",
                "icon",
-               "isSystemObj",
+               "isSystemObject",
                "isAccessManaged",
                "isTranslationManaged",
             ].forEach((f) => {

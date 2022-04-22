@@ -26,7 +26,8 @@ module.exports = {
       ecmaVersion: 2020,
       sourceType: "module",
    },
-   // root: true,
+
+   root: true,
 
    // extending recommended config and config derived from eslint-config-prettier
    extends: ["eslint:recommended", "prettier"],
