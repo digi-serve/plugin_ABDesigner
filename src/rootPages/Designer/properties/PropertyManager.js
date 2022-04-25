@@ -34,6 +34,8 @@ export default function (AB) {
    });
 
    var Processes = [];
+   // {array}
+   // All the ABProcess... Property Interfaces Available
    [
       require("./process/ABProcessEnd.js"),
       require("./process/ABProcessParticipant.js"),
@@ -42,6 +44,14 @@ export default function (AB) {
    ].forEach((P) => {
       let Klass = P.default(AB);
       Processes.push(Klass);
+   });
+
+   var Views = [];
+   // {array}
+   // All the ABViewXXX Property Interfaces Available.
+   [require("./views/ABViewPage")].forEach((V) => {
+      let Klass = V.default(AB);
+      Views.push(Klass);
    });
 
    return {
@@ -58,6 +68,10 @@ export default function (AB) {
 
       processElements: function (f = () => true) {
          return Processes.filter(f);
+      },
+
+      views: function (v = () => true) {
+         return Views.filter(v);
       },
    };
 }

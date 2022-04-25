@@ -241,7 +241,7 @@ export default function (AB, ibase, init_settings) {
          }
 
          // create ABViewDataCollection
-         this.CurrentDatacollection = null;
+         this.mockDataCollection = null;
          // {ABDataCollection}
          // An instance of an ABDataCollection to manage the data we are displaying
          // in our workspace.
@@ -671,15 +671,15 @@ export default function (AB, ibase, init_settings) {
 
          // Gantt.init();
 
-         this.CurrentDatacollection = this.AB.datacollectionNew({});
-         this.CurrentDatacollection.init();
+         this.mockDataCollection = this.AB.datacollectionNew({});
+         this.mockDataCollection.init();
 
          allInits.push(this.PopupCustomIndex.init(AB));
 
-         Datatable.datacollectionLoad(this.CurrentDatacollection);
-         Gantt.datacollectionLoad(this.CurrentDatacollection);
-         Kanban.datacollectionLoad(this.CurrentDatacollection);
-         // Gantt.datacollectionLoad(this.CurrentDatacollection);
+         Datatable.datacollectionLoad(this.mockDataCollection);
+         Gantt.datacollectionLoad(this.mockDataCollection);
+         Kanban.datacollectionLoad(this.mockDataCollection);
+         // Gantt.datacollectionLoad(this.mockDataCollection);
 
          allInits.push(this.PopupHeaderEditMenu.init(AB));
 
@@ -748,7 +748,7 @@ export default function (AB, ibase, init_settings) {
             this.PopupNewDataFieldComponent.applicationLoad(application);
          }
 
-         // this.CurrentDatacollection.application = CurrentApplication;
+         // this.mockDataCollection.application = CurrentApplication;
       }
 
       /**
@@ -1198,7 +1198,7 @@ export default function (AB, ibase, init_settings) {
 
             // Now stick this into the DataCollection so the displayed widget
             // will update itself:
-            var dc = this.CurrentDatacollection.$dc;
+            var dc = this.mockDataCollection.$dc;
             if (dc && !dc.exists(newObj.id)) {
                dc.add(newObj, 0);
             }
@@ -1324,7 +1324,7 @@ export default function (AB, ibase, init_settings) {
          // The current workspace view that is being displayed in our work area
          // currentView.component {ABViewGrid | ABViewKanBan | ABViewGantt}
 
-         this.CurrentDatacollection.datasource = object;
+         this.mockDataCollection.datasource = object;
 
          Datatable.objectLoad(object);
          Kanban.objectLoad(object);
@@ -1433,9 +1433,9 @@ export default function (AB, ibase, init_settings) {
             sorts = this.workspaceViews?.sortFields;
          }
 
-         this.CurrentDatacollection.datasource = this.CurrentObject;
+         this.mockDataCollection.datasource = this.CurrentObject;
 
-         this.CurrentDatacollection.fromValues({
+         this.mockDataCollection.fromValues({
             settings: {
                datasourceID: this.CurrentObjectID,
                objectWorkspace: {
@@ -1445,16 +1445,16 @@ export default function (AB, ibase, init_settings) {
             },
          });
 
-         this.CurrentDatacollection.refreshFilterConditions(wheres);
-         this.CurrentDatacollection.clearAll();
+         this.mockDataCollection.refreshFilterConditions(wheres);
+         this.mockDataCollection.clearAll();
 
          // WORKAROUND: load all data becuase kanban does not support pagination now
          let view = this.workspaceViews.getCurrentView();
          if (view.type === "gantt" || view.type === "kanban") {
-            this.CurrentDatacollection.settings.loadAll = true;
-            this.CurrentDatacollection.loadData(0);
+            this.mockDataCollection.settings.loadAll = true;
+            this.mockDataCollection.loadData(0);
          } else {
-            this.CurrentDatacollection.loadData(0, 30).catch((err) => {
+            this.mockDataCollection.loadData(0, 30).catch((err) => {
                var message = err.toString();
                if (typeof err == "string") {
                   try {
@@ -1481,7 +1481,7 @@ export default function (AB, ibase, init_settings) {
                this.AB.notify.developer(err, {
                   context: "ui_work_object_workspace.loadData()",
                   message,
-                  datacollection: this.CurrentDatacollection.toObj(),
+                  datacollection: this.mockDataCollection.toObj(),
                });
             });
          }

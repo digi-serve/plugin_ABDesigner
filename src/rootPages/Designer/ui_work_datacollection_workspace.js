@@ -108,7 +108,7 @@ export default function (AB, init_settings) {
 
          this.warningsPropogate([Property, Datatable]);
          this.on("warnings", () => {
-            Warnings.show(this.CurrentDatacollection);
+            Warnings.show(this.mockDatacollection);
          });
 
          this.workspaceViews.init(AB);
@@ -127,11 +127,11 @@ export default function (AB, init_settings) {
          await Datatable.init(AB);
          await Property.init(AB);
 
-         this.CurrentDatacollection = this.AB.datacollectionNew({});
-         this.CurrentDatacollection.init();
+         this.mockDatacollection = this.AB.datacollectionNew({});
+         this.mockDatacollection.init();
 
-         Datatable.datacollectionLoad(this.CurrentDatacollection);
-         Property.datacollectionLoad(this.CurrentDatacollection);
+         Datatable.datacollectionLoad(this.mockDatacollection);
+         Property.datacollectionLoad(this.mockDatacollection);
 
          $$(ids.noSelection).show();
       }
@@ -166,10 +166,10 @@ export default function (AB, init_settings) {
       }
 
       loadData() {
-         this.CurrentDatacollection.clearAll();
+         this.mockDatacollection.clearAll();
          // WORKAROUND: load all data becuase kanban does not support pagination now
          try {
-            this.CurrentDatacollection.loadData(0, 20);
+            this.mockDatacollection.loadData(0, 20);
          } catch (err) {
             let message = err.toString();
             if (typeof err == "string") {
@@ -186,7 +186,7 @@ export default function (AB, init_settings) {
             this.AB.notify.developer(err, {
                context: "ui_work_datacollection_workspace.loadData()",
                message,
-               datacollection: this.CurrentDatacollection.toObj(),
+               datacollection: this.mockDatacollection.toObj(),
             });
          }
       }
@@ -202,10 +202,10 @@ export default function (AB, init_settings) {
 
          $$(ids.workspace).show();
 
-         this.CurrentDatacollection = datacollection;
+         this.mockDatacollection = datacollection;
 
          // get current view from object
-         this.workspaceViews.objectLoad(this.CurrentDatacollection.datasource);
+         this.workspaceViews.objectLoad(this.mockDatacollection.datasource);
          const currentView = this.workspaceViews.getCurrentView();
 
          // {WorkspaceView}

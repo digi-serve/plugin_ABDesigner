@@ -21,7 +21,9 @@ export default function (AB) {
          });
       }
 
-      static key = "TriggerLifecycle";
+      static get key() {
+         return "TriggerLifecycle";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 

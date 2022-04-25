@@ -186,6 +186,7 @@ export default function (AB) {
             this.ListComponent.select(obj.id);
             // }
          });
+
          CopyForm.on("save", (obj) => {
             // the PopupEditPageComponent already takes care of updating the
             // CurrentApplication.
@@ -203,7 +204,6 @@ export default function (AB) {
             CopyForm.hide();
             this.listReady();
          });
-
       }
 
       addNew() {
@@ -256,7 +256,7 @@ export default function (AB) {
        *
        * Manages initiating the transition to the new Page Popup window
        */
-      clickNewView(selectNew) {
+      clickNewView() {
          // show the new popup
          AddForm.show();
       }
@@ -329,7 +329,9 @@ export default function (AB) {
                   try {
                      await selectedPage.destroy();
                      this.listReady();
-                     $$(this.ids.list).remove($$(this.ids.list).getSelectedId());
+                     $$(this.ids.list).remove(
+                        $$(this.ids.list).getSelectedId()
+                     );
                      // let the calling component know about
                      // the deletion:
                      this.emit("deleted", selectedPage);
@@ -338,7 +340,8 @@ export default function (AB) {
                      this.emit("selected", null);
                   } catch (e) {
                      this.AB.notify.developer(e, {
-                        context: "ui_interface_list:remove(): error removing item",
+                        context:
+                           "ui_interface_list:remove(): error removing item",
                         base: selectedPage,
                      });
                      this.listReady();
@@ -366,14 +369,15 @@ export default function (AB) {
 
          // add sub-pages to tree-view
          page.pages().forEach((p, index) => {
-            if (!this.viewList.exists(p.id)) this.viewList.add(p, index, page.id);
+            if (!this.viewList.exists(p.id))
+               this.viewList.add(p, index, page.id);
          });
 
          $$(this.ids.list).refresh();
 
          if (parentPageId) $$(this.ids.list).open(parentPageId);
 
-         $$(this.ids.list).select(page.id);
+         this.select(page);
 
          AddForm.hide();
       }
@@ -385,6 +389,10 @@ export default function (AB) {
          $$(this.ids.list)?.hideProgress?.();
       }
 
+      select(page) {
+         $$(this.ids.list).select(page.id);
+      }
+
       templateListItem(item, common, warnings) {
          let warnIcon = "";
          if (warnings?.length > 0) {
@@ -392,9 +400,11 @@ export default function (AB) {
                '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
          }
          var template = `<div class='ab-page-list-item'>
-            ${common.icon(item)} <span class='webix_icon fa fa-${item.icon || item.viewIcon()
-            }'></span> ${item.label}${warnIcon}<div class='ab-page-list-edit'>${common.iconGear
-            }</div>
+            ${common.icon(item)} <span class='webix_icon fa fa-${
+            item.icon || item.viewIcon()
+         }'></span> ${item.label}${warnIcon}<div class='ab-page-list-edit'>${
+            common.iconGear
+         }</div>
             </div>`;
 
          // now register a callback to update this display when this view is updated:
@@ -428,7 +438,11 @@ export default function (AB) {
          // AB.actions.populateInterfaceWorkspace(view);
 
          this.showGear(id);
+
+         let view = $$(this.ids.list).getItem(id);
+         this.emit("selected", view);
       }
+
       onBeforeEditStop(state /*, editor */) {
          var selectedItem = $$(this.ids.list).getSelectedItem(false);
          selectedItem.label = state.value;
@@ -475,7 +489,9 @@ export default function (AB) {
                      base: state.value,
                   });
                   webix.alert({
-                     text: L("System could not rename <b>{0}</b>.", [state.value]),
+                     text: L("System could not rename <b>{0}</b>.", [
+                        state.value,
+                     ]),
                   });
                });
          }

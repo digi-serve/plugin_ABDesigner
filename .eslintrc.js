@@ -19,7 +19,7 @@ module.exports = {
    globals: {
       // io: true,
       $$: true,
-      // webix: true,
+      webix: true,
    },
 
    parserOptions: {

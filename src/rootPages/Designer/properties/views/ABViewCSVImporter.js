@@ -6,8 +6,8 @@
 import FViewClass from "./ABView";
 
 export default function (AB) {
-   var ABViewClassProperty = FViewClass(AB);
-   var L = ABViewClassProperty.L();
+   const ABViewClassProperty = FViewClass(AB);
+   // const L = ABViewClassProperty.L();
 
    class ABViewCSVImporterProperty extends ABViewClassProperty {
       constructor() {

@@ -14,7 +14,7 @@ export default function (AB) {
    if (!myClass) {
       // const uiConfig = AB.Config.uiSettings();
       const UIClass = UI_Class(AB);
-      // var L = UIClass.L();
+      var L = UIClass.L();
 
       myClass = class ABViewProperty extends UIClass {
          constructor(base = "properties_abview", ids = {}) {
@@ -24,22 +24,7 @@ export default function (AB) {
             // unique to the Sub Class' interface elements.
 
             var common = {
-               // component: `${base}_component`,
-               /*
-// TODO:
-               // the common property fields
-               label: `${base}_label`,
-               columnName: `${base}_columnName`,
-               fieldDescription: `${base}_fieldDescription`,
-               showIcon: `${base}_showIcon`,
-               required: `${base}_required`,
-               numberOfNull: `${base}_numberOfNull`,
-               unique: `${base}_unique`,
-               filterComplex: `${base}_filtercomplex`,
-               addValidation: `${base}_addvalidation`,
-               shorthand: `${base}_shorthand`,
-               validationRules: `${base}_validationRules`,
-*/
+               label: "",
             };
 
             Object.keys(ids).forEach((k) => {
@@ -58,188 +43,36 @@ export default function (AB) {
             this.AB = AB;
          }
 
-         ui(elements = []) {
-            /*
-// TODO: this is still from ABField.js
+         ui(elements = [], rules = {}) {
+            let ids = this.ids;
 
-            var ids = this.ids;
-
-            var FC = this.FieldClass();
-
-            var _ui = {
+            let _ui = {
                view: "form",
                id: ids.component,
-               autoheight: true,
-               borderless: true,
+               scroll: true,
                elements: [
-                  // {
-                  //    view: "label",
-                  //    label: "<span class='webix_icon fa fa-{0}'></span>{1}".replace('{0}', Field.icon).replace('{1}', Field.menuName)
-                  // },
                   {
-                     view: "text",
                      id: ids.label,
-                     name: "label",
-                     label: L("Label"),
-                     placeholder: L("Label"),
-                     labelWidth: uiConfig.labelWidthLarge,
-                     css: "ab-new-label-name",
-                     on: {
-                        onChange: function (newVal, oldVal = "") {
-                           // update columnName when appropriate
-                           if (
-                              newVal != oldVal &&
-                              oldVal == $$(ids.columnName).getValue() &&
-                              $$(ids.columnName).isEnabled()
-                           ) {
-                              $$(ids.columnName).setValue(newVal);
-                           }
-                        },
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
                      view: "text",
-                     id: ids.columnName,
-                     name: "columnName",
-                     disallowEdit: true,
-                     label: L("Field Name"),
-                     labelWidth: uiConfig.labelWidthLarge,
-                     placeholder: L("Database field name"),
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "label",
-                     id: ids.fieldDescription,
-                     label: L("Description"), // Field.description,
-                     align: "right",
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "checkbox",
-                     id: ids.showIcon,
-                     name: "showIcon",
-                     labelRight: L("show icon?"),
-                     labelWidth: uiConfig.labelWidthCheckbox,
-                     value: true,
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "checkbox",
-                     id: ids.required,
-                     name: "required",
-                     hidden: !FC.defaults().supportRequire,
-                     labelRight: L("Required"),
-                     // disallowEdit: true,
-                     labelWidth: uiConfig.labelWidthCheckbox,
-                     on: {
-                        onChange: (newVal, oldVal) => {
-                           this.requiredOnChange(newVal, oldVal, ids);
-
-                           // If check require on edit field, then show warning message
-                           this.getNumberOfNullValue(newVal);
-                        },
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  // warning message: number of null value rows
-                  {
-                     view: "label",
-                     id: ids.numberOfNull,
-                     css: { color: "#f00" },
-                     label: "",
-                     hidden: true,
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "checkbox",
-                     id: ids.unique,
-                     name: "unique",
-                     hidden: !FC.defaults().supportUnique,
-                     labelRight: L("Unique"),
-                     disallowEdit: true,
-                     labelWidth: uiConfig.labelWidthCheckbox,
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     id: ids.filterComplex,
-                     rows: [],
-                  },
-                  {
-                     id: ids.addValidation,
-                     view: "button",
-                     label: L("Add Field Validation"),
-                     css: "webix_primary",
-                     click: () => {
-                        this.addValidation();
-                     },
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  // have a hidden field to contain the validationRules
-                  // value we will parse out later
-                  {
-                     id: ids.validationRules,
-                     view: "text",
-                     hidden: true,
-                     name: "validationRules",
-                     on: {
-                        onAfterRender() {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
+                     label: L("Name"),
+                     name: "name",
+                     value: "",
                   },
                ],
-
                rules: {
-                  label: webix.rules.isNotEmpty,
-                  columnName: webix.rules.isNotEmpty,
+                  // label: webix.rules.isNotEmpty,
                },
             };
 
-            // Add our passed in elements:
             elements.forEach((e) => {
-               // passed in elements might not have their .id
-               // set, but have a .name. Let's default id =
-               if (!e.id && e.name) {
-                  if (!this.ids[e.name]) {
-                     this.ids[e.name] = `${this.base}_${e.name}`;
-                  }
-                  e.id = this.ids[e.name];
-               }
                _ui.elements.push(e);
             });
 
+            Object.keys(rules).forEach((r) => {
+               _ui.rules[r] = rules[r];
+            });
+
             return _ui;
-*/
-            return {};
          }
 
          async init(AB) {
@@ -389,56 +222,11 @@ export default function (AB) {
          /**
           * @function populate
           * populate the property form with the given ABField instance provided.
-          * @param {ABField} field
-          *        The ABFieldXXX instance that we are editing the settings for.
+          * @param {ABView} view
+          *        The ABViewXXX instance that we are editing the settings for.
           */
-         populate(/* field */) {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = field;
-
-            // these columns are located on the base ABField object
-            ["label", "columnName"].forEach((c) => {
-               $$(ids[c]).setValue?.(field[c]);
-            });
-            $$(ids.fieldDescription).setValue(field.fieldDescription());
-
-            // the remaining columns are located in .settings
-            Object.keys(ids).forEach((c) => {
-               if (typeof field.settings[c] != "undefined") {
-                  $$(ids[c])?.setValue?.(field.settings[c]);
-               }
-            });
-            $$(ids.label).setValue(field.label);
-            $$(ids.columnName).setValue(field.columnName);
-            $$(ids.showIcon).setValue(field.settings.showIcon);
-            $$(ids.required).setValue(field.settings.required);
-            $$(ids.unique).setValue(field.settings.unique);
-
-            if (this._CurrentField) {
-               $$(ids.addValidation).show();
-            }
-
-            if (field.settings && field.settings.validationRules) {
-               var rules = field.settings.validationRules;
-               if (typeof rules == "string") {
-                  try {
-                     rules = JSON.parse(rules);
-                  } catch (e) {
-                     this.AB.notify.builder(e, {
-                        context: `ABField[${field.id}][${field.name}]: has invalid validationRules`,
-                        validationRules: field.settings.validationRules,
-                     });
-                     // so ... now what?
-                     rules = [];
-                  }
-               }
-               (rules || []).forEach((settings) => {
-                  field.addValidation(ids, settings);
-               });
-            }
-*/
+         populate(view) {
+            $$(this.ids.label).setValue(view.label);
          }
 
          requiredOnChange() {
@@ -497,14 +285,14 @@ export default function (AB) {
          }
 
          /**
-          * @method FieldClass()
-          * A method to return the proper ABFieldXXX Definition.
+          * @method ViewClass()
+          * A method to return the proper ABViewXXX Definition.
           * NOTE: Must be overwritten by the Child Class
           */
          ViewClass() {
-            console.error("!!! Child Class has not overwritten FieldClass()");
+            console.error("!!! Child Class has not overwritten ViewClass()");
             return null;
-            // return super._FieldClass("string");
+            // return super._ViewClass("string");
          }
 
          _ViewClass(key) {

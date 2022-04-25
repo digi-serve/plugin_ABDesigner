@@ -35,7 +35,9 @@ export default function (AB) {
          );
       }
 
-      static key = "Email";
+      static get key() {
+         return "Email";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 

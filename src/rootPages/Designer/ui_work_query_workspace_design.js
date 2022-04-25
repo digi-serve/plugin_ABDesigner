@@ -32,7 +32,7 @@ export default function (AB, init_settings) {
 
          this.settings = settings;
 
-         this.CurrentDatacollection = null;
+         this.mockDatacollection = null;
          // {ABDataCollection}
          // A DC used to drive the display of our workspace views.
 
@@ -300,14 +300,14 @@ export default function (AB, init_settings) {
          }
 
          // create new data view
-         this.CurrentDatacollection = this.AB.datacollectionNew({
+         this.mockDatacollection = this.AB.datacollectionNew({
             query: [CurrentQuery.toObj()],
             settings: {
                datasourceID: CurrentQuery.id,
             },
          });
-         this.CurrentDatacollection.datasource = CurrentQuery;
-         // this.CurrentDatacollection.init(); << need this?
+         this.mockDatacollection.datasource = CurrentQuery;
+         // this.mockDatacollection.init(); << need this?
 
          const objBase = CurrentQuery.objectBase();
 
@@ -1012,7 +1012,7 @@ export default function (AB, init_settings) {
       }
 
       refreshDataTable() {
-         if (this.CurrentDatacollection == null) return;
+         if (this.mockDatacollection == null) return;
          let CurrentQuery = this.CurrentQuery;
          if (!CurrentQuery) return;
 
@@ -1025,11 +1025,11 @@ export default function (AB, init_settings) {
 
          let qCurrentView = CurrentQuery.workspaceViews.getCurrentView();
 
-         this.CurrentDatacollection.clearAll();
-         this.CurrentDatacollection.datasource = CurrentQuery;
+         this.mockDatacollection.clearAll();
+         this.mockDatacollection.datasource = CurrentQuery;
 
          // Set filter and sort conditions
-         this.CurrentDatacollection.fromValues({
+         this.mockDatacollection.fromValues({
             query: [CurrentQuery.toObj()],
             settings: {
                datasourceID: CurrentQuery.id,
@@ -1042,19 +1042,21 @@ export default function (AB, init_settings) {
                },
             },
          });
-         this.CurrentDatacollection.datasource = CurrentQuery;
+         this.mockDatacollection.datasource = CurrentQuery;
 
          // Bind datatable view to data view
-         this.CurrentDatacollection.unbind(DataTable);
-         this.CurrentDatacollection.bind(DataTable);
+         this.mockDatacollection.unbind(DataTable);
+         this.mockDatacollection.bind(DataTable);
 
          DataTable.showProgress({ type: "icon" });
 
          // set data:
-         this.CurrentDatacollection.loadData(0, 50, () => {}).then(() => {
-            this.CurrentDatacollection.bind(DataTable);
-            // DataTable.hideProgress(); <-- happens on the .bind()
-         });
+         this.mockDatacollection
+            .loadData(0, 50, () => {})
+            .then(() => {
+               this.mockDatacollection.bind(DataTable);
+               // DataTable.hideProgress(); <-- happens on the .bind()
+            });
       }
 
       getObject(objectId) {

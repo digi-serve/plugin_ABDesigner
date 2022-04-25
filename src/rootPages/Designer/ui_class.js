@@ -25,6 +25,10 @@ export default function (AB) {
             // {string} uuid
             // The current ABApplication.id we are working with.
 
+            this.CurrentDatacollectionID = null;
+            // {string}
+            // the ABDataCollection.id of the datacollection we are working with.
+
             this.CurrentObjectID = null;
             // {string}
             // the ABObject.id of the object we are working with.
@@ -37,9 +41,9 @@ export default function (AB) {
             // {string}
             // the ABObjectQuery.id of the query we are working with.
 
-            this.CurrentDatacollectionID = null;
+            this.CurrentViewID = null;
             // {string}
-            // the ABDataCollection.id of the datacollection we are working with.
+            // the ABView.id of the view we are working with.
          }
 
          static L() {
@@ -49,21 +53,16 @@ export default function (AB) {
          }
 
          /**
-          * @method CurrentApplication
-          * return the current ABApplication being worked on.
-          * @return {ABApplication} application
-          */
-         get CurrentApplication() {
-            return this.AB.applicationByID(this.CurrentApplicationID);
-         }
-
-         /**
           * @function applicationLoad
           * save the ABApplication.id of the current application.
           * @param {ABApplication} app
           */
          applicationLoad(app) {
             this.CurrentApplicationID = app?.id;
+         }
+
+         datacollectionLoad(dc) {
+            this.CurrentDatacollectionID = dc?.id;
          }
 
          objectLoad(obj) {
@@ -78,12 +77,26 @@ export default function (AB) {
             this.CurrentQueryID = query?.id;
          }
 
-         datacollectionLoad(dc) {
-            this.CurrentDatacollectionID = dc?.id;
+         viewLoad(view) {
+            this.CurrentViewID = view?.id;
+         }
 
-            this.CurrentDatacollection = this.AB.datacollectionByID(
-               this.CurrentDatacollectionID
-            );
+         /**
+          * @method CurrentApplication
+          * return the current ABApplication being worked on.
+          * @return {ABApplication} application
+          */
+         get CurrentApplication() {
+            return this.AB.applicationByID(this.CurrentApplicationID);
+         }
+
+         /**
+          * @method CurrentDatacollection()
+          * A helper to return the current ABDataCollection we are working with.
+          * @return {ABObject}
+          */
+         get CurrentDatacollection() {
+            return this.AB.datacollectionByID(this.CurrentDatacollectionID);
          }
 
          /**
@@ -117,6 +130,16 @@ export default function (AB) {
             return this.AB.queryByID(this.CurrentQueryID);
          }
 
+         /**
+          * @method CurrentView()
+          * A helper to return the current ABObjectQuery we are working with.
+          * @return {ABObjectQuery}
+          */
+         get CurrentView() {
+            return this.CurrentApplication?.views(
+               (v) => v.id == this.CurrentViewID
+            )[0];
+         }
          /**
           * @method refreshWarnings()
           * reset the warnings on the provided ABObject and then start propogating

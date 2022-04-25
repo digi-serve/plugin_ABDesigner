@@ -53,7 +53,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
          // 3 - Global filter input options
          // globalFilterPosition: "default", // "default" || "single"
 
-         isGlobalToolbar: 1 // "boolean"
+         isGlobalToolbar: 1, // "boolean"
       };
    }
 
@@ -72,7 +72,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
          filterMenuLayout: idBase + "_filterMenuLayout",
 
          needLoadAllLabel: idBase + "_needLoadAll",
-         globalToolbar: idBase + "_globalToolbar"
+         globalToolbar: idBase + "_globalToolbar",
       };
 
       let labels = {
@@ -82,8 +82,8 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
             addNewFilter: L(
                "ab.components.grid.addNewFilter",
                "*Add new filter"
-            )
-         }
+            ),
+         },
       };
 
       let ui = {
@@ -97,7 +97,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                   { id: 0, value: "Do not Allow User filters" },
                   { id: 1, value: "Enable User filters" },
                   { id: 2, value: "Use a filter menu" },
-                  { id: 3, value: "Use a global filter input" }
+                  { id: 3, value: "Use a global filter input" },
                ],
                vertical: true,
                label: "Filter Option",
@@ -105,8 +105,8 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                on: {
                   onChange: (newValue, oldValue) => {
                      logic.setFilterOption(newValue);
-                  }
-               }
+                  },
+               },
             },
 
             {
@@ -118,8 +118,8 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                labelWidth: App.config.labelWidthLarge,
                options: [
                   { id: "default", value: "All matching records" },
-                  { id: "single", value: "Single records only" }
-               ]
+                  { id: "single", value: "Single records only" },
+               ],
             },
 
             {
@@ -137,22 +137,22 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                      width: 200,
                      options: [
                         { id: "toolbar", value: "Toolbar" },
-                        { id: "form", value: "Form" }
+                        { id: "form", value: "Form" },
                      ],
                      on: {
                         onChange: (newValue) => {
                            logic.setFilterUser(newValue);
-                        }
-                     }
+                        },
+                     },
                   },
                   {
                      view: "checkbox",
                      id: ids.globalToolbar,
                      width: 350,
-                     labelRight: "Include a global filter input"
+                     labelRight: "Include a global filter input",
                   },
-                  {}
-               ]
+                  {},
+               ],
             },
 
             {
@@ -172,17 +172,17 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                            width: 150,
                            click: () => {
                               logic.addFilterRule();
-                           }
+                           },
                         },
                         {
                            view: "label",
                            label: '*need "LoadAll" from datasource',
                            css: { color: "red" },
                            id: ids.needLoadAllLabel,
-                           hidden: true
+                           hidden: true,
                         },
-                        { fillspace: true }
-                     ]
+                        { fillspace: true },
+                     ],
                   },
                   {
                      view: "scrollview",
@@ -193,10 +193,10 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                         id: ids.filterRules,
                         margin: 20,
                         padding: 10,
-                        rows: []
-                     }
-                  }
-               ]
+                        rows: [],
+                     },
+                  },
+               ],
             },
             {
                css: { "background-color": "#fff" },
@@ -208,9 +208,9 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                      value: labels.common.cancel,
                      css: "ab-cancel-button",
                      autowidth: true,
-                     click: function() {
+                     click: function () {
                         logic.buttonCancel();
-                     }
+                     },
                   },
                   {
                      view: "button",
@@ -219,14 +219,14 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                      label: labels.common.save,
                      type: "form",
                      autowidth: true,
-                     click: function() {
+                     click: function () {
                         logic.buttonSave();
-                     }
+                     },
                   },
-                  { fillspace: true }
-               ]
-            }
-         ]
+                  { fillspace: true },
+               ],
+            },
+         ],
       };
 
       let init = (options) => {
@@ -241,15 +241,15 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
 
       let logic = {
          callbacks: {
-            onCancel: function() {
+            onCancel: function () {
                console.warn("NO onCancel()!");
             },
-            onSave: function() {
+            onSave: function () {
                console.warn("NO onSave()!");
-            }
+            },
          },
 
-         buttonCancel: function() {
+         buttonCancel: function () {
             logic.callbacks.onCancel();
          },
 
@@ -375,7 +375,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                         if (index !== -1) {
                            instance.queryRules.splice(index, 1);
                         }
-                     }
+                     },
                   });
                }
             }
@@ -385,7 +385,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
             }
          },
 
-         onShow: function() {
+         onShow: function () {
             if (!this.isLoadAll) {
                $$(ids.needLoadAllLabel).show();
             } else {
@@ -393,7 +393,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
             }
          },
 
-         setFilterOption: function(value) {
+         setFilterOption: function (value) {
             switch (JSON.parse(value || 0)) {
                case 1: // Enable User filters
                   $$(ids.filterMenuLayout).hide();
@@ -429,7 +429,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                   $$(ids.globalToolbar).hide();
                   break;
             }
-         }
+         },
       };
 
       return {
@@ -439,7 +439,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
          onShow: logic.onShow,
          objectLoad: logic.objectLoad,
          setSettings: logic.setSettings,
-         getSettings: logic.getSettings
+         getSettings: logic.getSettings,
       };
    }
 
@@ -555,7 +555,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
          globalFilterForm: App.unique(idBase + "_globalFilterForm"),
          filterMenutoolbar: App.unique(idBase + "_filterMenuToolbar"),
          resetFilterButton: App.unique(idBase + "_resetFilterButton"),
-         component: App.unique(idBase + "_filterData_popup")
+         component: App.unique(idBase + "_filterData_popup"),
       };
 
       let instance = this;
@@ -578,12 +578,12 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                      view: "text",
                      placeholder: "Search or scan a barcode to see results",
                      on: {
-                        onTimedKeyPress: function() {
+                        onTimedKeyPress: function () {
                            var searchText = this.getValue();
 
                            logic.searchText(searchText);
-                        }
-                     }
+                        },
+                     },
                   },
                   {
                      view: "button",
@@ -591,13 +591,13 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                      width: 28,
                      type: "icon",
                      icon: "fa fa-times",
-                     click: function() {
+                     click: function () {
                         $$(ids.globalFilterForm).setValue("");
                         $$(ids.globalFilterForm).focus();
                         $$(ids.globalFilterForm).callEvent("onTimedKeyPress");
-                     }
-                  }
-               ]
+                     },
+                  },
+               ],
             },
             this.rowFilterForm.ui,
             {
@@ -615,13 +615,13 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                      type: "icon",
                      badge: 0,
                      autowidth: true,
-                     click: function() {
+                     click: function () {
                         logic.resetFilter();
-                     }
-                  }
-               ]
-            }
-         ]
+                     },
+                  },
+               ],
+            },
+         ],
       };
 
       let init = (options) => {
@@ -630,7 +630,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
             id: ids.component,
             width: 800,
             hidden: true,
-            body: this.rowFilter.ui
+            body: this.rowFilter.ui,
          });
 
          // register callbacks:
@@ -651,7 +651,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                logic.triggerCallback((rowData) => {
                   return this.rowFilter.isValid(rowData);
                }, filterRules);
-            }
+            },
          });
 
          this.rowFilterForm.init({
@@ -662,7 +662,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                logic.triggerCallback((rowData) => {
                   return this.rowFilterForm.isValid(rowData);
                }, filterRules);
-            }
+            },
          });
 
          $$(ids.filterPanel).hide();
@@ -703,9 +703,9 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                         type: "icon",
                         badge: 0,
                         autowidth: true,
-                        click: function() {
+                        click: function () {
                            logic.selectFilter(qr.queryRules);
-                        }
+                        },
                      };
                      $$(ids.filterMenutoolbar).addView(filterRuleButton);
                   });
@@ -723,9 +723,9 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
             /**
              * @param {function} fnFilter
              */
-            onFilterData: function(fnFilter, filterRules) {
+            onFilterData: function (fnFilter, filterRules) {
                console.warn("NO onFilterData()");
-            }
+            },
          },
 
          triggerCallback: (fnFilter, filterRules) => {
@@ -734,7 +734,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
          },
 
          resetFilter: () => {
-            let showAllFn = function(rowData) {
+            let showAllFn = function (rowData) {
                   return true;
                },
                filterRules = [];
@@ -751,7 +751,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                id: id,
                hidden: true,
                view: "querybuilder",
-               fields: queryRule.conditionFields()
+               fields: queryRule.conditionFields(),
             };
             let hiddenQB = webix.ui(ui);
 
@@ -794,10 +794,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
          },
 
          searchText(search) {
-            let texts = search
-               .trim()
-               .toLowerCase()
-               .split(" ");
+            let texts = search.trim().toLowerCase().split(" ");
 
             let isTextValid = (rowData) => {
                var isValid = false;
@@ -817,10 +814,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
                   texts.forEach((text) => {
                      if (
                         rowData[key] &&
-                        rowData[key]
-                           .toString()
-                           .toLowerCase()
-                           .indexOf(text) > -1
+                        rowData[key].toString().toLowerCase().indexOf(text) > -1
                      )
                         isValid = true;
                   });
@@ -866,7 +860,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
             // 		table.hide();
             // 	}
             // }
-         }
+         },
       };
 
       return {
@@ -879,7 +873,7 @@ module.exports = class ABViewPropertyFilterData extends ABViewProperty {
 
          getFilter: logic.getFilter,
 
-         searchText: logic.searchText
+         searchText: logic.searchText,
       };
    }
 };

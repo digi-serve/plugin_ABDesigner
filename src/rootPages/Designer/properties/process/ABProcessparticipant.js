@@ -27,7 +27,9 @@ export default function (AB) {
          );
       }
 
-      static key = "process.participant";
+      static get key() {
+         return "process.participant";
+      }
       // {string}
       // This should match the ABProcessParticipant.defaults().key value.
 
