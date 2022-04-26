@@ -501,6 +501,7 @@ export default function (AB) {
                      this.CurrentPropertiesObj = newObj;
                      this.CurrentPropertiesObj.on("switchTo", (switchObj) => {
                         this.CurrentPropertiesObj = switchObj;
+                        this.panelShow(switchObj);
                      });
                      this.panelShow(newObj);
                      // newObj.propertiesShow(ids.properties /*, App */);
