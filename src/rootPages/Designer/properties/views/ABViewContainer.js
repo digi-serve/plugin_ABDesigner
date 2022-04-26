@@ -68,11 +68,11 @@ export default function (AB) {
                   label: L("Columns"),
                   labelWidth: uiConfig.labelWidthXLarge,
                   on: {
-                     onChange: function (newVal, oldVal) {
+                     onChange: (newVal, oldVal) => {
                         if (newVal > 8) $$(ids.columns).setValue(8);
 
                         let $grav = $$(ids.gravity);
-                        function addCounter(counterNum) {
+                        let addCounter = (counterNum) => {
                            var pos = $grav.getParentView().index($grav);
                            $grav.getParentView().addView(
                               {
@@ -90,7 +90,7 @@ export default function (AB) {
                               },
                               pos
                            );
-                        }
+                        };
 
                         function removeCounter() {
                            $grav
@@ -124,6 +124,8 @@ export default function (AB) {
                               removeCounter();
                            }
                         }
+
+                        this.onChange();
                      },
                   },
                },
@@ -135,7 +137,7 @@ export default function (AB) {
                },
             ];
 
-            _elements.concat(elements);
+            _elements = _elements.concat(elements);
 
             // Object.keys(rules).forEach((r) => {
             //    _ui.rules[r] = rules[r];
@@ -161,39 +163,7 @@ export default function (AB) {
             }
          }
 
-         clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
-         }
+         clear() {}
 
          /**
           * @method defaults()
@@ -359,7 +329,7 @@ export default function (AB) {
                .getParentView()
                .queryView({ css: "gravity_counter" }, "all")
                .map((counter) => gravity.push($$(counter).getValue()));
-            view.settings.gravity = gravity;
+            vals.settings.gravity = gravity;
 
             return vals;
          }

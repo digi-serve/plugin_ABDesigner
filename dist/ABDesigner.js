@@ -27737,7 +27737,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -75286,7 +75286,9 @@ __webpack_require__.r(__webpack_exports__);
          );
       }
 
-      static key = "process.participant";
+      static get key() {
+         return "process.participant";
+      }
       // {string}
       // This should match the ABProcessParticipant.defaults().key value.
 
@@ -76254,37 +76256,7 @@ var myClass = null;
          }
 
          clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
+            $$(this.ids.label).setValue("");
          }
 
          /**
@@ -76376,6 +76348,15 @@ var myClass = null;
          }
 
          /**
+          * @method onChange()
+          * emit a "changed" event so our property manager can know
+          * there are new values that need saving.
+          */
+         onChange() {
+            this.emit("changed");
+         }
+
+         /**
           * @function populate
           * populate the property form with the given ABField instance provided.
           * @param {ABView} view
@@ -76401,43 +76382,9 @@ var myClass = null;
           * @return {obj}
           */
          values() {
-            /*
-// TODO:
-            var ids = this.ids;
-
-            var settings = $$(ids.component).getValues();
-            if ($$(ids.filterComplex)) {
-               var validationRules = [];
-               var forms = $$(ids.filterComplex).queryView(
-                  { view: "form", css: "abValidationForm" },
-                  "all"
-               );
-               forms.forEach((form) => {
-                  var rules = form
-                     .queryView({ view: "querybuilder" })
-                     .getValue();
-                  var invalidMessage = form
-                     .queryView({ name: "invalidMessage" })
-                     .getValue();
-                  var validationObj = {
-                     invalidMessage: invalidMessage,
-                     rules: rules,
-                  };
-                  validationRules.push(validationObj);
-               });
-               settings.validationRules = JSON.stringify(validationRules);
-            }
-
-            var FC = this.FieldClass();
-
-            // convert flat settings into our ABField value format:
-            var values = FC.editorValues(settings);
-
-            values.key = FC.defaults().key;
-
-            return values;
-*/
-            return {};
+            let vals = {};
+            vals.label = $$(this.ids.label).getValue();
+            return vals;
          }
 
          /**
@@ -76706,7 +76653,7 @@ __webpack_require__.r(__webpack_exports__);
 
       /**
        * @method FieldClass()
-       * A method to return the proper ABFieldXXX Definition.
+       * A method to return the proper ABViewXXX Definition.
        * NOTE: Must be overwritten by the Child Class
        */
       ViewClass() {
@@ -76808,11 +76755,11 @@ const ABViewContainerDefaults = {
                   label: L("Columns"),
                   labelWidth: uiConfig.labelWidthXLarge,
                   on: {
-                     onChange: function (newVal, oldVal) {
+                     onChange: (newVal, oldVal) => {
                         if (newVal > 8) $$(ids.columns).setValue(8);
 
                         let $grav = $$(ids.gravity);
-                        function addCounter(counterNum) {
+                        let addCounter = (counterNum) => {
                            var pos = $grav.getParentView().index($grav);
                            $grav.getParentView().addView(
                               {
@@ -76830,7 +76777,7 @@ const ABViewContainerDefaults = {
                               },
                               pos
                            );
-                        }
+                        };
 
                         function removeCounter() {
                            $grav
@@ -76864,6 +76811,8 @@ const ABViewContainerDefaults = {
                               removeCounter();
                            }
                         }
+
+                        this.onChange();
                      },
                   },
                },
@@ -76875,7 +76824,7 @@ const ABViewContainerDefaults = {
                },
             ];
 
-            _elements.concat(elements);
+            _elements = _elements.concat(elements);
 
             // Object.keys(rules).forEach((r) => {
             //    _ui.rules[r] = rules[r];
@@ -76901,39 +76850,7 @@ const ABViewContainerDefaults = {
             }
          }
 
-         clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
-         }
+         clear() {}
 
          /**
           * @method defaults()
@@ -77099,7 +77016,7 @@ const ABViewContainerDefaults = {
                .getParentView()
                .queryView({ css: "gravity_counter" }, "all")
                .map((counter) => gravity.push($$(counter).getValue()));
-            view.settings.gravity = gravity;
+            vals.settings.gravity = gravity;
 
             return vals;
          }
@@ -77151,12 +77068,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const ABViewContainer = (0,_ABViewContainer__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // const L = ABViewClassProperty.L();
+   const uiConfig = AB.Config.uiSettings();
+   const L = ABViewContainer.L();
 
    class ABViewPageProperty extends ABViewContainer {
       constructor() {
          super("properties_abview_page", {
             // Put our ids here
+            type: "",
+            popupSettings: "",
+            popupWidth: "",
+            popupHeight: "",
+            pageSettings: "",
+            fixedPageWidth: "",
+            pageWidth: "",
+            pageBackground: "",
+            // pagePermissionPanel: "",
          });
       }
 
@@ -77165,7 +77092,138 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ui() {
-         return super.ui([]);
+         let ids = this.ids;
+         let _this = this;
+
+         return super.ui([
+            {
+               id: ids.type,
+               name: "type",
+               view: "richselect",
+               label: L("Type"),
+               options: [
+                  { id: "page", value: L("Page") },
+                  { id: "popup", value: L("Popup") },
+               ],
+               on: {
+                  onChange: (newv /*, oldv */) => {
+                     if (newv == "page") {
+                        $$(ids.popupSettings).hide();
+                        $$(ids.pageSettings).show();
+                     } else {
+                        $$(ids.popupSettings).show();
+                        $$(ids.pageSettings).hide();
+                     }
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.popupSettings,
+               view: "fieldset",
+               name: "popupSettings",
+               label: L("Popup Settings"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.popupWidth,
+                        view: "text",
+                        name: "popupWidth",
+                        placeholder: L("Set popup width"),
+                        label: L("Width:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        validate: webix.rules.isNumber,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                     {
+                        id: ids.popupHeight,
+                        view: "text",
+                        name: "popupHeight",
+                        placeholder: L("Set popup height"),
+                        label: L("Height:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        validate: webix.rules.isNumber,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+            {
+               id: ids.pageSettings,
+               view: "fieldset",
+               name: "pageSettings",
+               label: L("Page Settings"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.fixedPageWidth,
+                        view: "checkbox",
+                        name: "fixedPageWidth",
+                        labelRight: L("Page has fixed width"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: function (/*id, event */) {
+                           if (this.getValue() == 1) {
+                              $$(ids.pageWidth).show();
+                           } else {
+                              $$(ids.pageWidth).hide();
+                           }
+                           _this.onChange();
+                        },
+                     },
+                     {
+                        id: ids.pageWidth,
+                        view: "text",
+                        name: "pageWidth",
+                        placeholder: L("Set page width"),
+                        label: L("Page width:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                     {
+                        id: ids.pageBackground,
+                        view: "richselect",
+                        name: "pageBackground",
+                        label: L("Page background:"),
+                        labelWidth: uiConfig.labelWidthXLarge,
+                        options: [
+                           {
+                              id: "ab-background-default",
+                              value: L("White (default)"),
+                           },
+                           {
+                              id: "ab-background-gray",
+                              value: L("Dark"),
+                           },
+                           // { "id":"ab-background-texture", "value":L('ab.component.page.pageBackgroundTextured', '*Textured')}
+                        ],
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+         ]);
       }
 
       async init(AB) {
@@ -77174,28 +77232,57 @@ __webpack_require__.r(__webpack_exports__);
 
       populate(view) {
          super.populate(view);
+         let ids = this.ids;
+
+         let DefaultValues = this.defaultValues();
+
+         $$(ids.type).setValue(view.settings.type || DefaultValues.type);
+         $$(ids.popupWidth).setValue(
+            view.settings.popupWidth || DefaultValues.popupWidth
+         );
+         $$(ids.popupHeight).setValue(
+            view.settings.popupHeight || DefaultValues.popupHeight
+         );
+         $$(ids.pageWidth).setValue(
+            view.settings.pageWidth || DefaultValues.pageWidth
+         );
+         $$(ids.fixedPageWidth).setValue(
+            view.settings.fixedPageWidth || DefaultValues.fixedPageWidth
+         );
+         $$(ids.pageBackground).setValue(
+            view.settings.pageBackground || DefaultValues.pageBackground
+         );
+
+         // Disable select type of page when this page is root
+         if (view.isRoot()) {
+            $$(ids.type).hide();
+         } else {
+            $$(ids.type).show();
+         }
+
+         if (view.settings.type == "popup") {
+            $$(ids.popupSettings).show();
+            $$(ids.pageSettings).hide();
+         } else {
+            $$(ids.popupSettings).hide();
+            $$(ids.pageSettings).show();
+         }
+
+         if (view.settings.fixedPageWidth == 1) {
+            $$(ids.pageWidth).show();
+         } else {
+            $$(ids.pageWidth).hide();
+         }
       }
 
-      /*
-defaultValues() {
-   var values = {
-      dataviewID: null,
-      buttonLabel: "Upload CSV",
-      width: 0,
-      recordRules: [],
-   };
-
-   var FieldClass = this.ViewClass();
-   if (FieldClass) {
-      var fcValues = FieldClass.defaultValues();
-      Object.keys(fcValues).forEach((k) => {
-         values[k] = fcValues[k];
-      });
-   }
-
-   return values;
-}
-*/
+      defaultValues() {
+         let values = {};
+         var ViewClass = this.ViewClass();
+         if (ViewClass) {
+            values = ViewClass.defaultValues();
+         }
+         return values;
+      }
 
       /**
        * @method values
@@ -77203,7 +77290,16 @@ defaultValues() {
        * @return {obj}
        */
       values() {
+         let ids = this.ids;
          let vals = super.values();
+
+         vals.settings = vals.settings || {};
+         vals.settings.type = $$(ids.type).getValue();
+         vals.settings.popupWidth = $$(ids.popupWidth).getValue();
+         vals.settings.popupHeight = $$(ids.popupHeight).getValue();
+         vals.settings.pageWidth = $$(ids.pageWidth).getValue();
+         vals.settings.fixedPageWidth = $$(ids.fixedPageWidth).getValue();
+         vals.settings.pageBackground = $$(ids.pageBackground).getValue();
 
          return vals;
       }
@@ -77216,13 +77312,6 @@ defaultValues() {
       ViewClass() {
          return super._ViewClass("page");
       }
-      /*
-toSettings() {
-   var base = this.defaults();
-   base.settings = this.defaultValues();
-   return base;
-}
-*/
    }
 
    return ABViewPageProperty;
@@ -86377,7 +86466,40 @@ __webpack_require__.r(__webpack_exports__);
             form: "",
          });
 
-         this._editorsByType = {};
+         this._editorsByType = {
+            /* View.key : ViewPropertyClass */
+         };
+         this.currentPanel = null;
+
+         /**
+          * @function _handler_onChange()
+          * Triggered when a change in the Property Editor
+          * is alerted, or when a new view is loaded and we
+          * want to save the current one.
+          */
+         this._handler_onChange = (waitDuration = 3000) => {
+            let values = this.currentPanel.values();
+
+            // to update the label, add it before we ask for .toObj():
+            this.CurrentView.label = values.label;
+            var objVals = this.CurrentView.toObj();
+            Object.keys(values.settings).forEach((k) => {
+               objVals.settings[k] = values.settings[k];
+            });
+
+            this.CurrentView.fromValues(objVals);
+
+            // Timed saves ... once every 3s of no changes
+            let view = this.CurrentView;
+
+            if (view.__timedSave) {
+               clearTimeout(view.__timedSave);
+            }
+            view.__timedSave = setTimeout(() => {
+               view.save();
+               delete view.__timedSave;
+            }, waitDuration);
+         };
       }
 
       // webix UI definition:
@@ -86450,6 +86572,15 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABView} view  current view instance.
        */
       viewLoad(view) {
+         if (this.currentPanel) {
+            // Make sure the current Data is saved:
+            this._handler_onChange(10);
+
+            // unload the current panel
+            this.currentPanel.removeAllListeners("changed");
+            this.currentPanel = null;
+         }
+
          super.viewLoad(view);
 
          let _editor = this._editorsByType[view.key];
@@ -86465,6 +86596,9 @@ __webpack_require__.r(__webpack_exports__);
             webix.ui(ui, $$(this.ids.editors));
 
             newPanel.populate(view);
+
+            newPanel.on("changed", this._handler_onChange);
+            this.currentPanel = newPanel;
             // newPanel.show();
          }
       }

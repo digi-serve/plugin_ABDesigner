@@ -226,7 +226,7 @@ export default function (AB) {
 
       /**
        * @method FieldClass()
-       * A method to return the proper ABFieldXXX Definition.
+       * A method to return the proper ABViewXXX Definition.
        * NOTE: Must be overwritten by the Child Class
        */
       ViewClass() {

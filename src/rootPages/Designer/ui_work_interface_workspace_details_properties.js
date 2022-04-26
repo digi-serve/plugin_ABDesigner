@@ -26,7 +26,40 @@ export default function (AB) {
             form: "",
          });
 
-         this._editorsByType = {};
+         this._editorsByType = {
+            /* View.key : ViewPropertyClass */
+         };
+         this.currentPanel = null;
+
+         /**
+          * @function _handler_onChange()
+          * Triggered when a change in the Property Editor
+          * is alerted, or when a new view is loaded and we
+          * want to save the current one.
+          */
+         this._handler_onChange = (waitDuration = 3000) => {
+            let values = this.currentPanel.values();
+
+            // to update the label, add it before we ask for .toObj():
+            this.CurrentView.label = values.label;
+            var objVals = this.CurrentView.toObj();
+            Object.keys(values.settings).forEach((k) => {
+               objVals.settings[k] = values.settings[k];
+            });
+
+            this.CurrentView.fromValues(objVals);
+
+            // Timed saves ... once every 3s of no changes
+            let view = this.CurrentView;
+
+            if (view.__timedSave) {
+               clearTimeout(view.__timedSave);
+            }
+            view.__timedSave = setTimeout(() => {
+               view.save();
+               delete view.__timedSave;
+            }, waitDuration);
+         };
       }
 
       // webix UI definition:
@@ -99,6 +132,15 @@ export default function (AB) {
        * @param {ABView} view  current view instance.
        */
       viewLoad(view) {
+         if (this.currentPanel) {
+            // Make sure the current Data is saved:
+            this._handler_onChange(10);
+
+            // unload the current panel
+            this.currentPanel.removeAllListeners("changed");
+            this.currentPanel = null;
+         }
+
          super.viewLoad(view);
 
          let _editor = this._editorsByType[view.key];
@@ -114,6 +156,9 @@ export default function (AB) {
             webix.ui(ui, $$(this.ids.editors));
 
             newPanel.populate(view);
+
+            newPanel.on("changed", this._handler_onChange);
+            this.currentPanel = newPanel;
             // newPanel.show();
          }
       }
