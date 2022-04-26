@@ -1,14 +1,10 @@
 import UI_Class from "../../ui_class";
 
-import FServiceGetResetPasswordUrl from "./ABProcessTaskServiceGetResetPasswordUrl";
-
 export default function (AB) {
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
 
    const ProcessTaskManager = AB.Class.ABProcessTaskManager;
-
-   const ServiceGetResetPasswordUrl = FServiceGetResetPasswordUrl(AB);
 
    class UIProcessService extends UIClass {
       constructor() {
@@ -20,7 +16,9 @@ export default function (AB) {
          this.element = null;
       }
 
-      static key = "TaskService";
+      static get key() {
+         return "TaskService";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -151,8 +149,8 @@ export default function (AB) {
 
          const values = this.values();
 
-         values.id = this.element.id
-         values.diagramID = this.element.diagramID
+         values.id = this.element.id;
+         values.diagramID = this.element.diagramID;
 
          switch (key) {
             // case "accountingBatch":
@@ -217,7 +215,9 @@ export default function (AB) {
                values.key = this.key;
          }
 
-         const subtask = ProcessTaskManager.newTask(values, this.element.process, this.AB) || null;
+         const subtask =
+            ProcessTaskManager.newTask(values, this.element.process, this.AB) ||
+            null;
          if (subtask) {
             this.element.switchTo(subtask, ids.component);
          }

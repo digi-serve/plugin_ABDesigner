@@ -25,10 +25,11 @@ export default function (AB) {
          });
 
          this.element = null;
-
       }
 
-        static key = "InsertRecord";
+      static get key() {
+         return "InsertRecord";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -336,7 +337,7 @@ export default function (AB) {
          });
       }
 
-      setFieldValues(id) {
+      setFieldValues() {
          let ids = this.ids;
          let $fieldValues = $$(ids.fieldValues);
          let $fValueItems = $fieldValues.getChildViews() || [];
@@ -359,7 +360,7 @@ export default function (AB) {
          });
       }
 
-      getFieldValues(id) {
+      getFieldValues() {
          let result = {};
          let ids = this.ids;
          let $fieldValues = $$(ids.fieldValues);
@@ -419,8 +420,7 @@ export default function (AB) {
 
          $fieldValues.setValues(element.fieldValues);
 
-         if(element.repeatMode || element.repeatColumn)
-            $repeatLayout.show();
+         if (element.repeatMode || element.repeatColumn) $repeatLayout.show();
       }
 
       /**

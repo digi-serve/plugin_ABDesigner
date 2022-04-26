@@ -75832,9 +75832,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ABProcessTaskServiceGetResetPasswordUrl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ABProcessTaskServiceGetResetPasswordUrl */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceGetResetPasswordUrl.js");
-
-
 
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
@@ -75842,8 +75839,6 @@ __webpack_require__.r(__webpack_exports__);
    const L = UIClass.L();
 
    const ProcessTaskManager = AB.Class.ABProcessTaskManager;
-
-   const ServiceGetResetPasswordUrl = (0,_ABProcessTaskServiceGetResetPasswordUrl__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UIProcessService extends UIClass {
       constructor() {
@@ -75855,7 +75850,9 @@ __webpack_require__.r(__webpack_exports__);
          this.element = null;
       }
 
-      static key = "TaskService";
+      static get key() {
+         return "TaskService";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -75986,8 +75983,8 @@ __webpack_require__.r(__webpack_exports__);
 
          const values = this.values();
 
-         values.id = this.element.id
-         values.diagramID = this.element.diagramID
+         values.id = this.element.id;
+         values.diagramID = this.element.diagramID;
 
          switch (key) {
             // case "accountingBatch":
@@ -76052,7 +76049,9 @@ __webpack_require__.r(__webpack_exports__);
                values.key = this.key;
          }
 
-         const subtask = ProcessTaskManager.newTask(values, this.element.process, this.AB) || null;
+         const subtask =
+            ProcessTaskManager.newTask(values, this.element.process, this.AB) ||
+            null;
          if (subtask) {
             this.element.switchTo(subtask, ids.component);
          }
@@ -76134,10 +76133,11 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          this.element = null;
-
       }
 
-      static key = "GetResetPasswordUrl";
+      static get key() {
+         return "GetResetPasswordUrl";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -76191,7 +76191,7 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
 
          const $name = $$(ids.name);
-         const $email = $$(ids.email)
+         const $email = $$(ids.email);
 
          this.element = element;
 
@@ -76210,7 +76210,7 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
 
          const $name = $$(ids.name);
-         const $email = $$(ids.email)
+         const $email = $$(ids.email);
 
          obj.label = $name.getValue() || "";
          obj.name = $name.getValue() || "";
@@ -76265,10 +76265,11 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          this.element = null;
-
       }
 
-        static key = "InsertRecord";
+      static get key() {
+         return "InsertRecord";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -76576,7 +76577,7 @@ __webpack_require__.r(__webpack_exports__);
          });
       }
 
-      setFieldValues(id) {
+      setFieldValues() {
          let ids = this.ids;
          let $fieldValues = $$(ids.fieldValues);
          let $fValueItems = $fieldValues.getChildViews() || [];
@@ -76599,7 +76600,7 @@ __webpack_require__.r(__webpack_exports__);
          });
       }
 
-      getFieldValues(id) {
+      getFieldValues() {
          let result = {};
          let ids = this.ids;
          let $fieldValues = $$(ids.fieldValues);
@@ -76659,8 +76660,7 @@ __webpack_require__.r(__webpack_exports__);
 
          $fieldValues.setValues(element.fieldValues);
 
-         if(element.repeatMode || element.repeatColumn)
-            $repeatLayout.show();
+         if (element.repeatMode || element.repeatColumn) $repeatLayout.show();
       }
 
       /**
@@ -76724,7 +76724,6 @@ __webpack_require__.r(__webpack_exports__);
    const L = UIClass.L();
 
    const ABQLManager = AB.Class.ABQLManager;
-   const ABQLRootObject = AB.Class.ABQLRootObject;
 
    class UIProcessServiceQuery extends UIClass {
       constructor() {
@@ -76735,10 +76734,11 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          this.element = null;
-
       }
 
-      static key = "TaskServiceQuery";
+      static get key() {
+         return "TaskServiceQuery";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -76760,8 +76760,8 @@ __webpack_require__.r(__webpack_exports__);
                   value: this.name,
                },
                {
-                   id: ids.query,
-               }
+                  id: ids.query,
+               },
             ],
          };
       }
@@ -76787,7 +76787,11 @@ __webpack_require__.r(__webpack_exports__);
       populate(element) {
          const ids = this.ids;
 
-         const Builder = ABQLManager.builder(this.element.qlObj, this.element, this.AB);
+         const Builder = this.element.ABQLManager.builder(
+            this.element.qlObj,
+            this.element,
+            this.AB
+         );
          const queryIDs = Builder.ids(ids.query);
 
          const $name = $$(ids.name);
@@ -76804,7 +76808,7 @@ __webpack_require__.r(__webpack_exports__);
          Builder.init(ids.query);
 
          $name.setValue(element.label);
-        //  $query.root.setValue()
+         //  $query.root.setValue()
       }
 
       /**
@@ -76821,7 +76825,8 @@ __webpack_require__.r(__webpack_exports__);
 
          obj.label = $name.getValue() || "";
          obj.name = $name.getValue() || "";
-         obj.qlObj = ABQLManager.parse(ids.query, this.element, this.AB) || null;
+         obj.qlObj =
+            ABQLManager.parse(ids.query, this.element, this.AB) || null;
 
          return obj;
       }

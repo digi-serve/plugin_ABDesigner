@@ -13,7 +13,6 @@ export default function (AB) {
    const L = UIClass.L();
 
    const ABQLManager = AB.Class.ABQLManager;
-   const ABQLRootObject = AB.Class.ABQLRootObject;
 
    class UIProcessServiceQuery extends UIClass {
       constructor() {
@@ -24,10 +23,11 @@ export default function (AB) {
          });
 
          this.element = null;
-
       }
 
-      static key = "TaskServiceQuery";
+      static get key() {
+         return "TaskServiceQuery";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -49,8 +49,8 @@ export default function (AB) {
                   value: this.name,
                },
                {
-                   id: ids.query,
-               }
+                  id: ids.query,
+               },
             ],
          };
       }
@@ -76,7 +76,11 @@ export default function (AB) {
       populate(element) {
          const ids = this.ids;
 
-         const Builder = ABQLManager.builder(this.element.qlObj, this.element, this.AB);
+         const Builder = this.element.ABQLManager.builder(
+            this.element.qlObj,
+            this.element,
+            this.AB
+         );
          const queryIDs = Builder.ids(ids.query);
 
          const $name = $$(ids.name);
@@ -93,7 +97,7 @@ export default function (AB) {
          Builder.init(ids.query);
 
          $name.setValue(element.label);
-        //  $query.root.setValue()
+         //  $query.root.setValue()
       }
 
       /**
@@ -110,7 +114,8 @@ export default function (AB) {
 
          obj.label = $name.getValue() || "";
          obj.name = $name.getValue() || "";
-         obj.qlObj = ABQLManager.parse(ids.query, this.element, this.AB) || null;
+         obj.qlObj =
+            ABQLManager.parse(ids.query, this.element, this.AB) || null;
 
          return obj;
       }

@@ -20,10 +20,11 @@ export default function (AB) {
          });
 
          this.element = null;
-
       }
 
-      static key = "GetResetPasswordUrl";
+      static get key() {
+         return "GetResetPasswordUrl";
+      }
       // {string}
       // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
 
@@ -77,7 +78,7 @@ export default function (AB) {
          const ids = this.ids;
 
          const $name = $$(ids.name);
-         const $email = $$(ids.email)
+         const $email = $$(ids.email);
 
          this.element = element;
 
@@ -96,7 +97,7 @@ export default function (AB) {
          const ids = this.ids;
 
          const $name = $$(ids.name);
-         const $email = $$(ids.email)
+         const $email = $$(ids.email);
 
          obj.label = $name.getValue() || "";
          obj.name = $name.getValue() || "";
