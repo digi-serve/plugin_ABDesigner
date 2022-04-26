@@ -68697,24 +68697,17 @@ __webpack_require__.r(__webpack_exports__);
    });
 
    var Processes = [];
-   // {array}
-   // All the ABProcess... Property Interfaces Available
    [
       __webpack_require__(/*! ./process/ABProcessEnd.js */ "./src/rootPages/Designer/properties/process/ABProcessEnd.js"),
-      __webpack_require__(/*! ./process/ABProcessParticipant.js */ "./src/rootPages/Designer/properties/process/ABProcessParticipant.js"),
       __webpack_require__(/*! ./process/ABProcessTaskEmail.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskEmail.js"),
       __webpack_require__(/*! ./process/ABProcessTriggerLifecycle.js */ "./src/rootPages/Designer/properties/process/ABProcessTriggerLifecycle.js"),
+      __webpack_require__(/*! ./process/ABProcessTaskService.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskService.js"),
+      __webpack_require__(/*! ./process/ABProcessTaskServiceInsertRecord.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceInsertRecord.js"),
+      __webpack_require__(/*! ./process/ABProcessTaskServiceGetResetPasswordUrl.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceGetResetPasswordUrl.js"),
+      __webpack_require__(/*! ./process/ABProcessTaskServiceQuery.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceQuery.js"),
    ].forEach((P) => {
       let Klass = P.default(AB);
       Processes.push(Klass);
-   });
-
-   var Views = [];
-   // {array}
-   // All the ABViewXXX Property Interfaces Available.
-   [__webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/properties/views/ABViewPage.js")].forEach((V) => {
-      let Klass = V.default(AB);
-      Views.push(Klass);
    });
 
    return {
@@ -68731,10 +68724,6 @@ __webpack_require__.r(__webpack_exports__);
 
       processElements: function (f = () => true) {
          return Processes.filter(f);
-      },
-
-      views: function (v = () => true) {
-         return Views.filter(v);
       },
    };
 }
@@ -75244,173 +75233,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/rootPages/Designer/properties/process/ABProcessParticipant.js":
-/*!***************************************************************************!*\
-  !*** ./src/rootPages/Designer/properties/process/ABProcessParticipant.js ***!
-  \***************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
-/* harmony import */ var _ABProcessParticipant_selectManagersUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ABProcessParticipant_selectManagersUI */ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js");
-/*
- * ABProcessparticipant
- *
- * Display the form for entering the properties for a Process
- * Participant Element
- *
- * @return {ClassUI} The Class Definition for this UI widget.
- */
-
-
-
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   var L = UIClass.L();
-
-   const ABProcessParticipantUsers = (0,_ABProcessParticipant_selectManagersUI__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
-
-   class ABProcessparticipant extends UIClass {
-      constructor() {
-         super("properties_process_participant", {
-            name: "",
-            users: "",
-         });
-
-         this.users = new ABProcessParticipantUsers(
-            this.ids.component + "_users_"
-         );
-      }
-
-      static get key() {
-         return "process.participant";
-      }
-      // {string}
-      // This should match the ABProcessParticipant.defaults().key value.
-
-      uiUser(obj) {
-         var usersUI = this.users.ui(obj ?? {});
-         return {
-            id: this.ids.users,
-            rows: [usersUI],
-            paddingY: 10,
-         };
-      }
-
-      ui(obj) {
-         // we are creating these on the fly, and should have CurrentApplication
-         // defined already.
-
-         let ids = this.ids;
-         let ui = {
-            id: ids.component,
-            rows: [
-               { view: "label", label: L("Process Participant:") },
-               {
-                  view: "label",
-                  label: L(
-                     "This element defines a group of users that are responsible for the tasks contained within."
-                  ),
-               },
-               {
-                  view: "form",
-                  id: ids.form,
-                  // width: 300,
-                  elements: [
-                     {
-                        id: ids.name,
-                        view: "text",
-                        label: L("Name"),
-                        name: "name",
-                        value: this.name,
-                     },
-                     // Select Users Template Goes here
-                  ],
-               },
-            ],
-         };
-         let usersUI = { id: ids.users };
-         // If we don't have any sub lanes, then offer the select user options:
-         if (obj?.laneIDs && obj?.laneIDs.length == 0) {
-            usersUI = this.uiUser(obj ?? {});
-         }
-         ui.rows[2].elements.push(usersUI);
-
-         return ui;
-      }
-
-      async init(AB) {
-         this.AB = AB;
-
-         return Promise.resolve();
-      }
-
-      // applicationLoad(application) {
-      //    super.applicationLoad(application);
-
-      //    $$(this.ids.objList).define("data", listObj);
-      //    $$(this.ids.objList).refresh();
-      // }
-
-      // show() {
-      //    super.show();
-      //    AppList.show();
-      // }
-
-      populate(obj) {
-         let ids = this.ids;
-
-         $$(ids.name).setValue(obj.name);
-
-         if (obj.laneIDs && obj.laneIDs.length == 0) {
-            var usersUI = this.uiUser(obj ?? {});
-            webix.ui(usersUI, $$(ids.users));
-         }
-      }
-
-      /**
-       * values()
-       * return an object hash representing the values for this component.
-       * @return {json}
-       */
-      // values() {
-      //    var obj = {};
-      //    var ids = this.ids;
-
-      //    obj.label = $$(ids.name)?.getValue();
-      //    obj.objectID = $$(ids.objList)?.getValue();
-      //    obj.lifecycleKey = $$(ids.lifecycleList).getValue();
-      //    obj.triggerKey = `${obj.objectID}.${obj.lifecycleKey}`;
-
-      //    return obj;
-      // }
-
-      values() {
-         var obj = {};
-         var ids = this.ids;
-
-         obj.label = $$(ids.name).getValue();
-
-         // if (obj.laneIDs.length == 0) {
-         var userDef = this.users.values();
-         Object.keys(userDef).forEach((k) => {
-            obj[k] = userDef[k];
-         });
-         // }
-         return obj;
-      }
-   }
-
-   return ABProcessparticipant;
-}
-
-
-/***/ }),
-
 /***/ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js":
 /*!********************************************************************************************!*\
   !*** ./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js ***!
@@ -75993,6 +75815,1019 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return UIProcessEmail;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/process/ABProcessTaskService.js":
+/*!***************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/process/ABProcessTaskService.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ABProcessTaskServiceGetResetPasswordUrl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ABProcessTaskServiceGetResetPasswordUrl */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceGetResetPasswordUrl.js");
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = UIClass.L();
+
+   const ProcessTaskManager = AB.Class.ABProcessTaskManager;
+
+   const ServiceGetResetPasswordUrl = (0,_ABProcessTaskServiceGetResetPasswordUrl__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+
+   class UIProcessService extends UIClass {
+      constructor() {
+         super("properties_process_service", {
+            name: "",
+            option: "",
+         });
+
+         this.element = null;
+      }
+
+      static key = "TaskService";
+      // {string}
+      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+
+      ui() {
+         // we are creating these on the fly, and should have CurrentApplication
+         // defined already.
+
+         const ids = this.ids;
+
+         return {
+            id: ids.component,
+            view: "form",
+            elements: [
+               {
+                  id: ids.name,
+                  view: "text",
+                  label: L("Name"),
+                  name: "name",
+                  value: "",
+               },
+               {
+                  id: ids.option,
+                  rows: [
+                     {
+                        view: "button",
+                        label: L("Accounting: Process Batch"),
+                        click: () => {
+                           this.switchTo("accountingBatch");
+                        },
+                     },
+                     {
+                        view: "button",
+                        label: L("Accounting: Fiscal Period Close"),
+                        click: () => {
+                           this.switchTo("accountingFPClose");
+                        },
+                     },
+                     {
+                        view: "button",
+                        label: L("Accounting: Fiscal Period Year Close"),
+                        click: () => {
+                           this.switchTo(
+                              "accountingFPYearClose",
+                              ids.component
+                           );
+                        },
+                     },
+                     {
+                        view: "button",
+                        label: L("Accounting: Journal Entry Archive"),
+                        click: () => {
+                           this.switchTo("accountingJEArchive");
+                        },
+                     },
+                     {
+                        view: "button",
+                        label: L("Query Task"),
+                        click: () => {
+                           this.switchTo("query");
+                        },
+                     },
+                     {
+                        view: "button",
+                        label: L("Insert Record Task"),
+                        click: () => {
+                           this.switchTo("InsertRecord");
+                        },
+                     },
+                     {
+                        view: "button",
+                        label: L("Calculate Task"),
+                        click: () => {
+                           this.switchTo("calculate");
+                        },
+                     },
+                     {
+                        view: "button",
+                        label: L("Get Reset Password Url"),
+                        click: () => {
+                           this.switchTo("GetResetPasswordUrl");
+                           // this.AB.Network.post(
+                           //    {
+                           //       url:
+                           //          "/auth/login/reset",
+                           //       data: {
+                           //          email: this.AB.Account.email(),
+                           //          tenant: this.AB.Account.username(),
+                           //          url:
+                           //             window
+                           //                .location
+                           //                .origin ||
+                           //             window
+                           //                .location
+                           //                .href,
+                           //          fromProcessManager: "1",
+                           //       },
+                           //    },
+                           // )
+                           //    .then((data) => {
+                           //       console.log(data)
+                           //    })
+                           //    .catch((err) => {
+                           //       console.log(err);
+                           //    });
+                        },
+                     },
+                  ],
+               },
+            ],
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         return Promise.resolve();
+      }
+      /**
+       * switchTo()
+       * replace this object with an instance of one of our child classes:
+       * @param {string} classType
+       *        a key representing with subObject to create an instance of.
+       * @param {string} propertiesID
+       *        the webix ui.id container for the properties panel.
+       */
+      switchTo(key) {
+         const ids = this.ids;
+
+         const values = this.values();
+
+         values.id = this.element.id
+         values.diagramID = this.element.diagramID
+
+         switch (key) {
+            // case "accountingBatch":
+            //    child = new AccountingBatchProcessing(
+            //       myValues,
+            //       this.process,
+            //       this.application
+            //    );
+            //    break;
+
+            // case "accountingFPClose":
+            //    child = new AccountingFPClose(
+            //       myValues,
+            //       this.process,
+            //       this.application
+            //    );
+            //    break;
+
+            // case "accountingFPYearClose":
+            //    child = new AccountingFPYearClose(
+            //       myValues,
+            //       this.process,
+            //       this.application
+            //    );
+            //    break;
+
+            // case "accountingJEArchive":
+            //    child = new AccountingJEArchive(
+            //       myValues,
+            //       this.process,
+            //       this.application
+            //    );
+            //    break;
+
+            // case "query":
+            //    child = new ABProcessTaskServiceQuery(
+            //       myValues,
+            //       this.process,
+            //       this.application
+            //    );
+            //    break;
+
+            case "InsertRecord":
+               values.key = key;
+
+               break;
+
+            // case "calculate":
+            //    child = new ABProcessTaskServiceCalculate(
+            //       myValues,
+            //       this.process,
+            //       this.application
+            //    );
+            //    break;
+
+            case "GetResetPasswordUrl":
+               values.key = key;
+
+               break;
+
+            default:
+               values.key = this.key;
+         }
+
+         const subtask = ProcessTaskManager.newTask(values, this.element.process, this.AB) || null;
+         if (subtask) {
+            this.element.switchTo(subtask, ids.component);
+         }
+      }
+
+      // applicationLoad(application) {
+      //    super.applicationLoad(application);
+
+      //    $$(this.ids.objList).define("data", listObj);
+      //    $$(this.ids.objList).refresh();
+      // }
+
+      // show() {
+      //    super.show();
+      //    AppList.show();
+      // }
+
+      values() {
+         const ids = this.ids;
+
+         let obj = {};
+
+         const $name = $$(ids.name);
+
+         obj.label = $name.getValue() || "";
+         obj.name = $name.getValue() || "";
+
+         return obj;
+      }
+
+      populate(element) {
+         const ids = this.ids;
+
+         this.element = element;
+
+         const $name = $$(ids.name);
+
+         $name.setValue(element.label || "");
+      }
+   }
+
+   return UIProcessService;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceGetResetPasswordUrl.js":
+/*!**********************************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/process/ABProcessTaskServiceGetResetPasswordUrl.js ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * UIProcessTaskServiceGetResetPasswordUrl
+ *
+ * Display the form for entering the properties for a new
+ * ServiceGetResetPasswordUrl Task
+ *
+ * @return {ClassUI} The Class Definition for this UI widget.
+ */
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UIProcessServiceGetResetPasswordUrl extends UIClass {
+      constructor() {
+         super("properties_process_service_getResetPasswordUrl", {
+            name: "",
+            email: "",
+         });
+
+         this.element = null;
+
+      }
+
+      static key = "GetResetPasswordUrl";
+      // {string}
+      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+
+      ui() {
+         // we are creating these on the fly, and should have CurrentApplication
+         // defined already.
+
+         const ids = this.ids;
+         return {
+            id: ids.component,
+            view: "form",
+            rows: [
+               {
+                  id: ids.name,
+                  view: "text",
+                  label: L("Name"),
+                  name: "name",
+                  value: this.name,
+               },
+               {
+                  id: ids.email,
+                  view: "text",
+                  label: L("Email"),
+                  placeholder: L("Type email address here..."),
+                  name: "email",
+                  value: this.email,
+               },
+            ],
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         return Promise.resolve();
+      }
+
+      // applicationLoad(application) {
+      //    super.applicationLoad(application);
+
+      //    $$(this.ids.objList).define("data", listObj);
+      //    $$(this.ids.objList).refresh();
+      // }
+
+      // show() {
+      //    super.show();
+      //    AppList.show();
+      // }
+
+      populate(element) {
+         const ids = this.ids;
+
+         const $name = $$(ids.name);
+         const $email = $$(ids.email)
+
+         this.element = element;
+
+         $name.setValue(element.label);
+         $email.setValue(element.email);
+      }
+
+      /**
+       * values()
+       * return an object hash representing the values for this component.
+       * @return {json}
+       */
+
+      values() {
+         const obj = {};
+         const ids = this.ids;
+
+         const $name = $$(ids.name);
+         const $email = $$(ids.email)
+
+         obj.label = $name.getValue() || "";
+         obj.name = $name.getValue() || "";
+         obj.email = $email.getValue() || "";
+
+         return obj;
+      }
+   }
+
+   return UIProcessServiceGetResetPasswordUrl;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceInsertRecord.js":
+/*!***************************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/process/ABProcessTaskServiceInsertRecord.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * UIProcessTaskServiceInsertRecord
+ *
+ * Display the form for entering the properties for a new
+ * ServiceInsertRecord Task
+ *
+ * @return {ClassUI} The Class Definition for this UI widget.
+ */
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UIProcessServiceInsertRecord extends UIClass {
+      constructor() {
+         super("properties_process_service_insertRecord", {
+            name: "",
+            objectID: "",
+            fieldValues: "",
+
+            repeatLayout: "",
+            repeatMode: "",
+            repeatColumn: "",
+         });
+
+         this.element = null;
+
+      }
+
+        static key = "InsertRecord";
+      // {string}
+      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+
+      ui() {
+         // we are creating these on the fly, and should have CurrentApplication
+         // defined already.
+
+         const ids = this.ids;
+
+         let objectList = this.AB.objects().map((o) => {
+            return { id: o.id, value: o.label || o.name };
+         });
+
+         let repeatColumnList = this.objectOfStartElement
+            ? this.objectOfStartElement.connectFields().map((f) => {
+                 return {
+                    id: f.id,
+                    value: f.label,
+                 };
+              })
+            : [];
+
+         let getFieldOptions = (object) => {
+            let result = [];
+            result.push({
+               id: "PK",
+               value: L("[Primary Key]"),
+            });
+
+            object.fields().forEach((f) => {
+               // Populate fields of linked data source
+               if (f.isConnection) {
+                  let linkDS = f.datasourceLink;
+                  if (linkDS) {
+                     result.push({
+                        id: `${f.id}|PK`,
+                        value: `${f.label} -> ${L("[Primary Key]")}`,
+                     });
+
+                     linkDS.fields().forEach((linkF) => {
+                        result.push({
+                           id: `${f.id}|${linkF.id}`,
+                           value: `${f.label} -> ${linkF.label}`,
+                        });
+                     });
+                  }
+               } else {
+                  result.push({
+                     id: f.id,
+                     value: f.label,
+                  });
+               }
+            });
+
+            return result;
+         };
+
+         let refreshFieldValues = (objectID) => {
+            let $fieldValues = $$(ids.fieldValues);
+            if (!$fieldValues) return;
+
+            // clear form
+            webix.ui([], $fieldValues);
+
+            let object = this.AB.objectByID(objectID || this.objectID);
+            if (!object) return;
+
+            // Pull object & fields of start step
+            let startElemObj = this.objectOfStartElement;
+            let startElemObjFields = startElemObj
+               ? getFieldOptions(startElemObj)
+               : [];
+
+            // Pull object & fields of previous step
+            let prevElemObj = this.objectOfPrevElement;
+            let prevElemObjFields = [];
+            if (prevElemObj) {
+               prevElemObjFields = getFieldOptions(prevElemObj);
+            }
+
+            let setOptions = [
+               { id: 0, value: L("Not Set") },
+               { id: 1, value: L("Set by custom value") },
+               {
+                  id: 2,
+                  value: L("Set by the root data [{0}]", [
+                     startElemObj ? startElemObj.label : "",
+                  ]),
+               },
+               {
+                  id: 3,
+                  value: L("Set by previous step data [{0}]", [
+                     prevElemObj ? prevElemObj.label : "",
+                  ]),
+               },
+               {
+                  id: 4,
+                  value: L("Set by formula format"),
+               },
+            ];
+
+            let repeatObjectFields = [];
+            let fieldRepeat = this.fieldRepeat;
+            if (fieldRepeat && fieldRepeat.datasourceLink) {
+               setOptions.push({
+                  id: 5,
+                  value: L("Set by the instance [{0}]", [
+                     this.fieldRepeat ? this.fieldRepeat.label : "",
+                  ]),
+               });
+
+               repeatObjectFields = getFieldOptions(fieldRepeat.datasourceLink);
+            }
+
+            // field options to the form
+            object.fields().forEach((f) => {
+               $fieldValues.addView({
+                  fieldId: f.id,
+                  view: "layout",
+                  cols: [
+                     {
+                        rows: [
+                           {
+                              view: "label",
+                              label: f.label,
+                              width: 100,
+                           },
+                           { fillspace: true },
+                        ],
+                     },
+                     {
+                        rows: [
+                           {
+                              name: "setSelector",
+                              view: "select",
+                              options: setOptions,
+                              on: {
+                                 onChange: function (newVal, oldVal) {
+                                    let $parent = this.getParentView();
+                                    let $valuePanel = $parent.queryView({
+                                       name: "valuePanel",
+                                    });
+                                    $valuePanel.showBatch(newVal);
+                                 },
+                              },
+                           },
+                           {
+                              name: "valuePanel",
+                              view: "multiview",
+                              visibleBatch: 0,
+                              cols: [
+                                 { batch: 0, fillspace: true },
+                                 { batch: 1, view: "text" },
+                                 {
+                                    batch: 2,
+                                    view: "select",
+                                    options: startElemObjFields,
+                                 },
+                                 {
+                                    batch: 3,
+                                    view: "select",
+                                    options: prevElemObjFields,
+                                 },
+                                 { batch: 4, view: "text" },
+                                 {
+                                    batch: 5,
+                                    view: "select",
+                                    options: repeatObjectFields,
+                                 },
+                              ],
+                           },
+                        ],
+                     },
+                  ],
+               });
+            });
+
+            this.setFieldValues(ids.component);
+         };
+
+         return {
+            id: ids.component,
+            view: "form",
+            elementsConfig: {
+               labelWidth: 120,
+            },
+            elements: [
+               {
+                  id: ids.name,
+                  view: "text",
+                  label: L("Name"),
+                  name: "name",
+                  value: this.name,
+               },
+               {
+                  id: ids.objectID,
+                  view: "select",
+                  label: L("Object"),
+                  value: this.objectID,
+                  name: "objectID",
+                  options: objectList,
+                  on: {
+                     onChange: (newVal) => {
+                        this.objectID = newVal;
+                        refreshFieldValues(newVal);
+                     },
+                  },
+               },
+               {
+                  id: ids.repeatLayout,
+                  hidden: true,
+                  cols: [
+                     {
+                        id: ids.repeatMode,
+                        view: "select",
+                        label: L("Repeat"),
+                        value: this.repeatMode,
+                        name: "repeatMode",
+                        width: 330,
+                        options: [
+                           {
+                              id: "rootData",
+                              value: L("For Connection in root data"),
+                           },
+                        ],
+                        on: {
+                           onChange: (newVal) => {
+                              this.repeatMode = newVal;
+                              refreshFieldValues();
+                           },
+                        },
+                     },
+                     {
+                        id: ids.repeatColumn,
+                        view: "select",
+                        label: "",
+                        value: this.repeatColumn,
+                        name: "repeatColumn",
+                        options: repeatColumnList,
+                        on: {
+                           onChange: (newVal) => {
+                              this.repeatColumn = newVal;
+                              refreshFieldValues();
+                           },
+                        },
+                     },
+                  ],
+                  on: {
+                     onViewShow: () => {
+                        this.propertiesStash(ids.component);
+                        refreshFieldValues();
+                     },
+                  },
+               },
+               {
+                  view: "fieldset",
+                  label: L("Values"),
+                  body: {
+                     id: ids.fieldValues,
+                     view: "form",
+                     borderless: true,
+                     elements: [],
+                  },
+               },
+            ],
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         return Promise.resolve();
+      }
+
+      /**
+       * @method propertiesStash()
+       * pull our values from our property panel.
+       * @param {string} id
+       *        the webix $$(id) of the properties panel area.
+       */
+      propertiesStash(id) {
+         let ids = this.ids;
+
+         // TIP: keep the .settings entries == ids[s] keys and this will
+         // remain simple:
+         this.defaults.settings.forEach((s) => {
+            switch (s) {
+               case "fieldValues":
+                  this[s] = this.getFieldValues(id);
+                  break;
+               case "isRepeat":
+                  // .isRepeat is set in .onChange
+                  break;
+               case "repeatMode":
+               case "repeatColumn":
+                  if (!this.isRepeat) {
+                     this[s] = "";
+                     break;
+                  }
+               // no break;
+               // eslint-disable-next-line no-fallthrough
+               default:
+                  break;
+            }
+         });
+      }
+
+      setFieldValues(id) {
+         let ids = this.ids;
+         let $fieldValues = $$(ids.fieldValues);
+         let $fValueItems = $fieldValues.getChildViews() || [];
+
+         this.fieldValues = this.fieldValues || {};
+
+         $fValueItems.forEach(($item) => {
+            let fieldId = $item.config.fieldId;
+            let fValue = this.fieldValues[fieldId] || {};
+
+            let $setSelector = $item.queryView({ name: "setSelector" });
+            $setSelector.setValue(fValue.set);
+
+            let $valuePanel = $item.queryView({ name: "valuePanel" });
+            let $valueSelector = $valuePanel.queryView({
+               batch: $valuePanel.config.visibleBatch,
+            });
+            if ($valueSelector && $valueSelector.setValue)
+               $valueSelector.setValue(fValue.value);
+         });
+      }
+
+      getFieldValues(id) {
+         let result = {};
+         let ids = this.ids;
+         let $fieldValues = $$(ids.fieldValues);
+         let $fValueItems = $fieldValues.getChildViews() || [];
+
+         $fValueItems.forEach(($item) => {
+            let fieldId = $item.config.fieldId;
+            result[fieldId] = {};
+
+            let $setSelector = $item.queryView({ name: "setSelector" });
+            result[fieldId].set = $setSelector.getValue();
+
+            let $valuePanel = $item.queryView({ name: "valuePanel" });
+            let $valueSelector = $valuePanel.queryView({
+               batch: $valuePanel.config.visibleBatch,
+            });
+            if (
+               $valueSelector &&
+               $valueSelector.getValue &&
+               $valueSelector.getValue()
+            )
+               result[fieldId].value = $valueSelector.getValue();
+            else result[fieldId].value = null;
+         });
+
+         return result;
+      }
+
+      // applicationLoad(application) {
+      //    super.applicationLoad(application);
+
+      //    $$(this.ids.objList).define("data", listObj);
+      //    $$(this.ids.objList).refresh();
+      // }
+
+      // show() {
+      //    super.show();
+      //    AppList.show();
+      // }
+
+      populate(element) {
+         const ids = this.ids;
+
+         const $name = $$(ids.name);
+         const $objectID = $$(ids.objectID);
+         const $fieldValues = $$(ids.fieldValues);
+         const $repeatLayout = $$(ids.repeatLayout);
+         const $repeatMode = $$(ids.repeatMode);
+         const $repeatColumn = $$(ids.repeatColumn);
+
+         this.element = element;
+
+         $name.setValue(element.label);
+         $objectID.setValue(element.objectID);
+         $repeatMode.setValue(element.repeatMode);
+         $repeatColumn.setValue(element.repeatColumn);
+
+         $fieldValues.setValues(element.fieldValues);
+
+         if(element.repeatMode || element.repeatColumn)
+            $repeatLayout.show();
+      }
+
+      /**
+       * values()
+       * return an object hash representing the values for this component.
+       * @return {json}
+       */
+
+      values() {
+         const obj = {};
+         const ids = this.ids;
+
+         const $name = $$(ids.name);
+         const $objectID = $$(ids.objectID);
+         const $fieldValues = $$(ids.fieldValues);
+         const $repeatMode = $$(ids.repeatMode);
+         const $repeatColumn = $$(ids.repeatColumn);
+
+         obj.label = $name.getValue() || "";
+         obj.name = $name.getValue() || "";
+         obj.objectID = $objectID.getValue() || "";
+         obj.repeatMode = $repeatMode.getValue() || "";
+         obj.repeatColumn = $repeatColumn.getValue() || "";
+
+         obj.fieldValues = $fieldValues.getValues() || {};
+
+         return obj;
+      }
+   }
+
+   return UIProcessServiceInsertRecord;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceQuery.js":
+/*!********************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/process/ABProcessTaskServiceQuery.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * UIProcessTaskServiceQuery
+ *
+ * Display the form for entering the properties for a new
+ * ServiceGetResetPasswordUrl Task
+ *
+ * @return {ClassUI} The Class Definition for this UI widget.
+ */
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = UIClass.L();
+
+   const ABQLManager = AB.Class.ABQLManager;
+   const ABQLRootObject = AB.Class.ABQLRootObject;
+
+   class UIProcessServiceQuery extends UIClass {
+      constructor() {
+         super("properties_process_service_query", {
+            name: "",
+            query: "",
+            suggestions: "",
+         });
+
+         this.element = null;
+
+      }
+
+      static key = "TaskServiceQuery";
+      // {string}
+      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+
+      ui() {
+         // we are creating these on the fly, and should have CurrentApplication
+         // defined already.
+
+         const ids = this.ids;
+
+         return {
+            id: ids.component,
+            view: "form",
+            elements: [
+               {
+                  id: ids.name,
+                  view: "text",
+                  label: L("Name"),
+                  name: "name",
+                  value: this.name,
+               },
+               {
+                   id: ids.query,
+               }
+            ],
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         return Promise.resolve();
+      }
+
+      // applicationLoad(application) {
+      //    super.applicationLoad(application);
+
+      //    $$(this.ids.objList).define("data", listObj);
+      //    $$(this.ids.objList).refresh();
+      // }
+
+      // show() {
+      //    super.show();
+      //    AppList.show();
+      // }
+
+      populate(element) {
+         const ids = this.ids;
+
+         const Builder = ABQLManager.builder(this.element.qlObj, this.element, this.AB);
+         const queryIDs = Builder.ids(ids.query);
+
+         const $name = $$(ids.name);
+         const $query = {
+            root: $$(queryIDs.root),
+            select: $$(queryIDs.select),
+            options: $$(queryIDs.options),
+         };
+
+         this.element = element;
+
+         Builder.ui(ids.query);
+         webix.ui(Builder.ui(ids.query), $$(ids.query));
+         Builder.init(ids.query);
+
+         $name.setValue(element.label);
+        //  $query.root.setValue()
+      }
+
+      /**
+       * values()
+       * return an object hash representing the values for this component.
+       * @return {json}
+       */
+
+      values() {
+         const obj = {};
+         const ids = this.ids;
+
+         const $name = $$(ids.name);
+
+         obj.label = $name.getValue() || "";
+         obj.name = $name.getValue() || "";
+         obj.qlObj = ABQLManager.parse(ids.query, this.element, this.AB) || null;
+
+         return obj;
+      }
+   }
+
+   return UIProcessServiceQuery;
 }
 
 
@@ -76723,511 +77558,6 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return new ABViewCSVImporterProperty();
-}
-
-
-/***/ }),
-
-/***/ "./src/rootPages/Designer/properties/views/ABViewContainer.js":
-/*!********************************************************************!*\
-  !*** ./src/rootPages/Designer/properties/views/ABViewContainer.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _ABView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABView */ "./src/rootPages/Designer/properties/views/ABView.js");
-/*
- * ABViewContainer
- * A Generic Property manager for views that are ABViewContainers.
- */
-
-var myClass = null;
-// {singleton}
-// we will want to call this factory fn() repeatedly in our imports,
-// but we only want to define 1 Class reference.
-
-
-
-const ABViewContainerDefaults = {
-   columns: 1,
-   // {int}
-   // The number of columns this view is broken up into.
-
-   gravity: 1,
-   // {int}
-   // the gravity or weight of the column relative to other columns.
-   // the higher the number, the wider the space relative to other columns.
-   // so a gravity of 2 will be twice as wide as a gravity of 1.
-};
-
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   if (!myClass) {
-      const uiConfig = AB.Config.uiSettings();
-      const ABView = (0,_ABView__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-      var L = ABView.L();
-
-      myClass = class ABViewContainerProperty extends ABView {
-         constructor(base = "properties_abview_container", ids = {}) {
-            // base: {string} unique base id reference
-            // ids: {hash}  { key => '' }
-            // this is provided by the Sub Class and has the keys
-            // unique to the Sub Class' interface elements.
-
-            var common = {
-               columns: "",
-               gravity: "",
-            };
-
-            Object.keys(ids).forEach((k) => {
-               if (typeof common[k] != "undefined") {
-                  console.error(
-                     `!!! ABViewContainerProperty:: passed in ids contains a restricted id : ${k}`
-                  );
-                  return;
-               }
-               common[k] = "";
-            });
-
-            super(base, common);
-
-            this.base = base;
-            this.AB = AB;
-         }
-
-         ui(elements = [], rules = {}) {
-            let ids = this.ids;
-
-            let _elements = [
-               {
-                  id: ids.columns,
-                  name: "columns",
-                  view: "counter",
-                  min: 1,
-                  label: L("Columns"),
-                  labelWidth: uiConfig.labelWidthXLarge,
-                  on: {
-                     onChange: function (newVal, oldVal) {
-                        if (newVal > 8) $$(ids.columns).setValue(8);
-
-                        let $grav = $$(ids.gravity);
-                        function addCounter(counterNum) {
-                           var pos = $grav.getParentView().index($grav);
-                           $grav.getParentView().addView(
-                              {
-                                 view: "counter",
-                                 value: "1",
-                                 min: 1,
-                                 label: L("Column {0} Gravity", [counterNum]),
-                                 labelWidth: uiConfig.labelWidthXLarge,
-                                 css: "gravity_counter",
-                                 on: {
-                                    onChange: () => {
-                                       this.onChange();
-                                    },
-                                 },
-                              },
-                              pos
-                           );
-                        }
-
-                        function removeCounter() {
-                           $grav
-                              .getParentView()
-                              .removeView(
-                                 $grav.getParentView().getChildViews()[
-                                    $grav.getParentView().index($grav) - 1
-                                 ]
-                              );
-                        }
-
-                        if (newVal > oldVal) {
-                           // Add a Gravity Counter
-
-                           // SPECIAL CASE:
-                           // we are now hiding the gravity counter if only
-                           // 1 column.  So be sure to show the hidden counter
-                           // when switching to 2:
-                           if (newVal == 2) {
-                              addCounter(1);
-                           }
-
-                           addCounter(newVal);
-                        } else if (newVal < oldVal) {
-                           // Remove a gravity counter
-                           removeCounter();
-
-                           // SPECIAL CASE
-                           // if we go back to 1 column, hide them all
-                           if (newVal == 1) {
-                              removeCounter();
-                           }
-                        }
-                     },
-                  },
-               },
-               {
-                  id: ids.gravity,
-                  view: "text",
-                  name: "gravity",
-                  height: 1,
-               },
-            ];
-
-            _elements.concat(elements);
-
-            // Object.keys(rules).forEach((r) => {
-            //    _ui.rules[r] = rules[r];
-            // });
-
-            return super.ui(_elements, rules);
-         }
-
-         async init(AB) {
-            this.AB = AB;
-
-            var FC = this.FieldClass();
-            if (FC) {
-               /*
-// TODO:
-               $$(this.ids.fieldDescription).define(
-                  "label",
-                  L(FC.defaults().description)
-               );
-            } else {
-               $$(this.ids.fieldDescription).hide();
-*/
-            }
-         }
-
-         clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
-         }
-
-         /**
-          * @method defaults()
-          * Return the ViewClass() default values.
-          * NOTE: the child class MUST implement ViewClass() to return the
-          * proper ABViewXXX class definition.
-          * @return {obj}
-          */
-         defaults() {
-            var ViewClass = this.ViewClass();
-            if (!ViewClass) {
-               console.error(
-                  "!!! properties/views/ABView: could not find ViewClass"
-               );
-               return null;
-            }
-            return ViewClass.common();
-         }
-
-         editorPopulate(field) {
-            console.error("!!! Depreciated. call populate() instead.");
-            this.populate(field);
-         }
-
-         formValues() {
-            return $$(this.ids.component).getValues();
-         }
-
-         /**
-          * @method isValid()
-          * Verify the common ABField settings are valid before allowing
-          * us to create the new field.
-          * @return {bool}
-          */
-         isValid() {
-            /*
-// TODO:
-            var ids = this.ids;
-            var isValid = $$(ids.component).validate(),
-               colName = this.formValues()["columnName"];
-
-            // validate reserve column names
-            var FC = this.FieldClass();
-            if (!FC) {
-               this.AB.notify.developer(
-                  new Error("Unable to resolve FieldClass"),
-                  {
-                     context: "ABFieldProperty: isValid()",
-                     base: this.ids.component,
-                  }
-               );
-            }
-
-            // columnName should not be one of the reserved names:
-            if (FC?.reservedNames.indexOf(colName.trim().toLowerCase()) > -1) {
-               this.markInvalid("columnName", L("This is a reserved name"));
-               isValid = false;
-            }
-
-            // columnName should not be in use by other fields on this object
-            // get All fields with matching colName
-            var fieldColName = this.currentObject?.fields(
-               (f) => f.columnName == colName
-            );
-            // ignore current edit field
-            if (this._CurrentField) {
-               fieldColName = fieldColName.filter(
-                  (f) => f.id != this._CurrentField.id
-               );
-            }
-            // if any more matches, this is a problem
-            if (fieldColName.length > 0) {
-               this.markInvalid(
-                  "columnName",
-                  L("This column name is in use by another field ({0})", [
-                     fieldColName.label,
-                  ])
-               );
-               isValid = false;
-            }
-
-            return isValid;
-*/
-         }
-
-         markInvalid(name, message) {
-            $$(this.ids.component).markInvalid(name, message);
-         }
-
-         /**
-          * @function populate
-          * populate the property form with the given ABField instance provided.
-          * @param {ABField} field
-          *        The ABFieldXXX instance that we are editing the settings for.
-          */
-         populate(view) {
-            super.populate(view);
-            let ids = this.ids;
-
-            let $col = $$(ids.columns);
-            $col?.setValue(
-               view.settings.columns || ABViewContainerDefaults.columns
-            );
-
-            // remove all the gravity counters:
-            let $grav = $$(ids.gravity);
-            $grav
-               .getParentView()
-               .queryView({ css: "gravity_counter" }, "all")
-               .map((counter) => $grav.getParentView().removeView(counter));
-
-            let numCol = $col.getValue();
-
-            if (numCol > 1) {
-               // now add gravity counters for the number of columns we have
-               for (var step = 1; step <= numCol; step++) {
-                  var pos = $grav.getParentView().index($grav);
-                  $grav.getParentView().addView(
-                     {
-                        view: "counter",
-                        min: 1,
-                        label: L("Column {0} Gravity", [step]),
-                        labelWidth: uiConfig.labelWidthXLarge,
-                        css: "gravity_counter",
-                        value:
-                           view.settings.gravity &&
-                           view.settings.gravity[step - 1]
-                              ? view.settings.gravity[step - 1]
-                              : ABViewContainerDefaults.gravity,
-                        on: {
-                           onChange: () => {
-                              this.onChange();
-                           },
-                        },
-                     },
-                     pos
-                  );
-               }
-            }
-         }
-
-         requiredOnChange() {
-            // Sub Class should overwrite this if it is necessary.
-         }
-
-         // show() {
-         //    super.show();
-         //    // AppList.show();
-         // }
-
-         /**
-          * @method values
-          * return the values for this form.
-          * @return {obj}
-          */
-         values() {
-            let vals = super.values();
-            vals.settings = {};
-            vals.settings.columns = $$(this.ids.columns).getValue();
-
-            var gravity = [];
-            $$(this.ids.gravity)
-               .getParentView()
-               .queryView({ css: "gravity_counter" }, "all")
-               .map((counter) => gravity.push($$(counter).getValue()));
-            view.settings.gravity = gravity;
-
-            return vals;
-         }
-
-         /**
-          * @method ViewClass()
-          * A method to return the proper ABViewXXX Definition.
-          * NOTE: Must be overwritten by the Child Class
-          */
-         ViewClass() {
-            console.error("!!! Child Class has not overwritten ViewClass()");
-            return null;
-            // return super._ViewClass("string");
-         }
-
-         _ViewClass(key) {
-            var app = this.CurrentApplication;
-            if (!app) {
-               app = this.AB.applicationNew({});
-            }
-            return app.viewAll((V) => V.common().key == key)[0];
-         }
-      };
-   }
-   return myClass;
-}
-
-
-/***/ }),
-
-/***/ "./src/rootPages/Designer/properties/views/ABViewPage.js":
-/*!***************************************************************!*\
-  !*** ./src/rootPages/Designer/properties/views/ABViewPage.js ***!
-  \***************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _ABViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABViewContainer */ "./src/rootPages/Designer/properties/views/ABViewContainer.js");
-/*
- * ABViewPage
- * A Property manager for our ABViewPage definitions
- */
-
-
-
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
-   const ABViewContainer = (0,_ABViewContainer__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // const L = ABViewClassProperty.L();
-
-   class ABViewPageProperty extends ABViewContainer {
-      constructor() {
-         super("properties_abview_page", {
-            // Put our ids here
-         });
-      }
-
-      static get key() {
-         return "page";
-      }
-
-      ui() {
-         return super.ui([]);
-      }
-
-      async init(AB) {
-         return super.init(AB);
-      }
-
-      populate(view) {
-         super.populate(view);
-      }
-
-      /*
-defaultValues() {
-   var values = {
-      dataviewID: null,
-      buttonLabel: "Upload CSV",
-      width: 0,
-      recordRules: [],
-   };
-
-   var FieldClass = this.ViewClass();
-   if (FieldClass) {
-      var fcValues = FieldClass.defaultValues();
-      Object.keys(fcValues).forEach((k) => {
-         values[k] = fcValues[k];
-      });
-   }
-
-   return values;
-}
-*/
-
-      /**
-       * @method values
-       * return the values for this form.
-       * @return {obj}
-       */
-      values() {
-         let vals = super.values();
-
-         return vals;
-      }
-
-      /**
-       * @method FieldClass()
-       * A method to return the proper ABViewXXX Definition.
-       * NOTE: Must be overwritten by the Child Class
-       */
-      ViewClass() {
-         return super._ViewClass("page");
-      }
-      /*
-toSettings() {
-   var base = this.defaults();
-   base.settings = this.defaultValues();
-   return base;
-}
-*/
-   }
-
-   return ABViewPageProperty;
 }
 
 
