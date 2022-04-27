@@ -27737,7 +27737,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\r\n   }\r\n}\r\n@keyframes pulseLight {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\r\n   }\r\n}\r\n.pulseDark {\r\n   animation-name: pulseDark;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.pulseLight {\r\n   animation-name: pulseLight;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.smalltext {\r\n   font-size: small !important;\r\n}\r\n.ab-object-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-interface-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.darkorange .webix_button {\r\n   background-color: darkorange !important;\r\n}\r\n.warningtext {\r\n   color: orange;\r\n}\r\n.warningslist {\r\n   list-style-type: none;\r\n   margin: 0;\r\n   padding: 0;\r\n   line-height: 28px;\r\n   background-color: transparent;\r\n   color: white;\r\n}\r\n.warningslist li {\r\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\r\n}\r\n.webix_theme_dark {\r\n   background-color: #4a4e58;\r\n}\r\n.lighten {\r\n   opacity: 0.4;\r\n}\r\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\r\n   }\r\n}\r\n@keyframes pulseLight {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\r\n   }\r\n}\r\n.pulseDark {\r\n   animation-name: pulseDark;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.pulseLight {\r\n   animation-name: pulseLight;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.smalltext {\r\n   font-size: small !important;\r\n}\r\n.ab-object-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-interface-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.darkorange .webix_button {\r\n   background-color: darkorange !important;\r\n}\r\n.warningtext {\r\n   color: orange;\r\n}\r\n.warningslist {\r\n   list-style-type: none;\r\n   margin: 0;\r\n   padding: 0;\r\n   line-height: 28px;\r\n   background-color: transparent;\r\n   color: white;\r\n}\r\n.warningslist li {\r\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\r\n}\r\n.webix_theme_dark {\r\n   background-color: #4a4e58;\r\n}\r\n.lighten {\r\n   opacity: 0.4;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -75286,7 +75286,9 @@ __webpack_require__.r(__webpack_exports__);
          );
       }
 
-      static key = "process.participant";
+      static get key() {
+         return "process.participant";
+      }
       // {string}
       // This should match the ABProcessParticipant.defaults().key value.
 
@@ -80008,7 +80010,8 @@ __webpack_require__.r(__webpack_exports__);
             },
          ];
          this.MenuComponent.menuOptions(options);
-         this.MenuComponent.on("click", (action) => {
+         this.MenuComponent.trigger = (action) => {
+            this.MenuComponent.hide();
             var selectedApp = this.$list.getSelectedItem();
 
             switch (action) {
@@ -80057,8 +80060,8 @@ __webpack_require__.r(__webpack_exports__);
                   );
                   break;
             }
-         });
-
+         };
+         console.log('here', this.MenuComponent);
          // listen for the AllApplications response:
          this.AB.Network.on(
             "definitions.allapplications",
@@ -80815,7 +80818,8 @@ __webpack_require__.r(__webpack_exports__);
             hideExclude: !this.attributes.menu.exclude,
          });
 
-         this.PopupEditComponent.on("click", (command) => {
+         this.PopupEditComponent.trigger = (command) => {
+            this.PopupEditComponent.hide();
             var selectedItem = this.$list.getSelectedItem(false);
             switch (command) {
                case "delete":
@@ -80842,7 +80846,7 @@ __webpack_require__.r(__webpack_exports__);
                   });
                   break;
             }
-         });
+         };
 
          this._settings = this.AB.Storage.get(this.idBase) || {
             objectlistIsOpen: false,
@@ -81394,9 +81398,10 @@ var myClass = null;
                   autoheight: true,
                   select: false,
                   on: {
-                     onItemClick: (timestamp, e, trg) => {
-                        // we need to process which node was clicked before emitting
-                        return this.trigger(trg);
+                     onItemClick: (itemId) => {
+                        const { command, label } = $$(this.ids.list).getItem(itemId);
+                        console.log('onItemClick', {command, label});
+                        return this.trigger(command);
                      },
                   },
                },
@@ -81451,7 +81456,7 @@ var myClass = null;
             this._menuOptions = menuOptions;
             var data = [];
             menuOptions.forEach((mo) => {
-               data.push({ label: mo.label, icon: mo.icon });
+               data.push({ label: mo.label, icon: mo.icon, command: mo.command });
             });
             this.$list.parse(data);
             this.$list.refresh();
@@ -81469,16 +81474,13 @@ var myClass = null;
           * @param {itemNode} div.webix_list_item: we get the label then pass this up,
           * The itemNode contains the 'page' the user wants to edit
           */
-         trigger(itemNode) {
+         trigger(command) {
             // hide our popup before we trigger any other possible UI animation: (like .edit)
             // NOTE: if the UI is animating another component, and we do .hide()
             // while it is in progress, the UI will glitch and give the user whiplash.
-            var label = itemNode.textContent.trim();
-            var option = this._menuOptions.filter((mo) => {
-               return mo.label == label;
-            })[0];
-            if (option) {
-               this.emit(option.command);
+
+            if (command) {
+               this.emit(command);
                this.hide();
                return false;
             }

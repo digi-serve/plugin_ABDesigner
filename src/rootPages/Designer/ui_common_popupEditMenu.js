@@ -77,9 +77,9 @@ export default function (AB) {
                   autoheight: true,
                   select: false,
                   on: {
-                     onItemClick: (timestamp, e, trg) => {
-                        // we need to process which node was clicked before emitting
-                        return this.trigger(trg);
+                     onItemClick: (itemId) => {
+                        const { command } = $$(this.ids.list).getItem(itemId);
+                        return this.trigger(command);
                      },
                   },
                },
@@ -134,7 +134,7 @@ export default function (AB) {
             this._menuOptions = menuOptions;
             var data = [];
             menuOptions.forEach((mo) => {
-               data.push({ label: mo.label, icon: mo.icon });
+               data.push({ label: mo.label, icon: mo.icon, command: mo.command });
             });
             this.$list.parse(data);
             this.$list.refresh();
@@ -152,16 +152,13 @@ export default function (AB) {
           * @param {itemNode} div.webix_list_item: we get the label then pass this up,
           * The itemNode contains the 'page' the user wants to edit
           */
-         trigger(itemNode) {
+         trigger(command) {
             // hide our popup before we trigger any other possible UI animation: (like .edit)
             // NOTE: if the UI is animating another component, and we do .hide()
             // while it is in progress, the UI will glitch and give the user whiplash.
-            var label = itemNode.textContent.trim();
-            var option = this._menuOptions.filter((mo) => {
-               return mo.label == label;
-            })[0];
-            if (option) {
-               this.emit(option.command);
+
+            if (command) {
+               this.emit(command);
                this.hide();
                return false;
             }
