@@ -59,6 +59,8 @@ export default function (AB) {
                view.save();
                delete view.__timedSave;
             }, waitDuration);
+
+            this.emit("view.changed");
          };
       }
 
