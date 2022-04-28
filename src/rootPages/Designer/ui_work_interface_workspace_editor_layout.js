@@ -6,12 +6,15 @@
  */
 import UI_Class from "./ui_class";
 // import UI_Warnings from "./ui_warnings";
+import FEditorManager from "./editors/EditorManager";
 
 export default function (AB) {
    const ibase = "ui_work_interface_workspace_editor_layout";
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
+
+   const EditorManager = FEditorManager(AB);
 
    class UI_Work_Interface_Workspace_Editor_Layout extends UIClass {
       constructor() {
@@ -26,6 +29,13 @@ export default function (AB) {
          });
 
          this.CurrentViewMode = 1; // preview mode by default
+
+         this._editorsByType = {
+            /* view.key : {ViewEditorClass} */
+         };
+         // {hash}
+         // a collection of all possible View Editors that we can display in our
+         // layout editor.
       }
 
       // webix UI definition:
@@ -63,9 +73,8 @@ export default function (AB) {
                            ],
                         },
                         {
-                           // view:'template',
-                           view: "layout",
                            id: ids.editArea,
+                           view: "layout",
                            borderless: true,
                            rows: [],
                            // template:'[edit Area]'
@@ -91,6 +100,11 @@ export default function (AB) {
 
          let EditArea = $$(this.ids.editArea);
          if (EditArea) webix.extend(EditArea, webix.ProgressBar);
+
+         // get a copy of all the possible Editors by their .key
+         EditorManager.editors().forEach((E) => {
+            this._editorsByType[E.key] = E;
+         });
 
          return Promise.resolve();
       }
@@ -124,7 +138,7 @@ export default function (AB) {
          // load the component's editor in our editArea
          var editorComponent;
          if (this.CurrentViewMode == "preview") {
-            editorComponent = view.component(this.AB._App);
+            editorComponent = view.component();
             if (
                this.CurrentView.settings.type == "popup" &&
                this.CurrentView.settings.popupWidth &&
@@ -210,7 +224,9 @@ export default function (AB) {
                $$(ids.editAreaSamplePopup).hide();
             }
          } else {
-            editorComponent = view.editorComponent(this.AB._App, "preview");
+            let newEditor = this._editorsByType[view.key];
+
+            editorComponent = new newEditor(view); // view.editorComponent(this.AB._App, "preview");
             $$(ids.editAreaContainer).define({ width: 0 });
             $$(ids.editArea).define({ height: 0 });
             webix.html.removeCss(
@@ -234,15 +250,16 @@ export default function (AB) {
          }
          // editorComponent.ui.id = ids.editArea;
          // webix.ui(editorComponent.ui, $$(ids.editArea));
-         $$(ids.editArea).addView(editorComponent.ui);
-         editorComponent.init(null, 2);
+         $$(ids.editArea).addView(editorComponent.ui());
+         editorComponent.init(this.AB, 2);
+         // note: parentAccessLevel = 2 here in our Designer
 
          if (editorComponent.onShow) editorComponent.onShow();
 
          setTimeout(() => {
             $$(ids.component).adjust();
             $$(ids.editAreaContainer).adjust();
-         }, 250);
+         }, 150);
       }
 
       /*

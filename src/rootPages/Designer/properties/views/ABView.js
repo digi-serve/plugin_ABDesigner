@@ -98,37 +98,7 @@ export default function (AB) {
          }
 
          clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
+            $$(this.ids.label).setValue("");
          }
 
          /**
@@ -220,6 +190,15 @@ export default function (AB) {
          }
 
          /**
+          * @method onChange()
+          * emit a "changed" event so our property manager can know
+          * there are new values that need saving.
+          */
+         onChange() {
+            this.emit("changed");
+         }
+
+         /**
           * @function populate
           * populate the property form with the given ABField instance provided.
           * @param {ABView} view
@@ -245,43 +224,9 @@ export default function (AB) {
           * @return {obj}
           */
          values() {
-            /*
-// TODO:
-            var ids = this.ids;
-
-            var settings = $$(ids.component).getValues();
-            if ($$(ids.filterComplex)) {
-               var validationRules = [];
-               var forms = $$(ids.filterComplex).queryView(
-                  { view: "form", css: "abValidationForm" },
-                  "all"
-               );
-               forms.forEach((form) => {
-                  var rules = form
-                     .queryView({ view: "querybuilder" })
-                     .getValue();
-                  var invalidMessage = form
-                     .queryView({ name: "invalidMessage" })
-                     .getValue();
-                  var validationObj = {
-                     invalidMessage: invalidMessage,
-                     rules: rules,
-                  };
-                  validationRules.push(validationObj);
-               });
-               settings.validationRules = JSON.stringify(validationRules);
-            }
-
-            var FC = this.FieldClass();
-
-            // convert flat settings into our ABField value format:
-            var values = FC.editorValues(settings);
-
-            values.key = FC.defaults().key;
-
-            return values;
-*/
-            return {};
+            let vals = {};
+            vals.label = $$(this.ids.label).getValue();
+            return vals;
          }
 
          /**

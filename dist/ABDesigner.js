@@ -6577,30 +6577,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ BpmnGridSnapping)
 /* harmony export */ });
 /* harmony import */ var _modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modeling/util/ModelingUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
-
-
-function BpmnGridSnapping(eventBus) {
-  eventBus.on([
-    'create.init',
-    'shape.move.init'
-  ], function(event) {
-    var context = event.context,
-        shape = event.shape;
-
-    if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_0__.isAny)(shape, [
-      'bpmn:Participant',
-      'bpmn:SubProcess',
-      'bpmn:TextAnnotation'
-    ])) {
-      if (!context.gridSnappingContext) {
-        context.gridSnappingContext = {};
-      }
-
-      context.gridSnappingContext.snapLocation = 'top-left';
-    }
-  });
-}
-
+
+
+function BpmnGridSnapping(eventBus) {
+  eventBus.on([
+    'create.init',
+    'shape.move.init'
+  ], function(event) {
+    var context = event.context,
+        shape = event.shape;
+
+    if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_0__.isAny)(shape, [
+      'bpmn:Participant',
+      'bpmn:SubProcess',
+      'bpmn:TextAnnotation'
+    ])) {
+      if (!context.gridSnappingContext) {
+        context.gridSnappingContext = {};
+      }
+
+      context.gridSnappingContext.snapLocation = 'top-left';
+    }
+  });
+}
+
 BpmnGridSnapping.$inject = [ 'eventBus' ];
 
 /***/ }),
@@ -6619,64 +6619,64 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _auto_place_BpmnAutoPlaceUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../auto-place/BpmnAutoPlaceUtil */ "./node_modules/bpmn-js/lib/features/auto-place/BpmnAutoPlaceUtil.js");
 /* harmony import */ var diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! diagram-js/lib/layout/LayoutUtil */ "./node_modules/diagram-js/lib/layout/LayoutUtil.js");
 /* harmony import */ var _util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
-
-
-
-
-
-var HIGH_PRIORITY = 2000;
-
-
-function AutoPlaceBehavior(eventBus, gridSnapping) {
-  eventBus.on('autoPlace', HIGH_PRIORITY, function(context) {
-    var source = context.source,
-        sourceMid = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_0__.getMid)(source),
-        shape = context.shape;
-
-    var position = (0,_auto_place_BpmnAutoPlaceUtil__WEBPACK_IMPORTED_MODULE_1__.getNewShapePosition)(source, shape);
-
-    [ 'x', 'y' ].forEach(function(axis) {
-      var options = {};
-
-      // do not snap if x/y equal
-      if (position[ axis ] === sourceMid[ axis ]) {
-        return;
-      }
-
-      if (position[ axis ] > sourceMid[ axis ]) {
-        options.min = position[ axis ];
-      } else {
-        options.max = position[ axis ];
-      }
-
-      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__.is)(shape, 'bpmn:TextAnnotation')) {
-
-        if (isHorizontal(axis)) {
-          options.offset = -shape.width / 2;
-        } else {
-          options.offset = -shape.height / 2;
-        }
-
-      }
-
-      position[ axis ] = gridSnapping.snapValue(position[ axis ], options);
-
-    });
-
-    // must be returned to be considered by auto place
-    return position;
-  });
-}
-
-AutoPlaceBehavior.$inject = [
-  'eventBus',
-  'gridSnapping'
-];
-
-// helpers //////////
-
-function isHorizontal(axis) {
-  return axis === 'x';
+
+
+
+
+
+var HIGH_PRIORITY = 2000;
+
+
+function AutoPlaceBehavior(eventBus, gridSnapping) {
+  eventBus.on('autoPlace', HIGH_PRIORITY, function(context) {
+    var source = context.source,
+        sourceMid = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_0__.getMid)(source),
+        shape = context.shape;
+
+    var position = (0,_auto_place_BpmnAutoPlaceUtil__WEBPACK_IMPORTED_MODULE_1__.getNewShapePosition)(source, shape);
+
+    [ 'x', 'y' ].forEach(function(axis) {
+      var options = {};
+
+      // do not snap if x/y equal
+      if (position[ axis ] === sourceMid[ axis ]) {
+        return;
+      }
+
+      if (position[ axis ] > sourceMid[ axis ]) {
+        options.min = position[ axis ];
+      } else {
+        options.max = position[ axis ];
+      }
+
+      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_2__.is)(shape, 'bpmn:TextAnnotation')) {
+
+        if (isHorizontal(axis)) {
+          options.offset = -shape.width / 2;
+        } else {
+          options.offset = -shape.height / 2;
+        }
+
+      }
+
+      position[ axis ] = gridSnapping.snapValue(position[ axis ], options);
+
+    });
+
+    // must be returned to be considered by auto place
+    return position;
+  });
+}
+
+AutoPlaceBehavior.$inject = [
+  'eventBus',
+  'gridSnapping'
+];
+
+// helpers //////////
+
+function isHorizontal(axis) {
+  return axis === 'x';
 }
 
 /***/ }),
@@ -6693,41 +6693,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ CreateParticipantBehavior)
 /* harmony export */ });
 /* harmony import */ var _util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
-
-
-var HIGHER_PRIORITY = 1750;
-
-
-function CreateParticipantBehavior(canvas, eventBus, gridSnapping) {
-  eventBus.on([
-    'create.start',
-    'shape.move.start'
-  ], HIGHER_PRIORITY, function(event) {
-    var context = event.context,
-        shape = context.shape,
-        rootElement = canvas.getRootElement();
-
-    if (!(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Participant') ||
-      !(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(rootElement, 'bpmn:Process') ||
-      !rootElement.children.length) {
-      return;
-    }
-
-    var createConstraints = context.createConstraints;
-
-    if (!createConstraints) {
-      return;
-    }
-
-    shape.width = gridSnapping.snapValue(shape.width, { min: shape.width });
-    shape.height = gridSnapping.snapValue(shape.height, { min: shape.height });
-  });
-}
-
-CreateParticipantBehavior.$inject = [
-  'canvas',
-  'eventBus',
-  'gridSnapping'
+
+
+var HIGHER_PRIORITY = 1750;
+
+
+function CreateParticipantBehavior(canvas, eventBus, gridSnapping) {
+  eventBus.on([
+    'create.start',
+    'shape.move.start'
+  ], HIGHER_PRIORITY, function(event) {
+    var context = event.context,
+        shape = context.shape,
+        rootElement = canvas.getRootElement();
+
+    if (!(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Participant') ||
+      !(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(rootElement, 'bpmn:Process') ||
+      !rootElement.children.length) {
+      return;
+    }
+
+    var createConstraints = context.createConstraints;
+
+    if (!createConstraints) {
+      return;
+    }
+
+    shape.width = gridSnapping.snapValue(shape.width, { min: shape.width });
+    shape.height = gridSnapping.snapValue(shape.height, { min: shape.height });
+  });
+}
+
+CreateParticipantBehavior.$inject = [
+  'canvas',
+  'eventBus',
+  'gridSnapping'
 ];
 
 /***/ }),
@@ -6907,19 +6907,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AutoPlaceBehavior__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AutoPlaceBehavior */ "./node_modules/bpmn-js/lib/features/grid-snapping/behavior/AutoPlaceBehavior.js");
 /* harmony import */ var _CreateParticipantBehavior__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateParticipantBehavior */ "./node_modules/bpmn-js/lib/features/grid-snapping/behavior/CreateParticipantBehavior.js");
 /* harmony import */ var _LayoutConnectionBehavior__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LayoutConnectionBehavior */ "./node_modules/bpmn-js/lib/features/grid-snapping/behavior/LayoutConnectionBehavior.js");
-
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  __init__: [
-    'gridSnappingAutoPlaceBehavior',
-    'gridSnappingCreateParticipantBehavior',
-    'gridSnappingLayoutConnectionBehavior',
-  ],
-  gridSnappingAutoPlaceBehavior: [ 'type', _AutoPlaceBehavior__WEBPACK_IMPORTED_MODULE_0__["default"] ],
-  gridSnappingCreateParticipantBehavior: [ 'type', _CreateParticipantBehavior__WEBPACK_IMPORTED_MODULE_1__["default"] ],
-  gridSnappingLayoutConnectionBehavior: [ 'type', _LayoutConnectionBehavior__WEBPACK_IMPORTED_MODULE_2__["default"] ]
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  __init__: [
+    'gridSnappingAutoPlaceBehavior',
+    'gridSnappingCreateParticipantBehavior',
+    'gridSnappingLayoutConnectionBehavior',
+  ],
+  gridSnappingAutoPlaceBehavior: [ 'type', _AutoPlaceBehavior__WEBPACK_IMPORTED_MODULE_0__["default"] ],
+  gridSnappingCreateParticipantBehavior: [ 'type', _CreateParticipantBehavior__WEBPACK_IMPORTED_MODULE_1__["default"] ],
+  gridSnappingLayoutConnectionBehavior: [ 'type', _LayoutConnectionBehavior__WEBPACK_IMPORTED_MODULE_2__["default"] ]
 });
 
 /***/ }),
@@ -6938,18 +6938,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BpmnGridSnapping__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BpmnGridSnapping */ "./node_modules/bpmn-js/lib/features/grid-snapping/BpmnGridSnapping.js");
 /* harmony import */ var diagram_js_lib_features_grid_snapping__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! diagram-js/lib/features/grid-snapping */ "./node_modules/diagram-js/lib/features/grid-snapping/index.js");
 /* harmony import */ var _behavior__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./behavior */ "./node_modules/bpmn-js/lib/features/grid-snapping/behavior/index.js");
-
-
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  __depends__: [
-    diagram_js_lib_features_grid_snapping__WEBPACK_IMPORTED_MODULE_0__["default"],
-    _behavior__WEBPACK_IMPORTED_MODULE_1__["default"]
-  ],
-  __init__: [ 'bpmnGridSnapping' ],
-  bpmnGridSnapping: [ 'type', _BpmnGridSnapping__WEBPACK_IMPORTED_MODULE_2__["default"] ]
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  __depends__: [
+    diagram_js_lib_features_grid_snapping__WEBPACK_IMPORTED_MODULE_0__["default"],
+    _behavior__WEBPACK_IMPORTED_MODULE_1__["default"]
+  ],
+  __init__: [ 'bpmnGridSnapping' ],
+  bpmnGridSnapping: [ 'type', _BpmnGridSnapping__WEBPACK_IMPORTED_MODULE_2__["default"] ]
 });
 
 /***/ }),
@@ -10377,37 +10377,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
 /* harmony import */ var diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! diagram-js/lib/command/CommandInterceptor */ "./node_modules/diagram-js/lib/command/CommandInterceptor.js");
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
-
-
-
-
-
-
-
-
-
-function AssociationBehavior(injector, modeling) {
-  injector.invoke(diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"], this);
-
-  this.postExecute('shape.move', function(context) {
-    var newParent = context.newParent,
-        shape = context.shape;
-
-    var associations = (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.filter)(shape.incoming.concat(shape.outgoing), function(connection) {
-      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(connection, 'bpmn:Association');
-    });
-
-    (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.forEach)(associations, function(association) {
-      modeling.moveConnection(association, { x: 0, y: 0 }, newParent);
-    });
-  }, true);
-}
-
-inherits__WEBPACK_IMPORTED_MODULE_0___default()(AssociationBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-AssociationBehavior.$inject = [
-  'injector',
-  'modeling'
+
+
+
+
+
+
+
+
+
+function AssociationBehavior(injector, modeling) {
+  injector.invoke(diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"], this);
+
+  this.postExecute('shape.move', function(context) {
+    var newParent = context.newParent,
+        shape = context.shape;
+
+    var associations = (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.filter)(shape.incoming.concat(shape.outgoing), function(connection) {
+      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(connection, 'bpmn:Association');
+    });
+
+    (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.forEach)(associations, function(association) {
+      modeling.moveConnection(association, { x: 0, y: 0 }, newParent);
+    });
+  }, true);
+}
+
+inherits__WEBPACK_IMPORTED_MODULE_0___default()(AssociationBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+AssociationBehavior.$inject = [
+  'injector',
+  'modeling'
 ];
 
 /***/ }),
@@ -11169,213 +11169,213 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! diagram-js/lib/command/CommandInterceptor */ "./node_modules/diagram-js/lib/command/CommandInterceptor.js");
 /* harmony import */ var _util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/ModelingUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
 /* harmony import */ var _cmd_UpdateSemanticParentHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../cmd/UpdateSemanticParentHandler */ "./node_modules/bpmn-js/lib/features/modeling/cmd/UpdateSemanticParentHandler.js");
-
-
-
-
-
-
-
-
-
-
-
-/**
- * BPMN specific data store behavior
- */
-function DataStoreBehavior(
-    canvas, commandStack, elementRegistry,
-    eventBus) {
-
-  diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, eventBus);
-
-  commandStack.registerHandler('dataStore.updateContainment', _cmd_UpdateSemanticParentHandler__WEBPACK_IMPORTED_MODULE_2__["default"]);
-
-  function getFirstParticipantWithProcessRef() {
-    return elementRegistry.filter(function(element) {
-      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(element, 'bpmn:Participant') && (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.getBusinessObject)(element).processRef;
-    })[0];
-  }
-
-  function getDataStores(element) {
-    return element.children.filter(function(child) {
-      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(child, 'bpmn:DataStoreReference') && !child.labelTarget;
-    });
-  }
-
-  function updateDataStoreParent(dataStore, newDataStoreParent) {
-    var dataStoreBo = dataStore.businessObject || dataStore;
-
-    newDataStoreParent = newDataStoreParent || getFirstParticipantWithProcessRef();
-
-    if (newDataStoreParent) {
-      var newDataStoreParentBo = newDataStoreParent.businessObject || newDataStoreParent;
-
-      commandStack.execute('dataStore.updateContainment', {
-        dataStoreBo: dataStoreBo,
-        dataStoreDi: (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.getDi)(dataStore),
-        newSemanticParent: newDataStoreParentBo.processRef || newDataStoreParentBo,
-        newDiParent: (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.getDi)(newDataStoreParent)
-      });
-    }
-  }
-
-
-  // disable auto-resize for data stores
-  this.preExecute('shape.create', function(event) {
-
-    var context = event.context,
-        shape = context.shape;
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference') &&
-        shape.type !== 'label') {
-
-      if (!context.hints) {
-        context.hints = {};
-      }
-
-      // prevent auto resizing
-      context.hints.autoResize = false;
-    }
-  });
-
-
-  // disable auto-resize for data stores
-  this.preExecute('elements.move', function(event) {
-    var context = event.context,
-        shapes = context.shapes;
-
-    var dataStoreReferences = shapes.filter(function(shape) {
-      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference');
-    });
-
-    if (dataStoreReferences.length) {
-      if (!context.hints) {
-        context.hints = {};
-      }
-
-      // prevent auto resizing for data store references
-      context.hints.autoResize = shapes.filter(function(shape) {
-        return !(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference');
-      });
-    }
-  });
-
-
-  // update parent on data store created
-  this.postExecute('shape.create', function(event) {
-    var context = event.context,
-        shape = context.shape,
-        parent = shape.parent;
-
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference') &&
-        shape.type !== 'label' &&
-        (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(parent, 'bpmn:Collaboration')) {
-
-      updateDataStoreParent(shape);
-    }
-  });
-
-
-  // update parent on data store moved
-  this.postExecute('shape.move', function(event) {
-    var context = event.context,
-        shape = context.shape,
-        oldParent = context.oldParent,
-        parent = shape.parent;
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(oldParent, 'bpmn:Collaboration')) {
-
-      // do nothing if not necessary
-      return;
-    }
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference') &&
-        shape.type !== 'label' &&
-        (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(parent, 'bpmn:Collaboration')) {
-
-      var participant = (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(oldParent, 'bpmn:Participant') ?
-        oldParent :
-        getAncestor(oldParent, 'bpmn:Participant');
-
-      updateDataStoreParent(shape, participant);
-    }
-  });
-
-
-  // update data store parents on participant or subprocess deleted
-  this.postExecute('shape.delete', function(event) {
-    var context = event.context,
-        shape = context.shape,
-        rootElement = canvas.getRootElement();
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.isAny)(shape, [ 'bpmn:Participant', 'bpmn:SubProcess' ])
-        && (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(rootElement, 'bpmn:Collaboration')) {
-      getDataStores(rootElement)
-        .filter(function(dataStore) {
-          return isDescendant(dataStore, shape);
-        })
-        .forEach(function(dataStore) {
-          updateDataStoreParent(dataStore);
-        });
-    }
-  });
-
-  // update data store parents on collaboration -> process
-  this.postExecute('canvas.updateRoot', function(event) {
-    var context = event.context,
-        oldRoot = context.oldRoot,
-        newRoot = context.newRoot;
-
-    var dataStores = getDataStores(oldRoot);
-
-    dataStores.forEach(function(dataStore) {
-
-      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(newRoot, 'bpmn:Process')) {
-        updateDataStoreParent(dataStore, newRoot);
-      }
-
-    });
-  });
-}
-
-DataStoreBehavior.$inject = [
-  'canvas',
-  'commandStack',
-  'elementRegistry',
-  'eventBus',
-];
-
-inherits__WEBPACK_IMPORTED_MODULE_0___default()(DataStoreBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-
-// helpers //////////
-
-function isDescendant(descendant, ancestor) {
-  var descendantBo = descendant.businessObject || descendant,
-      ancestorBo = ancestor.businessObject || ancestor;
-
-  while (descendantBo.$parent) {
-    if (descendantBo.$parent === ancestorBo.processRef || ancestorBo) {
-      return true;
-    }
-
-    descendantBo = descendantBo.$parent;
-  }
-
-  return false;
-}
-
-function getAncestor(element, type) {
-
-  while (element.parent) {
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(element.parent, type)) {
-      return element.parent;
-    }
-
-    element = element.parent;
-  }
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * BPMN specific data store behavior
+ */
+function DataStoreBehavior(
+    canvas, commandStack, elementRegistry,
+    eventBus) {
+
+  diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, eventBus);
+
+  commandStack.registerHandler('dataStore.updateContainment', _cmd_UpdateSemanticParentHandler__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+  function getFirstParticipantWithProcessRef() {
+    return elementRegistry.filter(function(element) {
+      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(element, 'bpmn:Participant') && (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.getBusinessObject)(element).processRef;
+    })[0];
+  }
+
+  function getDataStores(element) {
+    return element.children.filter(function(child) {
+      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(child, 'bpmn:DataStoreReference') && !child.labelTarget;
+    });
+  }
+
+  function updateDataStoreParent(dataStore, newDataStoreParent) {
+    var dataStoreBo = dataStore.businessObject || dataStore;
+
+    newDataStoreParent = newDataStoreParent || getFirstParticipantWithProcessRef();
+
+    if (newDataStoreParent) {
+      var newDataStoreParentBo = newDataStoreParent.businessObject || newDataStoreParent;
+
+      commandStack.execute('dataStore.updateContainment', {
+        dataStoreBo: dataStoreBo,
+        dataStoreDi: (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.getDi)(dataStore),
+        newSemanticParent: newDataStoreParentBo.processRef || newDataStoreParentBo,
+        newDiParent: (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.getDi)(newDataStoreParent)
+      });
+    }
+  }
+
+
+  // disable auto-resize for data stores
+  this.preExecute('shape.create', function(event) {
+
+    var context = event.context,
+        shape = context.shape;
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference') &&
+        shape.type !== 'label') {
+
+      if (!context.hints) {
+        context.hints = {};
+      }
+
+      // prevent auto resizing
+      context.hints.autoResize = false;
+    }
+  });
+
+
+  // disable auto-resize for data stores
+  this.preExecute('elements.move', function(event) {
+    var context = event.context,
+        shapes = context.shapes;
+
+    var dataStoreReferences = shapes.filter(function(shape) {
+      return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference');
+    });
+
+    if (dataStoreReferences.length) {
+      if (!context.hints) {
+        context.hints = {};
+      }
+
+      // prevent auto resizing for data store references
+      context.hints.autoResize = shapes.filter(function(shape) {
+        return !(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference');
+      });
+    }
+  });
+
+
+  // update parent on data store created
+  this.postExecute('shape.create', function(event) {
+    var context = event.context,
+        shape = context.shape,
+        parent = shape.parent;
+
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference') &&
+        shape.type !== 'label' &&
+        (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(parent, 'bpmn:Collaboration')) {
+
+      updateDataStoreParent(shape);
+    }
+  });
+
+
+  // update parent on data store moved
+  this.postExecute('shape.move', function(event) {
+    var context = event.context,
+        shape = context.shape,
+        oldParent = context.oldParent,
+        parent = shape.parent;
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(oldParent, 'bpmn:Collaboration')) {
+
+      // do nothing if not necessary
+      return;
+    }
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(shape, 'bpmn:DataStoreReference') &&
+        shape.type !== 'label' &&
+        (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(parent, 'bpmn:Collaboration')) {
+
+      var participant = (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(oldParent, 'bpmn:Participant') ?
+        oldParent :
+        getAncestor(oldParent, 'bpmn:Participant');
+
+      updateDataStoreParent(shape, participant);
+    }
+  });
+
+
+  // update data store parents on participant or subprocess deleted
+  this.postExecute('shape.delete', function(event) {
+    var context = event.context,
+        shape = context.shape,
+        rootElement = canvas.getRootElement();
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.isAny)(shape, [ 'bpmn:Participant', 'bpmn:SubProcess' ])
+        && (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(rootElement, 'bpmn:Collaboration')) {
+      getDataStores(rootElement)
+        .filter(function(dataStore) {
+          return isDescendant(dataStore, shape);
+        })
+        .forEach(function(dataStore) {
+          updateDataStoreParent(dataStore);
+        });
+    }
+  });
+
+  // update data store parents on collaboration -> process
+  this.postExecute('canvas.updateRoot', function(event) {
+    var context = event.context,
+        oldRoot = context.oldRoot,
+        newRoot = context.newRoot;
+
+    var dataStores = getDataStores(oldRoot);
+
+    dataStores.forEach(function(dataStore) {
+
+      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(newRoot, 'bpmn:Process')) {
+        updateDataStoreParent(dataStore, newRoot);
+      }
+
+    });
+  });
+}
+
+DataStoreBehavior.$inject = [
+  'canvas',
+  'commandStack',
+  'elementRegistry',
+  'eventBus',
+];
+
+inherits__WEBPACK_IMPORTED_MODULE_0___default()(DataStoreBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+
+// helpers //////////
+
+function isDescendant(descendant, ancestor) {
+  var descendantBo = descendant.businessObject || descendant,
+      ancestorBo = ancestor.businessObject || ancestor;
+
+  while (descendantBo.$parent) {
+    if (descendantBo.$parent === ancestorBo.processRef || ancestorBo) {
+      return true;
+    }
+
+    descendantBo = descendantBo.$parent;
+  }
+
+  return false;
+}
+
+function getAncestor(element, type) {
+
+  while (element.parent) {
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(element.parent, type)) {
+      return element.parent;
+    }
+
+    element = element.parent;
+  }
 }
 
 /***/ }),
@@ -11960,122 +11960,122 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/LaneUtil */ "./node_modules/bpmn-js/lib/features/modeling/util/LaneUtil.js");
 /* harmony import */ var _util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/ModelingUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
-
-
-
-
-
-
-var HIGH_PRIORITY = 1500;
-var HIGHEST_PRIORITY = 2000;
-
-
-/**
- * Correct hover targets in certain situations to improve diagram interaction.
- *
- * @param {ElementRegistry} elementRegistry
- * @param {EventBus} eventBus
- * @param {Canvas} canvas
- */
-function FixHoverBehavior(elementRegistry, eventBus, canvas) {
-
-  eventBus.on([
-    'create.hover',
-    'create.move',
-    'create.out',
-    'create.end',
-    'shape.move.hover',
-    'shape.move.move',
-    'shape.move.out',
-    'shape.move.end'
-  ], HIGH_PRIORITY, function(event) {
-    var context = event.context,
-        shape = context.shape || event.shape,
-        hover = event.hover;
-
-    // ensure elements are not dropped onto a bpmn:Lane but onto
-    // the underlying bpmn:Participant
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(hover, 'bpmn:Lane') && !(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.isAny)(shape, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
-      event.hover = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(hover);
-      event.hoverGfx = elementRegistry.getGraphics(event.hover);
-    }
-
-    var rootElement = canvas.getRootElement();
-
-    // ensure bpmn:Group and label elements are dropped
-    // always onto the root
-    if (hover !== rootElement && (shape.labelTarget || (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Group'))) {
-      event.hover = rootElement;
-      event.hoverGfx = elementRegistry.getGraphics(event.hover);
-    }
-  });
-
-  eventBus.on([
-    'connect.hover',
-    'connect.out',
-    'connect.end',
-    'connect.cleanup',
-    'global-connect.hover',
-    'global-connect.out',
-    'global-connect.end',
-    'global-connect.cleanup'
-  ], HIGH_PRIORITY, function(event) {
-    var hover = event.hover;
-
-    // ensure connections start/end on bpmn:Participant,
-    // not the underlying bpmn:Lane
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(hover, 'bpmn:Lane')) {
-      event.hover = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(hover) || hover;
-      event.hoverGfx = elementRegistry.getGraphics(event.hover);
-    }
-  });
-
-
-  eventBus.on([
-    'bendpoint.move.hover'
-  ], HIGH_PRIORITY, function(event) {
-    var context = event.context,
-        hover = event.hover,
-        type = context.type;
-
-    // ensure reconnect start/end on bpmn:Participant,
-    // not the underlying bpmn:Lane
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(hover, 'bpmn:Lane') && /reconnect/.test(type)) {
-      event.hover = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(hover) || hover;
-      event.hoverGfx = elementRegistry.getGraphics(event.hover);
-    }
-  });
-
-
-  eventBus.on([
-    'connect.start'
-  ], HIGH_PRIORITY, function(event) {
-    var context = event.context,
-        start = context.start;
-
-    // ensure connect start on bpmn:Participant,
-    // not the underlying bpmn:Lane
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(start, 'bpmn:Lane')) {
-      context.start = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(start) || start;
-    }
-  });
-
-
-  // allow movement of participants from lanes
-  eventBus.on('shape.move.start', HIGHEST_PRIORITY, function(event) {
-    var shape = event.shape;
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Lane')) {
-      event.shape = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(shape) || shape;
-    }
-  });
-
-}
-
-FixHoverBehavior.$inject = [
-  'elementRegistry',
-  'eventBus',
-  'canvas'
+
+
+
+
+
+
+var HIGH_PRIORITY = 1500;
+var HIGHEST_PRIORITY = 2000;
+
+
+/**
+ * Correct hover targets in certain situations to improve diagram interaction.
+ *
+ * @param {ElementRegistry} elementRegistry
+ * @param {EventBus} eventBus
+ * @param {Canvas} canvas
+ */
+function FixHoverBehavior(elementRegistry, eventBus, canvas) {
+
+  eventBus.on([
+    'create.hover',
+    'create.move',
+    'create.out',
+    'create.end',
+    'shape.move.hover',
+    'shape.move.move',
+    'shape.move.out',
+    'shape.move.end'
+  ], HIGH_PRIORITY, function(event) {
+    var context = event.context,
+        shape = context.shape || event.shape,
+        hover = event.hover;
+
+    // ensure elements are not dropped onto a bpmn:Lane but onto
+    // the underlying bpmn:Participant
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(hover, 'bpmn:Lane') && !(0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.isAny)(shape, [ 'bpmn:Lane', 'bpmn:Participant' ])) {
+      event.hover = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(hover);
+      event.hoverGfx = elementRegistry.getGraphics(event.hover);
+    }
+
+    var rootElement = canvas.getRootElement();
+
+    // ensure bpmn:Group and label elements are dropped
+    // always onto the root
+    if (hover !== rootElement && (shape.labelTarget || (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Group'))) {
+      event.hover = rootElement;
+      event.hoverGfx = elementRegistry.getGraphics(event.hover);
+    }
+  });
+
+  eventBus.on([
+    'connect.hover',
+    'connect.out',
+    'connect.end',
+    'connect.cleanup',
+    'global-connect.hover',
+    'global-connect.out',
+    'global-connect.end',
+    'global-connect.cleanup'
+  ], HIGH_PRIORITY, function(event) {
+    var hover = event.hover;
+
+    // ensure connections start/end on bpmn:Participant,
+    // not the underlying bpmn:Lane
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(hover, 'bpmn:Lane')) {
+      event.hover = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(hover) || hover;
+      event.hoverGfx = elementRegistry.getGraphics(event.hover);
+    }
+  });
+
+
+  eventBus.on([
+    'bendpoint.move.hover'
+  ], HIGH_PRIORITY, function(event) {
+    var context = event.context,
+        hover = event.hover,
+        type = context.type;
+
+    // ensure reconnect start/end on bpmn:Participant,
+    // not the underlying bpmn:Lane
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(hover, 'bpmn:Lane') && /reconnect/.test(type)) {
+      event.hover = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(hover) || hover;
+      event.hoverGfx = elementRegistry.getGraphics(event.hover);
+    }
+  });
+
+
+  eventBus.on([
+    'connect.start'
+  ], HIGH_PRIORITY, function(event) {
+    var context = event.context,
+        start = context.start;
+
+    // ensure connect start on bpmn:Participant,
+    // not the underlying bpmn:Lane
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(start, 'bpmn:Lane')) {
+      context.start = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(start) || start;
+    }
+  });
+
+
+  // allow movement of participants from lanes
+  eventBus.on('shape.move.start', HIGHEST_PRIORITY, function(event) {
+    var shape = event.shape;
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Lane')) {
+      event.shape = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_1__.getLanesRoot)(shape) || shape;
+    }
+  });
+
+}
+
+FixHoverBehavior.$inject = [
+  'elementRegistry',
+  'eventBus',
+  'canvas'
 ];
 
 /***/ }),
@@ -12869,91 +12869,91 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_DiUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../util/DiUtil */ "./node_modules/bpmn-js/lib/util/DiUtil.js");
 /* harmony import */ var diagram_js_lib_util_Elements__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! diagram-js/lib/util/Elements */ "./node_modules/diagram-js/lib/util/Elements.js");
 /* harmony import */ var diagram_js_lib_features_modeling_cmd_helper_AnchorsHelper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! diagram-js/lib/features/modeling/cmd/helper/AnchorsHelper */ "./node_modules/diagram-js/lib/features/modeling/cmd/helper/AnchorsHelper.js");
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * BPMN-specific message flow behavior.
- */
-function MessageFlowBehavior(eventBus, modeling) {
-
-  diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, eventBus);
-
-  this.postExecute('shape.replace', function(context) {
-    var oldShape = context.oldShape,
-        newShape = context.newShape;
-
-    if (!isParticipantCollapse(oldShape, newShape)) {
-      return;
-    }
-
-    var messageFlows = getMessageFlows(oldShape);
-
-    messageFlows.incoming.forEach(function(incoming) {
-      var anchor = (0,diagram_js_lib_features_modeling_cmd_helper_AnchorsHelper__WEBPACK_IMPORTED_MODULE_2__.getResizedTargetAnchor)(incoming, newShape, oldShape);
-
-      modeling.reconnectEnd(incoming, newShape, anchor);
-    });
-
-    messageFlows.outgoing.forEach(function(outgoing) {
-      var anchor = (0,diagram_js_lib_features_modeling_cmd_helper_AnchorsHelper__WEBPACK_IMPORTED_MODULE_2__.getResizedSourceAnchor)(outgoing, newShape, oldShape);
-
-      modeling.reconnectStart(outgoing, newShape, anchor);
-    });
-  }, true);
-
-}
-
-MessageFlowBehavior.$inject = [ 'eventBus', 'modeling' ];
-
-inherits__WEBPACK_IMPORTED_MODULE_0___default()(MessageFlowBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-// helpers //////////
-
-function isParticipantCollapse(oldShape, newShape) {
-  return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(oldShape, 'bpmn:Participant')
-    && (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_4__.isExpanded)(oldShape)
-    && (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(newShape, 'bpmn:Participant')
-    && !(0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_4__.isExpanded)(newShape);
-}
-
-function getMessageFlows(parent) {
-  var elements = (0,diagram_js_lib_util_Elements__WEBPACK_IMPORTED_MODULE_5__.selfAndAllChildren)([ parent ], false);
-
-  var incoming = [],
-      outgoing = [];
-
-  elements.forEach(function(element) {
-    if (element === parent) {
-      return;
-    }
-
-    element.incoming.forEach(function(connection) {
-      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(connection, 'bpmn:MessageFlow')) {
-        incoming.push(connection);
-      }
-    });
-
-    element.outgoing.forEach(function(connection) {
-      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(connection, 'bpmn:MessageFlow')) {
-        outgoing.push(connection);
-      }
-    });
-  }, []);
-
-  return {
-    incoming: incoming,
-    outgoing: outgoing
-  };
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * BPMN-specific message flow behavior.
+ */
+function MessageFlowBehavior(eventBus, modeling) {
+
+  diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, eventBus);
+
+  this.postExecute('shape.replace', function(context) {
+    var oldShape = context.oldShape,
+        newShape = context.newShape;
+
+    if (!isParticipantCollapse(oldShape, newShape)) {
+      return;
+    }
+
+    var messageFlows = getMessageFlows(oldShape);
+
+    messageFlows.incoming.forEach(function(incoming) {
+      var anchor = (0,diagram_js_lib_features_modeling_cmd_helper_AnchorsHelper__WEBPACK_IMPORTED_MODULE_2__.getResizedTargetAnchor)(incoming, newShape, oldShape);
+
+      modeling.reconnectEnd(incoming, newShape, anchor);
+    });
+
+    messageFlows.outgoing.forEach(function(outgoing) {
+      var anchor = (0,diagram_js_lib_features_modeling_cmd_helper_AnchorsHelper__WEBPACK_IMPORTED_MODULE_2__.getResizedSourceAnchor)(outgoing, newShape, oldShape);
+
+      modeling.reconnectStart(outgoing, newShape, anchor);
+    });
+  }, true);
+
+}
+
+MessageFlowBehavior.$inject = [ 'eventBus', 'modeling' ];
+
+inherits__WEBPACK_IMPORTED_MODULE_0___default()(MessageFlowBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+// helpers //////////
+
+function isParticipantCollapse(oldShape, newShape) {
+  return (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(oldShape, 'bpmn:Participant')
+    && (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_4__.isExpanded)(oldShape)
+    && (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(newShape, 'bpmn:Participant')
+    && !(0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_4__.isExpanded)(newShape);
+}
+
+function getMessageFlows(parent) {
+  var elements = (0,diagram_js_lib_util_Elements__WEBPACK_IMPORTED_MODULE_5__.selfAndAllChildren)([ parent ], false);
+
+  var incoming = [],
+      outgoing = [];
+
+  elements.forEach(function(element) {
+    if (element === parent) {
+      return;
+    }
+
+    element.incoming.forEach(function(connection) {
+      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(connection, 'bpmn:MessageFlow')) {
+        incoming.push(connection);
+      }
+    });
+
+    element.outgoing.forEach(function(connection) {
+      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_3__.is)(connection, 'bpmn:MessageFlow')) {
+        outgoing.push(connection);
+      }
+    });
+  }, []);
+
+  return {
+    incoming: incoming,
+    outgoing: outgoing
+  };
 }
 
 /***/ }),
@@ -13593,174 +13593,174 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_DiUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/DiUtil */ "./node_modules/bpmn-js/lib/util/DiUtil.js");
 /* harmony import */ var diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! diagram-js/lib/layout/LayoutUtil */ "./node_modules/diagram-js/lib/layout/LayoutUtil.js");
 /* harmony import */ var _util_LaneUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/LaneUtil */ "./node_modules/bpmn-js/lib/features/modeling/util/LaneUtil.js");
-
-
-
-
-
-
-
-
-var HIGH_PRIORITY = 1500;
-
-var LANE_MIN_DIMENSIONS = { width: 300, height: 60 };
-
-var PARTICIPANT_MIN_DIMENSIONS = { width: 300, height: 150 };
-
-var SUB_PROCESS_MIN_DIMENSIONS = { width: 140, height: 120 };
-
-var TEXT_ANNOTATION_MIN_DIMENSIONS = { width: 50, height: 30 };
-
-/**
- * Set minimum bounds/resize constraints on resize.
- *
- * @param {EventBus} eventBus
- */
-function ResizeBehavior(eventBus) {
-  eventBus.on('resize.start', HIGH_PRIORITY, function(event) {
-    var context = event.context,
-        shape = context.shape,
-        direction = context.direction,
-        balanced = context.balanced;
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Lane') || (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Participant')) {
-      context.resizeConstraints = getParticipantResizeConstraints(shape, direction, balanced);
-    }
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Participant')) {
-      context.minDimensions = PARTICIPANT_MIN_DIMENSIONS;
-    }
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:SubProcess') && (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_1__.isExpanded)(shape)) {
-      context.minDimensions = SUB_PROCESS_MIN_DIMENSIONS;
-    }
-
-    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:TextAnnotation')) {
-      context.minDimensions = TEXT_ANNOTATION_MIN_DIMENSIONS;
-    }
-  });
-}
-
-ResizeBehavior.$inject = [ 'eventBus' ];
-
-
-var abs = Math.abs,
-    min = Math.min,
-    max = Math.max;
-
-
-function addToTrbl(trbl, attr, value, choice) {
-  var current = trbl[attr];
-
-  // make sure to set the value if it does not exist
-  // or apply the correct value by comparing against
-  // choice(value, currentValue)
-  trbl[attr] = current === undefined ? value : choice(value, current);
-}
-
-function addMin(trbl, attr, value) {
-  return addToTrbl(trbl, attr, value, min);
-}
-
-function addMax(trbl, attr, value) {
-  return addToTrbl(trbl, attr, value, max);
-}
-
-var LANE_RIGHT_PADDING = 20,
-    LANE_LEFT_PADDING = 50,
-    LANE_TOP_PADDING = 20,
-    LANE_BOTTOM_PADDING = 20;
-
-function getParticipantResizeConstraints(laneShape, resizeDirection, balanced) {
-  var lanesRoot = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_2__.getLanesRoot)(laneShape);
-
-  var isFirst = true,
-      isLast = true;
-
-  // max top/bottom size for lanes
-  var allLanes = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_2__.collectLanes)(lanesRoot, [ lanesRoot ]);
-
-  var laneTrbl = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.asTRBL)(laneShape);
-
-  var maxTrbl = {},
-      minTrbl = {};
-
-  if (/e/.test(resizeDirection)) {
-    minTrbl.right = laneTrbl.left + LANE_MIN_DIMENSIONS.width;
-  } else
-  if (/w/.test(resizeDirection)) {
-    minTrbl.left = laneTrbl.right - LANE_MIN_DIMENSIONS.width;
-  }
-
-  allLanes.forEach(function(other) {
-
-    var otherTrbl = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.asTRBL)(other);
-
-    if (/n/.test(resizeDirection)) {
-
-      if (otherTrbl.top < (laneTrbl.top - 10)) {
-        isFirst = false;
-      }
-
-      // max top size (based on next element)
-      if (balanced && abs(laneTrbl.top - otherTrbl.bottom) < 10) {
-        addMax(maxTrbl, 'top', otherTrbl.top + LANE_MIN_DIMENSIONS.height);
-      }
-
-      // min top size (based on self or nested element)
-      if (abs(laneTrbl.top - otherTrbl.top) < 5) {
-        addMin(minTrbl, 'top', otherTrbl.bottom - LANE_MIN_DIMENSIONS.height);
-      }
-    }
-
-    if (/s/.test(resizeDirection)) {
-
-      if (otherTrbl.bottom > (laneTrbl.bottom + 10)) {
-        isLast = false;
-      }
-
-      // max bottom size (based on previous element)
-      if (balanced && abs(laneTrbl.bottom - otherTrbl.top) < 10) {
-        addMin(maxTrbl, 'bottom', otherTrbl.bottom - LANE_MIN_DIMENSIONS.height);
-      }
-
-      // min bottom size (based on self or nested element)
-      if (abs(laneTrbl.bottom - otherTrbl.bottom) < 5) {
-        addMax(minTrbl, 'bottom', otherTrbl.top + LANE_MIN_DIMENSIONS.height);
-      }
-    }
-  });
-
-  // max top/bottom/left/right size based on flow nodes
-  var flowElements = lanesRoot.children.filter(function(s) {
-    return !s.hidden && !s.waypoints && ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(s, 'bpmn:FlowElement') || (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(s, 'bpmn:Artifact'));
-  });
-
-  flowElements.forEach(function(flowElement) {
-
-    var flowElementTrbl = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.asTRBL)(flowElement);
-
-    if (isFirst && /n/.test(resizeDirection)) {
-      addMin(minTrbl, 'top', flowElementTrbl.top - LANE_TOP_PADDING);
-    }
-
-    if (/e/.test(resizeDirection)) {
-      addMax(minTrbl, 'right', flowElementTrbl.right + LANE_RIGHT_PADDING);
-    }
-
-    if (isLast && /s/.test(resizeDirection)) {
-      addMax(minTrbl, 'bottom', flowElementTrbl.bottom + LANE_BOTTOM_PADDING);
-    }
-
-    if (/w/.test(resizeDirection)) {
-      addMin(minTrbl, 'left', flowElementTrbl.left - LANE_LEFT_PADDING);
-    }
-  });
-
-  return {
-    min: minTrbl,
-    max: maxTrbl
-  };
+
+
+
+
+
+
+
+
+var HIGH_PRIORITY = 1500;
+
+var LANE_MIN_DIMENSIONS = { width: 300, height: 60 };
+
+var PARTICIPANT_MIN_DIMENSIONS = { width: 300, height: 150 };
+
+var SUB_PROCESS_MIN_DIMENSIONS = { width: 140, height: 120 };
+
+var TEXT_ANNOTATION_MIN_DIMENSIONS = { width: 50, height: 30 };
+
+/**
+ * Set minimum bounds/resize constraints on resize.
+ *
+ * @param {EventBus} eventBus
+ */
+function ResizeBehavior(eventBus) {
+  eventBus.on('resize.start', HIGH_PRIORITY, function(event) {
+    var context = event.context,
+        shape = context.shape,
+        direction = context.direction,
+        balanced = context.balanced;
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Lane') || (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Participant')) {
+      context.resizeConstraints = getParticipantResizeConstraints(shape, direction, balanced);
+    }
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:Participant')) {
+      context.minDimensions = PARTICIPANT_MIN_DIMENSIONS;
+    }
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:SubProcess') && (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_1__.isExpanded)(shape)) {
+      context.minDimensions = SUB_PROCESS_MIN_DIMENSIONS;
+    }
+
+    if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(shape, 'bpmn:TextAnnotation')) {
+      context.minDimensions = TEXT_ANNOTATION_MIN_DIMENSIONS;
+    }
+  });
+}
+
+ResizeBehavior.$inject = [ 'eventBus' ];
+
+
+var abs = Math.abs,
+    min = Math.min,
+    max = Math.max;
+
+
+function addToTrbl(trbl, attr, value, choice) {
+  var current = trbl[attr];
+
+  // make sure to set the value if it does not exist
+  // or apply the correct value by comparing against
+  // choice(value, currentValue)
+  trbl[attr] = current === undefined ? value : choice(value, current);
+}
+
+function addMin(trbl, attr, value) {
+  return addToTrbl(trbl, attr, value, min);
+}
+
+function addMax(trbl, attr, value) {
+  return addToTrbl(trbl, attr, value, max);
+}
+
+var LANE_RIGHT_PADDING = 20,
+    LANE_LEFT_PADDING = 50,
+    LANE_TOP_PADDING = 20,
+    LANE_BOTTOM_PADDING = 20;
+
+function getParticipantResizeConstraints(laneShape, resizeDirection, balanced) {
+  var lanesRoot = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_2__.getLanesRoot)(laneShape);
+
+  var isFirst = true,
+      isLast = true;
+
+  // max top/bottom size for lanes
+  var allLanes = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_2__.collectLanes)(lanesRoot, [ lanesRoot ]);
+
+  var laneTrbl = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.asTRBL)(laneShape);
+
+  var maxTrbl = {},
+      minTrbl = {};
+
+  if (/e/.test(resizeDirection)) {
+    minTrbl.right = laneTrbl.left + LANE_MIN_DIMENSIONS.width;
+  } else
+  if (/w/.test(resizeDirection)) {
+    minTrbl.left = laneTrbl.right - LANE_MIN_DIMENSIONS.width;
+  }
+
+  allLanes.forEach(function(other) {
+
+    var otherTrbl = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.asTRBL)(other);
+
+    if (/n/.test(resizeDirection)) {
+
+      if (otherTrbl.top < (laneTrbl.top - 10)) {
+        isFirst = false;
+      }
+
+      // max top size (based on next element)
+      if (balanced && abs(laneTrbl.top - otherTrbl.bottom) < 10) {
+        addMax(maxTrbl, 'top', otherTrbl.top + LANE_MIN_DIMENSIONS.height);
+      }
+
+      // min top size (based on self or nested element)
+      if (abs(laneTrbl.top - otherTrbl.top) < 5) {
+        addMin(minTrbl, 'top', otherTrbl.bottom - LANE_MIN_DIMENSIONS.height);
+      }
+    }
+
+    if (/s/.test(resizeDirection)) {
+
+      if (otherTrbl.bottom > (laneTrbl.bottom + 10)) {
+        isLast = false;
+      }
+
+      // max bottom size (based on previous element)
+      if (balanced && abs(laneTrbl.bottom - otherTrbl.top) < 10) {
+        addMin(maxTrbl, 'bottom', otherTrbl.bottom - LANE_MIN_DIMENSIONS.height);
+      }
+
+      // min bottom size (based on self or nested element)
+      if (abs(laneTrbl.bottom - otherTrbl.bottom) < 5) {
+        addMax(minTrbl, 'bottom', otherTrbl.top + LANE_MIN_DIMENSIONS.height);
+      }
+    }
+  });
+
+  // max top/bottom/left/right size based on flow nodes
+  var flowElements = lanesRoot.children.filter(function(s) {
+    return !s.hidden && !s.waypoints && ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(s, 'bpmn:FlowElement') || (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_0__.is)(s, 'bpmn:Artifact'));
+  });
+
+  flowElements.forEach(function(flowElement) {
+
+    var flowElementTrbl = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.asTRBL)(flowElement);
+
+    if (isFirst && /n/.test(resizeDirection)) {
+      addMin(minTrbl, 'top', flowElementTrbl.top - LANE_TOP_PADDING);
+    }
+
+    if (/e/.test(resizeDirection)) {
+      addMax(minTrbl, 'right', flowElementTrbl.right + LANE_RIGHT_PADDING);
+    }
+
+    if (isLast && /s/.test(resizeDirection)) {
+      addMax(minTrbl, 'bottom', flowElementTrbl.bottom + LANE_BOTTOM_PADDING);
+    }
+
+    if (/w/.test(resizeDirection)) {
+      addMin(minTrbl, 'left', flowElementTrbl.left - LANE_LEFT_PADDING);
+    }
+  });
+
+  return {
+    min: minTrbl,
+    max: maxTrbl
+  };
 }
 
 /***/ }),
@@ -13860,179 +13860,179 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var diagram_js_lib_util_Collections__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! diagram-js/lib/util/Collections */ "./node_modules/diagram-js/lib/util/Collections.js");
 /* harmony import */ var _util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/ModelingUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
 /* harmony import */ var _util_DiUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../util/DiUtil */ "./node_modules/bpmn-js/lib/util/DiUtil.js");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var LOW_PRIORITY = 500;
-
-
-/**
- * Add referenced root elements (error, escalation, message, signal) if they don't exist.
- * Copy referenced root elements on copy & paste.
- */
-function RootElementReferenceBehavior(
-    bpmnjs, eventBus, injector, moddleCopy, bpmnFactory
-) {
-  injector.invoke(diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"], this);
-
-  function canHaveRootElementReference(element) {
-    return (0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(element, [ 'bpmn:ReceiveTask', 'bpmn:SendTask' ]) ||
-      hasAnyEventDefinition(element, [
-        'bpmn:ErrorEventDefinition',
-        'bpmn:EscalationEventDefinition',
-        'bpmn:MessageEventDefinition',
-        'bpmn:SignalEventDefinition'
-      ]);
-  }
-
-  function hasRootElement(rootElement) {
-    var definitions = bpmnjs.getDefinitions(),
-        rootElements = definitions.get('rootElements');
-
-    return !!(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.find)(rootElements, (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.matchPattern)({ id: rootElement.id }));
-  }
-
-  function getRootElementReferencePropertyName(eventDefinition) {
-    if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:ErrorEventDefinition')) {
-      return 'errorRef';
-    } else if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:EscalationEventDefinition')) {
-      return 'escalationRef';
-    } else if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:MessageEventDefinition')) {
-      return 'messageRef';
-    } else if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:SignalEventDefinition')) {
-      return 'signalRef';
-    }
-  }
-
-  function getRootElement(businessObject) {
-    if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(businessObject, [ 'bpmn:ReceiveTask', 'bpmn:SendTask' ])) {
-      return businessObject.get('messageRef');
-    }
-
-    var eventDefinitions = businessObject.get('eventDefinitions'),
-        eventDefinition = eventDefinitions[ 0 ];
-
-    return eventDefinition.get(getRootElementReferencePropertyName(eventDefinition));
-  }
-
-  function setRootElement(businessObject, rootElement) {
-    if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(businessObject, [ 'bpmn:ReceiveTask', 'bpmn:SendTask' ])) {
-      return businessObject.set('messageRef', rootElement);
-    }
-
-    var eventDefinitions = businessObject.get('eventDefinitions'),
-        eventDefinition = eventDefinitions[ 0 ];
-
-    return eventDefinition.set(getRootElementReferencePropertyName(eventDefinition), rootElement);
-  }
-
-  // create shape
-  this.executed('shape.create', function(context) {
-    var shape = context.shape;
-
-    if (!canHaveRootElementReference(shape)) {
-      return;
-    }
-
-    var businessObject = (0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.getBusinessObject)(shape),
-        rootElement = getRootElement(businessObject),
-        rootElements;
-
-    if (rootElement && !hasRootElement(rootElement)) {
-      rootElements = bpmnjs.getDefinitions().get('rootElements');
-
-      // add root element
-      (0,diagram_js_lib_util_Collections__WEBPACK_IMPORTED_MODULE_4__.add)(rootElements, rootElement);
-
-      context.addedRootElement = rootElement;
-    }
-  }, true);
-
-  this.reverted('shape.create', function(context) {
-    var addedRootElement = context.addedRootElement;
-
-    if (!addedRootElement) {
-      return;
-    }
-
-    var rootElements = bpmnjs.getDefinitions().get('rootElements');
-
-    // remove root element
-    (0,diagram_js_lib_util_Collections__WEBPACK_IMPORTED_MODULE_4__.remove)(rootElements, addedRootElement);
-  }, true);
-
-  eventBus.on('copyPaste.copyElement', function(context) {
-    var descriptor = context.descriptor,
-        element = context.element;
-
-    if (!canHaveRootElementReference(element)) {
-      return;
-    }
-
-    var businessObject = (0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.getBusinessObject)(element),
-        rootElement = getRootElement(businessObject);
-
-    if (rootElement) {
-      descriptor.referencedRootElement = rootElement;
-    }
-  });
-
-  eventBus.on('copyPaste.pasteElement', LOW_PRIORITY, function(context) {
-    var descriptor = context.descriptor,
-        businessObject = descriptor.businessObject;
-
-    if (!canHaveRootElementReference(businessObject)) {
-      return;
-    }
-
-    var referencedRootElement = descriptor.referencedRootElement;
-
-    if (!referencedRootElement) {
-      return;
-    }
-
-    if (!hasRootElement(referencedRootElement)) {
-      referencedRootElement = moddleCopy.copyElement(
-        referencedRootElement,
-        bpmnFactory.create(referencedRootElement.$type)
-      );
-    }
-
-    setRootElement(businessObject, referencedRootElement);
-  });
-}
-
-RootElementReferenceBehavior.$inject = [
-  'bpmnjs',
-  'eventBus',
-  'injector',
-  'moddleCopy',
-  'bpmnFactory'
-];
-
-inherits__WEBPACK_IMPORTED_MODULE_0___default()(RootElementReferenceBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-// helpers //////////
-
-function hasAnyEventDefinition(element, types) {
-  if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.isArray)(types)) {
-    types = [ types ];
-  }
-
-  return (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.some)(types, function(type) {
-    return (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_5__.hasEventDefinition)(element, type);
-  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var LOW_PRIORITY = 500;
+
+
+/**
+ * Add referenced root elements (error, escalation, message, signal) if they don't exist.
+ * Copy referenced root elements on copy & paste.
+ */
+function RootElementReferenceBehavior(
+    bpmnjs, eventBus, injector, moddleCopy, bpmnFactory
+) {
+  injector.invoke(diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"], this);
+
+  function canHaveRootElementReference(element) {
+    return (0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(element, [ 'bpmn:ReceiveTask', 'bpmn:SendTask' ]) ||
+      hasAnyEventDefinition(element, [
+        'bpmn:ErrorEventDefinition',
+        'bpmn:EscalationEventDefinition',
+        'bpmn:MessageEventDefinition',
+        'bpmn:SignalEventDefinition'
+      ]);
+  }
+
+  function hasRootElement(rootElement) {
+    var definitions = bpmnjs.getDefinitions(),
+        rootElements = definitions.get('rootElements');
+
+    return !!(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.find)(rootElements, (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.matchPattern)({ id: rootElement.id }));
+  }
+
+  function getRootElementReferencePropertyName(eventDefinition) {
+    if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:ErrorEventDefinition')) {
+      return 'errorRef';
+    } else if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:EscalationEventDefinition')) {
+      return 'escalationRef';
+    } else if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:MessageEventDefinition')) {
+      return 'messageRef';
+    } else if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(eventDefinition, 'bpmn:SignalEventDefinition')) {
+      return 'signalRef';
+    }
+  }
+
+  function getRootElement(businessObject) {
+    if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(businessObject, [ 'bpmn:ReceiveTask', 'bpmn:SendTask' ])) {
+      return businessObject.get('messageRef');
+    }
+
+    var eventDefinitions = businessObject.get('eventDefinitions'),
+        eventDefinition = eventDefinitions[ 0 ];
+
+    return eventDefinition.get(getRootElementReferencePropertyName(eventDefinition));
+  }
+
+  function setRootElement(businessObject, rootElement) {
+    if ((0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(businessObject, [ 'bpmn:ReceiveTask', 'bpmn:SendTask' ])) {
+      return businessObject.set('messageRef', rootElement);
+    }
+
+    var eventDefinitions = businessObject.get('eventDefinitions'),
+        eventDefinition = eventDefinitions[ 0 ];
+
+    return eventDefinition.set(getRootElementReferencePropertyName(eventDefinition), rootElement);
+  }
+
+  // create shape
+  this.executed('shape.create', function(context) {
+    var shape = context.shape;
+
+    if (!canHaveRootElementReference(shape)) {
+      return;
+    }
+
+    var businessObject = (0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.getBusinessObject)(shape),
+        rootElement = getRootElement(businessObject),
+        rootElements;
+
+    if (rootElement && !hasRootElement(rootElement)) {
+      rootElements = bpmnjs.getDefinitions().get('rootElements');
+
+      // add root element
+      (0,diagram_js_lib_util_Collections__WEBPACK_IMPORTED_MODULE_4__.add)(rootElements, rootElement);
+
+      context.addedRootElement = rootElement;
+    }
+  }, true);
+
+  this.reverted('shape.create', function(context) {
+    var addedRootElement = context.addedRootElement;
+
+    if (!addedRootElement) {
+      return;
+    }
+
+    var rootElements = bpmnjs.getDefinitions().get('rootElements');
+
+    // remove root element
+    (0,diagram_js_lib_util_Collections__WEBPACK_IMPORTED_MODULE_4__.remove)(rootElements, addedRootElement);
+  }, true);
+
+  eventBus.on('copyPaste.copyElement', function(context) {
+    var descriptor = context.descriptor,
+        element = context.element;
+
+    if (!canHaveRootElementReference(element)) {
+      return;
+    }
+
+    var businessObject = (0,_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.getBusinessObject)(element),
+        rootElement = getRootElement(businessObject);
+
+    if (rootElement) {
+      descriptor.referencedRootElement = rootElement;
+    }
+  });
+
+  eventBus.on('copyPaste.pasteElement', LOW_PRIORITY, function(context) {
+    var descriptor = context.descriptor,
+        businessObject = descriptor.businessObject;
+
+    if (!canHaveRootElementReference(businessObject)) {
+      return;
+    }
+
+    var referencedRootElement = descriptor.referencedRootElement;
+
+    if (!referencedRootElement) {
+      return;
+    }
+
+    if (!hasRootElement(referencedRootElement)) {
+      referencedRootElement = moddleCopy.copyElement(
+        referencedRootElement,
+        bpmnFactory.create(referencedRootElement.$type)
+      );
+    }
+
+    setRootElement(businessObject, referencedRootElement);
+  });
+}
+
+RootElementReferenceBehavior.$inject = [
+  'bpmnjs',
+  'eventBus',
+  'injector',
+  'moddleCopy',
+  'bpmnFactory'
+];
+
+inherits__WEBPACK_IMPORTED_MODULE_0___default()(RootElementReferenceBehavior, diagram_js_lib_command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+// helpers //////////
+
+function hasAnyEventDefinition(element, types) {
+  if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.isArray)(types)) {
+    types = [ types ];
+  }
+
+  return (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.some)(types, function(type) {
+    return (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_5__.hasEventDefinition)(element, type);
+  });
 }
 
 /***/ }),
@@ -14053,125 +14053,125 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_DiUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../util/DiUtil */ "./node_modules/bpmn-js/lib/util/DiUtil.js");
 /* harmony import */ var _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ResizeBehavior */ "./node_modules/bpmn-js/lib/features/modeling/behavior/ResizeBehavior.js");
 /* harmony import */ var _util_LaneUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/LaneUtil */ "./node_modules/bpmn-js/lib/features/modeling/util/LaneUtil.js");
-
-
-
-
-
-
-
-
-
-
-var max = Math.max;
-
-
-function SpaceToolBehavior(eventBus) {
-  eventBus.on('spaceTool.getMinDimensions', function(context) {
-    var shapes = context.shapes,
-        axis = context.axis,
-        start = context.start,
-        minDimensions = {};
-
-    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(shapes, function(shape) {
-      var id = shape.id;
-
-      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.is)(shape, 'bpmn:Participant')) {
-
-        if (isHorizontal(axis)) {
-          minDimensions[ id ] = _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS;
-        } else {
-          minDimensions[ id ] = {
-            width: _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS.width,
-            height: getParticipantMinHeight(shape, start)
-          };
-        }
-
-      }
-
-      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.is)(shape, 'bpmn:SubProcess') && (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_3__.isExpanded)(shape)) {
-        minDimensions[ id ] = _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.SUB_PROCESS_MIN_DIMENSIONS;
-      }
-
-      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.is)(shape, 'bpmn:TextAnnotation')) {
-        minDimensions[ id ] = _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.TEXT_ANNOTATION_MIN_DIMENSIONS;
-      }
-    });
-
-    return minDimensions;
-  });
-}
-
-SpaceToolBehavior.$inject = [ 'eventBus' ];
-
-
-// helpers //////////
-function isHorizontal(axis) {
-  return axis === 'x';
-}
-
-/**
- * Get minimum height for participant taking lanes into account.
- *
- * @param {<djs.model.Shape>} participant
- * @param {number} start
- *
- * @returns {Object}
- */
-function getParticipantMinHeight(participant, start) {
-  var lanesMinHeight;
-
-  if (!hasChildLanes(participant)) {
-    return _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS.height;
-  }
-
-  lanesMinHeight = getLanesMinHeight(participant, start);
-
-  return max(_ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS.height, lanesMinHeight);
-}
-
-function hasChildLanes(element) {
-  return !!(0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_4__.getChildLanes)(element).length;
-}
-
-function getLanesMinHeight(participant, resizeStart) {
-  var lanes = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_4__.getChildLanes)(participant),
-      resizedLane;
-
-  // find the nested lane which is currently resized
-  resizedLane = findResizedLane(lanes, resizeStart);
-
-  // resized lane cannot shrink below the minimum height
-  // but remaining lanes' dimensions are kept intact
-  return participant.height - resizedLane.height + _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.LANE_MIN_DIMENSIONS.height;
-}
-
-/**
- * Find nested lane which is currently resized.
- *
- * @param {Array<djs.model.Shape>} lanes
- * @param {number} resizeStart
- */
-function findResizedLane(lanes, resizeStart) {
-  var i, lane, childLanes;
-
-  for (i = 0; i < lanes.length; i++) {
-    lane = lanes[i];
-
-    // resizing current lane or a lane nested
-    if (resizeStart >= lane.y && resizeStart <= lane.y + lane.height) {
-      childLanes = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_4__.getChildLanes)(lane);
-
-      // a nested lane is resized
-      if (childLanes.length) {
-        return findResizedLane(childLanes, resizeStart);
-      }
-
-      // current lane is the resized one
-      return lane;
-    }
-  }
-}
+
+
+
+
+
+
+
+
+
+
+var max = Math.max;
+
+
+function SpaceToolBehavior(eventBus) {
+  eventBus.on('spaceTool.getMinDimensions', function(context) {
+    var shapes = context.shapes,
+        axis = context.axis,
+        start = context.start,
+        minDimensions = {};
+
+    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(shapes, function(shape) {
+      var id = shape.id;
+
+      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.is)(shape, 'bpmn:Participant')) {
+
+        if (isHorizontal(axis)) {
+          minDimensions[ id ] = _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS;
+        } else {
+          minDimensions[ id ] = {
+            width: _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS.width,
+            height: getParticipantMinHeight(shape, start)
+          };
+        }
+
+      }
+
+      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.is)(shape, 'bpmn:SubProcess') && (0,_util_DiUtil__WEBPACK_IMPORTED_MODULE_3__.isExpanded)(shape)) {
+        minDimensions[ id ] = _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.SUB_PROCESS_MIN_DIMENSIONS;
+      }
+
+      if ((0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.is)(shape, 'bpmn:TextAnnotation')) {
+        minDimensions[ id ] = _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.TEXT_ANNOTATION_MIN_DIMENSIONS;
+      }
+    });
+
+    return minDimensions;
+  });
+}
+
+SpaceToolBehavior.$inject = [ 'eventBus' ];
+
+
+// helpers //////////
+function isHorizontal(axis) {
+  return axis === 'x';
+}
+
+/**
+ * Get minimum height for participant taking lanes into account.
+ *
+ * @param {<djs.model.Shape>} participant
+ * @param {number} start
+ *
+ * @returns {Object}
+ */
+function getParticipantMinHeight(participant, start) {
+  var lanesMinHeight;
+
+  if (!hasChildLanes(participant)) {
+    return _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS.height;
+  }
+
+  lanesMinHeight = getLanesMinHeight(participant, start);
+
+  return max(_ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.PARTICIPANT_MIN_DIMENSIONS.height, lanesMinHeight);
+}
+
+function hasChildLanes(element) {
+  return !!(0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_4__.getChildLanes)(element).length;
+}
+
+function getLanesMinHeight(participant, resizeStart) {
+  var lanes = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_4__.getChildLanes)(participant),
+      resizedLane;
+
+  // find the nested lane which is currently resized
+  resizedLane = findResizedLane(lanes, resizeStart);
+
+  // resized lane cannot shrink below the minimum height
+  // but remaining lanes' dimensions are kept intact
+  return participant.height - resizedLane.height + _ResizeBehavior__WEBPACK_IMPORTED_MODULE_2__.LANE_MIN_DIMENSIONS.height;
+}
+
+/**
+ * Find nested lane which is currently resized.
+ *
+ * @param {Array<djs.model.Shape>} lanes
+ * @param {number} resizeStart
+ */
+function findResizedLane(lanes, resizeStart) {
+  var i, lane, childLanes;
+
+  for (i = 0; i < lanes.length; i++) {
+    lane = lanes[i];
+
+    // resizing current lane or a lane nested
+    if (resizeStart >= lane.y && resizeStart <= lane.y + lane.height) {
+      childLanes = (0,_util_LaneUtil__WEBPACK_IMPORTED_MODULE_4__.getChildLanes)(lane);
+
+      // a nested lane is resized
+      if (childLanes.length) {
+        return findResizedLane(childLanes, resizeStart);
+      }
+
+      // current lane is the resized one
+      return lane;
+    }
+  }
+}
 
 
 /***/ }),
@@ -16598,139 +16598,139 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
 /* harmony import */ var _util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/ModelUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
-
-
-
-
-var DEFAULT_COLORS = {
-  fill: undefined,
-  stroke: undefined
-};
-
-
-function SetColorHandler(commandStack) {
-  this._commandStack = commandStack;
-
-  this._normalizeColor = function(color) {
-
-    // Remove color for falsy values.
-    if (!color) {
-      return undefined;
-    }
-
-    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isString)(color)) {
-      var hexColor = colorToHex(color);
-
-      if (hexColor) {
-        return hexColor;
-      }
-    }
-
-    throw new Error('invalid color value: ' + color);
-  };
-}
-
-SetColorHandler.$inject = [
-  'commandStack'
-];
-
-
-SetColorHandler.prototype.postExecute = function(context) {
-  var elements = context.elements,
-      colors = context.colors || DEFAULT_COLORS;
-
-  var self = this;
-
-  var di = {};
-
-  if ('fill' in colors) {
-    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)(di, {
-      'background-color': this._normalizeColor(colors.fill) });
-  }
-
-  if ('stroke' in colors) {
-    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)(di, {
-      'border-color': this._normalizeColor(colors.stroke) });
-  }
-
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
-    var assignedDi = isConnection(element) ? (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.pick)(di, [ 'border-color' ]) : di;
-
-    // TODO @barmac: remove once we drop bpmn.io properties
-    ensureLegacySupport(assignedDi);
-
-    if (element.labelTarget) {
-
-      // set label colors as bpmndi:BPMNLabel#color
-      self._commandStack.execute('element.updateModdleProperties', {
-        element: element,
-        moddleElement: (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.getDi)(element).label,
-        properties: {
-          color: di['background-color']
-        }
-      });
-    } else {
-
-      // set colors bpmndi:BPMNEdge or bpmndi:BPMNShape
-      self._commandStack.execute('element.updateProperties', {
-        element: element,
-        properties: {
-          di: assignedDi
-        }
-      });
-    }
-  });
-
-};
-
-/**
- * Convert color from rgb(a)/hsl to hex. Returns `null` for unknown color names and for colors
- * with alpha less than 1.0. This depends on `<canvas>` serialization of the `context.fillStyle`.
- * Cf. https://html.spec.whatwg.org/multipage/canvas.html#dom-context-2d-fillstyle
- *
- * @example
- * ```js
- * var color = 'fuchsia';
- * console.log(colorToHex(color));
- * // "#ff00ff"
- * color = 'rgba(1,2,3,0.4)';
- * console.log(colorToHex(color));
- * // null
- * ```
- *
- * @param {string} color
- * @returns {string|null}
- */
-function colorToHex(color) {
-  var context = document.createElement('canvas').getContext('2d');
-
-  // (0) Start with transparent to account for browser default values.
-  context.fillStyle = 'transparent';
-
-  // (1) Assign color so that it's serialized.
-  context.fillStyle = color;
-
-  // (2) Return null for non-hex serialization result.
-  return /^#[0-9a-fA-F]{6}$/.test(context.fillStyle) ? context.fillStyle : null;
-}
-
-function isConnection(element) {
-  return !!element.waypoints;
-}
-
-/**
- * Add legacy properties if required.
- * @param {{ 'border-color': string?, 'background-color': string? }} di
- */
-function ensureLegacySupport(di) {
-  if ('border-color' in di) {
-    di.stroke = di['border-color'];
-  }
-
-  if ('background-color' in di) {
-    di.fill = di['background-color'];
-  }
-}
+
+
+
+
+var DEFAULT_COLORS = {
+  fill: undefined,
+  stroke: undefined
+};
+
+
+function SetColorHandler(commandStack) {
+  this._commandStack = commandStack;
+
+  this._normalizeColor = function(color) {
+
+    // Remove color for falsy values.
+    if (!color) {
+      return undefined;
+    }
+
+    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isString)(color)) {
+      var hexColor = colorToHex(color);
+
+      if (hexColor) {
+        return hexColor;
+      }
+    }
+
+    throw new Error('invalid color value: ' + color);
+  };
+}
+
+SetColorHandler.$inject = [
+  'commandStack'
+];
+
+
+SetColorHandler.prototype.postExecute = function(context) {
+  var elements = context.elements,
+      colors = context.colors || DEFAULT_COLORS;
+
+  var self = this;
+
+  var di = {};
+
+  if ('fill' in colors) {
+    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)(di, {
+      'background-color': this._normalizeColor(colors.fill) });
+  }
+
+  if ('stroke' in colors) {
+    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)(di, {
+      'border-color': this._normalizeColor(colors.stroke) });
+  }
+
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
+    var assignedDi = isConnection(element) ? (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.pick)(di, [ 'border-color' ]) : di;
+
+    // TODO @barmac: remove once we drop bpmn.io properties
+    ensureLegacySupport(assignedDi);
+
+    if (element.labelTarget) {
+
+      // set label colors as bpmndi:BPMNLabel#color
+      self._commandStack.execute('element.updateModdleProperties', {
+        element: element,
+        moddleElement: (0,_util_ModelUtil__WEBPACK_IMPORTED_MODULE_1__.getDi)(element).label,
+        properties: {
+          color: di['background-color']
+        }
+      });
+    } else {
+
+      // set colors bpmndi:BPMNEdge or bpmndi:BPMNShape
+      self._commandStack.execute('element.updateProperties', {
+        element: element,
+        properties: {
+          di: assignedDi
+        }
+      });
+    }
+  });
+
+};
+
+/**
+ * Convert color from rgb(a)/hsl to hex. Returns `null` for unknown color names and for colors
+ * with alpha less than 1.0. This depends on `<canvas>` serialization of the `context.fillStyle`.
+ * Cf. https://html.spec.whatwg.org/multipage/canvas.html#dom-context-2d-fillstyle
+ *
+ * @example
+ * ```js
+ * var color = 'fuchsia';
+ * console.log(colorToHex(color));
+ * // "#ff00ff"
+ * color = 'rgba(1,2,3,0.4)';
+ * console.log(colorToHex(color));
+ * // null
+ * ```
+ *
+ * @param {string} color
+ * @returns {string|null}
+ */
+function colorToHex(color) {
+  var context = document.createElement('canvas').getContext('2d');
+
+  // (0) Start with transparent to account for browser default values.
+  context.fillStyle = 'transparent';
+
+  // (1) Assign color so that it's serialized.
+  context.fillStyle = color;
+
+  // (2) Return null for non-hex serialization result.
+  return /^#[0-9a-fA-F]{6}$/.test(context.fillStyle) ? context.fillStyle : null;
+}
+
+function isConnection(element) {
+  return !!element.waypoints;
+}
+
+/**
+ * Add legacy properties if required.
+ * @param {{ 'border-color': string?, 'background-color': string? }} di
+ */
+function ensureLegacySupport(di) {
+  if ('border-color' in di) {
+    di.stroke = di['border-color'];
+  }
+
+  if ('background-color' in di) {
+    di.fill = di['background-color'];
+  }
+}
 
 
 /***/ }),
@@ -17494,42 +17494,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UpdateSemanticParentHandler)
 /* harmony export */ });
-function UpdateSemanticParentHandler(bpmnUpdater) {
-  this._bpmnUpdater = bpmnUpdater;
-}
-
-UpdateSemanticParentHandler.$inject = [ 'bpmnUpdater' ];
-
-
-UpdateSemanticParentHandler.prototype.execute = function(context) {
-  var dataStoreBo = context.dataStoreBo,
-      dataStoreDi = context.dataStoreDi,
-      newSemanticParent = context.newSemanticParent,
-      newDiParent = context.newDiParent;
-
-  context.oldSemanticParent = dataStoreBo.$parent;
-  context.oldDiParent = dataStoreDi.$parent;
-
-  // update semantic parent
-  this._bpmnUpdater.updateSemanticParent(dataStoreBo, newSemanticParent);
-
-  // update DI parent
-  this._bpmnUpdater.updateDiParent(dataStoreDi, newDiParent);
-};
-
-UpdateSemanticParentHandler.prototype.revert = function(context) {
-  var dataStoreBo = context.dataStoreBo,
-      dataStoreDi = context.dataStoreDi,
-      oldSemanticParent = context.oldSemanticParent,
-      oldDiParent = context.oldDiParent;
-
-  // update semantic parent
-  this._bpmnUpdater.updateSemanticParent(dataStoreBo, oldSemanticParent);
-
-  // update DI parent
-  this._bpmnUpdater.updateDiParent(dataStoreDi, oldDiParent);
-};
-
+function UpdateSemanticParentHandler(bpmnUpdater) {
+  this._bpmnUpdater = bpmnUpdater;
+}
+
+UpdateSemanticParentHandler.$inject = [ 'bpmnUpdater' ];
+
+
+UpdateSemanticParentHandler.prototype.execute = function(context) {
+  var dataStoreBo = context.dataStoreBo,
+      dataStoreDi = context.dataStoreDi,
+      newSemanticParent = context.newSemanticParent,
+      newDiParent = context.newDiParent;
+
+  context.oldSemanticParent = dataStoreBo.$parent;
+  context.oldDiParent = dataStoreDi.$parent;
+
+  // update semantic parent
+  this._bpmnUpdater.updateSemanticParent(dataStoreBo, newSemanticParent);
+
+  // update DI parent
+  this._bpmnUpdater.updateDiParent(dataStoreDi, newDiParent);
+};
+
+UpdateSemanticParentHandler.prototype.revert = function(context) {
+  var dataStoreBo = context.dataStoreBo,
+      dataStoreDi = context.dataStoreDi,
+      oldSemanticParent = context.oldSemanticParent,
+      oldDiParent = context.oldDiParent;
+
+  // update semantic parent
+  this._bpmnUpdater.updateSemanticParent(dataStoreBo, oldSemanticParent);
+
+  // update DI parent
+  this._bpmnUpdater.updateDiParent(dataStoreDi, oldDiParent);
+};
+
 
 
 /***/ }),
@@ -21584,212 +21584,212 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! diagram-js/lib/layout/LayoutUtil */ "./node_modules/diagram-js/lib/layout/LayoutUtil.js");
 /* harmony import */ var _modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../modeling/util/ModelingUtil */ "./node_modules/bpmn-js/lib/util/ModelUtil.js");
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
-
-
-
-
-
-
-
-
-
-
-
-
-var HIGHER_PRIORITY = 1250;
-
-var BOUNDARY_TO_HOST_THRESHOLD = 40;
-
-var TARGET_BOUNDS_PADDING = 20,
-    TASK_BOUNDS_PADDING = 10;
-
-var TARGET_CENTER_PADDING = 20;
-
-var AXES = [ 'x', 'y' ];
-
-var abs = Math.abs;
-
-/**
- * Snap during connect.
- *
- * @param {EventBus} eventBus
- */
-function BpmnConnectSnapping(eventBus) {
-  eventBus.on([
-    'connect.hover',
-    'connect.move',
-    'connect.end',
-  ], HIGHER_PRIORITY, function(event) {
-    var context = event.context,
-        canExecute = context.canExecute,
-        start = context.start,
-        hover = context.hover,
-        source = context.source,
-        target = context.target;
-
-    // do NOT snap on CMD
-    if (event.originalEvent && (0,diagram_js_lib_features_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(event.originalEvent)) {
-      return;
-    }
-
-    if (!context.initialConnectionStart) {
-      context.initialConnectionStart = context.connectionStart;
-    }
-
-    // snap hover
-    if (canExecute && hover) {
-      snapToShape(event, hover, getTargetBoundsPadding(hover));
-    }
-
-    if (hover && isAnyType(canExecute, [
-      'bpmn:Association',
-      'bpmn:DataInputAssociation',
-      'bpmn:DataOutputAssociation',
-      'bpmn:SequenceFlow'
-    ])) {
-      context.connectionStart = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(start);
-
-      // snap hover
-      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(hover, [ 'bpmn:Event', 'bpmn:Gateway' ])) {
-        snapToPosition(event, (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(hover));
-      }
-
-      // snap hover
-      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(hover, [ 'bpmn:Task', 'bpmn:SubProcess' ])) {
-        snapToTargetMid(event, hover);
-      }
-
-      // snap source and target
-      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(source, 'bpmn:BoundaryEvent') && target === source.host) {
-        snapBoundaryEventLoop(event);
-      }
-
-    } else if (isType(canExecute, 'bpmn:MessageFlow')) {
-
-      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(start, 'bpmn:Event')) {
-
-        // snap start
-        context.connectionStart = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(start);
-      }
-
-      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(hover, 'bpmn:Event')) {
-
-        // snap hover
-        snapToPosition(event, (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(hover));
-      }
-
-    } else {
-
-      // un-snap source
-      context.connectionStart = context.initialConnectionStart;
-    }
-  });
-}
-
-BpmnConnectSnapping.$inject = [ 'eventBus' ];
-
-
-// helpers //////////
-
-// snap to target if event in target
-function snapToShape(event, target, padding) {
-  AXES.forEach(function(axis) {
-    var dimensionForAxis = getDimensionForAxis(axis, target);
-
-    if (event[ axis ] < target[ axis ] + padding) {
-      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, target[ axis ] + padding);
-    } else if (event[ axis ] > target[ axis ] + dimensionForAxis - padding) {
-      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, target[ axis ] + dimensionForAxis - padding);
-    }
-  });
-}
-
-// snap to target mid if event in target mid
-function snapToTargetMid(event, target) {
-  var targetMid = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(target);
-
-  AXES.forEach(function(axis) {
-    if (isMid(event, target, axis)) {
-      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, targetMid[ axis ]);
-    }
-  });
-}
-
-// snap to prevent loop overlapping boundary event
-function snapBoundaryEventLoop(event) {
-  var context = event.context,
-      source = context.source,
-      target = context.target;
-
-  if (isReverse(context)) {
-    return;
-  }
-
-  var sourceMid = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(source),
-      orientation = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.getOrientation)(sourceMid, target, -10),
-      axes = [];
-
-  if (/top|bottom/.test(orientation)) {
-    axes.push('x');
-  }
-
-  if (/left|right/.test(orientation)) {
-    axes.push('y');
-  }
-
-  axes.forEach(function(axis) {
-    var coordinate = event[ axis ], newCoordinate;
-
-    if (abs(coordinate - sourceMid[ axis ]) < BOUNDARY_TO_HOST_THRESHOLD) {
-      if (coordinate > sourceMid[ axis ]) {
-        newCoordinate = sourceMid[ axis ] + BOUNDARY_TO_HOST_THRESHOLD;
-      }
-      else {
-        newCoordinate = sourceMid[ axis ] - BOUNDARY_TO_HOST_THRESHOLD;
-      }
-
-      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, newCoordinate);
-    }
-  });
-}
-
-function snapToPosition(event, position) {
-  (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'x', position.x);
-  (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'y', position.y);
-}
-
-function isType(attrs, type) {
-  return attrs && attrs.type === type;
-}
-
-function isAnyType(attrs, types) {
-  return (0,min_dash__WEBPACK_IMPORTED_MODULE_4__.some)(types, function(type) {
-    return isType(attrs, type);
-  });
-}
-
-function getDimensionForAxis(axis, element) {
-  return axis === 'x' ? element.width : element.height;
-}
-
-function getTargetBoundsPadding(target) {
-  if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(target, 'bpmn:Task')) {
-    return TASK_BOUNDS_PADDING;
-  } else {
-    return TARGET_BOUNDS_PADDING;
-  }
-}
-
-function isMid(event, target, axis) {
-  return event[ axis ] > target[ axis ] + TARGET_CENTER_PADDING
-    && event[ axis ] < target[ axis ] + getDimensionForAxis(axis, target) - TARGET_CENTER_PADDING;
-}
-
-function isReverse(context) {
-  var hover = context.hover,
-      source = context.source;
-
-  return hover && source && hover === source;
+
+
+
+
+
+
+
+
+
+
+
+
+var HIGHER_PRIORITY = 1250;
+
+var BOUNDARY_TO_HOST_THRESHOLD = 40;
+
+var TARGET_BOUNDS_PADDING = 20,
+    TASK_BOUNDS_PADDING = 10;
+
+var TARGET_CENTER_PADDING = 20;
+
+var AXES = [ 'x', 'y' ];
+
+var abs = Math.abs;
+
+/**
+ * Snap during connect.
+ *
+ * @param {EventBus} eventBus
+ */
+function BpmnConnectSnapping(eventBus) {
+  eventBus.on([
+    'connect.hover',
+    'connect.move',
+    'connect.end',
+  ], HIGHER_PRIORITY, function(event) {
+    var context = event.context,
+        canExecute = context.canExecute,
+        start = context.start,
+        hover = context.hover,
+        source = context.source,
+        target = context.target;
+
+    // do NOT snap on CMD
+    if (event.originalEvent && (0,diagram_js_lib_features_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(event.originalEvent)) {
+      return;
+    }
+
+    if (!context.initialConnectionStart) {
+      context.initialConnectionStart = context.connectionStart;
+    }
+
+    // snap hover
+    if (canExecute && hover) {
+      snapToShape(event, hover, getTargetBoundsPadding(hover));
+    }
+
+    if (hover && isAnyType(canExecute, [
+      'bpmn:Association',
+      'bpmn:DataInputAssociation',
+      'bpmn:DataOutputAssociation',
+      'bpmn:SequenceFlow'
+    ])) {
+      context.connectionStart = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(start);
+
+      // snap hover
+      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(hover, [ 'bpmn:Event', 'bpmn:Gateway' ])) {
+        snapToPosition(event, (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(hover));
+      }
+
+      // snap hover
+      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.isAny)(hover, [ 'bpmn:Task', 'bpmn:SubProcess' ])) {
+        snapToTargetMid(event, hover);
+      }
+
+      // snap source and target
+      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(source, 'bpmn:BoundaryEvent') && target === source.host) {
+        snapBoundaryEventLoop(event);
+      }
+
+    } else if (isType(canExecute, 'bpmn:MessageFlow')) {
+
+      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(start, 'bpmn:Event')) {
+
+        // snap start
+        context.connectionStart = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(start);
+      }
+
+      if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(hover, 'bpmn:Event')) {
+
+        // snap hover
+        snapToPosition(event, (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(hover));
+      }
+
+    } else {
+
+      // un-snap source
+      context.connectionStart = context.initialConnectionStart;
+    }
+  });
+}
+
+BpmnConnectSnapping.$inject = [ 'eventBus' ];
+
+
+// helpers //////////
+
+// snap to target if event in target
+function snapToShape(event, target, padding) {
+  AXES.forEach(function(axis) {
+    var dimensionForAxis = getDimensionForAxis(axis, target);
+
+    if (event[ axis ] < target[ axis ] + padding) {
+      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, target[ axis ] + padding);
+    } else if (event[ axis ] > target[ axis ] + dimensionForAxis - padding) {
+      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, target[ axis ] + dimensionForAxis - padding);
+    }
+  });
+}
+
+// snap to target mid if event in target mid
+function snapToTargetMid(event, target) {
+  var targetMid = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(target);
+
+  AXES.forEach(function(axis) {
+    if (isMid(event, target, axis)) {
+      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, targetMid[ axis ]);
+    }
+  });
+}
+
+// snap to prevent loop overlapping boundary event
+function snapBoundaryEventLoop(event) {
+  var context = event.context,
+      source = context.source,
+      target = context.target;
+
+  if (isReverse(context)) {
+    return;
+  }
+
+  var sourceMid = (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(source),
+      orientation = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_3__.getOrientation)(sourceMid, target, -10),
+      axes = [];
+
+  if (/top|bottom/.test(orientation)) {
+    axes.push('x');
+  }
+
+  if (/left|right/.test(orientation)) {
+    axes.push('y');
+  }
+
+  axes.forEach(function(axis) {
+    var coordinate = event[ axis ], newCoordinate;
+
+    if (abs(coordinate - sourceMid[ axis ]) < BOUNDARY_TO_HOST_THRESHOLD) {
+      if (coordinate > sourceMid[ axis ]) {
+        newCoordinate = sourceMid[ axis ] + BOUNDARY_TO_HOST_THRESHOLD;
+      }
+      else {
+        newCoordinate = sourceMid[ axis ] - BOUNDARY_TO_HOST_THRESHOLD;
+      }
+
+      (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, axis, newCoordinate);
+    }
+  });
+}
+
+function snapToPosition(event, position) {
+  (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'x', position.x);
+  (0,diagram_js_lib_features_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'y', position.y);
+}
+
+function isType(attrs, type) {
+  return attrs && attrs.type === type;
+}
+
+function isAnyType(attrs, types) {
+  return (0,min_dash__WEBPACK_IMPORTED_MODULE_4__.some)(types, function(type) {
+    return isType(attrs, type);
+  });
+}
+
+function getDimensionForAxis(axis, element) {
+  return axis === 'x' ? element.width : element.height;
+}
+
+function getTargetBoundsPadding(target) {
+  if ((0,_modeling_util_ModelingUtil__WEBPACK_IMPORTED_MODULE_2__.is)(target, 'bpmn:Task')) {
+    return TASK_BOUNDS_PADDING;
+  } else {
+    return TARGET_BOUNDS_PADDING;
+  }
+}
+
+function isMid(event, target, axis) {
+  return event[ axis ] > target[ axis ] + TARGET_CENTER_PADDING
+    && event[ axis ] < target[ axis ] + getDimensionForAxis(axis, target) - TARGET_CENTER_PADDING;
+}
+
+function isReverse(context) {
+  var hover = context.hover,
+      source = context.source;
+
+  return hover && source && hover === source;
 }
 
 /***/ }),
@@ -22065,17 +22065,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getBoundaryAttachment": () => (/* binding */ getBoundaryAttachment)
 /* harmony export */ });
 /* harmony import */ var diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! diagram-js/lib/layout/LayoutUtil */ "./node_modules/diagram-js/lib/layout/LayoutUtil.js");
-
-
-function getBoundaryAttachment(position, targetBounds) {
-
-  var orientation = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_0__.getOrientation)(position, targetBounds, -15);
-
-  if (orientation !== 'intersect') {
-    return orientation;
-  } else {
-    return null;
-  }
+
+
+function getBoundaryAttachment(position, targetBounds) {
+
+  var orientation = (0,diagram_js_lib_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_0__.getOrientation)(position, targetBounds, -15);
+
+  if (orientation !== 'intersect') {
+    return orientation;
+  } else {
+    return null;
+  }
 }
 
 /***/ }),
@@ -38152,101 +38152,101 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_SvgTransformUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../util/SvgTransformUtil */ "./node_modules/diagram-js/lib/util/SvgTransformUtil.js");
 /* harmony import */ var _util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/GraphicsUtil */ "./node_modules/diagram-js/lib/util/GraphicsUtil.js");
 /* harmony import */ var tiny_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tiny-svg */ "./node_modules/tiny-svg/dist/index.esm.js");
-
-
-
-
-
-
-var LOW_PRIORITY = 750;
-
-
-function CreatePreview(
-    canvas,
-    eventBus,
-    graphicsFactory,
-    previewSupport,
-    styles
-) {
-  function createDragGroup(elements) {
-    var dragGroup = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.create)('g');
-
-    (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.attr)(dragGroup, styles.cls('djs-drag-group', [ 'no-events' ]));
-
-    var childrenGfx = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.create)('g');
-
-    elements.forEach(function(element) {
-
-      // create graphics
-      var gfx;
-
-      if (element.hidden) {
-        return;
-      }
-
-      if (element.waypoints) {
-        gfx = graphicsFactory._createContainer('connection', childrenGfx);
-
-        graphicsFactory.drawConnection((0,_util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_1__.getVisual)(gfx), element);
-      } else {
-        gfx = graphicsFactory._createContainer('shape', childrenGfx);
-
-        graphicsFactory.drawShape((0,_util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_1__.getVisual)(gfx), element);
-
-        (0,_util_SvgTransformUtil__WEBPACK_IMPORTED_MODULE_2__.translate)(gfx, element.x, element.y);
-      }
-
-      // add preview
-      previewSupport.addDragger(element, dragGroup, gfx);
-    });
-
-    return dragGroup;
-  }
-
-  eventBus.on('create.move', LOW_PRIORITY, function(event) {
-
-    var hover = event.hover,
-        context = event.context,
-        elements = context.elements,
-        dragGroup = context.dragGroup;
-
-    // lazily create previews
-    if (!dragGroup) {
-      dragGroup = context.dragGroup = createDragGroup(elements);
-    }
-
-    var activeLayer;
-
-    if (hover) {
-      if (!dragGroup.parentNode) {
-        activeLayer = canvas.getActiveLayer();
-
-        (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.append)(activeLayer, dragGroup);
-      }
-
-      (0,_util_SvgTransformUtil__WEBPACK_IMPORTED_MODULE_2__.translate)(dragGroup, event.x, event.y);
-    } else {
-      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.remove)(dragGroup);
-    }
-  });
-
-  eventBus.on('create.cleanup', function(event) {
-    var context = event.context,
-        dragGroup = context.dragGroup;
-
-    if (dragGroup) {
-      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.remove)(dragGroup);
-    }
-  });
-}
-
-CreatePreview.$inject = [
-  'canvas',
-  'eventBus',
-  'graphicsFactory',
-  'previewSupport',
-  'styles'
-];
+
+
+
+
+
+
+var LOW_PRIORITY = 750;
+
+
+function CreatePreview(
+    canvas,
+    eventBus,
+    graphicsFactory,
+    previewSupport,
+    styles
+) {
+  function createDragGroup(elements) {
+    var dragGroup = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.create)('g');
+
+    (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.attr)(dragGroup, styles.cls('djs-drag-group', [ 'no-events' ]));
+
+    var childrenGfx = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.create)('g');
+
+    elements.forEach(function(element) {
+
+      // create graphics
+      var gfx;
+
+      if (element.hidden) {
+        return;
+      }
+
+      if (element.waypoints) {
+        gfx = graphicsFactory._createContainer('connection', childrenGfx);
+
+        graphicsFactory.drawConnection((0,_util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_1__.getVisual)(gfx), element);
+      } else {
+        gfx = graphicsFactory._createContainer('shape', childrenGfx);
+
+        graphicsFactory.drawShape((0,_util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_1__.getVisual)(gfx), element);
+
+        (0,_util_SvgTransformUtil__WEBPACK_IMPORTED_MODULE_2__.translate)(gfx, element.x, element.y);
+      }
+
+      // add preview
+      previewSupport.addDragger(element, dragGroup, gfx);
+    });
+
+    return dragGroup;
+  }
+
+  eventBus.on('create.move', LOW_PRIORITY, function(event) {
+
+    var hover = event.hover,
+        context = event.context,
+        elements = context.elements,
+        dragGroup = context.dragGroup;
+
+    // lazily create previews
+    if (!dragGroup) {
+      dragGroup = context.dragGroup = createDragGroup(elements);
+    }
+
+    var activeLayer;
+
+    if (hover) {
+      if (!dragGroup.parentNode) {
+        activeLayer = canvas.getActiveLayer();
+
+        (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.append)(activeLayer, dragGroup);
+      }
+
+      (0,_util_SvgTransformUtil__WEBPACK_IMPORTED_MODULE_2__.translate)(dragGroup, event.x, event.y);
+    } else {
+      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.remove)(dragGroup);
+    }
+  });
+
+  eventBus.on('create.cleanup', function(event) {
+    var context = event.context,
+        dragGroup = context.dragGroup;
+
+    if (dragGroup) {
+      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.remove)(dragGroup);
+    }
+  });
+}
+
+CreatePreview.$inject = [
+  'canvas',
+  'eventBus',
+  'graphicsFactory',
+  'previewSupport',
+  'styles'
+];
 
 
 /***/ }),
@@ -39638,341 +39638,341 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../keyboard/KeyboardUtil */ "./node_modules/diagram-js/lib/features/keyboard/KeyboardUtil.js");
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
 /* harmony import */ var _GridUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./GridUtil */ "./node_modules/diagram-js/lib/features/grid-snapping/GridUtil.js");
-
-
-
-
-
-
-
-
-var LOWER_PRIORITY = 1200;
-var LOW_PRIORITY = 800;
-
-/**
- * Basic grid snapping that covers connecting, creating, moving, resizing shapes, moving bendpoints
- * and connection segments.
- */
-function GridSnapping(elementRegistry, eventBus, config) {
-
-  var active = !config || config.active !== false;
-
-  this._eventBus = eventBus;
-
-  var self = this;
-
-  eventBus.on('diagram.init', LOW_PRIORITY, function() {
-    self.setActive(active);
-  });
-
-  eventBus.on([
-    'create.move',
-    'create.end',
-    'bendpoint.move.move',
-    'bendpoint.move.end',
-    'connect.move',
-    'connect.end',
-    'connectionSegment.move.move',
-    'connectionSegment.move.end',
-    'resize.move',
-    'resize.end',
-    'shape.move.move',
-    'shape.move.end'
-  ], LOWER_PRIORITY, function(event) {
-    var originalEvent = event.originalEvent;
-
-    if (!self.active || (originalEvent && (0,_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(originalEvent))) {
-      return;
-    }
-
-    var context = event.context,
-        gridSnappingContext = context.gridSnappingContext;
-
-    if (!gridSnappingContext) {
-      gridSnappingContext = context.gridSnappingContext = {};
-    }
-
-    [ 'x', 'y' ].forEach(function(axis) {
-      var options = {};
-
-      // allow snapping with offset
-      var snapOffset = getSnapOffset(event, axis, elementRegistry);
-
-      if (snapOffset) {
-        options.offset = snapOffset;
-      }
-
-      // allow snapping with min and max
-      var snapConstraints = getSnapConstraints(event, axis);
-
-      if (snapConstraints) {
-        (0,min_dash__WEBPACK_IMPORTED_MODULE_1__.assign)(options, snapConstraints);
-      }
-
-      if (!(0,_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_2__.isSnapped)(event, axis)) {
-        self.snapEvent(event, axis, options);
-      }
-    });
-  });
-}
-
-/**
- * Snap an events x or y with optional min, max and offset.
- *
- * @param {Object} event
- * @param {string} axis
- * @param {number} [options.min]
- * @param {number} [options.max]
- * @param {number} [options.offset]
- */
-GridSnapping.prototype.snapEvent = function(event, axis, options) {
-  var snappedValue = this.snapValue(event[ axis ], options);
-
-  (0,_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_2__.setSnapped)(event, axis, snappedValue);
-};
-
-/**
- * Expose grid spacing for third parties (i.e. extensions).
- *
- * @return {number} spacing of grid dots
- */
-GridSnapping.prototype.getGridSpacing = function() {
-  return _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING;
-};
-
-/**
- * Snap value with optional min, max and offset.
- *
- * @param {number} value
- * @param {Object} options
- * @param {number} [options.min]
- * @param {number} [options.max]
- * @param {number} [options.offset]
- */
-GridSnapping.prototype.snapValue = function(value, options) {
-  var offset = 0;
-
-  if (options && options.offset) {
-    offset = options.offset;
-  }
-
-  value += offset;
-
-  value = (0,_GridUtil__WEBPACK_IMPORTED_MODULE_3__.quantize)(value, _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING);
-
-  var min, max;
-
-  if (options && options.min) {
-    min = options.min;
-
-    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(min)) {
-      min = (0,_GridUtil__WEBPACK_IMPORTED_MODULE_3__.quantize)(min + offset, _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING, 'ceil');
-
-      value = Math.max(value, min);
-    }
-  }
-
-  if (options && options.max) {
-    max = options.max;
-
-    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(max)) {
-      max = (0,_GridUtil__WEBPACK_IMPORTED_MODULE_3__.quantize)(max + offset, _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING, 'floor');
-
-      value = Math.min(value, max);
-    }
-  }
-
-  value -= offset;
-
-  return value;
-};
-
-GridSnapping.prototype.isActive = function() {
-  return this.active;
-};
-
-GridSnapping.prototype.setActive = function(active) {
-  this.active = active;
-
-  this._eventBus.fire('gridSnapping.toggle', { active: active });
-};
-
-GridSnapping.prototype.toggleActive = function() {
-  this.setActive(!this.active);
-};
-
-GridSnapping.$inject = [
-  'elementRegistry',
-  'eventBus',
-  'config.gridSnapping'
-];
-
-// helpers //////////
-
-/**
- * Get minimum and maximum snap constraints.
- * Constraints are cached.
- *
- * @param {Object} event
- * @param {Object} event.context
- * @param {string} axis
- *
- * @returns {boolean|Object}
- */
-function getSnapConstraints(event, axis) {
-  var context = event.context,
-      createConstraints = context.createConstraints,
-      resizeConstraints = context.resizeConstraints || {},
-      gridSnappingContext = context.gridSnappingContext,
-      snapConstraints = gridSnappingContext.snapConstraints;
-
-  // cache snap constraints
-  if (snapConstraints && snapConstraints[ axis ]) {
-    return snapConstraints[ axis ];
-  }
-
-  if (!snapConstraints) {
-    snapConstraints = gridSnappingContext.snapConstraints = {};
-  }
-
-  if (!snapConstraints[ axis ]) {
-    snapConstraints[ axis ] = {};
-  }
-
-  var direction = context.direction;
-
-  // create
-  if (createConstraints) {
-    if (isHorizontal(axis)) {
-      snapConstraints.x.min = createConstraints.left;
-      snapConstraints.x.max = createConstraints.right;
-    } else {
-      snapConstraints.y.min = createConstraints.top;
-      snapConstraints.y.max = createConstraints.bottom;
-    }
-  }
-
-  // resize
-  var minResizeConstraints = resizeConstraints.min,
-      maxResizeConstraints = resizeConstraints.max;
-
-  if (minResizeConstraints) {
-    if (isHorizontal(axis)) {
-
-      if (isWest(direction)) {
-        snapConstraints.x.max = minResizeConstraints.left;
-      } else {
-        snapConstraints.x.min = minResizeConstraints.right;
-      }
-
-    } else {
-
-      if (isNorth(direction)) {
-        snapConstraints.y.max = minResizeConstraints.top;
-      } else {
-        snapConstraints.y.min = minResizeConstraints.bottom;
-      }
-
-    }
-  }
-
-  if (maxResizeConstraints) {
-    if (isHorizontal(axis)) {
-
-      if (isWest(direction)) {
-        snapConstraints.x.min = maxResizeConstraints.left;
-      } else {
-        snapConstraints.x.max = maxResizeConstraints.right;
-      }
-
-    } else {
-
-      if (isNorth(direction)) {
-        snapConstraints.y.min = maxResizeConstraints.top;
-      } else {
-        snapConstraints.y.max = maxResizeConstraints.bottom;
-      }
-
-    }
-  }
-
-  return snapConstraints[ axis ];
-}
-
-/**
- * Get snap offset.
- * Offset is cached.
- *
- * @param {Object} event
- * @param {string} axis
- * @param {ElementRegistry} elementRegistry
- *
- * @returns {number}
- */
-function getSnapOffset(event, axis, elementRegistry) {
-  var context = event.context,
-      shape = event.shape,
-      gridSnappingContext = context.gridSnappingContext,
-      snapLocation = gridSnappingContext.snapLocation,
-      snapOffset = gridSnappingContext.snapOffset;
-
-  // cache snap offset
-  if (snapOffset && (0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(snapOffset[ axis ])) {
-    return snapOffset[ axis ];
-  }
-
-  if (!snapOffset) {
-    snapOffset = gridSnappingContext.snapOffset = {};
-  }
-
-  if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(snapOffset[ axis ])) {
-    snapOffset[ axis ] = 0;
-  }
-
-  if (!shape) {
-    return snapOffset[ axis ];
-  }
-
-  if (!elementRegistry.get(shape.id)) {
-
-    if (isHorizontal(axis)) {
-      snapOffset[ axis ] += shape[ axis ] + shape.width / 2;
-    } else {
-      snapOffset[ axis ] += shape[ axis ] + shape.height / 2;
-    }
-  }
-
-  if (!snapLocation) {
-    return snapOffset[ axis ];
-  }
-
-  if (axis === 'x') {
-    if (/left/.test(snapLocation)) {
-      snapOffset[ axis ] -= shape.width / 2;
-    } else if (/right/.test(snapLocation)) {
-      snapOffset[ axis ] += shape.width / 2;
-    }
-  } else {
-    if (/top/.test(snapLocation)) {
-      snapOffset[ axis ] -= shape.height / 2;
-    } else if (/bottom/.test(snapLocation)) {
-      snapOffset[ axis ] += shape.height / 2;
-    }
-  }
-
-  return snapOffset[ axis ];
-}
-
-function isHorizontal(axis) {
-  return axis === 'x';
-}
-
-function isNorth(direction) {
-  return direction.indexOf('n') !== -1;
-}
-
-function isWest(direction) {
-  return direction.indexOf('w') !== -1;
+
+
+
+
+
+
+
+
+var LOWER_PRIORITY = 1200;
+var LOW_PRIORITY = 800;
+
+/**
+ * Basic grid snapping that covers connecting, creating, moving, resizing shapes, moving bendpoints
+ * and connection segments.
+ */
+function GridSnapping(elementRegistry, eventBus, config) {
+
+  var active = !config || config.active !== false;
+
+  this._eventBus = eventBus;
+
+  var self = this;
+
+  eventBus.on('diagram.init', LOW_PRIORITY, function() {
+    self.setActive(active);
+  });
+
+  eventBus.on([
+    'create.move',
+    'create.end',
+    'bendpoint.move.move',
+    'bendpoint.move.end',
+    'connect.move',
+    'connect.end',
+    'connectionSegment.move.move',
+    'connectionSegment.move.end',
+    'resize.move',
+    'resize.end',
+    'shape.move.move',
+    'shape.move.end'
+  ], LOWER_PRIORITY, function(event) {
+    var originalEvent = event.originalEvent;
+
+    if (!self.active || (originalEvent && (0,_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(originalEvent))) {
+      return;
+    }
+
+    var context = event.context,
+        gridSnappingContext = context.gridSnappingContext;
+
+    if (!gridSnappingContext) {
+      gridSnappingContext = context.gridSnappingContext = {};
+    }
+
+    [ 'x', 'y' ].forEach(function(axis) {
+      var options = {};
+
+      // allow snapping with offset
+      var snapOffset = getSnapOffset(event, axis, elementRegistry);
+
+      if (snapOffset) {
+        options.offset = snapOffset;
+      }
+
+      // allow snapping with min and max
+      var snapConstraints = getSnapConstraints(event, axis);
+
+      if (snapConstraints) {
+        (0,min_dash__WEBPACK_IMPORTED_MODULE_1__.assign)(options, snapConstraints);
+      }
+
+      if (!(0,_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_2__.isSnapped)(event, axis)) {
+        self.snapEvent(event, axis, options);
+      }
+    });
+  });
+}
+
+/**
+ * Snap an events x or y with optional min, max and offset.
+ *
+ * @param {Object} event
+ * @param {string} axis
+ * @param {number} [options.min]
+ * @param {number} [options.max]
+ * @param {number} [options.offset]
+ */
+GridSnapping.prototype.snapEvent = function(event, axis, options) {
+  var snappedValue = this.snapValue(event[ axis ], options);
+
+  (0,_snapping_SnapUtil__WEBPACK_IMPORTED_MODULE_2__.setSnapped)(event, axis, snappedValue);
+};
+
+/**
+ * Expose grid spacing for third parties (i.e. extensions).
+ *
+ * @return {number} spacing of grid dots
+ */
+GridSnapping.prototype.getGridSpacing = function() {
+  return _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING;
+};
+
+/**
+ * Snap value with optional min, max and offset.
+ *
+ * @param {number} value
+ * @param {Object} options
+ * @param {number} [options.min]
+ * @param {number} [options.max]
+ * @param {number} [options.offset]
+ */
+GridSnapping.prototype.snapValue = function(value, options) {
+  var offset = 0;
+
+  if (options && options.offset) {
+    offset = options.offset;
+  }
+
+  value += offset;
+
+  value = (0,_GridUtil__WEBPACK_IMPORTED_MODULE_3__.quantize)(value, _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING);
+
+  var min, max;
+
+  if (options && options.min) {
+    min = options.min;
+
+    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(min)) {
+      min = (0,_GridUtil__WEBPACK_IMPORTED_MODULE_3__.quantize)(min + offset, _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING, 'ceil');
+
+      value = Math.max(value, min);
+    }
+  }
+
+  if (options && options.max) {
+    max = options.max;
+
+    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(max)) {
+      max = (0,_GridUtil__WEBPACK_IMPORTED_MODULE_3__.quantize)(max + offset, _GridUtil__WEBPACK_IMPORTED_MODULE_3__.SPACING, 'floor');
+
+      value = Math.min(value, max);
+    }
+  }
+
+  value -= offset;
+
+  return value;
+};
+
+GridSnapping.prototype.isActive = function() {
+  return this.active;
+};
+
+GridSnapping.prototype.setActive = function(active) {
+  this.active = active;
+
+  this._eventBus.fire('gridSnapping.toggle', { active: active });
+};
+
+GridSnapping.prototype.toggleActive = function() {
+  this.setActive(!this.active);
+};
+
+GridSnapping.$inject = [
+  'elementRegistry',
+  'eventBus',
+  'config.gridSnapping'
+];
+
+// helpers //////////
+
+/**
+ * Get minimum and maximum snap constraints.
+ * Constraints are cached.
+ *
+ * @param {Object} event
+ * @param {Object} event.context
+ * @param {string} axis
+ *
+ * @returns {boolean|Object}
+ */
+function getSnapConstraints(event, axis) {
+  var context = event.context,
+      createConstraints = context.createConstraints,
+      resizeConstraints = context.resizeConstraints || {},
+      gridSnappingContext = context.gridSnappingContext,
+      snapConstraints = gridSnappingContext.snapConstraints;
+
+  // cache snap constraints
+  if (snapConstraints && snapConstraints[ axis ]) {
+    return snapConstraints[ axis ];
+  }
+
+  if (!snapConstraints) {
+    snapConstraints = gridSnappingContext.snapConstraints = {};
+  }
+
+  if (!snapConstraints[ axis ]) {
+    snapConstraints[ axis ] = {};
+  }
+
+  var direction = context.direction;
+
+  // create
+  if (createConstraints) {
+    if (isHorizontal(axis)) {
+      snapConstraints.x.min = createConstraints.left;
+      snapConstraints.x.max = createConstraints.right;
+    } else {
+      snapConstraints.y.min = createConstraints.top;
+      snapConstraints.y.max = createConstraints.bottom;
+    }
+  }
+
+  // resize
+  var minResizeConstraints = resizeConstraints.min,
+      maxResizeConstraints = resizeConstraints.max;
+
+  if (minResizeConstraints) {
+    if (isHorizontal(axis)) {
+
+      if (isWest(direction)) {
+        snapConstraints.x.max = minResizeConstraints.left;
+      } else {
+        snapConstraints.x.min = minResizeConstraints.right;
+      }
+
+    } else {
+
+      if (isNorth(direction)) {
+        snapConstraints.y.max = minResizeConstraints.top;
+      } else {
+        snapConstraints.y.min = minResizeConstraints.bottom;
+      }
+
+    }
+  }
+
+  if (maxResizeConstraints) {
+    if (isHorizontal(axis)) {
+
+      if (isWest(direction)) {
+        snapConstraints.x.min = maxResizeConstraints.left;
+      } else {
+        snapConstraints.x.max = maxResizeConstraints.right;
+      }
+
+    } else {
+
+      if (isNorth(direction)) {
+        snapConstraints.y.min = maxResizeConstraints.top;
+      } else {
+        snapConstraints.y.max = maxResizeConstraints.bottom;
+      }
+
+    }
+  }
+
+  return snapConstraints[ axis ];
+}
+
+/**
+ * Get snap offset.
+ * Offset is cached.
+ *
+ * @param {Object} event
+ * @param {string} axis
+ * @param {ElementRegistry} elementRegistry
+ *
+ * @returns {number}
+ */
+function getSnapOffset(event, axis, elementRegistry) {
+  var context = event.context,
+      shape = event.shape,
+      gridSnappingContext = context.gridSnappingContext,
+      snapLocation = gridSnappingContext.snapLocation,
+      snapOffset = gridSnappingContext.snapOffset;
+
+  // cache snap offset
+  if (snapOffset && (0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(snapOffset[ axis ])) {
+    return snapOffset[ axis ];
+  }
+
+  if (!snapOffset) {
+    snapOffset = gridSnappingContext.snapOffset = {};
+  }
+
+  if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_1__.isNumber)(snapOffset[ axis ])) {
+    snapOffset[ axis ] = 0;
+  }
+
+  if (!shape) {
+    return snapOffset[ axis ];
+  }
+
+  if (!elementRegistry.get(shape.id)) {
+
+    if (isHorizontal(axis)) {
+      snapOffset[ axis ] += shape[ axis ] + shape.width / 2;
+    } else {
+      snapOffset[ axis ] += shape[ axis ] + shape.height / 2;
+    }
+  }
+
+  if (!snapLocation) {
+    return snapOffset[ axis ];
+  }
+
+  if (axis === 'x') {
+    if (/left/.test(snapLocation)) {
+      snapOffset[ axis ] -= shape.width / 2;
+    } else if (/right/.test(snapLocation)) {
+      snapOffset[ axis ] += shape.width / 2;
+    }
+  } else {
+    if (/top/.test(snapLocation)) {
+      snapOffset[ axis ] -= shape.height / 2;
+    } else if (/bottom/.test(snapLocation)) {
+      snapOffset[ axis ] += shape.height / 2;
+    }
+  }
+
+  return snapOffset[ axis ];
+}
+
+function isHorizontal(axis) {
+  return axis === 'x';
+}
+
+function isNorth(direction) {
+  return direction.indexOf('n') !== -1;
+}
+
+function isWest(direction) {
+  return direction.indexOf('w') !== -1;
 }
 
 /***/ }),
@@ -40016,182 +40016,182 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var inherits__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(inherits__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../command/CommandInterceptor */ "./node_modules/diagram-js/lib/command/CommandInterceptor.js");
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
-
-
-
-
-
-
-
-/**
- * Integrates resizing with grid snapping.
- */
-function ResizeBehavior(eventBus, gridSnapping) {
-  _command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, eventBus);
-
-  this._gridSnapping = gridSnapping;
-
-  var self = this;
-
-  this.preExecute('shape.resize', function(event) {
-    var context = event.context,
-        hints = context.hints || {},
-        autoResize = hints.autoResize;
-
-    if (!autoResize) {
-      return;
-    }
-
-    var shape = context.shape,
-        newBounds = context.newBounds;
-
-    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_2__.isString)(autoResize)) {
-      context.newBounds = self.snapComplex(newBounds, autoResize);
-    } else {
-      context.newBounds = self.snapSimple(shape, newBounds);
-    }
-  });
-}
-
-ResizeBehavior.$inject = [
-  'eventBus',
-  'gridSnapping',
-  'modeling'
-];
-
-inherits__WEBPACK_IMPORTED_MODULE_0___default()(ResizeBehavior, _command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
-
-/**
- * Snap width and height in relation to center.
- *
- * @param {djs.model.shape} shape
- * @param {Bounds} newBounds
- *
- * @returns {Bounds} Snapped bounds.
- */
-ResizeBehavior.prototype.snapSimple = function(shape, newBounds) {
-  var gridSnapping = this._gridSnapping;
-
-  newBounds.width = gridSnapping.snapValue(newBounds.width, {
-    min: newBounds.width
-  });
-
-  newBounds.height = gridSnapping.snapValue(newBounds.height, {
-    min: newBounds.height
-  });
-
-  newBounds.x = shape.x + (shape.width / 2) - (newBounds.width / 2);
-  newBounds.y = shape.y + (shape.height / 2) - (newBounds.height / 2);
-
-  return newBounds;
-};
-
-/**
- * Snap x, y, width and height according to given directions.
- *
- * @param {Bounds} newBounds
- * @param {string} directions - Directions as {n|w|s|e}.
- *
- * @returns {Bounds} Snapped bounds.
- */
-ResizeBehavior.prototype.snapComplex = function(newBounds, directions) {
-  if (/w|e/.test(directions)) {
-    newBounds = this.snapHorizontally(newBounds, directions);
-  }
-
-  if (/n|s/.test(directions)) {
-    newBounds = this.snapVertically(newBounds, directions);
-  }
-
-  return newBounds;
-};
-
-/**
- * Snap in one or both directions horizontally.
- *
- * @param {Bounds} newBounds
- * @param {string} directions - Directions as {n|w|s|e}.
- *
- * @returns {Bounds} Snapped bounds.
- */
-ResizeBehavior.prototype.snapHorizontally = function(newBounds, directions) {
-  var gridSnapping = this._gridSnapping,
-      west = /w/.test(directions),
-      east = /e/.test(directions);
-
-  var snappedNewBounds = {};
-
-  snappedNewBounds.width = gridSnapping.snapValue(newBounds.width, {
-    min: newBounds.width
-  });
-
-  if (east) {
-
-    // handle <we>
-    if (west) {
-      snappedNewBounds.x = gridSnapping.snapValue(newBounds.x, {
-        max: newBounds.x
-      });
-
-      snappedNewBounds.width += gridSnapping.snapValue(newBounds.x - snappedNewBounds.x, {
-        min: newBounds.x - snappedNewBounds.x
-      });
-    }
-
-    // handle <e>
-    else {
-      newBounds.x = newBounds.x + newBounds.width - snappedNewBounds.width;
-    }
-  }
-
-  // assign snapped x and width
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.assign)(newBounds, snappedNewBounds);
-
-  return newBounds;
-};
-
-/**
- * Snap in one or both directions vertically.
- *
- * @param {Bounds} newBounds
- * @param {string} directions - Directions as {n|w|s|e}.
- *
- * @returns {Bounds} Snapped bounds.
- */
-ResizeBehavior.prototype.snapVertically = function(newBounds, directions) {
-  var gridSnapping = this._gridSnapping,
-      north = /n/.test(directions),
-      south = /s/.test(directions);
-
-  var snappedNewBounds = {};
-
-  snappedNewBounds.height = gridSnapping.snapValue(newBounds.height, {
-    min: newBounds.height
-  });
-
-  if (north) {
-
-    // handle <ns>
-    if (south) {
-      snappedNewBounds.y = gridSnapping.snapValue(newBounds.y, {
-        max: newBounds.y
-      });
-
-      snappedNewBounds.height += gridSnapping.snapValue(newBounds.y - snappedNewBounds.y, {
-        min: newBounds.y - snappedNewBounds.y
-      });
-    }
-
-    // handle <n>
-    else {
-      newBounds.y = newBounds.y + newBounds.height - snappedNewBounds.height;
-    }
-  }
-
-  // assign snapped y and height
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.assign)(newBounds, snappedNewBounds);
-
-  return newBounds;
+
+
+
+
+
+
+
+/**
+ * Integrates resizing with grid snapping.
+ */
+function ResizeBehavior(eventBus, gridSnapping) {
+  _command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"].call(this, eventBus);
+
+  this._gridSnapping = gridSnapping;
+
+  var self = this;
+
+  this.preExecute('shape.resize', function(event) {
+    var context = event.context,
+        hints = context.hints || {},
+        autoResize = hints.autoResize;
+
+    if (!autoResize) {
+      return;
+    }
+
+    var shape = context.shape,
+        newBounds = context.newBounds;
+
+    if ((0,min_dash__WEBPACK_IMPORTED_MODULE_2__.isString)(autoResize)) {
+      context.newBounds = self.snapComplex(newBounds, autoResize);
+    } else {
+      context.newBounds = self.snapSimple(shape, newBounds);
+    }
+  });
+}
+
+ResizeBehavior.$inject = [
+  'eventBus',
+  'gridSnapping',
+  'modeling'
+];
+
+inherits__WEBPACK_IMPORTED_MODULE_0___default()(ResizeBehavior, _command_CommandInterceptor__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+/**
+ * Snap width and height in relation to center.
+ *
+ * @param {djs.model.shape} shape
+ * @param {Bounds} newBounds
+ *
+ * @returns {Bounds} Snapped bounds.
+ */
+ResizeBehavior.prototype.snapSimple = function(shape, newBounds) {
+  var gridSnapping = this._gridSnapping;
+
+  newBounds.width = gridSnapping.snapValue(newBounds.width, {
+    min: newBounds.width
+  });
+
+  newBounds.height = gridSnapping.snapValue(newBounds.height, {
+    min: newBounds.height
+  });
+
+  newBounds.x = shape.x + (shape.width / 2) - (newBounds.width / 2);
+  newBounds.y = shape.y + (shape.height / 2) - (newBounds.height / 2);
+
+  return newBounds;
+};
+
+/**
+ * Snap x, y, width and height according to given directions.
+ *
+ * @param {Bounds} newBounds
+ * @param {string} directions - Directions as {n|w|s|e}.
+ *
+ * @returns {Bounds} Snapped bounds.
+ */
+ResizeBehavior.prototype.snapComplex = function(newBounds, directions) {
+  if (/w|e/.test(directions)) {
+    newBounds = this.snapHorizontally(newBounds, directions);
+  }
+
+  if (/n|s/.test(directions)) {
+    newBounds = this.snapVertically(newBounds, directions);
+  }
+
+  return newBounds;
+};
+
+/**
+ * Snap in one or both directions horizontally.
+ *
+ * @param {Bounds} newBounds
+ * @param {string} directions - Directions as {n|w|s|e}.
+ *
+ * @returns {Bounds} Snapped bounds.
+ */
+ResizeBehavior.prototype.snapHorizontally = function(newBounds, directions) {
+  var gridSnapping = this._gridSnapping,
+      west = /w/.test(directions),
+      east = /e/.test(directions);
+
+  var snappedNewBounds = {};
+
+  snappedNewBounds.width = gridSnapping.snapValue(newBounds.width, {
+    min: newBounds.width
+  });
+
+  if (east) {
+
+    // handle <we>
+    if (west) {
+      snappedNewBounds.x = gridSnapping.snapValue(newBounds.x, {
+        max: newBounds.x
+      });
+
+      snappedNewBounds.width += gridSnapping.snapValue(newBounds.x - snappedNewBounds.x, {
+        min: newBounds.x - snappedNewBounds.x
+      });
+    }
+
+    // handle <e>
+    else {
+      newBounds.x = newBounds.x + newBounds.width - snappedNewBounds.width;
+    }
+  }
+
+  // assign snapped x and width
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.assign)(newBounds, snappedNewBounds);
+
+  return newBounds;
+};
+
+/**
+ * Snap in one or both directions vertically.
+ *
+ * @param {Bounds} newBounds
+ * @param {string} directions - Directions as {n|w|s|e}.
+ *
+ * @returns {Bounds} Snapped bounds.
+ */
+ResizeBehavior.prototype.snapVertically = function(newBounds, directions) {
+  var gridSnapping = this._gridSnapping,
+      north = /n/.test(directions),
+      south = /s/.test(directions);
+
+  var snappedNewBounds = {};
+
+  snappedNewBounds.height = gridSnapping.snapValue(newBounds.height, {
+    min: newBounds.height
+  });
+
+  if (north) {
+
+    // handle <ns>
+    if (south) {
+      snappedNewBounds.y = gridSnapping.snapValue(newBounds.y, {
+        max: newBounds.y
+      });
+
+      snappedNewBounds.height += gridSnapping.snapValue(newBounds.y - snappedNewBounds.y, {
+        min: newBounds.y - snappedNewBounds.y
+      });
+    }
+
+    // handle <n>
+    else {
+      newBounds.y = newBounds.y + newBounds.height - snappedNewBounds.height;
+    }
+  }
+
+  // assign snapped y and height
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_2__.assign)(newBounds, snappedNewBounds);
+
+  return newBounds;
 };
 
 /***/ }),
@@ -40207,47 +40207,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SpaceToolBehavior)
 /* harmony export */ });
-var HIGH_PRIORITY = 2000;
-
-/**
- * Integrates space tool with grid snapping.
- */
-function SpaceToolBehavior(eventBus, gridSnapping) {
-  eventBus.on([
-    'spaceTool.move',
-    'spaceTool.end'
-  ], HIGH_PRIORITY, function(event) {
-    var context = event.context;
-
-    if (!context.initialized) {
-      return;
-    }
-
-    var axis = context.axis;
-
-    var snapped;
-
-    if (axis === 'x') {
-
-      // snap delta x to multiple of 10
-      snapped = gridSnapping.snapValue(event.dx);
-
-      event.x = event.x + snapped - event.dx;
-      event.dx = snapped;
-    } else {
-
-      // snap delta y to multiple of 10
-      snapped = gridSnapping.snapValue(event.dy);
-
-      event.y = event.y + snapped - event.dy;
-      event.dy = snapped;
-    }
-  });
-}
-
-SpaceToolBehavior.$inject = [
-  'eventBus',
-  'gridSnapping'
+var HIGH_PRIORITY = 2000;
+
+/**
+ * Integrates space tool with grid snapping.
+ */
+function SpaceToolBehavior(eventBus, gridSnapping) {
+  eventBus.on([
+    'spaceTool.move',
+    'spaceTool.end'
+  ], HIGH_PRIORITY, function(event) {
+    var context = event.context;
+
+    if (!context.initialized) {
+      return;
+    }
+
+    var axis = context.axis;
+
+    var snapped;
+
+    if (axis === 'x') {
+
+      // snap delta x to multiple of 10
+      snapped = gridSnapping.snapValue(event.dx);
+
+      event.x = event.x + snapped - event.dx;
+      event.dx = snapped;
+    } else {
+
+      // snap delta y to multiple of 10
+      snapped = gridSnapping.snapValue(event.dy);
+
+      event.y = event.y + snapped - event.dy;
+      event.dy = snapped;
+    }
+  });
+}
+
+SpaceToolBehavior.$inject = [
+  'eventBus',
+  'gridSnapping'
 ];
 
 /***/ }),
@@ -40265,16 +40265,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ResizeBehavior__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ResizeBehavior */ "./node_modules/diagram-js/lib/features/grid-snapping/behavior/ResizeBehavior.js");
 /* harmony import */ var _SpaceToolBehavior__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SpaceToolBehavior */ "./node_modules/diagram-js/lib/features/grid-snapping/behavior/SpaceToolBehavior.js");
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  __init__: [
-    'gridSnappingResizeBehavior',
-    'gridSnappingSpaceToolBehavior'
-  ],
-  gridSnappingResizeBehavior: [ 'type', _ResizeBehavior__WEBPACK_IMPORTED_MODULE_0__["default"] ],
-  gridSnappingSpaceToolBehavior: [ 'type', _SpaceToolBehavior__WEBPACK_IMPORTED_MODULE_1__["default"] ]
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  __init__: [
+    'gridSnappingResizeBehavior',
+    'gridSnappingSpaceToolBehavior'
+  ],
+  gridSnappingResizeBehavior: [ 'type', _ResizeBehavior__WEBPACK_IMPORTED_MODULE_0__["default"] ],
+  gridSnappingSpaceToolBehavior: [ 'type', _SpaceToolBehavior__WEBPACK_IMPORTED_MODULE_1__["default"] ]
 });
 
 /***/ }),
@@ -40292,14 +40292,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _GridSnapping__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GridSnapping */ "./node_modules/diagram-js/lib/features/grid-snapping/GridSnapping.js");
 /* harmony import */ var _behavior__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./behavior */ "./node_modules/diagram-js/lib/features/grid-snapping/behavior/index.js");
-
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  __depends__: [ _behavior__WEBPACK_IMPORTED_MODULE_0__["default"] ],
-  __init__: [ 'gridSnapping' ],
-  gridSnapping: [ 'type', _GridSnapping__WEBPACK_IMPORTED_MODULE_1__["default"] ]
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  __depends__: [ _behavior__WEBPACK_IMPORTED_MODULE_0__["default"] ],
+  __init__: [ 'gridSnapping' ],
+  gridSnapping: [ 'type', _GridSnapping__WEBPACK_IMPORTED_MODULE_1__["default"] ]
 });
 
 /***/ }),
@@ -41840,47 +41840,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "isShift": () => (/* binding */ isShift)
 /* harmony export */ });
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
-
-
-/**
- * Returns true if event was triggered with any modifier
- * @param {KeyboardEvent} event
- */
-function hasModifier(event) {
-  return (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey);
-}
-
-/**
- * @param {KeyboardEvent} event
- */
-function isCmd(event) {
-
-  // ensure we don't react to AltGr
-  // (mapped to CTRL + ALT)
-  if (event.altKey) {
-    return false;
-  }
-
-  return event.ctrlKey || event.metaKey;
-}
-
-/**
- * Checks if key pressed is one of provided keys.
- *
- * @param {string|Array<string>} keys
- * @param {KeyboardEvent} event
- */
-function isKey(keys, event) {
-  keys = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isArray)(keys) ? keys : [ keys ];
-
-  return keys.indexOf(event.key) !== -1 || keys.indexOf(event.keyCode) !== -1;
-}
-
-/**
- * @param {KeyboardEvent} event
- */
-function isShift(event) {
-  return event.shiftKey;
+
+
+/**
+ * Returns true if event was triggered with any modifier
+ * @param {KeyboardEvent} event
+ */
+function hasModifier(event) {
+  return (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey);
+}
+
+/**
+ * @param {KeyboardEvent} event
+ */
+function isCmd(event) {
+
+  // ensure we don't react to AltGr
+  // (mapped to CTRL + ALT)
+  if (event.altKey) {
+    return false;
+  }
+
+  return event.ctrlKey || event.metaKey;
+}
+
+/**
+ * Checks if key pressed is one of provided keys.
+ *
+ * @param {string|Array<string>} keys
+ * @param {KeyboardEvent} event
+ */
+function isKey(keys, event) {
+  keys = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isArray)(keys) ? keys : [ keys ];
+
+  return keys.indexOf(event.key) !== -1 || keys.indexOf(event.keyCode) !== -1;
+}
+
+/**
+ * @param {KeyboardEvent} event
+ */
+function isShift(event) {
+  return event.shiftKey;
 }
 
 /***/ }),
@@ -43217,118 +43217,118 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
 /* harmony import */ var _util_Elements__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/Elements */ "./node_modules/diagram-js/lib/util/Elements.js");
-
-
-
-
-var round = Math.round;
-
-function CreateElementsHandler(modeling) {
-  this._modeling = modeling;
-}
-
-CreateElementsHandler.$inject = [
-  'modeling'
-];
-
-CreateElementsHandler.prototype.preExecute = function(context) {
-  var elements = context.elements,
-      parent = context.parent,
-      parentIndex = context.parentIndex,
-      position = context.position,
-      hints = context.hints;
-
-  var modeling = this._modeling;
-
-  // make sure each element has x and y
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
-    if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(element.x)) {
-      element.x = 0;
-    }
-
-    if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(element.y)) {
-      element.y = 0;
-    }
-  });
-
-  var visibleElements = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.filter)(elements, function(element) {
-    return !element.hidden;
-  });
-
-  var bbox = (0,_util_Elements__WEBPACK_IMPORTED_MODULE_1__.getBBox)(visibleElements);
-
-  // center elements around position
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
-    if (isConnection(element)) {
-      element.waypoints = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.map)(element.waypoints, function(waypoint) {
-        return {
-          x: round(waypoint.x - bbox.x - bbox.width / 2 + position.x),
-          y: round(waypoint.y - bbox.y - bbox.height / 2 + position.y)
-        };
-      });
-    }
-
-    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)(element, {
-      x: round(element.x - bbox.x - bbox.width / 2 + position.x),
-      y: round(element.y - bbox.y - bbox.height / 2 + position.y)
-    });
-  });
-
-  var parents = (0,_util_Elements__WEBPACK_IMPORTED_MODULE_1__.getParents)(elements);
-
-  var cache = {};
-
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
-    if (isConnection(element)) {
-      cache[ element.id ] = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parentIndex) ?
-        modeling.createConnection(
-          cache[ element.source.id ],
-          cache[ element.target.id ],
-          parentIndex,
-          element,
-          element.parent || parent,
-          hints
-        ) :
-        modeling.createConnection(
-          cache[ element.source.id ],
-          cache[ element.target.id ],
-          element,
-          element.parent || parent,
-          hints
-        );
-
-      return;
-    }
-
-    var createShapeHints = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)({}, hints);
-
-    if (parents.indexOf(element) === -1) {
-      createShapeHints.autoResize = false;
-    }
-
-    cache[ element.id ] = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parentIndex) ?
-      modeling.createShape(
-        element,
-        (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.pick)(element, [ 'x', 'y', 'width', 'height' ]),
-        element.parent || parent,
-        parentIndex,
-        createShapeHints
-      ) :
-      modeling.createShape(
-        element,
-        (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.pick)(element, [ 'x', 'y', 'width', 'height' ]),
-        element.parent || parent,
-        createShapeHints
-      );
-  });
-
-  context.elements = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.values)(cache);
-};
-
-// helpers //////////
-
-function isConnection(element) {
-  return !!element.waypoints;
+
+
+
+
+var round = Math.round;
+
+function CreateElementsHandler(modeling) {
+  this._modeling = modeling;
+}
+
+CreateElementsHandler.$inject = [
+  'modeling'
+];
+
+CreateElementsHandler.prototype.preExecute = function(context) {
+  var elements = context.elements,
+      parent = context.parent,
+      parentIndex = context.parentIndex,
+      position = context.position,
+      hints = context.hints;
+
+  var modeling = this._modeling;
+
+  // make sure each element has x and y
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
+    if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(element.x)) {
+      element.x = 0;
+    }
+
+    if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(element.y)) {
+      element.y = 0;
+    }
+  });
+
+  var visibleElements = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.filter)(elements, function(element) {
+    return !element.hidden;
+  });
+
+  var bbox = (0,_util_Elements__WEBPACK_IMPORTED_MODULE_1__.getBBox)(visibleElements);
+
+  // center elements around position
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
+    if (isConnection(element)) {
+      element.waypoints = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.map)(element.waypoints, function(waypoint) {
+        return {
+          x: round(waypoint.x - bbox.x - bbox.width / 2 + position.x),
+          y: round(waypoint.y - bbox.y - bbox.height / 2 + position.y)
+        };
+      });
+    }
+
+    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)(element, {
+      x: round(element.x - bbox.x - bbox.width / 2 + position.x),
+      y: round(element.y - bbox.y - bbox.height / 2 + position.y)
+    });
+  });
+
+  var parents = (0,_util_Elements__WEBPACK_IMPORTED_MODULE_1__.getParents)(elements);
+
+  var cache = {};
+
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(elements, function(element) {
+    if (isConnection(element)) {
+      cache[ element.id ] = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parentIndex) ?
+        modeling.createConnection(
+          cache[ element.source.id ],
+          cache[ element.target.id ],
+          parentIndex,
+          element,
+          element.parent || parent,
+          hints
+        ) :
+        modeling.createConnection(
+          cache[ element.source.id ],
+          cache[ element.target.id ],
+          element,
+          element.parent || parent,
+          hints
+        );
+
+      return;
+    }
+
+    var createShapeHints = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.assign)({}, hints);
+
+    if (parents.indexOf(element) === -1) {
+      createShapeHints.autoResize = false;
+    }
+
+    cache[ element.id ] = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parentIndex) ?
+      modeling.createShape(
+        element,
+        (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.pick)(element, [ 'x', 'y', 'width', 'height' ]),
+        element.parent || parent,
+        parentIndex,
+        createShapeHints
+      ) :
+      modeling.createShape(
+        element,
+        (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.pick)(element, [ 'x', 'y', 'width', 'height' ]),
+        element.parent || parent,
+        createShapeHints
+      );
+  });
+
+  context.elements = (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.values)(cache);
+};
+
+// helpers //////////
+
+function isConnection(element) {
+  return !!element.waypoints;
 }
 
 /***/ }),
@@ -45386,65 +45386,65 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Mouse),
 /* harmony export */   "createMoveEvent": () => (/* binding */ createMoveEvent)
 /* harmony export */ });
-function Mouse(eventBus) {
-  var self = this;
-
-  this._lastMoveEvent = null;
-
-  function setLastMoveEvent(mousemoveEvent) {
-    self._lastMoveEvent = mousemoveEvent;
-  }
-
-  eventBus.on('canvas.init', function(context) {
-    var svg = self._svg = context.svg;
-
-    svg.addEventListener('mousemove', setLastMoveEvent);
-  });
-
-  eventBus.on('canvas.destroy', function() {
-    self._lastMouseEvent = null;
-
-    self._svg.removeEventListener('mousemove', setLastMoveEvent);
-  });
-}
-
-Mouse.$inject = [ 'eventBus' ];
-
-Mouse.prototype.getLastMoveEvent = function() {
-  return this._lastMoveEvent || createMoveEvent(0, 0);
-};
-
-// helpers //////////
-
-function createMoveEvent(x, y) {
-  var event = document.createEvent('MouseEvent');
-
-  var screenX = x,
-      screenY = y,
-      clientX = x,
-      clientY = y;
-
-  if (event.initMouseEvent) {
-    event.initMouseEvent(
-      'mousemove',
-      true,
-      true,
-      window,
-      0,
-      screenX,
-      screenY,
-      clientX,
-      clientY,
-      false,
-      false,
-      false,
-      false,
-      0,
-      null
-    );
-  }
-
-  return event;
+function Mouse(eventBus) {
+  var self = this;
+
+  this._lastMoveEvent = null;
+
+  function setLastMoveEvent(mousemoveEvent) {
+    self._lastMoveEvent = mousemoveEvent;
+  }
+
+  eventBus.on('canvas.init', function(context) {
+    var svg = self._svg = context.svg;
+
+    svg.addEventListener('mousemove', setLastMoveEvent);
+  });
+
+  eventBus.on('canvas.destroy', function() {
+    self._lastMouseEvent = null;
+
+    self._svg.removeEventListener('mousemove', setLastMoveEvent);
+  });
+}
+
+Mouse.$inject = [ 'eventBus' ];
+
+Mouse.prototype.getLastMoveEvent = function() {
+  return this._lastMoveEvent || createMoveEvent(0, 0);
+};
+
+// helpers //////////
+
+function createMoveEvent(x, y) {
+  var event = document.createEvent('MouseEvent');
+
+  var screenX = x,
+      screenY = y,
+      clientX = x,
+      clientY = y;
+
+  if (event.initMouseEvent) {
+    event.initMouseEvent(
+      'mousemove',
+      true,
+      true,
+      window,
+      0,
+      screenX,
+      screenY,
+      clientX,
+      clientY,
+      false,
+      false,
+      false,
+      false,
+      0,
+      null
+    );
+  }
+
+  return event;
 }
 
 /***/ }),
@@ -48104,242 +48104,242 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tiny_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tiny-svg */ "./node_modules/tiny-svg/dist/index.esm.js");
 /* harmony import */ var min_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! min-dom */ "./node_modules/min-dom/dist/index.esm.js");
 /* harmony import */ var _util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../util/GraphicsUtil */ "./node_modules/diagram-js/lib/util/GraphicsUtil.js");
-
-
-
-
-
-
-
-
-var MARKER_TYPES = [
-  'marker-start',
-  'marker-mid',
-  'marker-end'
-];
-
-var NODES_CAN_HAVE_MARKER = [
-  'circle',
-  'ellipse',
-  'line',
-  'path',
-  'polygon',
-  'polyline',
-  'rect'
-];
-
-
-/**
- * Adds support for previews of moving/resizing elements.
- */
-function PreviewSupport(elementRegistry, eventBus, canvas, styles) {
-  this._elementRegistry = elementRegistry;
-  this._canvas = canvas;
-  this._styles = styles;
-
-  this._clonedMarkers = {};
-
-  var self = this;
-
-  eventBus.on('drag.cleanup', function() {
-    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(self._clonedMarkers, function(clonedMarker) {
-      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.remove)(clonedMarker);
-    });
-
-    self._clonedMarkers = {};
-  });
-}
-
-PreviewSupport.$inject = [
-  'elementRegistry',
-  'eventBus',
-  'canvas',
-  'styles'
-];
-
-
-/**
- * Returns graphics of an element.
- *
- * @param {djs.model.Base} element
- *
- * @return {SVGElement}
- */
-PreviewSupport.prototype.getGfx = function(element) {
-  return this._elementRegistry.getGraphics(element);
-};
-
-/**
- * Adds a move preview of a given shape to a given svg group.
- *
- * @param {djs.model.Base} element
- * @param {SVGElement} group
- * @param {SVGElement} [gfx]
- *
- * @return {SVGElement} dragger
- */
-PreviewSupport.prototype.addDragger = function(element, group, gfx) {
-  gfx = gfx || this.getGfx(element);
-
-  var dragger = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.clone)(gfx);
-  var bbox = gfx.getBoundingClientRect();
-
-  this._cloneMarkers((0,_util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_2__.getVisual)(dragger));
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(dragger, this._styles.cls('djs-dragger', [], {
-    x: bbox.top,
-    y: bbox.left
-  }));
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(group, dragger);
-
-  return dragger;
-};
-
-/**
- * Adds a resize preview of a given shape to a given svg group.
- *
- * @param {djs.model.Base} element
- * @param {SVGElement} group
- *
- * @return {SVGElement} frame
- */
-PreviewSupport.prototype.addFrame = function(shape, group) {
-
-  var frame = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.create)('rect', {
-    class: 'djs-resize-overlay',
-    width:  shape.width,
-    height: shape.height,
-    x: shape.x,
-    y: shape.y
-  });
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(group, frame);
-
-  return frame;
-};
-
-/**
- * Clone all markers referenced by a node and its child nodes.
- *
- * @param {SVGElement} gfx
- */
-PreviewSupport.prototype._cloneMarkers = function(gfx) {
-  var self = this;
-
-  if (gfx.childNodes) {
-
-    // TODO: use forEach once we drop PhantomJS
-    for (var i = 0; i < gfx.childNodes.length; i++) {
-
-      // recursively clone markers of child nodes
-      self._cloneMarkers(gfx.childNodes[ i ]);
-    }
-  }
-
-  if (!canHaveMarker(gfx)) {
-    return;
-  }
-
-  MARKER_TYPES.forEach(function(markerType) {
-    if ((0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(gfx, markerType)) {
-      var marker = getMarker(gfx, markerType, self._canvas.getContainer());
-
-      self._cloneMarker(gfx, marker, markerType);
-    }
-  });
-};
-
-/**
- * Clone marker referenced by an element.
- *
- * @param {SVGElement} gfx
- * @param {SVGElement} marker
- * @param {string} markerType
- */
-PreviewSupport.prototype._cloneMarker = function(gfx, marker, markerType) {
-  var markerId = marker.id;
-
-  var clonedMarker = this._clonedMarkers[ markerId ];
-
-  if (!clonedMarker) {
-    clonedMarker = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.clone)(marker);
-
-    var clonedMarkerId = markerId + '-clone';
-
-    clonedMarker.id = clonedMarkerId;
-
-    (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.classes)(clonedMarker)
-      .add('djs-dragger')
-      .add('djs-dragger-marker');
-
-    this._clonedMarkers[ markerId ] = clonedMarker;
-
-    var defs = (0,min_dom__WEBPACK_IMPORTED_MODULE_3__.query)('defs', this._canvas._svg);
-
-    if (!defs) {
-      defs = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.create)('defs');
-
-      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(this._canvas._svg, defs);
-    }
-
-    (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(defs, clonedMarker);
-  }
-
-  var reference = idToReference(this._clonedMarkers[ markerId ].id);
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(gfx, markerType, reference);
-};
-
-// helpers //////////
-
-/**
- * Get marker of given type referenced by node.
- *
- * @param {Node} node
- * @param {string} markerType
- * @param {Node} [parentNode]
- *
- * @param {Node}
- */
-function getMarker(node, markerType, parentNode) {
-  var id = referenceToId((0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(node, markerType));
-
-  return (0,min_dom__WEBPACK_IMPORTED_MODULE_3__.query)('marker#' + id, parentNode || document);
-}
-
-/**
- * Get ID of fragment within current document from its functional IRI reference.
- * References may use single or double quotes.
- *
- * @param {string} reference
- *
- * @returns {string}
- */
-function referenceToId(reference) {
-  return reference.match(/url\(['"]?#([^'"]*)['"]?\)/)[1];
-}
-
-/**
- * Get functional IRI reference for given ID of fragment within current document.
- *
- * @param {string} id
- *
- * @returns {string}
- */
-function idToReference(id) {
-  return 'url(#' + id + ')';
-}
-
-/**
- * Check wether node type can have marker attributes.
- *
- * @param {Node} node
- *
- * @returns {boolean}
- */
-function canHaveMarker(node) {
-  return NODES_CAN_HAVE_MARKER.indexOf(node.nodeName) !== -1;
+
+
+
+
+
+
+
+
+var MARKER_TYPES = [
+  'marker-start',
+  'marker-mid',
+  'marker-end'
+];
+
+var NODES_CAN_HAVE_MARKER = [
+  'circle',
+  'ellipse',
+  'line',
+  'path',
+  'polygon',
+  'polyline',
+  'rect'
+];
+
+
+/**
+ * Adds support for previews of moving/resizing elements.
+ */
+function PreviewSupport(elementRegistry, eventBus, canvas, styles) {
+  this._elementRegistry = elementRegistry;
+  this._canvas = canvas;
+  this._styles = styles;
+
+  this._clonedMarkers = {};
+
+  var self = this;
+
+  eventBus.on('drag.cleanup', function() {
+    (0,min_dash__WEBPACK_IMPORTED_MODULE_0__.forEach)(self._clonedMarkers, function(clonedMarker) {
+      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.remove)(clonedMarker);
+    });
+
+    self._clonedMarkers = {};
+  });
+}
+
+PreviewSupport.$inject = [
+  'elementRegistry',
+  'eventBus',
+  'canvas',
+  'styles'
+];
+
+
+/**
+ * Returns graphics of an element.
+ *
+ * @param {djs.model.Base} element
+ *
+ * @return {SVGElement}
+ */
+PreviewSupport.prototype.getGfx = function(element) {
+  return this._elementRegistry.getGraphics(element);
+};
+
+/**
+ * Adds a move preview of a given shape to a given svg group.
+ *
+ * @param {djs.model.Base} element
+ * @param {SVGElement} group
+ * @param {SVGElement} [gfx]
+ *
+ * @return {SVGElement} dragger
+ */
+PreviewSupport.prototype.addDragger = function(element, group, gfx) {
+  gfx = gfx || this.getGfx(element);
+
+  var dragger = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.clone)(gfx);
+  var bbox = gfx.getBoundingClientRect();
+
+  this._cloneMarkers((0,_util_GraphicsUtil__WEBPACK_IMPORTED_MODULE_2__.getVisual)(dragger));
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(dragger, this._styles.cls('djs-dragger', [], {
+    x: bbox.top,
+    y: bbox.left
+  }));
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(group, dragger);
+
+  return dragger;
+};
+
+/**
+ * Adds a resize preview of a given shape to a given svg group.
+ *
+ * @param {djs.model.Base} element
+ * @param {SVGElement} group
+ *
+ * @return {SVGElement} frame
+ */
+PreviewSupport.prototype.addFrame = function(shape, group) {
+
+  var frame = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.create)('rect', {
+    class: 'djs-resize-overlay',
+    width:  shape.width,
+    height: shape.height,
+    x: shape.x,
+    y: shape.y
+  });
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(group, frame);
+
+  return frame;
+};
+
+/**
+ * Clone all markers referenced by a node and its child nodes.
+ *
+ * @param {SVGElement} gfx
+ */
+PreviewSupport.prototype._cloneMarkers = function(gfx) {
+  var self = this;
+
+  if (gfx.childNodes) {
+
+    // TODO: use forEach once we drop PhantomJS
+    for (var i = 0; i < gfx.childNodes.length; i++) {
+
+      // recursively clone markers of child nodes
+      self._cloneMarkers(gfx.childNodes[ i ]);
+    }
+  }
+
+  if (!canHaveMarker(gfx)) {
+    return;
+  }
+
+  MARKER_TYPES.forEach(function(markerType) {
+    if ((0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(gfx, markerType)) {
+      var marker = getMarker(gfx, markerType, self._canvas.getContainer());
+
+      self._cloneMarker(gfx, marker, markerType);
+    }
+  });
+};
+
+/**
+ * Clone marker referenced by an element.
+ *
+ * @param {SVGElement} gfx
+ * @param {SVGElement} marker
+ * @param {string} markerType
+ */
+PreviewSupport.prototype._cloneMarker = function(gfx, marker, markerType) {
+  var markerId = marker.id;
+
+  var clonedMarker = this._clonedMarkers[ markerId ];
+
+  if (!clonedMarker) {
+    clonedMarker = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.clone)(marker);
+
+    var clonedMarkerId = markerId + '-clone';
+
+    clonedMarker.id = clonedMarkerId;
+
+    (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.classes)(clonedMarker)
+      .add('djs-dragger')
+      .add('djs-dragger-marker');
+
+    this._clonedMarkers[ markerId ] = clonedMarker;
+
+    var defs = (0,min_dom__WEBPACK_IMPORTED_MODULE_3__.query)('defs', this._canvas._svg);
+
+    if (!defs) {
+      defs = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.create)('defs');
+
+      (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(this._canvas._svg, defs);
+    }
+
+    (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.append)(defs, clonedMarker);
+  }
+
+  var reference = idToReference(this._clonedMarkers[ markerId ].id);
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(gfx, markerType, reference);
+};
+
+// helpers //////////
+
+/**
+ * Get marker of given type referenced by node.
+ *
+ * @param {Node} node
+ * @param {string} markerType
+ * @param {Node} [parentNode]
+ *
+ * @param {Node}
+ */
+function getMarker(node, markerType, parentNode) {
+  var id = referenceToId((0,tiny_svg__WEBPACK_IMPORTED_MODULE_1__.attr)(node, markerType));
+
+  return (0,min_dom__WEBPACK_IMPORTED_MODULE_3__.query)('marker#' + id, parentNode || document);
+}
+
+/**
+ * Get ID of fragment within current document from its functional IRI reference.
+ * References may use single or double quotes.
+ *
+ * @param {string} reference
+ *
+ * @returns {string}
+ */
+function referenceToId(reference) {
+  return reference.match(/url\(['"]?#([^'"]*)['"]?\)/)[1];
+}
+
+/**
+ * Get functional IRI reference for given ID of fragment within current document.
+ *
+ * @param {string} id
+ *
+ * @returns {string}
+ */
+function idToReference(id) {
+  return 'url(#' + id + ')';
+}
+
+/**
+ * Check wether node type can have marker attributes.
+ *
+ * @param {Node} node
+ *
+ * @returns {boolean}
+ */
+function canHaveMarker(node) {
+  return NODES_CAN_HAVE_MARKER.indexOf(node.nodeName) !== -1;
 }
 
 /***/ }),
@@ -50580,205 +50580,205 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SnapUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SnapUtil */ "./node_modules/diagram-js/lib/features/snapping/SnapUtil.js");
 /* harmony import */ var _keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../keyboard/KeyboardUtil */ "./node_modules/diagram-js/lib/features/keyboard/KeyboardUtil.js");
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
-
-
-
-
-
-
-
-
-var HIGHER_PRIORITY = 1250;
-
-
-/**
- * Snap during create and move.
- *
- * @param {EventBus} elementRegistry
- * @param {EventBus} eventBus
- * @param {Snapping} snapping
- */
-function CreateMoveSnapping(elementRegistry, eventBus, snapping) {
-  var self = this;
-
-  this._elementRegistry = elementRegistry;
-
-  eventBus.on([
-    'create.start',
-    'shape.move.start'
-  ], function(event) {
-    self.initSnap(event);
-  });
-
-  eventBus.on([
-    'create.move',
-    'create.end',
-    'shape.move.move',
-    'shape.move.end'
-  ], HIGHER_PRIORITY, function(event) {
-    var context = event.context,
-        shape = context.shape,
-        snapContext = context.snapContext,
-        target = context.target;
-
-    if (event.originalEvent && (0,_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(event.originalEvent)) {
-      return;
-    }
-
-    if ((0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.isSnapped)(event) || !target) {
-      return;
-    }
-
-    var snapPoints = snapContext.pointsForTarget(target);
-
-    if (!snapPoints.initialized) {
-      snapPoints = self.addSnapTargetPoints(snapPoints, shape, target);
-
-      snapPoints.initialized = true;
-    }
-
-    snapping.snap(event, snapPoints);
-  });
-
-  eventBus.on([
-    'create.cleanup',
-    'shape.move.cleanup'
-  ], function() {
-    snapping.hide();
-  });
-}
-
-CreateMoveSnapping.$inject = [
-  'elementRegistry',
-  'eventBus',
-  'snapping'
-];
-
-CreateMoveSnapping.prototype.initSnap = function(event) {
-  var elementRegistry = this._elementRegistry;
-
-  var context = event.context,
-      shape = context.shape,
-      snapContext = context.snapContext;
-
-  if (!snapContext) {
-    snapContext = context.snapContext = new _SnapContext__WEBPACK_IMPORTED_MODULE_2__["default"]();
-  }
-
-  var shapeMid;
-
-  if (elementRegistry.get(shape.id)) {
-
-    // move
-    shapeMid = (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape, event);
-  } else {
-
-    // create
-    shapeMid = {
-      x: event.x + (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape).x,
-      y: event.y + (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape).y
-    };
-  }
-
-  var shapeTopLeft = {
-        x: shapeMid.x - shape.width / 2,
-        y: shapeMid.y - shape.height / 2
-      },
-      shapeBottomRight = {
-        x: shapeMid.x + shape.width / 2,
-        y: shapeMid.y + shape.height / 2
-      };
-
-  snapContext.setSnapOrigin('mid', {
-    x: shapeMid.x - event.x,
-    y: shapeMid.y - event.y
-  });
-
-  // snap labels to mid only
-  if (isLabel(shape)) {
-    return snapContext;
-  }
-
-  snapContext.setSnapOrigin('top-left', {
-    x: shapeTopLeft.x - event.x,
-    y: shapeTopLeft.y - event.y
-  });
-
-  snapContext.setSnapOrigin('bottom-right', {
-    x: shapeBottomRight.x - event.x,
-    y: shapeBottomRight.y - event.y
-  });
-
-  return snapContext;
-};
-
-CreateMoveSnapping.prototype.addSnapTargetPoints = function(snapPoints, shape, target) {
-  var snapTargets = this.getSnapTargets(shape, target);
-
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.forEach)(snapTargets, function(snapTarget) {
-
-    // handle labels
-    if (isLabel(snapTarget)) {
-
-      if (isLabel(shape)) {
-        snapPoints.add('mid', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(snapTarget));
-      }
-
-      return;
-    }
-
-    // handle connections
-    if (isConnection(snapTarget)) {
-
-      // ignore single segment connections
-      if (snapTarget.waypoints.length < 3) {
-        return;
-      }
-
-      // ignore first and last waypoint
-      var waypoints = snapTarget.waypoints.slice(1, -1);
-
-      (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.forEach)(waypoints, function(waypoint) {
-        snapPoints.add('mid', waypoint);
-      });
-
-      return;
-    }
-
-    // handle shapes
-    snapPoints.add('mid', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(snapTarget));
-  });
-
-  if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.isNumber)(shape.x) || !(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.isNumber)(shape.y)) {
-    return snapPoints;
-  }
-
-  // snap to original position when moving
-  if (this._elementRegistry.get(shape.id)) {
-    snapPoints.add('mid', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape));
-  }
-
-  return snapPoints;
-};
-
-CreateMoveSnapping.prototype.getSnapTargets = function(shape, target) {
-  return (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.getChildren)(target).filter(function(child) {
-    return !isHidden(child);
-  });
-};
-
-// helpers //////////
-
-function isConnection(element) {
-  return !!element.waypoints;
-}
-
-function isHidden(element) {
-  return !!element.hidden;
-}
-
-function isLabel(element) {
-  return !!element.labelTarget;
+
+
+
+
+
+
+
+
+var HIGHER_PRIORITY = 1250;
+
+
+/**
+ * Snap during create and move.
+ *
+ * @param {EventBus} elementRegistry
+ * @param {EventBus} eventBus
+ * @param {Snapping} snapping
+ */
+function CreateMoveSnapping(elementRegistry, eventBus, snapping) {
+  var self = this;
+
+  this._elementRegistry = elementRegistry;
+
+  eventBus.on([
+    'create.start',
+    'shape.move.start'
+  ], function(event) {
+    self.initSnap(event);
+  });
+
+  eventBus.on([
+    'create.move',
+    'create.end',
+    'shape.move.move',
+    'shape.move.end'
+  ], HIGHER_PRIORITY, function(event) {
+    var context = event.context,
+        shape = context.shape,
+        snapContext = context.snapContext,
+        target = context.target;
+
+    if (event.originalEvent && (0,_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(event.originalEvent)) {
+      return;
+    }
+
+    if ((0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.isSnapped)(event) || !target) {
+      return;
+    }
+
+    var snapPoints = snapContext.pointsForTarget(target);
+
+    if (!snapPoints.initialized) {
+      snapPoints = self.addSnapTargetPoints(snapPoints, shape, target);
+
+      snapPoints.initialized = true;
+    }
+
+    snapping.snap(event, snapPoints);
+  });
+
+  eventBus.on([
+    'create.cleanup',
+    'shape.move.cleanup'
+  ], function() {
+    snapping.hide();
+  });
+}
+
+CreateMoveSnapping.$inject = [
+  'elementRegistry',
+  'eventBus',
+  'snapping'
+];
+
+CreateMoveSnapping.prototype.initSnap = function(event) {
+  var elementRegistry = this._elementRegistry;
+
+  var context = event.context,
+      shape = context.shape,
+      snapContext = context.snapContext;
+
+  if (!snapContext) {
+    snapContext = context.snapContext = new _SnapContext__WEBPACK_IMPORTED_MODULE_2__["default"]();
+  }
+
+  var shapeMid;
+
+  if (elementRegistry.get(shape.id)) {
+
+    // move
+    shapeMid = (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape, event);
+  } else {
+
+    // create
+    shapeMid = {
+      x: event.x + (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape).x,
+      y: event.y + (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape).y
+    };
+  }
+
+  var shapeTopLeft = {
+        x: shapeMid.x - shape.width / 2,
+        y: shapeMid.y - shape.height / 2
+      },
+      shapeBottomRight = {
+        x: shapeMid.x + shape.width / 2,
+        y: shapeMid.y + shape.height / 2
+      };
+
+  snapContext.setSnapOrigin('mid', {
+    x: shapeMid.x - event.x,
+    y: shapeMid.y - event.y
+  });
+
+  // snap labels to mid only
+  if (isLabel(shape)) {
+    return snapContext;
+  }
+
+  snapContext.setSnapOrigin('top-left', {
+    x: shapeTopLeft.x - event.x,
+    y: shapeTopLeft.y - event.y
+  });
+
+  snapContext.setSnapOrigin('bottom-right', {
+    x: shapeBottomRight.x - event.x,
+    y: shapeBottomRight.y - event.y
+  });
+
+  return snapContext;
+};
+
+CreateMoveSnapping.prototype.addSnapTargetPoints = function(snapPoints, shape, target) {
+  var snapTargets = this.getSnapTargets(shape, target);
+
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.forEach)(snapTargets, function(snapTarget) {
+
+    // handle labels
+    if (isLabel(snapTarget)) {
+
+      if (isLabel(shape)) {
+        snapPoints.add('mid', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(snapTarget));
+      }
+
+      return;
+    }
+
+    // handle connections
+    if (isConnection(snapTarget)) {
+
+      // ignore single segment connections
+      if (snapTarget.waypoints.length < 3) {
+        return;
+      }
+
+      // ignore first and last waypoint
+      var waypoints = snapTarget.waypoints.slice(1, -1);
+
+      (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.forEach)(waypoints, function(waypoint) {
+        snapPoints.add('mid', waypoint);
+      });
+
+      return;
+    }
+
+    // handle shapes
+    snapPoints.add('mid', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(snapTarget));
+  });
+
+  if (!(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.isNumber)(shape.x) || !(0,min_dash__WEBPACK_IMPORTED_MODULE_3__.isNumber)(shape.y)) {
+    return snapPoints;
+  }
+
+  // snap to original position when moving
+  if (this._elementRegistry.get(shape.id)) {
+    snapPoints.add('mid', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.mid)(shape));
+  }
+
+  return snapPoints;
+};
+
+CreateMoveSnapping.prototype.getSnapTargets = function(shape, target) {
+  return (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.getChildren)(target).filter(function(child) {
+    return !isHidden(child);
+  });
+};
+
+// helpers //////////
+
+function isConnection(element) {
+  return !!element.waypoints;
+}
+
+function isHidden(element) {
+  return !!element.hidden;
+}
+
+function isLabel(element) {
+  return !!element.labelTarget;
 }
 
 /***/ }),
@@ -50799,169 +50799,169 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../keyboard/KeyboardUtil */ "./node_modules/diagram-js/lib/features/keyboard/KeyboardUtil.js");
 /* harmony import */ var _layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../layout/LayoutUtil */ "./node_modules/diagram-js/lib/layout/LayoutUtil.js");
 /* harmony import */ var min_dash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! min-dash */ "./node_modules/min-dash/dist/index.esm.js");
-
-
-
-
-
-
-
-
-
-
-var HIGHER_PRIORITY = 1250;
-
-
-/**
- * Snap during resize.
- *
- * @param {EventBus} eventBus
- * @param {Snapping} snapping
- */
-function ResizeSnapping(eventBus, snapping) {
-  var self = this;
-
-  eventBus.on([ 'resize.start' ], function(event) {
-    self.initSnap(event);
-  });
-
-  eventBus.on([
-    'resize.move',
-    'resize.end',
-  ], HIGHER_PRIORITY, function(event) {
-    var context = event.context,
-        shape = context.shape,
-        parent = shape.parent,
-        direction = context.direction,
-        snapContext = context.snapContext;
-
-    if (event.originalEvent && (0,_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(event.originalEvent)) {
-      return;
-    }
-
-    if ((0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.isSnapped)(event)) {
-      return;
-    }
-
-    var snapPoints = snapContext.pointsForTarget(parent);
-
-    if (!snapPoints.initialized) {
-      snapPoints = self.addSnapTargetPoints(snapPoints, shape, parent, direction);
-
-      snapPoints.initialized = true;
-    }
-
-    if (isHorizontal(direction)) {
-      (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'x', event.x);
-    }
-
-    if (isVertical(direction)) {
-      (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'y', event.y);
-    }
-
-    snapping.snap(event, snapPoints);
-  });
-
-  eventBus.on([ 'resize.cleanup' ], function() {
-    snapping.hide();
-  });
-}
-
-ResizeSnapping.prototype.initSnap = function(event) {
-  var context = event.context,
-      shape = context.shape,
-      direction = context.direction,
-      snapContext = context.snapContext;
-
-  if (!snapContext) {
-    snapContext = context.snapContext = new _SnapContext__WEBPACK_IMPORTED_MODULE_2__["default"]();
-  }
-
-  var snapOrigin = getSnapOrigin(shape, direction);
-
-  snapContext.setSnapOrigin('corner', {
-    x: snapOrigin.x - event.x,
-    y: snapOrigin.y - event.y
-  });
-
-  return snapContext;
-};
-
-ResizeSnapping.prototype.addSnapTargetPoints = function(snapPoints, shape, target, direction) {
-  var snapTargets = this.getSnapTargets(shape, target);
-
-  (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.forEach)(snapTargets, function(snapTarget) {
-    snapPoints.add('corner', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.bottomRight)(snapTarget));
-    snapPoints.add('corner', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.topLeft)(snapTarget));
-  });
-
-  snapPoints.add('corner', getSnapOrigin(shape, direction));
-
-  return snapPoints;
-};
-
-ResizeSnapping.$inject = [
-  'eventBus',
-  'snapping'
-];
-
-ResizeSnapping.prototype.getSnapTargets = function(shape, target) {
-  return (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.getChildren)(target).filter(function(child) {
-    return !isAttached(child, shape)
-      && !isConnection(child)
-      && !isHidden(child)
-      && !isLabel(child);
-  });
-};
-
-// helpers //////////
-
-function getSnapOrigin(shape, direction) {
-  var mid = (0,_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_4__.getMid)(shape),
-      trbl = (0,_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_4__.asTRBL)(shape);
-
-  var snapOrigin = {
-    x: mid.x,
-    y: mid.y
-  };
-
-  if (direction.indexOf('n') !== -1) {
-    snapOrigin.y = trbl.top;
-  } else if (direction.indexOf('s') !== -1) {
-    snapOrigin.y = trbl.bottom;
-  }
-
-  if (direction.indexOf('e') !== -1) {
-    snapOrigin.x = trbl.right;
-  } else if (direction.indexOf('w') !== -1) {
-    snapOrigin.x = trbl.left;
-  }
-
-  return snapOrigin;
-}
-
-function isAttached(element, host) {
-  return element.host === host;
-}
-
-function isConnection(element) {
-  return !!element.waypoints;
-}
-
-function isHidden(element) {
-  return !!element.hidden;
-}
-
-function isLabel(element) {
-  return !!element.labelTarget;
-}
-
-function isHorizontal(direction) {
-  return direction === 'n' || direction === 's';
-}
-
-function isVertical(direction) {
-  return direction === 'e' || direction === 'w';
+
+
+
+
+
+
+
+
+
+
+var HIGHER_PRIORITY = 1250;
+
+
+/**
+ * Snap during resize.
+ *
+ * @param {EventBus} eventBus
+ * @param {Snapping} snapping
+ */
+function ResizeSnapping(eventBus, snapping) {
+  var self = this;
+
+  eventBus.on([ 'resize.start' ], function(event) {
+    self.initSnap(event);
+  });
+
+  eventBus.on([
+    'resize.move',
+    'resize.end',
+  ], HIGHER_PRIORITY, function(event) {
+    var context = event.context,
+        shape = context.shape,
+        parent = shape.parent,
+        direction = context.direction,
+        snapContext = context.snapContext;
+
+    if (event.originalEvent && (0,_keyboard_KeyboardUtil__WEBPACK_IMPORTED_MODULE_0__.isCmd)(event.originalEvent)) {
+      return;
+    }
+
+    if ((0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.isSnapped)(event)) {
+      return;
+    }
+
+    var snapPoints = snapContext.pointsForTarget(parent);
+
+    if (!snapPoints.initialized) {
+      snapPoints = self.addSnapTargetPoints(snapPoints, shape, parent, direction);
+
+      snapPoints.initialized = true;
+    }
+
+    if (isHorizontal(direction)) {
+      (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'x', event.x);
+    }
+
+    if (isVertical(direction)) {
+      (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.setSnapped)(event, 'y', event.y);
+    }
+
+    snapping.snap(event, snapPoints);
+  });
+
+  eventBus.on([ 'resize.cleanup' ], function() {
+    snapping.hide();
+  });
+}
+
+ResizeSnapping.prototype.initSnap = function(event) {
+  var context = event.context,
+      shape = context.shape,
+      direction = context.direction,
+      snapContext = context.snapContext;
+
+  if (!snapContext) {
+    snapContext = context.snapContext = new _SnapContext__WEBPACK_IMPORTED_MODULE_2__["default"]();
+  }
+
+  var snapOrigin = getSnapOrigin(shape, direction);
+
+  snapContext.setSnapOrigin('corner', {
+    x: snapOrigin.x - event.x,
+    y: snapOrigin.y - event.y
+  });
+
+  return snapContext;
+};
+
+ResizeSnapping.prototype.addSnapTargetPoints = function(snapPoints, shape, target, direction) {
+  var snapTargets = this.getSnapTargets(shape, target);
+
+  (0,min_dash__WEBPACK_IMPORTED_MODULE_3__.forEach)(snapTargets, function(snapTarget) {
+    snapPoints.add('corner', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.bottomRight)(snapTarget));
+    snapPoints.add('corner', (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.topLeft)(snapTarget));
+  });
+
+  snapPoints.add('corner', getSnapOrigin(shape, direction));
+
+  return snapPoints;
+};
+
+ResizeSnapping.$inject = [
+  'eventBus',
+  'snapping'
+];
+
+ResizeSnapping.prototype.getSnapTargets = function(shape, target) {
+  return (0,_SnapUtil__WEBPACK_IMPORTED_MODULE_1__.getChildren)(target).filter(function(child) {
+    return !isAttached(child, shape)
+      && !isConnection(child)
+      && !isHidden(child)
+      && !isLabel(child);
+  });
+};
+
+// helpers //////////
+
+function getSnapOrigin(shape, direction) {
+  var mid = (0,_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_4__.getMid)(shape),
+      trbl = (0,_layout_LayoutUtil__WEBPACK_IMPORTED_MODULE_4__.asTRBL)(shape);
+
+  var snapOrigin = {
+    x: mid.x,
+    y: mid.y
+  };
+
+  if (direction.indexOf('n') !== -1) {
+    snapOrigin.y = trbl.top;
+  } else if (direction.indexOf('s') !== -1) {
+    snapOrigin.y = trbl.bottom;
+  }
+
+  if (direction.indexOf('e') !== -1) {
+    snapOrigin.x = trbl.right;
+  } else if (direction.indexOf('w') !== -1) {
+    snapOrigin.x = trbl.left;
+  }
+
+  return snapOrigin;
+}
+
+function isAttached(element, host) {
+  return element.host === host;
+}
+
+function isConnection(element) {
+  return !!element.waypoints;
+}
+
+function isHidden(element) {
+  return !!element.hidden;
+}
+
+function isLabel(element) {
+  return !!element.labelTarget;
+}
+
+function isHorizontal(direction) {
+  return direction === 'n' || direction === 's';
+}
+
+function isVertical(direction) {
+  return direction === 'e' || direction === 'w';
 }
 
 /***/ }),
@@ -57095,64 +57095,64 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "scale": () => (/* binding */ scale)
 /* harmony export */ });
 /* harmony import */ var tiny_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tiny-svg */ "./node_modules/tiny-svg/dist/index.esm.js");
-
-
-
-/**
- * @param {<SVGElement>} element
- * @param {number} x
- * @param {number} y
- * @param {number} angle
- * @param {number} amount
- */
-function transform(gfx, x, y, angle, amount) {
-  var translate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
-  translate.setTranslate(x, y);
-
-  var rotate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
-  rotate.setRotate(angle || 0, 0, 0);
-
-  var scale = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
-  scale.setScale(amount || 1, amount || 1);
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, [ translate, rotate, scale ]);
-}
-
-
-/**
- * @param {SVGElement} element
- * @param {number} x
- * @param {number} y
- */
-function translate(gfx, x, y) {
-  var translate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
-  translate.setTranslate(x, y);
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, translate);
-}
-
-
-/**
- * @param {SVGElement} element
- * @param {number} angle
- */
-function rotate(gfx, angle) {
-  var rotate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
-  rotate.setRotate(angle, 0, 0);
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, rotate);
-}
-
-
-/**
- * @param {SVGElement} element
- * @param {number} amount
- */
-function scale(gfx, amount) {
-  var scale = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
-  scale.setScale(amount, amount);
-
-  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, scale);
+
+
+
+/**
+ * @param {<SVGElement>} element
+ * @param {number} x
+ * @param {number} y
+ * @param {number} angle
+ * @param {number} amount
+ */
+function transform(gfx, x, y, angle, amount) {
+  var translate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
+  translate.setTranslate(x, y);
+
+  var rotate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
+  rotate.setRotate(angle || 0, 0, 0);
+
+  var scale = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
+  scale.setScale(amount || 1, amount || 1);
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, [ translate, rotate, scale ]);
+}
+
+
+/**
+ * @param {SVGElement} element
+ * @param {number} x
+ * @param {number} y
+ */
+function translate(gfx, x, y) {
+  var translate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
+  translate.setTranslate(x, y);
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, translate);
+}
+
+
+/**
+ * @param {SVGElement} element
+ * @param {number} angle
+ */
+function rotate(gfx, angle) {
+  var rotate = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
+  rotate.setRotate(angle, 0, 0);
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, rotate);
+}
+
+
+/**
+ * @param {SVGElement} element
+ * @param {number} amount
+ */
+function scale(gfx, amount) {
+  var scale = (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.createTransform)();
+  scale.setScale(amount, amount);
+
+  (0,tiny_svg__WEBPACK_IMPORTED_MODULE_0__.transform)(gfx, scale);
 }
 
 /***/ }),
@@ -67896,208 +67896,208 @@ function attr(node, name, value) {
   return node;
 }
 
-/**
- * Clear utility
- */
-function index(arr, obj) {
-  if (arr.indexOf) {
-    return arr.indexOf(obj);
-  }
-
-
-  for (var i = 0; i < arr.length; ++i) {
-    if (arr[i] === obj) {
-      return i;
-    }
-  }
-
-  return -1;
-}
-
-var re = /\s+/;
-
-var toString = Object.prototype.toString;
-
-function defined(o) {
-  return typeof o !== 'undefined';
-}
-
-/**
- * Wrap `el` in a `ClassList`.
- *
- * @param {Element} el
- * @return {ClassList}
- * @api public
- */
-
-function classes(el) {
-  return new ClassList(el);
-}
-
-function ClassList(el) {
-  if (!el || !el.nodeType) {
-    throw new Error('A DOM element reference is required');
-  }
-  this.el = el;
-  this.list = el.classList;
-}
-
-/**
- * Add class `name` if not already present.
- *
- * @param {String} name
- * @return {ClassList}
- * @api public
- */
-
-ClassList.prototype.add = function(name) {
-
-  // classList
-  if (this.list) {
-    this.list.add(name);
-    return this;
-  }
-
-  // fallback
-  var arr = this.array();
-  var i = index(arr, name);
-  if (!~i) {
-    arr.push(name);
-  }
-
-  if (defined(this.el.className.baseVal)) {
-    this.el.className.baseVal = arr.join(' ');
-  } else {
-    this.el.className = arr.join(' ');
-  }
-
-  return this;
-};
-
-/**
- * Remove class `name` when present, or
- * pass a regular expression to remove
- * any which match.
- *
- * @param {String|RegExp} name
- * @return {ClassList}
- * @api public
- */
-
-ClassList.prototype.remove = function(name) {
-  if ('[object RegExp]' === toString.call(name)) {
-    return this.removeMatching(name);
-  }
-
-  // classList
-  if (this.list) {
-    this.list.remove(name);
-    return this;
-  }
-
-  // fallback
-  var arr = this.array();
-  var i = index(arr, name);
-  if (~i) {
-    arr.splice(i, 1);
-  }
-  this.el.className.baseVal = arr.join(' ');
-  return this;
-};
-
-/**
- * Remove all classes matching `re`.
- *
- * @param {RegExp} re
- * @return {ClassList}
- * @api private
- */
-
-ClassList.prototype.removeMatching = function(re) {
-  var arr = this.array();
-  for (var i = 0; i < arr.length; i++) {
-    if (re.test(arr[i])) {
-      this.remove(arr[i]);
-    }
-  }
-  return this;
-};
-
-/**
- * Toggle class `name`, can force state via `force`.
- *
- * For browsers that support classList, but do not support `force` yet,
- * the mistake will be detected and corrected.
- *
- * @param {String} name
- * @param {Boolean} force
- * @return {ClassList}
- * @api public
- */
-
-ClassList.prototype.toggle = function(name, force) {
-  // classList
-  if (this.list) {
-    if (defined(force)) {
-      if (force !== this.list.toggle(name, force)) {
-        this.list.toggle(name); // toggle again to correct
-      }
-    } else {
-      this.list.toggle(name);
-    }
-    return this;
-  }
-
-  // fallback
-  if (defined(force)) {
-    if (!force) {
-      this.remove(name);
-    } else {
-      this.add(name);
-    }
-  } else {
-    if (this.has(name)) {
-      this.remove(name);
-    } else {
-      this.add(name);
-    }
-  }
-
-  return this;
-};
-
-/**
- * Return an array of classes.
- *
- * @return {Array}
- * @api public
- */
-
-ClassList.prototype.array = function() {
-  var className = this.el.getAttribute('class') || '';
-  var str = className.replace(/^\s+|\s+$/g, '');
-  var arr = str.split(re);
-  if ('' === arr[0]) {
-    arr.shift();
-  }
-  return arr;
-};
-
-/**
- * Check if class `name` is present.
- *
- * @param {String} name
- * @return {ClassList}
- * @api public
- */
-
-ClassList.prototype.has =
-ClassList.prototype.contains = function(name) {
-  return (
-    this.list ?
-      this.list.contains(name) :
-      !! ~index(this.array(), name)
-  );
+/**
+ * Clear utility
+ */
+function index(arr, obj) {
+  if (arr.indexOf) {
+    return arr.indexOf(obj);
+  }
+
+
+  for (var i = 0; i < arr.length; ++i) {
+    if (arr[i] === obj) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+var re = /\s+/;
+
+var toString = Object.prototype.toString;
+
+function defined(o) {
+  return typeof o !== 'undefined';
+}
+
+/**
+ * Wrap `el` in a `ClassList`.
+ *
+ * @param {Element} el
+ * @return {ClassList}
+ * @api public
+ */
+
+function classes(el) {
+  return new ClassList(el);
+}
+
+function ClassList(el) {
+  if (!el || !el.nodeType) {
+    throw new Error('A DOM element reference is required');
+  }
+  this.el = el;
+  this.list = el.classList;
+}
+
+/**
+ * Add class `name` if not already present.
+ *
+ * @param {String} name
+ * @return {ClassList}
+ * @api public
+ */
+
+ClassList.prototype.add = function(name) {
+
+  // classList
+  if (this.list) {
+    this.list.add(name);
+    return this;
+  }
+
+  // fallback
+  var arr = this.array();
+  var i = index(arr, name);
+  if (!~i) {
+    arr.push(name);
+  }
+
+  if (defined(this.el.className.baseVal)) {
+    this.el.className.baseVal = arr.join(' ');
+  } else {
+    this.el.className = arr.join(' ');
+  }
+
+  return this;
+};
+
+/**
+ * Remove class `name` when present, or
+ * pass a regular expression to remove
+ * any which match.
+ *
+ * @param {String|RegExp} name
+ * @return {ClassList}
+ * @api public
+ */
+
+ClassList.prototype.remove = function(name) {
+  if ('[object RegExp]' === toString.call(name)) {
+    return this.removeMatching(name);
+  }
+
+  // classList
+  if (this.list) {
+    this.list.remove(name);
+    return this;
+  }
+
+  // fallback
+  var arr = this.array();
+  var i = index(arr, name);
+  if (~i) {
+    arr.splice(i, 1);
+  }
+  this.el.className.baseVal = arr.join(' ');
+  return this;
+};
+
+/**
+ * Remove all classes matching `re`.
+ *
+ * @param {RegExp} re
+ * @return {ClassList}
+ * @api private
+ */
+
+ClassList.prototype.removeMatching = function(re) {
+  var arr = this.array();
+  for (var i = 0; i < arr.length; i++) {
+    if (re.test(arr[i])) {
+      this.remove(arr[i]);
+    }
+  }
+  return this;
+};
+
+/**
+ * Toggle class `name`, can force state via `force`.
+ *
+ * For browsers that support classList, but do not support `force` yet,
+ * the mistake will be detected and corrected.
+ *
+ * @param {String} name
+ * @param {Boolean} force
+ * @return {ClassList}
+ * @api public
+ */
+
+ClassList.prototype.toggle = function(name, force) {
+  // classList
+  if (this.list) {
+    if (defined(force)) {
+      if (force !== this.list.toggle(name, force)) {
+        this.list.toggle(name); // toggle again to correct
+      }
+    } else {
+      this.list.toggle(name);
+    }
+    return this;
+  }
+
+  // fallback
+  if (defined(force)) {
+    if (!force) {
+      this.remove(name);
+    } else {
+      this.add(name);
+    }
+  } else {
+    if (this.has(name)) {
+      this.remove(name);
+    } else {
+      this.add(name);
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Return an array of classes.
+ *
+ * @return {Array}
+ * @api public
+ */
+
+ClassList.prototype.array = function() {
+  var className = this.el.getAttribute('class') || '';
+  var str = className.replace(/^\s+|\s+$/g, '');
+  var arr = str.split(re);
+  if ('' === arr[0]) {
+    arr.shift();
+  }
+  return arr;
+};
+
+/**
+ * Check if class `name` is present.
+ *
+ * @param {String} name
+ * @return {ClassList}
+ * @api public
+ */
+
+ClassList.prototype.has =
+ClassList.prototype.contains = function(name) {
+  return (
+    this.list ?
+      this.list.contains(name) :
+      !! ~index(this.array(), name)
+  );
 };
 
 function remove(element) {
@@ -68646,6 +68646,504 @@ var Labels = {};
 Labels.en = __webpack_require__(/*! ./en.js */ "./src/labels/en.js");
 
 module.exports = Labels;
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/editors/EditorManager.js":
+/*!*********************************************************!*\
+  !*** ./src/rootPages/Designer/editors/EditorManager.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * EditorManager
+ *
+ * An Interface for managing all the various Component Editors we support.
+ *
+ */
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var Editors = [];
+   // {array}
+   // All the ABField Component Inerfaces available.
+   [__webpack_require__(/*! ./views/ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js"), __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/editors/views/ABViewPage.js")].forEach(
+      (E) => {
+         let Klass = E.default(AB);
+         Editors.push(Klass);
+      }
+   );
+
+   return {
+      /*
+       * @function editors
+       * return all the currently defined Editors in an array.
+       * @param {fn} f
+       *        A filter for limiting which editor you want.
+       * @return [{ClassUI(Editor1)}, {ClassUI(Editor2)}, ...]
+       */
+      editors: function (f = () => true) {
+         return Editors.filter(f);
+      },
+   };
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/editors/views/ABViewContainer.js":
+/*!*****************************************************************!*\
+  !*** ./src/rootPages/Designer/editors/views/ABViewContainer.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/**
+ * ABViewContainerEditor
+ * The widget that displays the UI Editor Component on the screen
+ * when designing the UI.
+ */
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      // const uiConfig = AB.Config.uiSettings();
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      var L = UIClass.L();
+
+      myClass = class ABViewContainerEditor extends UIClass {
+         static get key() {
+            return "viewcontainer";
+         }
+
+         constructor(view, base = "interface_editor_viewcontainer", ids = {}) {
+            // base: {string} unique base id reference
+            // ids: {hash}  { key => '' }
+            // this is provided by the Sub Class and has the keys
+            // unique to the Sub Class' interface elements.
+
+            var common = {
+               label: "",
+            };
+
+            Object.keys(ids).forEach((k) => {
+               if (typeof common[k] != "undefined") {
+                  console.error(
+                     `!!! ABFieldProperty:: passed in ids contains a restricted field : ${k}`
+                  );
+                  return;
+               }
+               common[k] = "";
+            });
+
+            super(base, common);
+
+            this.view = view;
+            this.settings = view.settings;
+            // shortcut to reference the settings
+
+            this.base = base;
+            this.AB = AB;
+
+            this.subComponents = {
+               /* viewId: viewComponent */
+            };
+
+            this.cellHeight = 250;
+            // {int}
+            // default height of this editor component in our editing area.
+         }
+
+         ui() {
+            let key = ABViewContainerEditor.key;
+            let Defaults =
+               AB.Class.ABViewManager.viewClass(key).defaultValues();
+            return {
+               rows: [
+                  {
+                     id: this.ids.component,
+                     view: "dashboard",
+                     css: `ab-${key}-container`,
+                     cellHeight: this.cellHeight,
+                     gridColumns: this.settings.columns || Defaults.columns,
+                  },
+               ],
+            };
+         }
+
+         init(AB) {
+            var Dashboard = $$(this.ids.component);
+            if (Dashboard) {
+               webix.extend(Dashboard, webix.OverlayBox);
+               webix.extend(Dashboard, webix.ProgressBar);
+            }
+
+            // this.views().reverse().forEach((child) => {
+
+            // NOTE: need to sorting before .addView because there is a render position bug in webix 5.1.7
+            // https://webix.com/snippet/404cf0c7
+            var childViews = this.view.viewsSortByPosition();
+
+            // attach all the .UI views:
+            childViews.forEach((child) => {
+               var component = child.component();
+
+               // store
+               this.subComponents[child.id] = component;
+
+               let view = "panel";
+               if (child.settings.movable == false) view = "scrollview";
+
+               Dashboard.addView({
+                  view: view,
+
+                  // specific viewId to .name, it will be used to save view position
+                  name: child.id,
+                  icon: "fa fa-arrows",
+                  css: "ab-widget-container",
+                  body: {
+                     rows: [
+                        {
+                           view: "template",
+                           height: 30,
+                           css: "ab-widget-header",
+                           template: this.template(child),
+                           onClick: {
+                              "ab-component-edit": (e, id, trg) => {
+                                 this.viewEdit(e, child.id, trg);
+                              },
+                              "ab-component-remove": (e, id, trg) => {
+                                 this.viewDelete(e, child.id, trg);
+                              },
+                           },
+                        },
+                        component.ui(),
+                        // (mode == 'preview' ? component.ui : {
+                        //    // empty element
+                        //    view: 'spacer',
+                        //    hidden: true,
+                        // })
+                     ],
+                  },
+
+                  // dx: _logic.validatePosition(child.position.dx, 1, Dashboard.config.gridColumns),
+                  // dy: _logic.validatePosition(child.position.dy, 1, Dashboard.config.gridRows),
+
+                  dx: child.position.dx || 1,
+                  dy: child.position.dy || 1,
+                  x: this.validatePosition(
+                     child.position.x,
+                     0,
+                     Dashboard.config.gridColumns - 1
+                  ),
+                  y: child.position.y || 0,
+               });
+
+               // initial sub-component
+               component.init(AB, 2); // when in editor allow full access
+            });
+
+            // listen onChange event
+            // NOTE: listen after populate views by .addView
+            if (this._onChangeId) Dashboard.detachEvent(this._onChangeId);
+            this._onChangeId = Dashboard.attachEvent("onChange", () => {
+               this.onReorder();
+            });
+
+            // show "drop here" panel
+            this.showEmptyPlaceholder();
+
+            Dashboard.adjust();
+         } // init()
+
+         /**
+          * @method busy()
+          * Display a progress in action icon
+          */
+         busy() {
+            let Dashboard = $$(this.ids.component);
+            Dashboard?.disable();
+            Dashboard?.showProgress({ type: "icon" });
+         }
+
+         /**
+          * @method onReorder()
+          * Attempt to encode the current layout order among all our
+          * child views.
+          */
+         async onReorder() {
+            this.busy();
+
+            var Dashboard = $$(this.ids.component);
+
+            // ignore in "preview" mode
+            // if (Dashboard == null || Dashboard.config.view != "dashboard") return;
+
+            var viewState = Dashboard.serialize();
+
+            var allViewUpdates = [];
+
+            // save view position state to views
+            this.view.views().forEach((v) => {
+               var state = viewState.filter((vs) => vs.name == v.id)[0];
+               if (state) {
+                  v.position.x = state.x;
+                  v.position.y = state.y;
+
+                  // validate position data
+                  if (v.position.x < 0) v.position.x = 0;
+                  if (v.position.y < 0) v.position.y = 0;
+
+                  allViewUpdates.push(v.save());
+               }
+            });
+
+            try {
+               // save template layout
+               // this.saveReorder()
+               await Promise.all(allViewUpdates);
+
+               await this.view.save();
+
+               this.ready();
+            } catch (err) {
+               this.AB.notify.developer(err, {
+                  message: "Error trying to save selected View:",
+                  view: this.toObj(),
+               });
+               this.ready();
+            }
+         }
+
+         onShow() {
+            this.view.views().forEach((v) => {
+               var component = this.subComponents[v.id];
+               component?.onShow?.();
+            });
+
+            let dc = this.view.datacollection;
+            if (dc && dc.dataStatus == dc.dataStatusFlag.notInitial) {
+               // load data when a widget is showing
+               dc.loadData();
+            }
+         }
+
+         /**
+          * @method ready()
+          * Remove the progress in action icon.
+          */
+         ready() {
+            let Dashboard = $$(this.ids.component);
+            Dashboard?.enable();
+            Dashboard?.hideProgress();
+         }
+
+         /**
+          * @method showEmptyPlaceholder()
+          * Display the message to drop a new widget here to the UI
+          * when there are no child views.
+          */
+         showEmptyPlaceholder() {
+            var Dashboard = $$(this.ids.component);
+
+            // if we don't have any views, then place a "drop here" placeholder
+            if (Dashboard.getChildViews().length == 0) {
+               Dashboard.showOverlay(
+                  "<div class='drop-zone'><div>" +
+                     L("Add Widgets Here") +
+                     "</div></div>"
+               );
+            }
+         }
+
+         /**
+          * @method template()
+          * render the list template for the View
+          * @param {obj} obj the current View instance
+          * @param {obj} common  Webix provided object with common UI tools
+          */
+         template(child) {
+            return `<div>
+               <i class="fa fa-${child.icon} webix_icon_btn"></i> ${child.label}
+               <div class="ab-component-tools">
+               ${
+                  child.settings.removable == false
+                     ? ""
+                     : '<i class="fa fa-trash ab-component-remove"></i>'
+               }
+               <i class="fa fa-edit ab-component-edit"></i>
+               </div></div>`;
+         }
+
+         /**
+          * @method validatePosition
+          * ensure the given position is within the specified bounds.
+          * @param {int} curPosition
+          * @param {int} minPosition
+          * @param {int} maxPosition
+          */
+         validatePosition(curPosition, minPosition, maxPosition) {
+            if (curPosition < minPosition) return minPosition;
+            if (curPosition > maxPosition) return maxPosition;
+            else return curPosition;
+         }
+
+         /**
+          * @method viewDelete()
+          * Called when the [delete] icon for a child View is clicked.
+          * @param {obj} e the onClick event object
+          * @param {integer} id the id of the element to delete
+          * @param {obj} trg  Webix provided object
+          */
+         viewDelete(e, id /*, trg */) {
+            var deletedView = this.view.views((v) => v.id == id)[0];
+            if (!deletedView) return false;
+
+            webix.confirm({
+               title: L("Delete component"),
+               text: L("Do you want to delete <b>{0}</b>?", [
+                  deletedView.label,
+               ]),
+               callback: async (result) => {
+                  if (!result) return;
+                  // let Dashboard = $$(ids.component);
+
+                  // // remove UI of this component in template
+                  // var deletedElem = Dashboard.queryView({ name: id });
+                  // if (deletedElem) {
+
+                  //    // store the removed view to signal event in .onChange
+                  //    this.__deletedView = deletedView;
+
+                  //    // remove view
+                  //    var remainingViews = this.views((v) => { return v.id != deletedView.id; })
+                  //    this._views = remainingViews;
+
+                  //    // this calls the remove REST to API server
+                  //    Dashboard.removeView(deletedElem);
+                  // }
+
+                  this.busy();
+
+                  try {
+                     await deletedView.destroy();
+
+                     // signal the current view has been deleted.
+                     deletedView.emit("destroyed", deletedView);
+
+                     let Dashboard = $$(this.ids.component);
+
+                     // Update UI
+                     var deletedElem = Dashboard.queryView({ name: id });
+                     if (deletedElem) {
+                        Dashboard.blockEvent();
+                        Dashboard.removeView(deletedElem);
+                        Dashboard.unblockEvent();
+                     }
+
+                     this.showEmptyPlaceholder();
+                  } catch (err) {
+                     this.AB.notify.developer(err, {
+                        message: "Error trying to delete selected View:",
+                        view: deletedView,
+                     });
+                  }
+
+                  this.ready();
+               },
+            });
+            e.preventDefault();
+         } // viewDelete()
+
+         /**
+          * @method viewEdit()
+          * Called when the [edit] icon for a child View is clicked.
+          * @param {obj} e the onClick event object
+          * @param {integer} id the id of the element to edit
+          * @param {obj} trg  Webix provided object
+          */
+         viewEdit(e, id /*, trg */) {
+            var view = this.view.views((v) => v.id == id)[0];
+
+            if (!view) return false;
+
+            // NOTE: let webix finish this onClick event, before
+            // calling .populateInterfaceWorkspace() which will replace
+            // the interface elements with the edited view.  (apparently
+            // that causes errors.)
+            setTimeout(() => {
+               // App.actions.populateInterfaceWorkspace(view);
+               this.emit("view.edit", view);
+            }, 50);
+
+            e.preventDefault();
+
+            return false;
+         }
+      };
+   }
+
+   return myClass;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/editors/views/ABViewPage.js":
+/*!************************************************************!*\
+  !*** ./src/rootPages/Designer/editors/views/ABViewPage.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js");
+/**
+ * ABViewPage
+ * The widget that displays the UI Editor Component on the screen
+ * when designing the UI.
+ *
+ * ABViewPage is a glorified ABViewContainer
+ */
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      // const uiConfig = AB.Config.uiSettings();
+      const ABViewContainer = (0,_ABViewContainer__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      // var L = ABViewContainer.L();
+
+      myClass = class ABViewPageEditor extends ABViewContainer {
+         static get key() {
+            return "page";
+         }
+      };
+   }
+
+   return myClass;
+}
 
 
 /***/ }),
@@ -76256,37 +76754,7 @@ var myClass = null;
          }
 
          clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
+            $$(this.ids.label).setValue("");
          }
 
          /**
@@ -76378,6 +76846,15 @@ var myClass = null;
          }
 
          /**
+          * @method onChange()
+          * emit a "changed" event so our property manager can know
+          * there are new values that need saving.
+          */
+         onChange() {
+            this.emit("changed");
+         }
+
+         /**
           * @function populate
           * populate the property form with the given ABField instance provided.
           * @param {ABView} view
@@ -76403,43 +76880,9 @@ var myClass = null;
           * @return {obj}
           */
          values() {
-            /*
-// TODO:
-            var ids = this.ids;
-
-            var settings = $$(ids.component).getValues();
-            if ($$(ids.filterComplex)) {
-               var validationRules = [];
-               var forms = $$(ids.filterComplex).queryView(
-                  { view: "form", css: "abValidationForm" },
-                  "all"
-               );
-               forms.forEach((form) => {
-                  var rules = form
-                     .queryView({ view: "querybuilder" })
-                     .getValue();
-                  var invalidMessage = form
-                     .queryView({ name: "invalidMessage" })
-                     .getValue();
-                  var validationObj = {
-                     invalidMessage: invalidMessage,
-                     rules: rules,
-                  };
-                  validationRules.push(validationObj);
-               });
-               settings.validationRules = JSON.stringify(validationRules);
-            }
-
-            var FC = this.FieldClass();
-
-            // convert flat settings into our ABField value format:
-            var values = FC.editorValues(settings);
-
-            values.key = FC.defaults().key;
-
-            return values;
-*/
-            return {};
+            let vals = {};
+            vals.label = $$(this.ids.label).getValue();
+            return vals;
          }
 
          /**
@@ -76708,7 +77151,7 @@ __webpack_require__.r(__webpack_exports__);
 
       /**
        * @method FieldClass()
-       * A method to return the proper ABFieldXXX Definition.
+       * A method to return the proper ABViewXXX Definition.
        * NOTE: Must be overwritten by the Child Class
        */
       ViewClass() {
@@ -76810,11 +77253,11 @@ const ABViewContainerDefaults = {
                   label: L("Columns"),
                   labelWidth: uiConfig.labelWidthXLarge,
                   on: {
-                     onChange: function (newVal, oldVal) {
+                     onChange: (newVal, oldVal) => {
                         if (newVal > 8) $$(ids.columns).setValue(8);
 
                         let $grav = $$(ids.gravity);
-                        function addCounter(counterNum) {
+                        let addCounter = (counterNum) => {
                            var pos = $grav.getParentView().index($grav);
                            $grav.getParentView().addView(
                               {
@@ -76832,7 +77275,7 @@ const ABViewContainerDefaults = {
                               },
                               pos
                            );
-                        }
+                        };
 
                         function removeCounter() {
                            $grav
@@ -76866,6 +77309,8 @@ const ABViewContainerDefaults = {
                               removeCounter();
                            }
                         }
+
+                        this.onChange();
                      },
                   },
                },
@@ -76877,7 +77322,7 @@ const ABViewContainerDefaults = {
                },
             ];
 
-            _elements.concat(elements);
+            _elements = _elements.concat(elements);
 
             // Object.keys(rules).forEach((r) => {
             //    _ui.rules[r] = rules[r];
@@ -76903,39 +77348,7 @@ const ABViewContainerDefaults = {
             }
          }
 
-         clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
-         }
+         clear() {}
 
          /**
           * @method defaults()
@@ -77101,7 +77514,7 @@ const ABViewContainerDefaults = {
                .getParentView()
                .queryView({ css: "gravity_counter" }, "all")
                .map((counter) => gravity.push($$(counter).getValue()));
-            view.settings.gravity = gravity;
+            vals.settings.gravity = gravity;
 
             return vals;
          }
@@ -77153,12 +77566,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const ABViewContainer = (0,_ABViewContainer__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
-   // const L = ABViewClassProperty.L();
+   const uiConfig = AB.Config.uiSettings();
+   const L = ABViewContainer.L();
 
    class ABViewPageProperty extends ABViewContainer {
       constructor() {
          super("properties_abview_page", {
             // Put our ids here
+            type: "",
+            popupSettings: "",
+            popupWidth: "",
+            popupHeight: "",
+            pageSettings: "",
+            fixedPageWidth: "",
+            pageWidth: "",
+            pageBackground: "",
+            // pagePermissionPanel: "",
          });
       }
 
@@ -77167,7 +77590,138 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       ui() {
-         return super.ui([]);
+         let ids = this.ids;
+         let _this = this;
+
+         return super.ui([
+            {
+               id: ids.type,
+               name: "type",
+               view: "richselect",
+               label: L("Type"),
+               options: [
+                  { id: "page", value: L("Page") },
+                  { id: "popup", value: L("Popup") },
+               ],
+               on: {
+                  onChange: (newv /*, oldv */) => {
+                     if (newv == "page") {
+                        $$(ids.popupSettings).hide();
+                        $$(ids.pageSettings).show();
+                     } else {
+                        $$(ids.popupSettings).show();
+                        $$(ids.pageSettings).hide();
+                     }
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.popupSettings,
+               view: "fieldset",
+               name: "popupSettings",
+               label: L("Popup Settings"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.popupWidth,
+                        view: "text",
+                        name: "popupWidth",
+                        placeholder: L("Set popup width"),
+                        label: L("Width:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        validate: webix.rules.isNumber,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                     {
+                        id: ids.popupHeight,
+                        view: "text",
+                        name: "popupHeight",
+                        placeholder: L("Set popup height"),
+                        label: L("Height:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        validate: webix.rules.isNumber,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+            {
+               id: ids.pageSettings,
+               view: "fieldset",
+               name: "pageSettings",
+               label: L("Page Settings"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.fixedPageWidth,
+                        view: "checkbox",
+                        name: "fixedPageWidth",
+                        labelRight: L("Page has fixed width"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: function (/*id, event */) {
+                           if (this.getValue() == 1) {
+                              $$(ids.pageWidth).show();
+                           } else {
+                              $$(ids.pageWidth).hide();
+                           }
+                           _this.onChange();
+                        },
+                     },
+                     {
+                        id: ids.pageWidth,
+                        view: "text",
+                        name: "pageWidth",
+                        placeholder: L("Set page width"),
+                        label: L("Page width:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                     {
+                        id: ids.pageBackground,
+                        view: "richselect",
+                        name: "pageBackground",
+                        label: L("Page background:"),
+                        labelWidth: uiConfig.labelWidthXLarge,
+                        options: [
+                           {
+                              id: "ab-background-default",
+                              value: L("White (default)"),
+                           },
+                           {
+                              id: "ab-background-gray",
+                              value: L("Dark"),
+                           },
+                           // { "id":"ab-background-texture", "value":L('ab.component.page.pageBackgroundTextured', '*Textured')}
+                        ],
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+         ]);
       }
 
       async init(AB) {
@@ -77176,28 +77730,57 @@ __webpack_require__.r(__webpack_exports__);
 
       populate(view) {
          super.populate(view);
+         let ids = this.ids;
+
+         let DefaultValues = this.defaultValues();
+
+         $$(ids.type).setValue(view.settings.type || DefaultValues.type);
+         $$(ids.popupWidth).setValue(
+            view.settings.popupWidth || DefaultValues.popupWidth
+         );
+         $$(ids.popupHeight).setValue(
+            view.settings.popupHeight || DefaultValues.popupHeight
+         );
+         $$(ids.pageWidth).setValue(
+            view.settings.pageWidth || DefaultValues.pageWidth
+         );
+         $$(ids.fixedPageWidth).setValue(
+            view.settings.fixedPageWidth || DefaultValues.fixedPageWidth
+         );
+         $$(ids.pageBackground).setValue(
+            view.settings.pageBackground || DefaultValues.pageBackground
+         );
+
+         // Disable select type of page when this page is root
+         if (view.isRoot()) {
+            $$(ids.type).hide();
+         } else {
+            $$(ids.type).show();
+         }
+
+         if (view.settings.type == "popup") {
+            $$(ids.popupSettings).show();
+            $$(ids.pageSettings).hide();
+         } else {
+            $$(ids.popupSettings).hide();
+            $$(ids.pageSettings).show();
+         }
+
+         if (view.settings.fixedPageWidth == 1) {
+            $$(ids.pageWidth).show();
+         } else {
+            $$(ids.pageWidth).hide();
+         }
       }
 
-      /*
-defaultValues() {
-   var values = {
-      dataviewID: null,
-      buttonLabel: "Upload CSV",
-      width: 0,
-      recordRules: [],
-   };
-
-   var FieldClass = this.ViewClass();
-   if (FieldClass) {
-      var fcValues = FieldClass.defaultValues();
-      Object.keys(fcValues).forEach((k) => {
-         values[k] = fcValues[k];
-      });
-   }
-
-   return values;
-}
-*/
+      defaultValues() {
+         let values = {};
+         var ViewClass = this.ViewClass();
+         if (ViewClass) {
+            values = ViewClass.defaultValues();
+         }
+         return values;
+      }
 
       /**
        * @method values
@@ -77205,7 +77788,16 @@ defaultValues() {
        * @return {obj}
        */
       values() {
+         let ids = this.ids;
          let vals = super.values();
+
+         vals.settings = vals.settings || {};
+         vals.settings.type = $$(ids.type).getValue();
+         vals.settings.popupWidth = $$(ids.popupWidth).getValue();
+         vals.settings.popupHeight = $$(ids.popupHeight).getValue();
+         vals.settings.pageWidth = $$(ids.pageWidth).getValue();
+         vals.settings.fixedPageWidth = $$(ids.fixedPageWidth).getValue();
+         vals.settings.pageBackground = $$(ids.pageBackground).getValue();
 
          return vals;
       }
@@ -77218,13 +77810,6 @@ defaultValues() {
       ViewClass() {
          return super._ViewClass("page");
       }
-      /*
-toSettings() {
-   var base = this.defaults();
-   base.settings = this.defaultValues();
-   return base;
-}
-*/
    }
 
    return ABViewPageProperty;
@@ -86176,6 +86761,12 @@ __webpack_require__.r(__webpack_exports__);
             this.viewLoad(view);
          });
 
+         this.ColumnDetails.on("view.changed", () => {
+            // a property of a view has changed, so reload
+            // the current display of the View.
+            this.ColumnEditor.viewLoad(this.CurrentView);
+         });
+
          return Promise.all(allInits);
       }
 
@@ -86296,6 +86887,9 @@ __webpack_require__.r(__webpack_exports__);
       init(AB) {
          this.AB = AB;
 
+         PropertiesList.on("view.changed", () => {
+            this.emit("view.changed");
+         });
          return PropertiesList.init(AB);
       }
 
@@ -86378,7 +86972,42 @@ __webpack_require__.r(__webpack_exports__);
             form: "",
          });
 
-         this._editorsByType = {};
+         this._editorsByType = {
+            /* View.key : ViewPropertyClass */
+         };
+         this.currentPanel = null;
+
+         /**
+          * @function _handler_onChange()
+          * Triggered when a change in the Property Editor
+          * is alerted, or when a new view is loaded and we
+          * want to save the current one.
+          */
+         this._handler_onChange = (waitDuration = 3000) => {
+            let values = this.currentPanel.values();
+
+            // to update the label, add it before we ask for .toObj():
+            this.CurrentView.label = values.label;
+            var objVals = this.CurrentView.toObj();
+            Object.keys(values.settings).forEach((k) => {
+               objVals.settings[k] = values.settings[k];
+            });
+
+            this.CurrentView.fromValues(objVals);
+
+            // Timed saves ... once every 3s of no changes
+            let view = this.CurrentView;
+
+            if (view.__timedSave) {
+               clearTimeout(view.__timedSave);
+            }
+            view.__timedSave = setTimeout(() => {
+               view.save();
+               delete view.__timedSave;
+            }, waitDuration);
+
+            this.emit("view.changed");
+         };
       }
 
       // webix UI definition:
@@ -86451,6 +87080,15 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABView} view  current view instance.
        */
       viewLoad(view) {
+         if (this.currentPanel) {
+            // Make sure the current Data is saved:
+            this._handler_onChange(10);
+
+            // unload the current panel
+            this.currentPanel.removeAllListeners("changed");
+            this.currentPanel = null;
+         }
+
          super.viewLoad(view);
 
          let _editor = this._editorsByType[view.key];
@@ -86466,6 +87104,9 @@ __webpack_require__.r(__webpack_exports__);
             webix.ui(ui, $$(this.ids.editors));
 
             newPanel.populate(view);
+
+            newPanel.on("changed", this._handler_onChange);
+            this.currentPanel = newPanel;
             // newPanel.show();
          }
       }
@@ -87027,6 +87668,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _editors_EditorManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./editors/EditorManager */ "./src/rootPages/Designer/editors/EditorManager.js");
 /*
  * ui_work_interface_workspace_editor_layout
  *
@@ -87036,11 +87678,14 @@ __webpack_require__.r(__webpack_exports__);
 
 // import UI_Warnings from "./ui_warnings";
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const ibase = "ui_work_interface_workspace_editor_layout";
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const L = UIClass.L();
+
+   const EditorManager = (0,_editors_EditorManager__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Interface_Workspace_Editor_Layout extends UIClass {
       constructor() {
@@ -87055,6 +87700,13 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          this.CurrentViewMode = 1; // preview mode by default
+
+         this._editorsByType = {
+            /* view.key : {ViewEditorClass} */
+         };
+         // {hash}
+         // a collection of all possible View Editors that we can display in our
+         // layout editor.
       }
 
       // webix UI definition:
@@ -87092,9 +87744,8 @@ __webpack_require__.r(__webpack_exports__);
                            ],
                         },
                         {
-                           // view:'template',
-                           view: "layout",
                            id: ids.editArea,
+                           view: "layout",
                            borderless: true,
                            rows: [],
                            // template:'[edit Area]'
@@ -87120,6 +87771,11 @@ __webpack_require__.r(__webpack_exports__);
 
          let EditArea = $$(this.ids.editArea);
          if (EditArea) webix.extend(EditArea, webix.ProgressBar);
+
+         // get a copy of all the possible Editors by their .key
+         EditorManager.editors().forEach((E) => {
+            this._editorsByType[E.key] = E;
+         });
 
          return Promise.resolve();
       }
@@ -87153,7 +87809,7 @@ __webpack_require__.r(__webpack_exports__);
          // load the component's editor in our editArea
          var editorComponent;
          if (this.CurrentViewMode == "preview") {
-            editorComponent = view.component(this.AB._App);
+            editorComponent = view.component();
             if (
                this.CurrentView.settings.type == "popup" &&
                this.CurrentView.settings.popupWidth &&
@@ -87239,7 +87895,9 @@ __webpack_require__.r(__webpack_exports__);
                $$(ids.editAreaSamplePopup).hide();
             }
          } else {
-            editorComponent = view.editorComponent(this.AB._App, "preview");
+            let newEditor = this._editorsByType[view.key];
+
+            editorComponent = new newEditor(view); // view.editorComponent(this.AB._App, "preview");
             $$(ids.editAreaContainer).define({ width: 0 });
             $$(ids.editArea).define({ height: 0 });
             webix.html.removeCss(
@@ -87263,15 +87921,16 @@ __webpack_require__.r(__webpack_exports__);
          }
          // editorComponent.ui.id = ids.editArea;
          // webix.ui(editorComponent.ui, $$(ids.editArea));
-         $$(ids.editArea).addView(editorComponent.ui);
-         editorComponent.init(null, 2);
+         $$(ids.editArea).addView(editorComponent.ui());
+         editorComponent.init(this.AB, 2);
+         // note: parentAccessLevel = 2 here in our Designer
 
          if (editorComponent.onShow) editorComponent.onShow();
 
          setTimeout(() => {
             $$(ids.component).adjust();
             $$(ids.editAreaContainer).adjust();
-         }, 250);
+         }, 150);
       }
 
       /*

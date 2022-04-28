@@ -37,6 +37,9 @@ export default function (AB) {
       init(AB) {
          this.AB = AB;
 
+         PropertiesList.on("view.changed", () => {
+            this.emit("view.changed");
+         });
          return PropertiesList.init(AB);
       }
 
