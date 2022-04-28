@@ -81399,8 +81399,7 @@ var myClass = null;
                   select: false,
                   on: {
                      onItemClick: (itemId) => {
-                        const { command, label } = $$(this.ids.list).getItem(itemId);
-                        console.log('onItemClick', {command, label});
+                        const { command } = $$(this.ids.list).getItem(itemId);
                         return this.trigger(command);
                      },
                   },
