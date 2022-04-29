@@ -107,6 +107,12 @@ export default function (AB) {
             this.viewLoad(view);
          });
 
+         this.ColumnDetails.on("view.changed", () => {
+            // a property of a view has changed, so reload
+            // the current display of the View.
+            this.ColumnEditor.viewLoad(this.CurrentView);
+         });
+
          return Promise.all(allInits);
       }
 

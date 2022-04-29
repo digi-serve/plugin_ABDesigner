@@ -68650,6 +68650,504 @@ module.exports = Labels;
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/editors/EditorManager.js":
+/*!*********************************************************!*\
+  !*** ./src/rootPages/Designer/editors/EditorManager.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/*
+ * EditorManager
+ *
+ * An Interface for managing all the various Component Editors we support.
+ *
+ */
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   var Editors = [];
+   // {array}
+   // All the ABField Component Inerfaces available.
+   [__webpack_require__(/*! ./views/ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js"), __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/editors/views/ABViewPage.js")].forEach(
+      (E) => {
+         let Klass = E.default(AB);
+         Editors.push(Klass);
+      }
+   );
+
+   return {
+      /*
+       * @function editors
+       * return all the currently defined Editors in an array.
+       * @param {fn} f
+       *        A filter for limiting which editor you want.
+       * @return [{ClassUI(Editor1)}, {ClassUI(Editor2)}, ...]
+       */
+      editors: function (f = () => true) {
+         return Editors.filter(f);
+      },
+   };
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/editors/views/ABViewContainer.js":
+/*!*****************************************************************!*\
+  !*** ./src/rootPages/Designer/editors/views/ABViewContainer.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/**
+ * ABViewContainerEditor
+ * The widget that displays the UI Editor Component on the screen
+ * when designing the UI.
+ */
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      // const uiConfig = AB.Config.uiSettings();
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      var L = UIClass.L();
+
+      myClass = class ABViewContainerEditor extends UIClass {
+         static get key() {
+            return "viewcontainer";
+         }
+
+         constructor(view, base = "interface_editor_viewcontainer", ids = {}) {
+            // base: {string} unique base id reference
+            // ids: {hash}  { key => '' }
+            // this is provided by the Sub Class and has the keys
+            // unique to the Sub Class' interface elements.
+
+            var common = {
+               label: "",
+            };
+
+            Object.keys(ids).forEach((k) => {
+               if (typeof common[k] != "undefined") {
+                  console.error(
+                     `!!! ABFieldProperty:: passed in ids contains a restricted field : ${k}`
+                  );
+                  return;
+               }
+               common[k] = "";
+            });
+
+            super(base, common);
+
+            this.view = view;
+            this.settings = view.settings;
+            // shortcut to reference the settings
+
+            this.base = base;
+            this.AB = AB;
+
+            this.subComponents = {
+               /* viewId: viewComponent */
+            };
+
+            this.cellHeight = 250;
+            // {int}
+            // default height of this editor component in our editing area.
+         }
+
+         ui() {
+            let key = ABViewContainerEditor.key;
+            let Defaults =
+               AB.Class.ABViewManager.viewClass(key).defaultValues();
+            return {
+               rows: [
+                  {
+                     id: this.ids.component,
+                     view: "dashboard",
+                     css: `ab-${key}-container`,
+                     cellHeight: this.cellHeight,
+                     gridColumns: this.settings.columns || Defaults.columns,
+                  },
+               ],
+            };
+         }
+
+         init(AB) {
+            var Dashboard = $$(this.ids.component);
+            if (Dashboard) {
+               webix.extend(Dashboard, webix.OverlayBox);
+               webix.extend(Dashboard, webix.ProgressBar);
+            }
+
+            // this.views().reverse().forEach((child) => {
+
+            // NOTE: need to sorting before .addView because there is a render position bug in webix 5.1.7
+            // https://webix.com/snippet/404cf0c7
+            var childViews = this.view.viewsSortByPosition();
+
+            // attach all the .UI views:
+            childViews.forEach((child) => {
+               var component = child.component();
+
+               // store
+               this.subComponents[child.id] = component;
+
+               let view = "panel";
+               if (child.settings.movable == false) view = "scrollview";
+
+               Dashboard.addView({
+                  view: view,
+
+                  // specific viewId to .name, it will be used to save view position
+                  name: child.id,
+                  icon: "fa fa-arrows",
+                  css: "ab-widget-container",
+                  body: {
+                     rows: [
+                        {
+                           view: "template",
+                           height: 30,
+                           css: "ab-widget-header",
+                           template: this.template(child),
+                           onClick: {
+                              "ab-component-edit": (e, id, trg) => {
+                                 this.viewEdit(e, child.id, trg);
+                              },
+                              "ab-component-remove": (e, id, trg) => {
+                                 this.viewDelete(e, child.id, trg);
+                              },
+                           },
+                        },
+                        component.ui(),
+                        // (mode == 'preview' ? component.ui : {
+                        //    // empty element
+                        //    view: 'spacer',
+                        //    hidden: true,
+                        // })
+                     ],
+                  },
+
+                  // dx: _logic.validatePosition(child.position.dx, 1, Dashboard.config.gridColumns),
+                  // dy: _logic.validatePosition(child.position.dy, 1, Dashboard.config.gridRows),
+
+                  dx: child.position.dx || 1,
+                  dy: child.position.dy || 1,
+                  x: this.validatePosition(
+                     child.position.x,
+                     0,
+                     Dashboard.config.gridColumns - 1
+                  ),
+                  y: child.position.y || 0,
+               });
+
+               // initial sub-component
+               component.init(AB, 2); // when in editor allow full access
+            });
+
+            // listen onChange event
+            // NOTE: listen after populate views by .addView
+            if (this._onChangeId) Dashboard.detachEvent(this._onChangeId);
+            this._onChangeId = Dashboard.attachEvent("onChange", () => {
+               this.onReorder();
+            });
+
+            // show "drop here" panel
+            this.showEmptyPlaceholder();
+
+            Dashboard.adjust();
+         } // init()
+
+         /**
+          * @method busy()
+          * Display a progress in action icon
+          */
+         busy() {
+            let Dashboard = $$(this.ids.component);
+            Dashboard?.disable();
+            Dashboard?.showProgress({ type: "icon" });
+         }
+
+         /**
+          * @method onReorder()
+          * Attempt to encode the current layout order among all our
+          * child views.
+          */
+         async onReorder() {
+            this.busy();
+
+            var Dashboard = $$(this.ids.component);
+
+            // ignore in "preview" mode
+            // if (Dashboard == null || Dashboard.config.view != "dashboard") return;
+
+            var viewState = Dashboard.serialize();
+
+            var allViewUpdates = [];
+
+            // save view position state to views
+            this.view.views().forEach((v) => {
+               var state = viewState.filter((vs) => vs.name == v.id)[0];
+               if (state) {
+                  v.position.x = state.x;
+                  v.position.y = state.y;
+
+                  // validate position data
+                  if (v.position.x < 0) v.position.x = 0;
+                  if (v.position.y < 0) v.position.y = 0;
+
+                  allViewUpdates.push(v.save());
+               }
+            });
+
+            try {
+               // save template layout
+               // this.saveReorder()
+               await Promise.all(allViewUpdates);
+
+               await this.view.save();
+
+               this.ready();
+            } catch (err) {
+               this.AB.notify.developer(err, {
+                  message: "Error trying to save selected View:",
+                  view: this.toObj(),
+               });
+               this.ready();
+            }
+         }
+
+         onShow() {
+            this.view.views().forEach((v) => {
+               var component = this.subComponents[v.id];
+               component?.onShow?.();
+            });
+
+            let dc = this.view.datacollection;
+            if (dc && dc.dataStatus == dc.dataStatusFlag.notInitial) {
+               // load data when a widget is showing
+               dc.loadData();
+            }
+         }
+
+         /**
+          * @method ready()
+          * Remove the progress in action icon.
+          */
+         ready() {
+            let Dashboard = $$(this.ids.component);
+            Dashboard?.enable();
+            Dashboard?.hideProgress();
+         }
+
+         /**
+          * @method showEmptyPlaceholder()
+          * Display the message to drop a new widget here to the UI
+          * when there are no child views.
+          */
+         showEmptyPlaceholder() {
+            var Dashboard = $$(this.ids.component);
+
+            // if we don't have any views, then place a "drop here" placeholder
+            if (Dashboard.getChildViews().length == 0) {
+               Dashboard.showOverlay(
+                  "<div class='drop-zone'><div>" +
+                     L("Add Widgets Here") +
+                     "</div></div>"
+               );
+            }
+         }
+
+         /**
+          * @method template()
+          * render the list template for the View
+          * @param {obj} obj the current View instance
+          * @param {obj} common  Webix provided object with common UI tools
+          */
+         template(child) {
+            return `<div>
+               <i class="fa fa-${child.icon} webix_icon_btn"></i> ${child.label}
+               <div class="ab-component-tools">
+               ${
+                  child.settings.removable == false
+                     ? ""
+                     : '<i class="fa fa-trash ab-component-remove"></i>'
+               }
+               <i class="fa fa-edit ab-component-edit"></i>
+               </div></div>`;
+         }
+
+         /**
+          * @method validatePosition
+          * ensure the given position is within the specified bounds.
+          * @param {int} curPosition
+          * @param {int} minPosition
+          * @param {int} maxPosition
+          */
+         validatePosition(curPosition, minPosition, maxPosition) {
+            if (curPosition < minPosition) return minPosition;
+            if (curPosition > maxPosition) return maxPosition;
+            else return curPosition;
+         }
+
+         /**
+          * @method viewDelete()
+          * Called when the [delete] icon for a child View is clicked.
+          * @param {obj} e the onClick event object
+          * @param {integer} id the id of the element to delete
+          * @param {obj} trg  Webix provided object
+          */
+         viewDelete(e, id /*, trg */) {
+            var deletedView = this.view.views((v) => v.id == id)[0];
+            if (!deletedView) return false;
+
+            webix.confirm({
+               title: L("Delete component"),
+               text: L("Do you want to delete <b>{0}</b>?", [
+                  deletedView.label,
+               ]),
+               callback: async (result) => {
+                  if (!result) return;
+                  // let Dashboard = $$(ids.component);
+
+                  // // remove UI of this component in template
+                  // var deletedElem = Dashboard.queryView({ name: id });
+                  // if (deletedElem) {
+
+                  //    // store the removed view to signal event in .onChange
+                  //    this.__deletedView = deletedView;
+
+                  //    // remove view
+                  //    var remainingViews = this.views((v) => { return v.id != deletedView.id; })
+                  //    this._views = remainingViews;
+
+                  //    // this calls the remove REST to API server
+                  //    Dashboard.removeView(deletedElem);
+                  // }
+
+                  this.busy();
+
+                  try {
+                     await deletedView.destroy();
+
+                     // signal the current view has been deleted.
+                     deletedView.emit("destroyed", deletedView);
+
+                     let Dashboard = $$(this.ids.component);
+
+                     // Update UI
+                     var deletedElem = Dashboard.queryView({ name: id });
+                     if (deletedElem) {
+                        Dashboard.blockEvent();
+                        Dashboard.removeView(deletedElem);
+                        Dashboard.unblockEvent();
+                     }
+
+                     this.showEmptyPlaceholder();
+                  } catch (err) {
+                     this.AB.notify.developer(err, {
+                        message: "Error trying to delete selected View:",
+                        view: deletedView,
+                     });
+                  }
+
+                  this.ready();
+               },
+            });
+            e.preventDefault();
+         } // viewDelete()
+
+         /**
+          * @method viewEdit()
+          * Called when the [edit] icon for a child View is clicked.
+          * @param {obj} e the onClick event object
+          * @param {integer} id the id of the element to edit
+          * @param {obj} trg  Webix provided object
+          */
+         viewEdit(e, id /*, trg */) {
+            var view = this.view.views((v) => v.id == id)[0];
+
+            if (!view) return false;
+
+            // NOTE: let webix finish this onClick event, before
+            // calling .populateInterfaceWorkspace() which will replace
+            // the interface elements with the edited view.  (apparently
+            // that causes errors.)
+            setTimeout(() => {
+               // App.actions.populateInterfaceWorkspace(view);
+               this.emit("view.edit", view);
+            }, 50);
+
+            e.preventDefault();
+
+            return false;
+         }
+      };
+   }
+
+   return myClass;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/editors/views/ABViewPage.js":
+/*!************************************************************!*\
+  !*** ./src/rootPages/Designer/editors/views/ABViewPage.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js");
+/**
+ * ABViewPage
+ * The widget that displays the UI Editor Component on the screen
+ * when designing the UI.
+ *
+ * ABViewPage is a glorified ABViewContainer
+ */
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      // const uiConfig = AB.Config.uiSettings();
+      const ABViewContainer = (0,_ABViewContainer__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      // var L = ABViewContainer.L();
+
+      myClass = class ABViewPageEditor extends ABViewContainer {
+         static get key() {
+            return "page";
+         }
+      };
+   }
+
+   return myClass;
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/properties/PropertyManager.js":
 /*!**************************************************************!*\
   !*** ./src/rootPages/Designer/properties/PropertyManager.js ***!
@@ -77020,37 +77518,7 @@ var myClass = null;
          }
 
          clear() {
-            /*
-// TODO:
-            var ids = this.ids;
-            this._CurrentField = null;
-
-            var defaultValues = this.defaultValues();
-
-            for (var f in defaultValues) {
-               var component = $$(ids[f]);
-               if (component) component.setValue(defaultValues[f]);
-            }
-
-            // reset the validation rules UI
-            var filterViews = $$(ids.filterComplex).queryView(
-               {
-                  view: "form",
-                  css: "abValidationForm",
-               },
-               "all"
-            );
-            if (filterViews.length) {
-               filterViews.forEach((v) => {
-                  $$(ids.filterComplex).removeView(v);
-               });
-            }
-
-            $$(ids.addValidation).hide();
-
-            // hide warning message of null data
-            $$(ids.numberOfNull).hide();
-*/
+            $$(this.ids.label).setValue("");
          }
 
          /**
@@ -77142,6 +77610,15 @@ var myClass = null;
          }
 
          /**
+          * @method onChange()
+          * emit a "changed" event so our property manager can know
+          * there are new values that need saving.
+          */
+         onChange() {
+            this.emit("changed");
+         }
+
+         /**
           * @function populate
           * populate the property form with the given ABField instance provided.
           * @param {ABView} view
@@ -77167,43 +77644,9 @@ var myClass = null;
           * @return {obj}
           */
          values() {
-            /*
-// TODO:
-            var ids = this.ids;
-
-            var settings = $$(ids.component).getValues();
-            if ($$(ids.filterComplex)) {
-               var validationRules = [];
-               var forms = $$(ids.filterComplex).queryView(
-                  { view: "form", css: "abValidationForm" },
-                  "all"
-               );
-               forms.forEach((form) => {
-                  var rules = form
-                     .queryView({ view: "querybuilder" })
-                     .getValue();
-                  var invalidMessage = form
-                     .queryView({ name: "invalidMessage" })
-                     .getValue();
-                  var validationObj = {
-                     invalidMessage: invalidMessage,
-                     rules: rules,
-                  };
-                  validationRules.push(validationObj);
-               });
-               settings.validationRules = JSON.stringify(validationRules);
-            }
-
-            var FC = this.FieldClass();
-
-            // convert flat settings into our ABField value format:
-            var values = FC.editorValues(settings);
-
-            values.key = FC.defaults().key;
-
-            return values;
-*/
-            return {};
+            let vals = {};
+            vals.label = $$(this.ids.label).getValue();
+            return vals;
          }
 
          /**
@@ -77472,7 +77915,7 @@ __webpack_require__.r(__webpack_exports__);
 
       /**
        * @method FieldClass()
-       * A method to return the proper ABFieldXXX Definition.
+       * A method to return the proper ABViewXXX Definition.
        * NOTE: Must be overwritten by the Child Class
        */
       ViewClass() {
@@ -81655,9 +82098,9 @@ var myClass = null;
                   autoheight: true,
                   select: false,
                   on: {
-                     onItemClick: (timestamp, e, trg) => {
-                        // we need to process which node was clicked before emitting
-                        return this.trigger(trg);
+                     onItemClick: (itemId) => {
+                        const { command } = $$(this.ids.list).getItem(itemId);
+                        return this.trigger(command);
                      },
                   },
                },
@@ -81712,7 +82155,7 @@ var myClass = null;
             this._menuOptions = menuOptions;
             var data = [];
             menuOptions.forEach((mo) => {
-               data.push({ label: mo.label, icon: mo.icon });
+               data.push({ label: mo.label, icon: mo.icon, command: mo.command });
             });
             this.$list.parse(data);
             this.$list.refresh();
@@ -81730,17 +82173,13 @@ var myClass = null;
           * @param {itemNode} div.webix_list_item: we get the label then pass this up,
           * The itemNode contains the 'page' the user wants to edit
           */
-         trigger(itemNode) {
+         trigger(command) {
             // hide our popup before we trigger any other possible UI animation: (like .edit)
             // NOTE: if the UI is animating another component, and we do .hide()
             // while it is in progress, the UI will glitch and give the user whiplash.
-            var label = itemNode.textContent.trim();
-            var option = this._menuOptions.filter((mo) => {
-               return mo.label == label;
-            })[0];
-            if (option) {
-               this.emit(option.command);
+            if (command) {
                this.hide();
+               this.emit("click", command);
                return false;
             }
          }
@@ -85021,16 +85460,19 @@ __webpack_require__.r(__webpack_exports__);
             },
          ]);
 
-         this.EditPopup.on("delete", () => {
-            this.remove();
-         });
-
-         this.EditPopup.on("copy", () => {
-            this.copy();
-         });
-
-         this.EditPopup.on("rename", () => {
-            this.rename();
+         this.EditPopup.on("click", (command) =>{
+            switch (command) {
+               case "delete":
+                  this.remove();
+                  break;
+               case "copy":
+                  this.copy();
+                  break;
+               case "rename":
+                  this.rename();
+                  break;
+               default:
+            }
          });
 
          await AddForm.init(AB);
@@ -86436,6 +86878,12 @@ __webpack_require__.r(__webpack_exports__);
             this.viewLoad(view);
          });
 
+         this.ColumnDetails.on("view.changed", () => {
+            // a property of a view has changed, so reload
+            // the current display of the View.
+            this.ColumnEditor.viewLoad(this.CurrentView);
+         });
+
          return Promise.all(allInits);
       }
 
@@ -86556,6 +87004,9 @@ __webpack_require__.r(__webpack_exports__);
       init(AB) {
          this.AB = AB;
 
+         PropertiesList.on("view.changed", () => {
+            this.emit("view.changed");
+         });
          return PropertiesList.init(AB);
       }
 
@@ -86638,7 +87089,42 @@ __webpack_require__.r(__webpack_exports__);
             form: "",
          });
 
-         this._editorsByType = {};
+         this._editorsByType = {
+            /* View.key : ViewPropertyClass */
+         };
+         this.currentPanel = null;
+
+         /**
+          * @function _handler_onChange()
+          * Triggered when a change in the Property Editor
+          * is alerted, or when a new view is loaded and we
+          * want to save the current one.
+          */
+         this._handler_onChange = (waitDuration = 3000) => {
+            let values = this.currentPanel.values();
+
+            // to update the label, add it before we ask for .toObj():
+            this.CurrentView.label = values.label;
+            var objVals = this.CurrentView.toObj();
+            Object.keys(values.settings).forEach((k) => {
+               objVals.settings[k] = values.settings[k];
+            });
+
+            this.CurrentView.fromValues(objVals);
+
+            // Timed saves ... once every 3s of no changes
+            let view = this.CurrentView;
+
+            if (view.__timedSave) {
+               clearTimeout(view.__timedSave);
+            }
+            view.__timedSave = setTimeout(() => {
+               view.save();
+               delete view.__timedSave;
+            }, waitDuration);
+
+            this.emit("view.changed");
+         };
       }
 
       // webix UI definition:
@@ -86711,6 +87197,15 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABView} view  current view instance.
        */
       viewLoad(view) {
+         if (this.currentPanel) {
+            // Make sure the current Data is saved:
+            this._handler_onChange(10);
+
+            // unload the current panel
+            this.currentPanel.removeAllListeners("changed");
+            this.currentPanel = null;
+         }
+
          super.viewLoad(view);
 
          let _editor = this._editorsByType[view.key];
@@ -86726,6 +87221,9 @@ __webpack_require__.r(__webpack_exports__);
             webix.ui(ui, $$(this.ids.editors));
 
             newPanel.populate(view);
+
+            newPanel.on("changed", this._handler_onChange);
+            this.currentPanel = newPanel;
             // newPanel.show();
          }
       }
@@ -87287,6 +87785,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _editors_EditorManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./editors/EditorManager */ "./src/rootPages/Designer/editors/EditorManager.js");
 /*
  * ui_work_interface_workspace_editor_layout
  *
@@ -87296,11 +87795,14 @@ __webpack_require__.r(__webpack_exports__);
 
 // import UI_Warnings from "./ui_warnings";
 
+
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const ibase = "ui_work_interface_workspace_editor_layout";
    // const uiConfig = AB.Config.uiSettings();
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const L = UIClass.L();
+
+   const EditorManager = (0,_editors_EditorManager__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
 
    class UI_Work_Interface_Workspace_Editor_Layout extends UIClass {
       constructor() {
@@ -87315,6 +87817,13 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          this.CurrentViewMode = 1; // preview mode by default
+
+         this._editorsByType = {
+            /* view.key : {ViewEditorClass} */
+         };
+         // {hash}
+         // a collection of all possible View Editors that we can display in our
+         // layout editor.
       }
 
       // webix UI definition:
@@ -87352,9 +87861,8 @@ __webpack_require__.r(__webpack_exports__);
                            ],
                         },
                         {
-                           // view:'template',
-                           view: "layout",
                            id: ids.editArea,
+                           view: "layout",
                            borderless: true,
                            rows: [],
                            // template:'[edit Area]'
@@ -87380,6 +87888,11 @@ __webpack_require__.r(__webpack_exports__);
 
          let EditArea = $$(this.ids.editArea);
          if (EditArea) webix.extend(EditArea, webix.ProgressBar);
+
+         // get a copy of all the possible Editors by their .key
+         EditorManager.editors().forEach((E) => {
+            this._editorsByType[E.key] = E;
+         });
 
          return Promise.resolve();
       }
@@ -87413,7 +87926,7 @@ __webpack_require__.r(__webpack_exports__);
          // load the component's editor in our editArea
          var editorComponent;
          if (this.CurrentViewMode == "preview") {
-            editorComponent = view.component(this.AB._App);
+            editorComponent = view.component();
             if (
                this.CurrentView.settings.type == "popup" &&
                this.CurrentView.settings.popupWidth &&
@@ -87499,7 +88012,9 @@ __webpack_require__.r(__webpack_exports__);
                $$(ids.editAreaSamplePopup).hide();
             }
          } else {
-            editorComponent = view.editorComponent(this.AB._App, "preview");
+            let newEditor = this._editorsByType[view.key];
+
+            editorComponent = new newEditor(view); // view.editorComponent(this.AB._App, "preview");
             $$(ids.editAreaContainer).define({ width: 0 });
             $$(ids.editArea).define({ height: 0 });
             webix.html.removeCss(
@@ -87523,15 +88038,16 @@ __webpack_require__.r(__webpack_exports__);
          }
          // editorComponent.ui.id = ids.editArea;
          // webix.ui(editorComponent.ui, $$(ids.editArea));
-         $$(ids.editArea).addView(editorComponent.ui);
-         editorComponent.init(null, 2);
+         $$(ids.editArea).addView(editorComponent.ui());
+         editorComponent.init(this.AB, 2);
+         // note: parentAccessLevel = 2 here in our Designer
 
          if (editorComponent.onShow) editorComponent.onShow();
 
          setTimeout(() => {
             $$(ids.component).adjust();
             $$(ids.editAreaContainer).adjust();
-         }, 250);
+         }, 150);
       }
 
       /*
