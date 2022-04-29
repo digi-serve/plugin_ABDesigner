@@ -157,16 +157,19 @@ export default function (AB) {
             },
          ]);
 
-         this.EditPopup.on("delete", () => {
-            this.remove();
-         });
-
-         this.EditPopup.on("copy", () => {
-            this.copy();
-         });
-
-         this.EditPopup.on("rename", () => {
-            this.rename();
+         this.EditPopup.on("click", (command) =>{
+            switch (command) {
+               case "delete":
+                  this.remove();
+                  break;
+               case "copy":
+                  this.copy();
+                  break;
+               case "rename":
+                  this.rename();
+                  break;
+               default:
+            }
          });
 
          await AddForm.init(AB);
