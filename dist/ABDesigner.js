@@ -80595,8 +80595,7 @@ __webpack_require__.r(__webpack_exports__);
             },
          ];
          this.MenuComponent.menuOptions(options);
-         this.MenuComponent.trigger = (action) => {
-            this.MenuComponent.hide();
+         this.MenuComponent.on("click", (action) => {
             var selectedApp = this.$list.getSelectedItem();
 
             switch (action) {
@@ -80645,7 +80644,7 @@ __webpack_require__.r(__webpack_exports__);
                   );
                   break;
             }
-         };
+         });
 
          // listen for the AllApplications response:
          this.AB.Network.on(
@@ -81403,8 +81402,7 @@ __webpack_require__.r(__webpack_exports__);
             hideExclude: !this.attributes.menu.exclude,
          });
 
-         this.PopupEditComponent.trigger = (command) => {
-            this.PopupEditComponent.hide();
+         this.PopupEditComponent.on("click", (command) => {
             var selectedItem = this.$list.getSelectedItem(false);
             switch (command) {
                case "delete":
@@ -81431,7 +81429,7 @@ __webpack_require__.r(__webpack_exports__);
                   });
                   break;
             }
-         };
+         });
 
          this._settings = this.AB.Storage.get(this.idBase) || {
             objectlistIsOpen: false,
@@ -82062,10 +82060,9 @@ var myClass = null;
             // hide our popup before we trigger any other possible UI animation: (like .edit)
             // NOTE: if the UI is animating another component, and we do .hide()
             // while it is in progress, the UI will glitch and give the user whiplash.
-
             if (command) {
-               this.emit(command);
                this.hide();
+               this.emit("click", command);
                return false;
             }
          }
@@ -85346,16 +85343,19 @@ __webpack_require__.r(__webpack_exports__);
             },
          ]);
 
-         this.EditPopup.on("delete", () => {
-            this.remove();
-         });
-
-         this.EditPopup.on("copy", () => {
-            this.copy();
-         });
-
-         this.EditPopup.on("rename", () => {
-            this.rename();
+         this.EditPopup.on("click", (command) =>{
+            switch (command) {
+               case "delete":
+                  this.remove();
+                  break;
+               case "copy":
+                  this.copy();
+                  break;
+               case "rename":
+                  this.rename();
+                  break;
+               default:
+            }
          });
 
          await AddForm.init(AB);

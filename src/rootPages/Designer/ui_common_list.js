@@ -290,8 +290,7 @@ export default function (AB, options) {
             hideExclude: !this.attributes.menu.exclude,
          });
 
-         this.PopupEditComponent.trigger = (command) => {
-            this.PopupEditComponent.hide();
+         this.PopupEditComponent.on("click", (command) => {
             var selectedItem = this.$list.getSelectedItem(false);
             switch (command) {
                case "delete":
@@ -318,7 +317,7 @@ export default function (AB, options) {
                   });
                   break;
             }
-         };
+         });
 
          this._settings = this.AB.Storage.get(this.idBase) || {
             objectlistIsOpen: false,

@@ -272,8 +272,7 @@ export default function (AB) {
             },
          ];
          this.MenuComponent.menuOptions(options);
-         this.MenuComponent.trigger = (action) => {
-            this.MenuComponent.hide();
+         this.MenuComponent.on("click", (action) => {
             var selectedApp = this.$list.getSelectedItem();
 
             switch (action) {
@@ -322,7 +321,7 @@ export default function (AB) {
                   );
                   break;
             }
-         };
+         });
 
          // listen for the AllApplications response:
          this.AB.Network.on(

@@ -156,10 +156,9 @@ export default function (AB) {
             // hide our popup before we trigger any other possible UI animation: (like .edit)
             // NOTE: if the UI is animating another component, and we do .hide()
             // while it is in progress, the UI will glitch and give the user whiplash.
-
             if (command) {
-               this.emit(command);
                this.hide();
+               this.emit("click", command);
                return false;
             }
          }
