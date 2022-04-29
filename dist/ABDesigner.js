@@ -76432,7 +76432,7 @@ __webpack_require__.r(__webpack_exports__);
                            view: "select",
                            options: setOptions,
                            on: {
-                              onChange: function (newVal, oldVal) {
+                              onChange: function (newVal) {
                                  const $parent = this.getParentView();
                                  const $valuePanel = $parent.queryView({
                                     name: "valuePanel",
@@ -76660,8 +76660,6 @@ __webpack_require__.r(__webpack_exports__);
    const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const L = UIClass.L();
 
-   const ABQLManager = AB.Class.ABQLManager;
-
    class UIProcessServiceQuery extends UIClass {
       constructor() {
          super("properties_process_service_query", {
@@ -76725,23 +76723,15 @@ __webpack_require__.r(__webpack_exports__);
          const Builder = element
             .ABQLManager()
             .builder(element.qlObj, element, this.AB);
-         // const queryIDs = Builder.ids(ids.query);
 
          const $name = $$(ids.name);
-         // const $query = {
-         //    root: $$(queryIDs.root),
-         //    select: $$(queryIDs.select),
-         //    options: $$(queryIDs.options),
-         // };
 
          this.element = element;
 
-         // Builder.ui(ids.query);
          webix.ui(Builder.ui(ids.query), $$(ids.query));
          Builder.init(ids.query);
 
          $name.setValue(element.label);
-         //  $query.root.setValue()
       }
 
       /**
