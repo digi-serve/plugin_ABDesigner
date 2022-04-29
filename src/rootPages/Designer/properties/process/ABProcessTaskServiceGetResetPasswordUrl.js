@@ -17,9 +17,8 @@ export default function (AB) {
          super("properties_process_service_getResetPasswordUrl", {
             name: "",
             email: "",
+            url: "",
          });
-
-         this.element = null;
       }
 
       static get key() {
@@ -33,6 +32,7 @@ export default function (AB) {
          // defined already.
 
          const ids = this.ids;
+
          return {
             id: ids.component,
             view: "form",
@@ -42,7 +42,7 @@ export default function (AB) {
                   view: "text",
                   label: L("Name"),
                   name: "name",
-                  value: this.name,
+                  value: "",
                },
                {
                   id: ids.email,
@@ -50,7 +50,15 @@ export default function (AB) {
                   label: L("Email"),
                   placeholder: L("Type email address here..."),
                   name: "email",
-                  value: this.email,
+                  value: "",
+               },
+               {
+                  id: ids.url,
+                  view: "text",
+                  label: L("URL"),
+                  name: "url",
+                  disabled: true,
+                  value: window.location.origin || window.location.href,
                },
             ],
          };
@@ -79,11 +87,11 @@ export default function (AB) {
 
          const $name = $$(ids.name);
          const $email = $$(ids.email);
-
-         this.element = element;
+         const $url = $$(ids.url);
 
          $name.setValue(element.label);
          $email.setValue(element.email);
+         $url.setValue(window.location.origin || window.location.href);
       }
 
       /**
@@ -98,10 +106,12 @@ export default function (AB) {
 
          const $name = $$(ids.name);
          const $email = $$(ids.email);
+         const $url = $$(ids.url);
 
          obj.label = $name.getValue() || "";
          obj.name = $name.getValue() || "";
          obj.email = $email.getValue() || "";
+         obj.url = $url.getValue() || "";
 
          return obj;
       }

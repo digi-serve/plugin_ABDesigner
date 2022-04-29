@@ -12,8 +12,6 @@ export default function (AB) {
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
 
-   const ABQLManager = AB.Class.ABQLManager;
-
    class UIProcessServiceQuery extends UIClass {
       constructor() {
          super("properties_process_service_query", {
@@ -21,8 +19,6 @@ export default function (AB) {
             query: "",
             suggestions: "",
          });
-
-         this.element = null;
       }
 
       static get key() {
@@ -76,28 +72,18 @@ export default function (AB) {
       populate(element) {
          const ids = this.ids;
 
-         const Builder = this.element.ABQLManager.builder(
-            this.element.qlObj,
-            this.element,
-            this.AB
-         );
-         const queryIDs = Builder.ids(ids.query);
+         const Builder = element
+            .ABQLManager()
+            .builder(element.qlObj, element, this.AB);
 
          const $name = $$(ids.name);
-         const $query = {
-            root: $$(queryIDs.root),
-            select: $$(queryIDs.select),
-            options: $$(queryIDs.options),
-         };
 
          this.element = element;
 
-         Builder.ui(ids.query);
          webix.ui(Builder.ui(ids.query), $$(ids.query));
          Builder.init(ids.query);
 
          $name.setValue(element.label);
-         //  $query.root.setValue()
       }
 
       /**
@@ -115,7 +101,9 @@ export default function (AB) {
          obj.label = $name.getValue() || "";
          obj.name = $name.getValue() || "";
          obj.qlObj =
-            ABQLManager.parse(ids.query, this.element, this.AB) || null;
+            this.element
+               .ABQLManager()
+               .parse(ids.query, this.element, this.AB) || null;
 
          return obj;
       }

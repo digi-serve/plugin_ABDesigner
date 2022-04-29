@@ -23,8 +23,6 @@ export default function (AB) {
             repeatMode: "",
             repeatColumn: "",
          });
-
-         this.element = null;
       }
 
       static get key() {
@@ -39,176 +37,9 @@ export default function (AB) {
 
          const ids = this.ids;
 
-         let objectList = this.AB.objects().map((o) => {
+         const objectList = this.AB.objects().map((o) => {
             return { id: o.id, value: o.label || o.name };
          });
-
-         let repeatColumnList = this.objectOfStartElement
-            ? this.objectOfStartElement.connectFields().map((f) => {
-                 return {
-                    id: f.id,
-                    value: f.label,
-                 };
-              })
-            : [];
-
-         let getFieldOptions = (object) => {
-            let result = [];
-            result.push({
-               id: "PK",
-               value: L("[Primary Key]"),
-            });
-
-            object.fields().forEach((f) => {
-               // Populate fields of linked data source
-               if (f.isConnection) {
-                  let linkDS = f.datasourceLink;
-                  if (linkDS) {
-                     result.push({
-                        id: `${f.id}|PK`,
-                        value: `${f.label} -> ${L("[Primary Key]")}`,
-                     });
-
-                     linkDS.fields().forEach((linkF) => {
-                        result.push({
-                           id: `${f.id}|${linkF.id}`,
-                           value: `${f.label} -> ${linkF.label}`,
-                        });
-                     });
-                  }
-               } else {
-                  result.push({
-                     id: f.id,
-                     value: f.label,
-                  });
-               }
-            });
-
-            return result;
-         };
-
-         let refreshFieldValues = (objectID) => {
-            let $fieldValues = $$(ids.fieldValues);
-            if (!$fieldValues) return;
-
-            // clear form
-            webix.ui([], $fieldValues);
-
-            let object = this.AB.objectByID(objectID || this.objectID);
-            if (!object) return;
-
-            // Pull object & fields of start step
-            let startElemObj = this.objectOfStartElement;
-            let startElemObjFields = startElemObj
-               ? getFieldOptions(startElemObj)
-               : [];
-
-            // Pull object & fields of previous step
-            let prevElemObj = this.objectOfPrevElement;
-            let prevElemObjFields = [];
-            if (prevElemObj) {
-               prevElemObjFields = getFieldOptions(prevElemObj);
-            }
-
-            let setOptions = [
-               { id: 0, value: L("Not Set") },
-               { id: 1, value: L("Set by custom value") },
-               {
-                  id: 2,
-                  value: L("Set by the root data [{0}]", [
-                     startElemObj ? startElemObj.label : "",
-                  ]),
-               },
-               {
-                  id: 3,
-                  value: L("Set by previous step data [{0}]", [
-                     prevElemObj ? prevElemObj.label : "",
-                  ]),
-               },
-               {
-                  id: 4,
-                  value: L("Set by formula format"),
-               },
-            ];
-
-            let repeatObjectFields = [];
-            let fieldRepeat = this.fieldRepeat;
-            if (fieldRepeat && fieldRepeat.datasourceLink) {
-               setOptions.push({
-                  id: 5,
-                  value: L("Set by the instance [{0}]", [
-                     this.fieldRepeat ? this.fieldRepeat.label : "",
-                  ]),
-               });
-
-               repeatObjectFields = getFieldOptions(fieldRepeat.datasourceLink);
-            }
-
-            // field options to the form
-            object.fields().forEach((f) => {
-               $fieldValues.addView({
-                  fieldId: f.id,
-                  view: "layout",
-                  cols: [
-                     {
-                        rows: [
-                           {
-                              view: "label",
-                              label: f.label,
-                              width: 100,
-                           },
-                           { fillspace: true },
-                        ],
-                     },
-                     {
-                        rows: [
-                           {
-                              name: "setSelector",
-                              view: "select",
-                              options: setOptions,
-                              on: {
-                                 onChange: function (newVal, oldVal) {
-                                    let $parent = this.getParentView();
-                                    let $valuePanel = $parent.queryView({
-                                       name: "valuePanel",
-                                    });
-                                    $valuePanel.showBatch(newVal);
-                                 },
-                              },
-                           },
-                           {
-                              name: "valuePanel",
-                              view: "multiview",
-                              visibleBatch: 0,
-                              cols: [
-                                 { batch: 0, fillspace: true },
-                                 { batch: 1, view: "text" },
-                                 {
-                                    batch: 2,
-                                    view: "select",
-                                    options: startElemObjFields,
-                                 },
-                                 {
-                                    batch: 3,
-                                    view: "select",
-                                    options: prevElemObjFields,
-                                 },
-                                 { batch: 4, view: "text" },
-                                 {
-                                    batch: 5,
-                                    view: "select",
-                                    options: repeatObjectFields,
-                                 },
-                              ],
-                           },
-                        ],
-                     },
-                  ],
-               });
-            });
-
-            this.setFieldValues(ids.component);
-         };
 
          return {
             id: ids.component,
@@ -222,19 +53,19 @@ export default function (AB) {
                   view: "text",
                   label: L("Name"),
                   name: "name",
-                  value: this.name,
+                  value: "",
                },
                {
                   id: ids.objectID,
                   view: "select",
                   label: L("Object"),
-                  value: this.objectID,
+                  value: "",
                   name: "objectID",
                   options: objectList,
                   on: {
                      onChange: (newVal) => {
-                        this.objectID = newVal;
-                        refreshFieldValues(newVal);
+                        this.element.objectID = newVal;
+                        this.refreshFieldValues(newVal);
                      },
                   },
                },
@@ -246,7 +77,7 @@ export default function (AB) {
                         id: ids.repeatMode,
                         view: "select",
                         label: L("Repeat"),
-                        value: this.repeatMode,
+                        value: "",
                         name: "repeatMode",
                         width: 330,
                         options: [
@@ -257,8 +88,8 @@ export default function (AB) {
                         ],
                         on: {
                            onChange: (newVal) => {
-                              this.repeatMode = newVal;
-                              refreshFieldValues();
+                              this.element.repeatMode = newVal;
+                              this.refreshFieldValues();
                            },
                         },
                      },
@@ -268,19 +99,19 @@ export default function (AB) {
                         label: "",
                         value: this.repeatColumn,
                         name: "repeatColumn",
-                        options: repeatColumnList,
+                        options: [],
                         on: {
                            onChange: (newVal) => {
-                              this.repeatColumn = newVal;
-                              refreshFieldValues();
+                              this.element.repeatColumn = newVal;
+                              this.refreshFieldValues();
                            },
                         },
                      },
                   ],
                   on: {
                      onViewShow: () => {
-                        this.propertiesStash(ids.component);
-                        refreshFieldValues();
+                        this.propertiesStash();
+                        this.refreshFieldValues();
                      },
                   },
                },
@@ -304,29 +135,209 @@ export default function (AB) {
          return Promise.resolve();
       }
 
+      getFieldOptions(object) {
+         const result = [];
+         result.push({
+            id: "PK",
+            value: L("[Primary Key]"),
+         });
+
+         object.fields().forEach((f) => {
+            // Populate fields of linked data source
+            if (f.isConnection) {
+               const linkDS = f.datasourceLink;
+               if (linkDS) {
+                  result.push({
+                     id: `${f.id}|PK`,
+                     value: `${f.label} -> ${L("[Primary Key]")}`,
+                  });
+
+                  linkDS.fields().forEach((linkF) => {
+                     result.push({
+                        id: `${f.id}|${linkF.id}`,
+                        value: `${f.label} -> ${linkF.label}`,
+                     });
+                  });
+               }
+            } else {
+               result.push({
+                  id: f.id,
+                  value: f.label,
+               });
+            }
+         });
+
+         return result;
+      }
+
+      refreshFieldValues(objectID) {
+         const ids = this.ids;
+
+         const $fieldValues = $$(ids.fieldValues);
+         if (!$fieldValues) return;
+
+         // clear form
+         webix.ui([], $fieldValues);
+
+         const object = this.AB.objectByID(objectID || this.element.objectID);
+         if (!object) return;
+
+         // Pull object & fields of start step
+         const startElemObj = this.element.objectOfStartElement;
+         const startElemObjFields = startElemObj
+            ? this.getFieldOptions(startElemObj)
+            : [];
+
+         // Pull object & fields of previous step
+         const prevElemObj = this.objectOfPrevElement;
+         let prevElemObjFields = [];
+         if (prevElemObj) {
+            prevElemObjFields = this.getFieldOptions(prevElemObj);
+         }
+
+         const setOptions = [
+            { id: 0, value: L("Not Set") },
+            { id: 1, value: L("Set by custom value") },
+            {
+               id: 2,
+               value: L("Set by the root data [{0}]", [
+                  startElemObj ? startElemObj.label : "",
+               ]),
+            },
+            {
+               id: 3,
+               value: L("Set by previous step data [{0}]", [
+                  prevElemObj ? prevElemObj.label : "",
+               ]),
+            },
+            {
+               id: 4,
+               value: L("Set by formula format"),
+            },
+         ];
+
+         let repeatObjectFields = [];
+         const fieldRepeat = this.element.fieldRepeat;
+
+         if (fieldRepeat && fieldRepeat.datasourceLink) {
+            setOptions.push({
+               id: 5,
+               value: L("Set by the instance [{0}]", [
+                  this.fieldRepeat ? this.element.fieldRepeat.label : "",
+               ]),
+            });
+
+            repeatObjectFields = this.getFieldOptions(
+               fieldRepeat.datasourceLink
+            );
+         }
+
+         setOptions.push({
+            id: 6,
+            value: `Set by the paremeter of a Query task`,
+         });
+
+         // Pull query tasks option list
+         const queryTaskOptions = (
+            this.element.process.processDataFields(this.element) || []
+         ).map((item) => {
+            return {
+               id: item.key,
+               value: item.label,
+            };
+         });
+
+         // field options to the form
+         object.fields().forEach((f) => {
+            $fieldValues.addView({
+               fieldId: f.id,
+               view: "layout",
+               cols: [
+                  {
+                     rows: [
+                        {
+                           view: "label",
+                           label: f.label,
+                           width: 100,
+                        },
+                        { fillspace: true },
+                     ],
+                  },
+                  {
+                     rows: [
+                        {
+                           name: "setSelector",
+                           view: "select",
+                           options: setOptions,
+                           on: {
+                              onChange: function (newVal) {
+                                 const $parent = this.getParentView();
+                                 const $valuePanel = $parent.queryView({
+                                    name: "valuePanel",
+                                 });
+                                 $valuePanel.showBatch(newVal);
+                              },
+                           },
+                        },
+                        {
+                           name: "valuePanel",
+                           view: "multiview",
+                           visibleBatch: 0,
+                           cols: [
+                              { batch: 0, fillspace: true },
+                              { batch: 1, view: "text" },
+                              {
+                                 batch: 2,
+                                 view: "select",
+                                 options: startElemObjFields,
+                              },
+                              {
+                                 batch: 3,
+                                 view: "select",
+                                 options: prevElemObjFields,
+                              },
+                              { batch: 4, view: "text" },
+                              {
+                                 batch: 5,
+                                 view: "select",
+                                 options: repeatObjectFields,
+                              },
+                              {
+                                 batch: 6,
+                                 view: "multicombo",
+                                 label: "",
+                                 options: queryTaskOptions,
+                              },
+                           ],
+                        },
+                     ],
+                  },
+               ],
+            });
+         });
+      }
+
       /**
        * @method propertiesStash()
        * pull our values from our property panel.
        * @param {string} id
        *        the webix $$(id) of the properties panel area.
        */
-      propertiesStash(id) {
-         let ids = this.ids;
-
+      propertiesStash() {
          // TIP: keep the .settings entries == ids[s] keys and this will
          // remain simple:
-         this.defaults.settings.forEach((s) => {
+         this.element.defaults.settings.forEach((s) => {
             switch (s) {
                case "fieldValues":
-                  this[s] = this.getFieldValues(id);
+                  this.element[s] = this.getFieldValues();
                   break;
                case "isRepeat":
                   // .isRepeat is set in .onChange
                   break;
                case "repeatMode":
                case "repeatColumn":
-                  if (!this.isRepeat) {
-                     this[s] = "";
+                  if (!(this.elememt?.isRepeat || null)) {
+                     this.element[s] = "";
                      break;
                   }
                // no break;
@@ -338,21 +349,22 @@ export default function (AB) {
       }
 
       setFieldValues() {
-         let ids = this.ids;
-         let $fieldValues = $$(ids.fieldValues);
-         let $fValueItems = $fieldValues.getChildViews() || [];
+         const ids = this.ids;
 
-         this.fieldValues = this.fieldValues || {};
+         const $fieldValues = $$(ids.fieldValues);
+         const $fValueItems = $fieldValues.getChildViews() || [];
+
+         this.element.fieldValues = this.element.fieldValues || {};
 
          $fValueItems.forEach(($item) => {
-            let fieldId = $item.config.fieldId;
-            let fValue = this.fieldValues[fieldId] || {};
+            const fieldId = $item.config.fieldId;
+            const fValue = this.element.fieldValues[fieldId] || {};
 
-            let $setSelector = $item.queryView({ name: "setSelector" });
+            const $setSelector = $item.queryView({ name: "setSelector" });
             $setSelector.setValue(fValue.set);
 
-            let $valuePanel = $item.queryView({ name: "valuePanel" });
-            let $valueSelector = $valuePanel.queryView({
+            const $valuePanel = $item.queryView({ name: "valuePanel" });
+            const $valueSelector = $valuePanel.queryView({
                batch: $valuePanel.config.visibleBatch,
             });
             if ($valueSelector && $valueSelector.setValue)
@@ -361,29 +373,24 @@ export default function (AB) {
       }
 
       getFieldValues() {
-         let result = {};
-         let ids = this.ids;
-         let $fieldValues = $$(ids.fieldValues);
-         let $fValueItems = $fieldValues.getChildViews() || [];
+         const result = {};
+         const ids = this.ids;
+         const $fieldValues = $$(ids.fieldValues);
+         const $fValueItems = $fieldValues.getChildViews() || [];
 
          $fValueItems.forEach(($item) => {
-            let fieldId = $item.config.fieldId;
-            result[fieldId] = {};
+            const fieldId = $item.config.fieldId;
 
-            let $setSelector = $item.queryView({ name: "setSelector" });
-            result[fieldId].set = $setSelector.getValue();
-
-            let $valuePanel = $item.queryView({ name: "valuePanel" });
-            let $valueSelector = $valuePanel.queryView({
+            const $setSelector = $item.queryView({ name: "setSelector" });
+            const $valuePanel = $item.queryView({ name: "valuePanel" });
+            const $valueSelector = $valuePanel.queryView({
                batch: $valuePanel.config.visibleBatch,
             });
-            if (
-               $valueSelector &&
-               $valueSelector.getValue &&
-               $valueSelector.getValue()
-            )
-               result[fieldId].value = $valueSelector.getValue();
-            else result[fieldId].value = null;
+
+            result[fieldId] = {};
+            result[fieldId].set = $setSelector.getValue();
+
+            result[fieldId].value = $valueSelector?.getValue?.() || null;
          });
 
          return result;
@@ -406,21 +413,30 @@ export default function (AB) {
 
          const $name = $$(ids.name);
          const $objectID = $$(ids.objectID);
-         const $fieldValues = $$(ids.fieldValues);
          const $repeatLayout = $$(ids.repeatLayout);
          const $repeatMode = $$(ids.repeatMode);
          const $repeatColumn = $$(ids.repeatColumn);
+
+         const repeatColumnList =
+            element?.objectOfStartElement?.connectFields().map((f) => {
+               return {
+                  id: f.id,
+                  value: f.label,
+               };
+            }) || [];
 
          this.element = element;
 
          $name.setValue(element.label);
          $objectID.setValue(element.objectID);
          $repeatMode.setValue(element.repeatMode);
-         $repeatColumn.setValue(element.repeatColumn);
+         $repeatColumn.define("options", repeatColumnList);
+         $repeatColumn.refresh();
 
-         $fieldValues.setValues(element.fieldValues);
+         this.refreshFieldValues();
+         this.setFieldValues();
 
-         if (element.repeatMode || element.repeatColumn) $repeatLayout.show();
+         if (element.isRepeat) $repeatLayout.show();
       }
 
       /**
@@ -435,7 +451,6 @@ export default function (AB) {
 
          const $name = $$(ids.name);
          const $objectID = $$(ids.objectID);
-         const $fieldValues = $$(ids.fieldValues);
          const $repeatMode = $$(ids.repeatMode);
          const $repeatColumn = $$(ids.repeatColumn);
 
@@ -445,7 +460,7 @@ export default function (AB) {
          obj.repeatMode = $repeatMode.getValue() || "";
          obj.repeatColumn = $repeatColumn.getValue() || "";
 
-         obj.fieldValues = $fieldValues.getValues() || {};
+         obj.fieldValues = this.getFieldValues();
 
          return obj;
       }

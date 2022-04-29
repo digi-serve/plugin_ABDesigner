@@ -12,8 +12,6 @@ export default function (AB) {
             name: "",
             option: "",
          });
-
-         this.element = null;
       }
 
       static get key() {
@@ -99,30 +97,6 @@ export default function (AB) {
                         label: L("Get Reset Password Url"),
                         click: () => {
                            this.switchTo("GetResetPasswordUrl");
-                           // this.AB.Network.post(
-                           //    {
-                           //       url:
-                           //          "/auth/login/reset",
-                           //       data: {
-                           //          email: this.AB.Account.email(),
-                           //          tenant: this.AB.Account.username(),
-                           //          url:
-                           //             window
-                           //                .location
-                           //                .origin ||
-                           //             window
-                           //                .location
-                           //                .href,
-                           //          fromProcessManager: "1",
-                           //       },
-                           //    },
-                           // )
-                           //    .then((data) => {
-                           //       console.log(data)
-                           //    })
-                           //    .catch((err) => {
-                           //       console.log(err);
-                           //    });
                         },
                      },
                   ],
@@ -151,69 +125,7 @@ export default function (AB) {
 
          values.id = this.element.id;
          values.diagramID = this.element.diagramID;
-
-         switch (key) {
-            // case "accountingBatch":
-            //    child = new AccountingBatchProcessing(
-            //       myValues,
-            //       this.process,
-            //       this.application
-            //    );
-            //    break;
-
-            // case "accountingFPClose":
-            //    child = new AccountingFPClose(
-            //       myValues,
-            //       this.process,
-            //       this.application
-            //    );
-            //    break;
-
-            // case "accountingFPYearClose":
-            //    child = new AccountingFPYearClose(
-            //       myValues,
-            //       this.process,
-            //       this.application
-            //    );
-            //    break;
-
-            // case "accountingJEArchive":
-            //    child = new AccountingJEArchive(
-            //       myValues,
-            //       this.process,
-            //       this.application
-            //    );
-            //    break;
-
-            // case "query":
-            //    child = new ABProcessTaskServiceQuery(
-            //       myValues,
-            //       this.process,
-            //       this.application
-            //    );
-            //    break;
-
-            case "InsertRecord":
-               values.key = key;
-
-               break;
-
-            // case "calculate":
-            //    child = new ABProcessTaskServiceCalculate(
-            //       myValues,
-            //       this.process,
-            //       this.application
-            //    );
-            //    break;
-
-            case "GetResetPasswordUrl":
-               values.key = key;
-
-               break;
-
-            default:
-               values.key = this.key;
-         }
+         values.key = key || this.key;
 
          const subtask =
             ProcessTaskManager.newTask(values, this.element.process, this.AB) ||
@@ -251,9 +163,9 @@ export default function (AB) {
       populate(element) {
          const ids = this.ids;
 
-         this.element = element;
-
          const $name = $$(ids.name);
+
+         this.element = element;
 
          $name.setValue(element.label || "");
       }
