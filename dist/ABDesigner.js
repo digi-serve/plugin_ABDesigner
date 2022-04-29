@@ -76082,8 +76082,7 @@ __webpack_require__.r(__webpack_exports__);
                   view: "text",
                   label: L("URL"),
                   name: "url",
-                  disabled: true,
-                  value: window.location.origin || window.location.href,
+                  value: "",
                },
             ],
          };
@@ -76116,7 +76115,7 @@ __webpack_require__.r(__webpack_exports__);
 
          $name.setValue(element.label);
          $email.setValue(element.email);
-         $url.setValue(window.location.origin || window.location.href);
+         $url.setValue(element.url);
       }
 
       /**

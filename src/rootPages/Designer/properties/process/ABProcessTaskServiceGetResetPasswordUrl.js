@@ -57,8 +57,7 @@ export default function (AB) {
                   view: "text",
                   label: L("URL"),
                   name: "url",
-                  disabled: true,
-                  value: window.location.origin || window.location.href,
+                  value: "",
                },
             ],
          };
@@ -91,7 +90,7 @@ export default function (AB) {
 
          $name.setValue(element.label);
          $email.setValue(element.email);
-         $url.setValue(window.location.origin || window.location.href);
+         $url.setValue(element.url);
       }
 
       /**
