@@ -76540,7 +76540,6 @@ __webpack_require__.r(__webpack_exports__);
          super("properties_process_service_getResetPasswordUrl", {
             name: "",
             email: "",
-            url: "",
          });
       }
 
@@ -76575,13 +76574,6 @@ __webpack_require__.r(__webpack_exports__);
                   name: "email",
                   value: "",
                },
-               {
-                  id: ids.url,
-                  view: "text",
-                  label: L("URL"),
-                  name: "url",
-                  value: "",
-               },
             ],
          };
       }
@@ -76609,11 +76601,9 @@ __webpack_require__.r(__webpack_exports__);
 
          const $name = $$(ids.name);
          const $email = $$(ids.email);
-         const $url = $$(ids.url);
 
          $name.setValue(element.label);
          $email.setValue(element.email);
-         $url.setValue(element.url);
       }
 
       /**
@@ -76628,12 +76618,10 @@ __webpack_require__.r(__webpack_exports__);
 
          const $name = $$(ids.name);
          const $email = $$(ids.email);
-         const $url = $$(ids.url);
 
          obj.label = $name?.getValue() ?? "";
          obj.name = $name?.getValue() ?? "";
          obj.email = $email?.getValue() ?? "";
-         obj.url = $url?.getValue() ?? "";
 
          return obj;
       }

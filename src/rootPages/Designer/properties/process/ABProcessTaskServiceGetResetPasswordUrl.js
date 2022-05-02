@@ -17,7 +17,6 @@ export default function (AB) {
          super("properties_process_service_getResetPasswordUrl", {
             name: "",
             email: "",
-            url: "",
          });
       }
 
@@ -52,13 +51,6 @@ export default function (AB) {
                   name: "email",
                   value: "",
                },
-               {
-                  id: ids.url,
-                  view: "text",
-                  label: L("URL"),
-                  name: "url",
-                  value: "",
-               },
             ],
          };
       }
@@ -86,11 +78,9 @@ export default function (AB) {
 
          const $name = $$(ids.name);
          const $email = $$(ids.email);
-         const $url = $$(ids.url);
 
          $name.setValue(element.label);
          $email.setValue(element.email);
-         $url.setValue(element.url);
       }
 
       /**
@@ -105,12 +95,10 @@ export default function (AB) {
 
          const $name = $$(ids.name);
          const $email = $$(ids.email);
-         const $url = $$(ids.url);
 
          obj.label = $name?.getValue() ?? "";
          obj.name = $name?.getValue() ?? "";
          obj.email = $email?.getValue() ?? "";
-         obj.url = $url?.getValue() ?? "";
 
          return obj;
       }
