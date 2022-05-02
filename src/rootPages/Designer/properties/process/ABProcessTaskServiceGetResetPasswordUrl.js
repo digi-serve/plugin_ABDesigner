@@ -107,10 +107,10 @@ export default function (AB) {
          const $email = $$(ids.email);
          const $url = $$(ids.url);
 
-         obj.label = $name.getValue() ?? "";
-         obj.name = $name.getValue() ?? "";
-         obj.email = $email.getValue() ?? "";
-         obj.url = $url.getValue() ?? "";
+         obj.label = $name?.getValue() ?? "";
+         obj.name = $name?.getValue() ?? "";
+         obj.email = $email?.getValue() ?? "";
+         obj.url = $url?.getValue() ?? "";
 
          return obj;
       }
