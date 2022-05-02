@@ -38,7 +38,7 @@ export default function (AB) {
          const ids = this.ids;
 
          const objectList = this.AB.objects().map((o) => {
-            return { id: o.id, value: o.label || o.name };
+            return { id: o.id, value: o.label ?? o.name };
          });
 
          return {
@@ -179,7 +179,7 @@ export default function (AB) {
          // clear form
          webix.ui([], $fieldValues);
 
-         const object = this.AB.objectByID(objectID || this.element.objectID);
+         const object = this.AB.objectByID(objectID ?? this.element.objectID);
          if (!object) return;
 
          // Pull object & fields of start step
@@ -239,7 +239,7 @@ export default function (AB) {
 
          // Pull query tasks option list
          const queryTaskOptions = (
-            this.element.process.processDataFields(this.element) || []
+            this.element.process.processDataFields(this.element) ?? []
          ).map((item) => {
             return {
                id: item.key,
@@ -336,7 +336,7 @@ export default function (AB) {
                   break;
                case "repeatMode":
                case "repeatColumn":
-                  if (!(this.elememt?.isRepeat || null)) {
+                  if (!(this.elememt?.isRepeat ?? null)) {
                      this.element[s] = "";
                      break;
                   }
@@ -352,13 +352,13 @@ export default function (AB) {
          const ids = this.ids;
 
          const $fieldValues = $$(ids.fieldValues);
-         const $fValueItems = $fieldValues.getChildViews() || [];
+         const $fValueItems = $fieldValues.getChildViews() ?? [];
 
-         this.element.fieldValues = this.element.fieldValues || {};
+         this.element.fieldValues = this.element.fieldValues ?? {};
 
          $fValueItems.forEach(($item) => {
             const fieldId = $item.config.fieldId;
-            const fValue = this.element.fieldValues[fieldId] || {};
+            const fValue = this.element.fieldValues[fieldId] ?? {};
 
             const $setSelector = $item.queryView({ name: "setSelector" });
             $setSelector.setValue(fValue.set);
@@ -376,7 +376,7 @@ export default function (AB) {
          const result = {};
          const ids = this.ids;
          const $fieldValues = $$(ids.fieldValues);
-         const $fValueItems = $fieldValues.getChildViews() || [];
+         const $fValueItems = $fieldValues.getChildViews() ?? [];
 
          $fValueItems.forEach(($item) => {
             const fieldId = $item.config.fieldId;
@@ -390,7 +390,7 @@ export default function (AB) {
             result[fieldId] = {};
             result[fieldId].set = $setSelector.getValue();
 
-            result[fieldId].value = $valueSelector?.getValue?.() || null;
+            result[fieldId].value = $valueSelector?.getValue?.() ?? null;
          });
 
          return result;
@@ -423,7 +423,7 @@ export default function (AB) {
                   id: f.id,
                   value: f.label,
                };
-            }) || [];
+            }) ?? [];
 
          this.element = element;
 
@@ -454,11 +454,11 @@ export default function (AB) {
          const $repeatMode = $$(ids.repeatMode);
          const $repeatColumn = $$(ids.repeatColumn);
 
-         obj.label = $name.getValue() || "";
-         obj.name = $name.getValue() || "";
-         obj.objectID = $objectID.getValue() || "";
-         obj.repeatMode = $repeatMode.getValue() || "";
-         obj.repeatColumn = $repeatColumn.getValue() || "";
+         obj.label = $name.getValue() ?? "";
+         obj.name = $name.getValue() ?? "";
+         obj.objectID = $objectID.getValue() ?? "";
+         obj.repeatMode = $repeatMode.getValue() ?? "";
+         obj.repeatColumn = $repeatColumn.getValue() ?? "";
 
          obj.fieldValues = this.getFieldValues();
 

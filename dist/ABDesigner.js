@@ -76460,7 +76460,7 @@ __webpack_require__.r(__webpack_exports__);
          values.key = key ?? this.key;
 
          const subtask =
-            ProcessTaskManager.newTask(values, this.element.process, this.AB) ||
+            ProcessTaskManager.newTask(values, this.element.process, this.AB) ??
             null;
          if (subtask) {
             this.element.switchTo(subtask, ids.component);
@@ -76697,7 +76697,7 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
 
          const objectList = this.AB.objects().map((o) => {
-            return { id: o.id, value: o.label || o.name };
+            return { id: o.id, value: o.label ?? o.name };
          });
 
          return {
@@ -76838,7 +76838,7 @@ __webpack_require__.r(__webpack_exports__);
          // clear form
          webix.ui([], $fieldValues);
 
-         const object = this.AB.objectByID(objectID || this.element.objectID);
+         const object = this.AB.objectByID(objectID ?? this.element.objectID);
          if (!object) return;
 
          // Pull object & fields of start step
@@ -76898,7 +76898,7 @@ __webpack_require__.r(__webpack_exports__);
 
          // Pull query tasks option list
          const queryTaskOptions = (
-            this.element.process.processDataFields(this.element) || []
+            this.element.process.processDataFields(this.element) ?? []
          ).map((item) => {
             return {
                id: item.key,
@@ -76995,7 +76995,7 @@ __webpack_require__.r(__webpack_exports__);
                   break;
                case "repeatMode":
                case "repeatColumn":
-                  if (!(this.elememt?.isRepeat || null)) {
+                  if (!(this.elememt?.isRepeat ?? null)) {
                      this.element[s] = "";
                      break;
                   }
@@ -77011,13 +77011,13 @@ __webpack_require__.r(__webpack_exports__);
          const ids = this.ids;
 
          const $fieldValues = $$(ids.fieldValues);
-         const $fValueItems = $fieldValues.getChildViews() || [];
+         const $fValueItems = $fieldValues.getChildViews() ?? [];
 
-         this.element.fieldValues = this.element.fieldValues || {};
+         this.element.fieldValues = this.element.fieldValues ?? {};
 
          $fValueItems.forEach(($item) => {
             const fieldId = $item.config.fieldId;
-            const fValue = this.element.fieldValues[fieldId] || {};
+            const fValue = this.element.fieldValues[fieldId] ?? {};
 
             const $setSelector = $item.queryView({ name: "setSelector" });
             $setSelector.setValue(fValue.set);
@@ -77035,7 +77035,7 @@ __webpack_require__.r(__webpack_exports__);
          const result = {};
          const ids = this.ids;
          const $fieldValues = $$(ids.fieldValues);
-         const $fValueItems = $fieldValues.getChildViews() || [];
+         const $fValueItems = $fieldValues.getChildViews() ?? [];
 
          $fValueItems.forEach(($item) => {
             const fieldId = $item.config.fieldId;
@@ -77049,7 +77049,7 @@ __webpack_require__.r(__webpack_exports__);
             result[fieldId] = {};
             result[fieldId].set = $setSelector.getValue();
 
-            result[fieldId].value = $valueSelector?.getValue?.() || null;
+            result[fieldId].value = $valueSelector?.getValue?.() ?? null;
          });
 
          return result;
@@ -77082,7 +77082,7 @@ __webpack_require__.r(__webpack_exports__);
                   id: f.id,
                   value: f.label,
                };
-            }) || [];
+            }) ?? [];
 
          this.element = element;
 
@@ -77113,11 +77113,11 @@ __webpack_require__.r(__webpack_exports__);
          const $repeatMode = $$(ids.repeatMode);
          const $repeatColumn = $$(ids.repeatColumn);
 
-         obj.label = $name.getValue() || "";
-         obj.name = $name.getValue() || "";
-         obj.objectID = $objectID.getValue() || "";
-         obj.repeatMode = $repeatMode.getValue() || "";
-         obj.repeatColumn = $repeatColumn.getValue() || "";
+         obj.label = $name.getValue() ?? "";
+         obj.name = $name.getValue() ?? "";
+         obj.objectID = $objectID.getValue() ?? "";
+         obj.repeatMode = $repeatMode.getValue() ?? "";
+         obj.repeatColumn = $repeatColumn.getValue() ?? "";
 
          obj.fieldValues = this.getFieldValues();
 
@@ -77243,12 +77243,12 @@ __webpack_require__.r(__webpack_exports__);
 
          const $name = $$(ids.name);
 
-         obj.label = $name.getValue() || "";
-         obj.name = $name.getValue() || "";
+         obj.label = $name.getValue() ?? "";
+         obj.name = $name.getValue() ?? "";
          obj.qlObj =
             this.element
                .ABQLManager()
-               .parse(ids.query, this.element, this.AB) || null;
+               .parse(ids.query, this.element, this.AB) ?? null;
 
          return obj;
       }

@@ -128,7 +128,7 @@ export default function (AB) {
          values.key = key ?? this.key;
 
          const subtask =
-            ProcessTaskManager.newTask(values, this.element.process, this.AB) ||
+            ProcessTaskManager.newTask(values, this.element.process, this.AB) ??
             null;
          if (subtask) {
             this.element.switchTo(subtask, ids.component);

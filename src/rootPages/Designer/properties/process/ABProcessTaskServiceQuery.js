@@ -98,12 +98,12 @@ export default function (AB) {
 
          const $name = $$(ids.name);
 
-         obj.label = $name.getValue() || "";
-         obj.name = $name.getValue() || "";
+         obj.label = $name.getValue() ?? "";
+         obj.name = $name.getValue() ?? "";
          obj.qlObj =
             this.element
                .ABQLManager()
-               .parse(ids.query, this.element, this.AB) || null;
+               .parse(ids.query, this.element, this.AB) ?? null;
 
          return obj;
       }
