@@ -125,7 +125,7 @@ export default function (AB) {
 
          values.id = this.element.id;
          values.diagramID = this.element.diagramID;
-         values.key = key || this.key;
+         values.key = key ?? this.key;
 
          const subtask =
             ProcessTaskManager.newTask(values, this.element.process, this.AB) ||
@@ -154,8 +154,8 @@ export default function (AB) {
 
          const $name = $$(ids.name);
 
-         obj.label = $name.getValue() || "";
-         obj.name = $name.getValue() || "";
+         obj.label = $name.getValue() ?? "";
+         obj.name = $name.getValue() ?? "";
 
          return obj;
       }
@@ -167,7 +167,7 @@ export default function (AB) {
 
          this.element = element;
 
-         $name.setValue(element.label || "");
+         $name.setValue(element.label ?? "");
       }
    }
 

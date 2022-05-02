@@ -76457,7 +76457,7 @@ __webpack_require__.r(__webpack_exports__);
 
          values.id = this.element.id;
          values.diagramID = this.element.diagramID;
-         values.key = key || this.key;
+         values.key = key ?? this.key;
 
          const subtask =
             ProcessTaskManager.newTask(values, this.element.process, this.AB) ||
@@ -76486,8 +76486,8 @@ __webpack_require__.r(__webpack_exports__);
 
          const $name = $$(ids.name);
 
-         obj.label = $name.getValue() || "";
-         obj.name = $name.getValue() || "";
+         obj.label = $name.getValue() ?? "";
+         obj.name = $name.getValue() ?? "";
 
          return obj;
       }
@@ -76499,7 +76499,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.element = element;
 
-         $name.setValue(element.label || "");
+         $name.setValue(element.label ?? "");
       }
    }
 
@@ -76630,10 +76630,10 @@ __webpack_require__.r(__webpack_exports__);
          const $email = $$(ids.email);
          const $url = $$(ids.url);
 
-         obj.label = $name.getValue() || "";
-         obj.name = $name.getValue() || "";
-         obj.email = $email.getValue() || "";
-         obj.url = $url.getValue() || "";
+         obj.label = $name.getValue() ?? "";
+         obj.name = $name.getValue() ?? "";
+         obj.email = $email.getValue() ?? "";
+         obj.url = $url.getValue() ?? "";
 
          return obj;
       }
