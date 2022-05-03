@@ -68671,12 +68671,14 @@ __webpack_require__.r(__webpack_exports__);
    var Editors = [];
    // {array}
    // All the ABField Component Inerfaces available.
-   [__webpack_require__(/*! ./views/ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js"), __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/editors/views/ABViewPage.js")].forEach(
-      (E) => {
-         let Klass = E.default(AB);
-         Editors.push(Klass);
-      }
-   );
+   [
+      __webpack_require__(/*! ./views/ABViewCarousel */ "./src/rootPages/Designer/editors/views/ABViewCarousel.js"),
+      __webpack_require__(/*! ./views/ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js"),
+      __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/editors/views/ABViewPage.js"),
+   ].forEach((E) => {
+      let Klass = E.default(AB);
+      Editors.push(Klass);
+   });
 
    return {
       /*
@@ -68690,6 +68692,84 @@ __webpack_require__.r(__webpack_exports__);
          return Editors.filter(f);
       },
    };
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/editors/views/ABViewCarousel.js":
+/*!****************************************************************!*\
+  !*** ./src/rootPages/Designer/editors/views/ABViewCarousel.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/**
+ * ABViewCarousel
+ * The widget that displays the UI Editor Component on the screen
+ * when designing the UI.
+ */
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      // var L = UIClass.L();
+      // var L = ABViewContainer.L();
+
+      myClass = class ABViewCarouselEditor extends UIClass {
+         static get key() {
+            return "carousel";
+         }
+
+         constructor(view, base = "interface_editor_viewcarousel") {
+            // base: {string} unique base id reference
+
+            super(base, {
+               label: "",
+            });
+
+            this.view = view;
+            this.settings = view.settings;
+            // shortcut to reference the settings
+
+            this.base = base;
+            this.AB = AB;
+
+            this.component = this.view.component();
+         }
+
+         ui() {
+            return this.component.ui();
+         }
+
+         init(AB) {
+            this.AB = AB;
+            return this.component.init(AB, 2);
+            // in our editor, we provide accessLv = 2
+         }
+
+         detatch() {
+            this.component.detatch();
+         }
+
+         onShow() {
+            this.component.onShow();
+         }
+      };
+   }
+
+   return myClass;
 }
 
 
@@ -68869,6 +68949,22 @@ var myClass = null;
 
             Dashboard.adjust();
          } // init()
+
+         /**
+          * @method detatch()
+          * Make sure we and any of our child components remove any
+          * active listeners on objects.
+          */
+         detatch() {
+            Object.keys(this.subComponents).forEach((k) => {
+               this.subComponents[k]?.detatch?.();
+            });
+
+            var Dashboard = $$(this.ids.component);
+            if (Dashboard) {
+               if (this._onChangeId) Dashboard.detachEvent(this._onChangeId);
+            }
+         }
 
          /**
           * @method busy()
@@ -69087,8 +69183,12 @@ var myClass = null;
             // that causes errors.)
             setTimeout(() => {
                // App.actions.populateInterfaceWorkspace(view);
-               this.emit("view.edit", view);
-            }, 50);
+               try {
+                  this.emit("view.edit", view);
+               } catch (err) {
+                  console.error(err);
+               }
+            }, 15);
 
             e.preventDefault();
 
@@ -69210,10 +69310,12 @@ __webpack_require__.r(__webpack_exports__);
    var Views = [];
    // {array}
    // All the ABViewXXX Property Interfaces Available.
-   [__webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/properties/views/ABViewPage.js")].forEach((V) => {
-      let Klass = V.default(AB);
-      Views.push(Klass);
-   });
+   [__webpack_require__(/*! ./views/ABViewCarousel */ "./src/rootPages/Designer/properties/views/ABViewCarousel.js"), __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/properties/views/ABViewPage.js")].forEach(
+      (V) => {
+         let Klass = V.default(AB);
+         Views.push(Klass);
+      }
+   );
 
    return {
       /*
@@ -76757,6 +76859,12 @@ var myClass = null;
             $$(this.ids.label).setValue("");
          }
 
+         propertyDatacollections(view) {
+            return view.application.datacollectionsIncluded().map((d) => {
+               return { id: d.id, value: d.label };
+            });
+         }
+
          /**
           * @method defaults()
           * Return the ViewClass() default values.
@@ -77166,6 +77274,401 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return new ABViewCSVImporterProperty();
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/views/ABViewCarousel.js":
+/*!*******************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/views/ABViewCarousel.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABView */ "./src/rootPages/Designer/properties/views/ABView.js");
+/*
+ * ABViewCarousel
+ * A Property manager for our ABViewCarousel definitions
+ */
+
+
+
+// import FABViewPropertyFilterData from "./viewProperties/ABViewPropertyFilterData";
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const ABView = (0,_ABView__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const uiConfig = AB.Config.uiSettings();
+   const L = ABView.L();
+
+   // const ABViewPropertyFilterData = FABViewPropertyFilterData(AB);
+
+   class ABViewCarouselProperty extends ABView {
+      constructor() {
+         super("properties_abview_carousel", {
+            // Put our ids here
+            datacollection: "",
+            field: "",
+            filterByCursor: "",
+            width: "",
+            height: "",
+            showLabel: "",
+            hideItem: "",
+            hideButton: "",
+            navigationType: "",
+
+            gridFilterMenuButton: "",
+            detailsPage: "",
+            editPage: "",
+         });
+
+         this.ABFieldImage = AB.Class.ABFieldManager.fieldByKey("image");
+      }
+
+      static get key() {
+         return "carousel";
+      }
+
+      ui() {
+         let ids = this.ids;
+         let _this = this;
+
+         return super.ui([
+            {
+               view: "fieldset",
+               label: L("Data:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.datacollection,
+                        view: "select",
+                        name: "datacollection",
+                        label: L("Object:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        options: [],
+                        on: {
+                           onChange: (newv, oldv) => {
+                              if (newv != oldv) {
+                                 // linkPageComponent
+                                 // maybe: linkPageComponent.clear();
+                                 // $$(ids.detailsPage).setValue("");
+                                 // $$(ids.editPage).setValue("");
+
+                                 let imageFields = [];
+
+                                 let dataCollection =
+                                    this.AB.datacollectionByID(newv);
+                                 if (dataCollection) {
+                                    let datasource = dataCollection.datasource;
+                                    if (datasource) {
+                                       imageFields =
+                                          datasource
+                                             .fields(
+                                                (f) =>
+                                                   f instanceof
+                                                   this.ABFieldImage
+                                             )
+                                             .map((f) => {
+                                                return {
+                                                   id: f.id,
+                                                   value: f.label,
+                                                };
+                                             }) || [];
+                                    }
+                                 }
+                                 if (imageFields.length > 0) {
+                                    imageFields.unshift({
+                                       id: "",
+                                       value: L("Select a field"),
+                                    });
+                                 } else {
+                                    imageFields.unshift({
+                                       id: "",
+                                       value: L("no image fields."),
+                                    });
+                                 }
+
+                                 $$(ids.field).define("options", imageFields);
+                                 $$(ids.field).refresh();
+                                 this.onChange();
+                              }
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.field,
+                        view: "select",
+                        name: "field",
+                        label: L("Image Field:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        options: [],
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.filterByCursor,
+                        view: "checkbox",
+                        name: "filterByCursor",
+                        labelWidth: 0,
+                        labelRight: L("Filter images by cursor"),
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+
+            // this.linkPageComponent.ui,
+            // {
+            //    view: "fieldset",
+            //    label: L('ab.component.label.linkedPages', '*Linked Pages:'),
+            //    labelWidth: uiConfig.labelWidthLarge,
+            //    body: {
+            //       type: "clean",
+            //       padding: 10,
+            //       rows: [
+            //          {
+            //             view: "select",
+            //             name: "detailsPage",
+            //             label: L('ab.component.label.detailsPage', '*Details Page:'),
+            //             labelWidth: uiConfig.labelWidthLarge,
+            //             options: []
+            //          },
+            //          {
+            //             view: "select",
+            //             name: "editPage",
+            //             label: L('ab.component.label.editForm', '*Edit Form:'),
+            //             labelWidth: uiConfig.labelWidthLarge,
+            //             options: []
+            //          }
+            //       ]
+            //    }
+            // },
+            {
+               view: "fieldset",
+               label: L("Customize Display:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.navigationType,
+                        view: "select",
+                        name: "navigationType",
+                        label: L("Navigation Type"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        options: [
+                           { id: "corner", value: L("Corner") },
+                           { id: "side", value: L("Side") },
+                        ],
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.showLabel,
+                        view: "checkbox",
+                        name: "showLabel",
+                        labelRight: L("Show label of image"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.hideItem,
+                        view: "checkbox",
+                        name: "hideItem",
+                        labelRight: L("Hide item list"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.hideButton,
+                        view: "checkbox",
+                        name: "hideButton",
+                        labelRight: L("Hide navigation buttons"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.width,
+                        view: "counter",
+                        name: "width",
+                        label: L("Width:"),
+                        labelWidth: uiConfig.labelWidthXLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.height,
+                        view: "counter",
+                        name: "height",
+                        label: L("Height:"),
+                        labelWidth: uiConfig.labelWidthXLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Filter Option:"),
+                              css: "ab-text-bold",
+                              width: uiConfig.labelWidthXLarge,
+                           },
+                           {
+                              id: ids.gridFilterMenuButton,
+                              view: "button",
+                              css: "webix_primary",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              badge: 0,
+                              click: function () {
+                                 _this.filterMenuShow(this.$view);
+                              },
+                           },
+                        ],
+                     },
+                  ],
+               },
+            },
+         ]);
+      }
+
+      async init(AB) {
+         return super.init(AB);
+      }
+
+      populate(view) {
+         super.populate(view);
+         let ids = this.ids;
+
+         if (!view) return;
+
+         // Set the objects you can choose from in the list
+         // Pull data collections to options
+         var objectOptions = this.propertyDatacollections(view);
+         $$(ids.datacollection).define("options", objectOptions);
+         $$(ids.datacollection).refresh();
+
+         $$(ids.datacollection).setValue(view.settings.dataviewID);
+         $$(ids.field).setValue(view.settings.field);
+         $$(ids.filterByCursor).setValue(view.settings.filterByCursor);
+
+         $$(ids.width).setValue(view.settings.width);
+         $$(ids.height).setValue(view.settings.height);
+         $$(ids.showLabel).setValue(view.settings.showLabel);
+         $$(ids.hideItem).setValue(view.settings.hideItem);
+         $$(ids.hideButton).setValue(view.settings.hideButton);
+         $$(ids.navigationType).setValue(view.settings.navigationType);
+
+         // Populate values to QueryBuilder
+         var selectedDv = view.datacollection;
+         if (selectedDv) {
+            // PopupCarouselFilterMenu.objectLoad(selectedDv.datasource);
+         }
+
+         // Populate values to link page properties
+         // this.linkPageComponent.viewLoad(view);
+         // this.linkPageComponent.setSettings(view.settings);
+      }
+
+      defaultValues() {
+         let values = {};
+         var ViewClass = this.ViewClass();
+         if (ViewClass) {
+            values = ViewClass.defaultValues();
+         }
+         return values;
+      }
+
+      /**
+       * @method values
+       * return the values for this form.
+       * @return {obj}
+       */
+      values() {
+         let ids = this.ids;
+         let vals = super.values();
+
+         vals.settings = vals.settings || {};
+         vals.settings.dataviewID = $$(ids.datacollection).getValue();
+         vals.settings.field = $$(ids.field).getValue();
+         vals.settings.filterByCursor =
+            $$(ids.filterByCursor).getValue() || false;
+
+         vals.settings.width = $$(ids.width).getValue();
+         vals.settings.height = $$(ids.height).getValue();
+         vals.settings.showLabel = $$(ids.showLabel).getValue();
+         vals.settings.hideItem = $$(ids.hideItem).getValue();
+         vals.settings.hideButton = $$(ids.hideButton).getValue();
+         vals.settings.navigationType = $$(ids.navigationType).getValue();
+
+         // filter
+         // vals.settings.filter = PopupCarouselFilterMenu.getSettings();
+
+         // link pages
+         // let linkSettings = this.linkPageComponent.getSettings();
+         // for (let key in linkSettings) {
+         //    // vals.settings[key] = linkSettings[key];
+         // }
+
+         return vals;
+      }
+
+      /**
+       * @method FieldClass()
+       * A method to return the proper ABViewXXX Definition.
+       * NOTE: Must be overwritten by the Child Class
+       */
+      ViewClass() {
+         return super._ViewClass("carousel");
+      }
+   }
+
+   return ABViewCarouselProperty;
 }
 
 
@@ -86983,7 +87486,7 @@ __webpack_require__.r(__webpack_exports__);
           * is alerted, or when a new view is loaded and we
           * want to save the current one.
           */
-         this._handler_onChange = (waitDuration = 3000) => {
+         this._handler_onChange = (waitDuration = 3000, skipEmit = false) => {
             let values = this.currentPanel.values();
 
             // to update the label, add it before we ask for .toObj():
@@ -87006,7 +87509,9 @@ __webpack_require__.r(__webpack_exports__);
                delete view.__timedSave;
             }, waitDuration);
 
-            this.emit("view.changed");
+            if (!skipEmit) {
+               this.emit("view.changed");
+            }
          };
       }
 
@@ -87082,7 +87587,7 @@ __webpack_require__.r(__webpack_exports__);
       viewLoad(view) {
          if (this.currentPanel) {
             // Make sure the current Data is saved:
-            this._handler_onChange(10);
+            this._handler_onChange(10, true);
 
             // unload the current panel
             this.currentPanel.removeAllListeners("changed");
@@ -87292,6 +87797,11 @@ __webpack_require__.r(__webpack_exports__);
          ComponentMenu.on("widget.add", () => {
             this.viewLoad(this.CurrentView);
             EditorLayout.ready();
+         });
+
+         EditorLayout.on("view.load", (view) => {
+            // the user wants to edit the provided view.
+            this.emit("view.load", view);
          });
 
          return Promise.all(allInits);
@@ -87796,6 +88306,9 @@ __webpack_require__.r(__webpack_exports__);
        * @param {ABView} view  current view instance.
        */
       viewLoad(view) {
+         // remove the current Editor if it exists.
+         this.currentEditor?.detatch?.();
+
          super.viewLoad(view);
          let ids = this.ids;
 
@@ -87925,7 +88438,14 @@ __webpack_require__.r(__webpack_exports__);
          editorComponent.init(this.AB, 2);
          // note: parentAccessLevel = 2 here in our Designer
 
+         editorComponent.on("view.edit", (_view) => {
+            // if the [edit] icon is clicked on this component:
+            // tell our interface_workspace to load a new view
+            this.emit("view.load", _view);
+         });
+
          if (editorComponent.onShow) editorComponent.onShow();
+         this.currentEditor = editorComponent;
 
          setTimeout(() => {
             $$(ids.component).adjust();

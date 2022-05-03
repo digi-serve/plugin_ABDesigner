@@ -49,10 +49,12 @@ export default function (AB) {
    var Views = [];
    // {array}
    // All the ABViewXXX Property Interfaces Available.
-   [require("./views/ABViewPage")].forEach((V) => {
-      let Klass = V.default(AB);
-      Views.push(Klass);
-   });
+   [require("./views/ABViewCarousel"), require("./views/ABViewPage")].forEach(
+      (V) => {
+         let Klass = V.default(AB);
+         Views.push(Klass);
+      }
+   );
 
    return {
       /*

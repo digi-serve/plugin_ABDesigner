@@ -162,6 +162,22 @@ export default function (AB) {
          } // init()
 
          /**
+          * @method detatch()
+          * Make sure we and any of our child components remove any
+          * active listeners on objects.
+          */
+         detatch() {
+            Object.keys(this.subComponents).forEach((k) => {
+               this.subComponents[k]?.detatch?.();
+            });
+
+            var Dashboard = $$(this.ids.component);
+            if (Dashboard) {
+               if (this._onChangeId) Dashboard.detachEvent(this._onChangeId);
+            }
+         }
+
+         /**
           * @method busy()
           * Display a progress in action icon
           */
@@ -378,8 +394,12 @@ export default function (AB) {
             // that causes errors.)
             setTimeout(() => {
                // App.actions.populateInterfaceWorkspace(view);
-               this.emit("view.edit", view);
-            }, 50);
+               try {
+                  this.emit("view.edit", view);
+               } catch (err) {
+                  console.error(err);
+               }
+            }, 15);
 
             e.preventDefault();
 

@@ -37,7 +37,7 @@ export default function (AB) {
           * is alerted, or when a new view is loaded and we
           * want to save the current one.
           */
-         this._handler_onChange = (waitDuration = 3000) => {
+         this._handler_onChange = (waitDuration = 3000, skipEmit = false) => {
             let values = this.currentPanel.values();
 
             // to update the label, add it before we ask for .toObj():
@@ -60,7 +60,9 @@ export default function (AB) {
                delete view.__timedSave;
             }, waitDuration);
 
-            this.emit("view.changed");
+            if (!skipEmit) {
+               this.emit("view.changed");
+            }
          };
       }
 
@@ -136,7 +138,7 @@ export default function (AB) {
       viewLoad(view) {
          if (this.currentPanel) {
             // Make sure the current Data is saved:
-            this._handler_onChange(10);
+            this._handler_onChange(10, true);
 
             // unload the current panel
             this.currentPanel.removeAllListeners("changed");
