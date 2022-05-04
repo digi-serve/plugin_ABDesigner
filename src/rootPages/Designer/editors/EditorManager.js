@@ -8,12 +8,14 @@ export default function (AB) {
    var Editors = [];
    // {array}
    // All the ABField Component Inerfaces available.
-   [require("./views/ABViewContainer"), require("./views/ABViewPage")].forEach(
-      (E) => {
-         let Klass = E.default(AB);
-         Editors.push(Klass);
-      }
-   );
+   [
+      require("./views/ABViewCarousel"),
+      require("./views/ABViewContainer"),
+      require("./views/ABViewPage"),
+   ].forEach((E) => {
+      let Klass = E.default(AB);
+      Editors.push(Klass);
+   });
 
    return {
       /*

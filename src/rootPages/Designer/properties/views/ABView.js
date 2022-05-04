@@ -101,6 +101,12 @@ export default function (AB) {
             $$(this.ids.label).setValue("");
          }
 
+         propertyDatacollections(view) {
+            return view.application.datacollectionsIncluded().map((d) => {
+               return { id: d.id, value: d.label };
+            });
+         }
+
          /**
           * @method defaults()
           * Return the ViewClass() default values.

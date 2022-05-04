@@ -47,6 +47,16 @@ export default function (AB) {
       Processes.push(Klass);
    });
 
+   var Views = [];
+   // {array}
+   // All the ABViewXXX Property Interfaces Available.
+   [require("./views/ABViewCarousel"), require("./views/ABViewPage")].forEach(
+      (V) => {
+         let Klass = V.default(AB);
+         Views.push(Klass);
+      }
+   );
+
    return {
       /*
        * @function fields

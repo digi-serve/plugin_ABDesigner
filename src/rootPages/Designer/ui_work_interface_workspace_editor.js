@@ -160,6 +160,11 @@ export default function (AB) {
             EditorLayout.ready();
          });
 
+         EditorLayout.on("view.load", (view) => {
+            // the user wants to edit the provided view.
+            this.emit("view.load", view);
+         });
+
          return Promise.all(allInits);
       }
 

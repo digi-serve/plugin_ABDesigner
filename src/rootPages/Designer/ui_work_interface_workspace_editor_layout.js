@@ -125,6 +125,9 @@ export default function (AB) {
        * @param {ABView} view  current view instance.
        */
       viewLoad(view) {
+         // remove the current Editor if it exists.
+         this.currentEditor?.detatch?.();
+
          super.viewLoad(view);
          let ids = this.ids;
 
@@ -254,7 +257,14 @@ export default function (AB) {
          editorComponent.init(this.AB, 2);
          // note: parentAccessLevel = 2 here in our Designer
 
+         editorComponent.on("view.edit", (_view) => {
+            // if the [edit] icon is clicked on this component:
+            // tell our interface_workspace to load a new view
+            this.emit("view.load", _view);
+         });
+
          if (editorComponent.onShow) editorComponent.onShow();
+         this.currentEditor = editorComponent;
 
          setTimeout(() => {
             $$(ids.component).adjust();
