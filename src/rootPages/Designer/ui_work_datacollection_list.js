@@ -127,13 +127,46 @@ export default function (AB) {
        *										we are working with.
        */
       applicationLoad(application) {
+         var oldAppID = this.CurrentApplicationID;
+         var selectedItem = null;
+
          super.applicationLoad(application);
 
+         if (oldAppID == this.CurrentApplicationID) {
+            selectedItem = this.ListComponent.selectedItem();
+         }
+
+         // NOTE: only include System Objects if the user has permission
+         var f = (obj) => !obj.isSystemObject;
+         if (this.AB.Account.isSystemDesigner()) {
+            f = () => true;
+         }
+
          // clear our list and display our data collections:
-         this.ListComponent.dataLoad(application?.datacollectionsIncluded());
+         this.ListComponent.dataLoad(application?.datacollectionsIncluded(f));
+
+         if (selectedItem) {
+            this.ListComponent.selectItem(selectedItem.id);
+         }
 
          // prepare our Popup with the current Application
          AddForm.applicationLoad(application);
+      }
+
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            // NOTE: only include System Objects if the user has permission
+            var f = (obj) => !obj.isSystemObject;
+            if (this.AB.Account.isSystemDesigner()) {
+               f = () => true;
+            }
+
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.datacollectionsIncluded(f)
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
       }
 
       /**

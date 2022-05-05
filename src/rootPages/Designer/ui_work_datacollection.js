@@ -56,7 +56,7 @@ export default function (AB) {
          this.warningsPropogate([DataCollectionList, DataCollectionWorkspace]);
          this.on("warnings", () => {
             // make sure our list refreshes it's display
-            DataCollectionList.applicationLoad(this.CurrentApplication);
+            DataCollectionList.warningsRefresh();
          });
 
          await DataCollectionWorkspace.init(AB);
