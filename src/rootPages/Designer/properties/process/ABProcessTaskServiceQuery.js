@@ -25,7 +25,7 @@ export default function (AB) {
          return "TaskServiceQuery";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskServiceQueryCore.defaults().key value.
 
       ui() {
          // we are creating these on the fly, and should have CurrentApplication

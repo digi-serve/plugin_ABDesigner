@@ -18,7 +18,7 @@ export default function (AB) {
          return "TaskService";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskServiceCore.defaults().key value.
 
       ui() {
          // we are creating these on the fly, and should have CurrentApplication

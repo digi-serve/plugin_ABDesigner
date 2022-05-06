@@ -39,7 +39,7 @@ export default function (AB) {
          return "Email";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskEmailCore.defaults().key value.
 
       ui(obj) {
          // we are creating these on the fly, and should have CurrentApplication

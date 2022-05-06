@@ -24,7 +24,7 @@ export default function (AB) {
       }
 
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessEndCore.defaults().key value.
 
       ui() {
          let ids = this.ids;

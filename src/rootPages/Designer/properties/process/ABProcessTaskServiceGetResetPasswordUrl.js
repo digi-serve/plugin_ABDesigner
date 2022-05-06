@@ -24,7 +24,7 @@ export default function (AB) {
          return "GetResetPasswordUrl";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskServiceGetResetPasswordUrlCore.defaults().key value.
 
       ui() {
          // we are creating these on the fly, and should have CurrentApplication

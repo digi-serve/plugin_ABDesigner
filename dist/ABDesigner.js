@@ -77192,7 +77192,8 @@ __webpack_require__.r(__webpack_exports__);
 
          this.refreshFieldValues();
          this.setFieldValues();
-
+console.log(this)
+console.log(element)
          if (element.isRepeat) $repeatLayout.show();
       }
 
@@ -77325,7 +77326,8 @@ __webpack_require__.r(__webpack_exports__);
 
          webix.ui(Builder.ui(ids.query), $$(ids.query));
          Builder.init(ids.query);
-
+console.log(this)
+console.log(element)
          $name.setValue(element.label);
       }
 
