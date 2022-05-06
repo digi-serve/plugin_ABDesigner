@@ -112,7 +112,6 @@ export default function (AB) {
                   ],
                   on: {
                      onViewShow: () => {
-                        this.propertiesStash();
                         this.refreshFieldValues();
                      },
                   },
@@ -316,37 +315,6 @@ export default function (AB) {
                   },
                ],
             });
-         });
-      }
-
-      /**
-       * @method propertiesStash()
-       * pull our values from our property panel.
-       * @param {string} id
-       *        the webix $$(id) of the properties panel area.
-       */
-      propertiesStash() {
-         // TIP: keep the .settings entries == ids[s] keys and this will
-         // remain simple:
-         this.element.defaults.settings.forEach((s) => {
-            switch (s) {
-               case "fieldValues":
-                  this.element[s] = this.getFieldValues();
-                  break;
-               case "isRepeat":
-                  // .isRepeat is set in .onChange
-                  break;
-               case "repeatMode":
-               case "repeatColumn":
-                  if (!(this.elememt?.isRepeat ?? null)) {
-                     this.element[s] = "";
-                     break;
-                  }
-               // no break;
-               // eslint-disable-next-line no-fallthrough
-               default:
-                  break;
-            }
          });
       }
 
