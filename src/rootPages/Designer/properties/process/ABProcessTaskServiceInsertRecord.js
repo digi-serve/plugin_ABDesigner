@@ -37,9 +37,11 @@ export default function (AB) {
 
          const ids = this.ids;
 
-         const objectList = this.AB.objects().map((o) => {
-            return { id: o.id, value: o.label ?? o.name };
-         });
+         const objectList = this.CurrentApplication.objectsIncluded().map(
+            (o) => {
+               return { id: o.id, value: o.label ?? o.name };
+            }
+         );
 
          return {
             id: ids.component,

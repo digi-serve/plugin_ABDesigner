@@ -75783,7 +75783,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessEndCore.defaults().key value.
 
       ui() {
          let ids = this.ids;
@@ -76164,7 +76164,7 @@ __webpack_require__.r(__webpack_exports__);
          return "Email";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskEmailCore.defaults().key value.
 
       ui(obj) {
          // we are creating these on the fly, and should have CurrentApplication
@@ -76460,7 +76460,7 @@ __webpack_require__.r(__webpack_exports__);
          return "TaskService";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskServiceCore.defaults().key value.
 
       ui() {
          // we are creating these on the fly, and should have CurrentApplication
@@ -76657,7 +76657,7 @@ __webpack_require__.r(__webpack_exports__);
          return "GetResetPasswordUrl";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskServiceGetResetPasswordUrlCore.defaults().key value.
 
       ui() {
          // we are creating these on the fly, and should have CurrentApplication
@@ -76786,7 +76786,7 @@ __webpack_require__.r(__webpack_exports__);
          return "InsertRecord";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskServiceInsertRecordCore.defaults().key value.
 
       ui() {
          // we are creating these on the fly, and should have CurrentApplication
@@ -76794,9 +76794,11 @@ __webpack_require__.r(__webpack_exports__);
 
          const ids = this.ids;
 
-         const objectList = this.AB.objects().map((o) => {
-            return { id: o.id, value: o.label ?? o.name };
-         });
+         const objectList = this.CurrentApplication.objectsIncluded().map(
+            (o) => {
+               return { id: o.id, value: o.label ?? o.name };
+            }
+         );
 
          return {
             id: ids.component,
@@ -77192,8 +77194,7 @@ __webpack_require__.r(__webpack_exports__);
 
          this.refreshFieldValues();
          this.setFieldValues();
-console.log(this)
-console.log(element)
+
          if (element.isRepeat) $repeatLayout.show();
       }
 
@@ -77269,7 +77270,7 @@ __webpack_require__.r(__webpack_exports__);
          return "TaskServiceQuery";
       }
       // {string}
-      // This should match the ABProcessTriggerLifecycleCore.defaults().key value.
+      // This should match the ABProcessTaskServiceQueryCore.defaults().key value.
 
       ui() {
          // we are creating these on the fly, and should have CurrentApplication
@@ -77326,8 +77327,7 @@ __webpack_require__.r(__webpack_exports__);
 
          webix.ui(Builder.ui(ids.query), $$(ids.query));
          Builder.init(ids.query);
-console.log(this)
-console.log(element)
+
          $name.setValue(element.label);
       }
 
