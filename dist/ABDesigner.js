@@ -76898,7 +76898,7 @@ __webpack_require__.r(__webpack_exports__);
          const result = [];
          result.push({
             id: "PK",
-            value: L("[Primary Key]"),
+            value: L("Primary Key"),
          });
 
          object.fields().forEach((f) => {
@@ -76908,7 +76908,7 @@ __webpack_require__.r(__webpack_exports__);
                if (linkDS) {
                   result.push({
                      id: `${f.id}|PK`,
-                     value: `${f.label} -> ${L("[Primary Key]")}`,
+                     value: `${f.label} -> ${L("Primary Key")}`,
                   });
 
                   linkDS.fields().forEach((linkF) => {

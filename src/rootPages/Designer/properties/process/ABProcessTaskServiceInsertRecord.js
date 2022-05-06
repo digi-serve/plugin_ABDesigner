@@ -141,7 +141,7 @@ export default function (AB) {
          const result = [];
          result.push({
             id: "PK",
-            value: L("[Primary Key]"),
+            value: L("Primary Key"),
          });
 
          object.fields().forEach((f) => {
@@ -151,7 +151,7 @@ export default function (AB) {
                if (linkDS) {
                   result.push({
                      id: `${f.id}|PK`,
-                     value: `${f.label} -> ${L("[Primary Key]")}`,
+                     value: `${f.label} -> ${L("Primary Key")}`,
                   });
 
                   linkDS.fields().forEach((linkF) => {
