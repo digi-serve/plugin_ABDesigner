@@ -236,7 +236,7 @@ export default function (AB) {
 
          setOptions.push({
             id: 6,
-            value: `Set by the paremeter of a Query task`,
+            value: L("Set by the parameter of a Query task"),
          });
 
          // Pull query tasks option list
