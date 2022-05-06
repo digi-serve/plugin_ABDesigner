@@ -146,22 +146,22 @@ export default function (AB) {
             return super.ui(_elements, rules);
          }
 
-         async init(AB) {
-            this.AB = AB;
+         //          async init(AB) {
+         //             this.AB = AB;
 
-            var FC = this.FieldClass();
-            if (FC) {
-               /*
-// TODO:
-               $$(this.ids.fieldDescription).define(
-                  "label",
-                  L(FC.defaults().description)
-               );
-            } else {
-               $$(this.ids.fieldDescription).hide();
-*/
-            }
-         }
+         //             var VC = this.ViewClass();
+         //             if (VC) {
+
+         // // TODO:
+         //                $$(this.ids.fieldDescription).define(
+         //                   "label",
+         //                   L(FC.defaults().description)
+         //                );
+         //             } else {
+         //                $$(this.ids.fieldDescription).hide();
+
+         //             }
+         //          }
 
          clear() {}
 
@@ -339,19 +339,19 @@ export default function (AB) {
           * A method to return the proper ABViewXXX Definition.
           * NOTE: Must be overwritten by the Child Class
           */
-         ViewClass() {
-            console.error("!!! Child Class has not overwritten ViewClass()");
-            return null;
-            // return super._ViewClass("string");
-         }
+         // ViewClass() {
+         //    console.error("!!! Child Class has not overwritten ViewClass()");
+         //    return null;
+         //    // return super._ViewClass("string");
+         // }
 
-         _ViewClass(key) {
-            var app = this.CurrentApplication;
-            if (!app) {
-               app = this.AB.applicationNew({});
-            }
-            return app.viewAll((V) => V.common().key == key)[0];
-         }
+         // _ViewClass(key) {
+         //    var app = this.CurrentApplication;
+         //    if (!app) {
+         //       app = this.AB.applicationNew({});
+         //    }
+         //    return app.viewAll((V) => V.common().key == key)[0];
+         // }
       };
    }
    return myClass;

@@ -78,8 +78,8 @@ export default function (AB) {
          async init(AB) {
             this.AB = AB;
 
-            var FC = this.FieldClass();
-            if (FC) {
+            var VC = this.ViewClass();
+            if (VC) {
                /*
 // TODO:
                $$(this.ids.fieldDescription).define(

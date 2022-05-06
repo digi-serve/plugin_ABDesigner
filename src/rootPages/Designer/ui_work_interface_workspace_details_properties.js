@@ -158,7 +158,7 @@ export default function (AB) {
             };
 
             webix.ui(ui, $$(this.ids.editors));
-
+            newPanel.init(this.AB);
             newPanel.populate(view);
 
             newPanel.on("changed", this._handler_onChange);

@@ -5,14 +5,15 @@
 
 import FABView from "./ABView";
 
-// import FABViewPropertyFilterData from "./viewProperties/ABViewPropertyFilterData";
+import FABViewPropertyFilterData from "./viewProperties/ABViewPropertyFilterData";
 
 export default function (AB) {
    const ABView = FABView(AB);
    const uiConfig = AB.Config.uiSettings();
    const L = ABView.L();
 
-   // const ABViewPropertyFilterData = FABViewPropertyFilterData(AB);
+   const ABViewPropertyFilterData = FABViewPropertyFilterData(AB);
+   const PopupCarouselFilterMenu = new ABViewPropertyFilterData();
 
    class ABViewCarouselProperty extends ABView {
       constructor() {
@@ -34,6 +35,15 @@ export default function (AB) {
          });
 
          this.ABFieldImage = AB.Class.ABFieldManager.fieldByKey("image");
+         // {ABFieldImage}  the Class reference
+         // we use this later to help find which fields in an object
+         // are image fields.
+
+         this._preFilterSettings = null;
+         // {json}
+         // The settings that were in the Filter popup when we chose to
+         // display them.  We will use these values to undo any modifications
+         // if the user clicks [cancel] or [close];
       }
 
       static get key() {
@@ -57,7 +67,7 @@ export default function (AB) {
                         id: ids.datacollection,
                         view: "select",
                         name: "datacollection",
-                        label: L("Object:"),
+                        label: L("Datacollection:"),
                         labelWidth: uiConfig.labelWidthLarge,
                         options: [],
                         on: {
@@ -285,7 +295,57 @@ export default function (AB) {
       }
 
       async init(AB) {
-         return super.init(AB);
+         super.init(AB);
+
+         this._handler_onCancel = () => {
+            // we have to set the values BACK to what they were:
+            PopupCarouselFilterMenu.setSettings(this._preFilterSettings);
+            this.filter_property_popup.hide();
+         };
+
+         this.filter_property_popup = webix.ui({
+            view: "window",
+            modal: true,
+            position: "center",
+            resize: true,
+            width: 700,
+            height: 450,
+            css: "ab-main-container",
+            hidden: true,
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Filter Menu"),
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     // width: 50,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: this._handler_onCancel,
+                     on: {
+                        onAfterRender() {
+                           ABView.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            body: PopupCarouselFilterMenu.ui(),
+         });
+
+         PopupCarouselFilterMenu.on("cancel", this._handler_onCancel);
+
+         PopupCarouselFilterMenu.on("save", () => {
+            this.filter_property_popup.hide();
+            this.onChange();
+         });
+
+         return PopupCarouselFilterMenu.init(AB);
       }
 
       populate(view) {
@@ -293,6 +353,8 @@ export default function (AB) {
          let ids = this.ids;
 
          if (!view) return;
+
+         this.viewEditing = view;
 
          // Set the objects you can choose from in the list
          // Pull data collections to options
@@ -314,7 +376,8 @@ export default function (AB) {
          // Populate values to QueryBuilder
          var selectedDv = view.datacollection;
          if (selectedDv) {
-            // PopupCarouselFilterMenu.objectLoad(selectedDv.datasource);
+            PopupCarouselFilterMenu.objectLoad(selectedDv.datasource);
+            PopupCarouselFilterMenu.setSettings(view.settings.filter);
          }
 
          // Populate values to link page properties
@@ -329,6 +392,15 @@ export default function (AB) {
             values = ViewClass.defaultValues();
          }
          return values;
+      }
+
+      filterMenuShow() {
+         // var currView = _logic.currentEditObject();
+
+         this._preFilterSettings = PopupCarouselFilterMenu.getSettings();
+
+         // show filter popup
+         this.filter_property_popup.show();
       }
 
       /**
@@ -354,7 +426,7 @@ export default function (AB) {
          vals.settings.navigationType = $$(ids.navigationType).getValue();
 
          // filter
-         // vals.settings.filter = PopupCarouselFilterMenu.getSettings();
+         vals.settings.filter = PopupCarouselFilterMenu.getSettings();
 
          // link pages
          // let linkSettings = this.linkPageComponent.getSettings();

@@ -21,25 +21,73 @@ export default function (AB, idBase) {
       const uiConfig = AB.Config.uiSettings();
       var L = UIClass.L();
 
+      class FilterRule {
+         constructor(indx) {
+            this.indx = indx;
+            // use this for uniqueness in our UI
+
+            this.base = `${base}_filterrule_${indx}`;
+
+            this.ids = {};
+            this.ids.label = `${this.base}_label`;
+            this.ids.filter = `${this.base}_filter`;
+
+            this.rowFilter = null;
+            // {FilterComplex}
+            // the widget that generates the filter condition
+         }
+
+         ui() {
+            return {
+               cols: [
+                  {
+                     id: this.ids.label,
+                     view: "text",
+                     value: "",
+                  },
+                  {
+                     id: this.ids.filter,
+                     view: "button",
+                     css: "webix_primary",
+                     value: L("Add Filter"),
+                     click: () => {
+                        this.rowFilter.popUp();
+                     },
+                  },
+               ],
+            };
+         }
+
+         init(AB) {
+            this.AB = AB;
+            this.rowFilter = this.AB.filterComplexNew(`${this.ids.filter}_fc`);
+         }
+
+         objectLoad(object) {
+            this.object = object;
+            if (this.rowFilter) {
+               this.rowFilter.fieldsLoad(this.object.fields(), this.object);
+            }
+         }
+      }
+
       myClass = class ABViewPropertyFilterData extends UIClass {
+         static get default() {
+            return {
+               filterOption: 1, // 0 - Not allow, 1 - Enable user filter, 2 - Predefined filter menu, 3 - Global filter input
 
-            static get default() {
-      return {
-         filterOption: 1, // 0 - Not allow, 1 - Enable user filter, 2 - Predefined filter menu, 3 - Global filter input
+               // 1- Enable user filter options
+               userFilterPosition: "toolbar", // "toolbar" || "form"
 
-         // 1- Enable user filter options
-         userFilterPosition: "toolbar", // "toolbar" || "form"
+               // 2 - Predefined filter menu options
+               // queryRules: [], // An array of ABViewGridFilterRule object
 
-         // 2 - Predefined filter menu options
-         // queryRules: [], // An array of ABViewGridFilterRule object
+               // 3 - Global filter input options
+               // globalFilterPosition: "default", // "default" || "single"
 
-         // 3 - Global filter input options
-         // globalFilterPosition: "default", // "default" || "single"
-
-         isGlobalToolbar: 1, // "boolean"
-      };
-   }
-
+               isGlobalToolbar: 1, // "boolean"
+            };
+         }
 
          constructor() {
             // base: {string} unique base id reference
@@ -63,8 +111,6 @@ export default function (AB, idBase) {
             this.queryRules = [];
             // {array}
             // of ... ?
-
-
          }
 
          ui() {
@@ -155,7 +201,10 @@ export default function (AB, idBase) {
                                  label: L("Add new filter"),
                                  width: 150,
                                  click: () => {
-                                    this.addFilterRule();
+                                    let rules = $$(
+                                       ids.filterRules
+                                    ).getChildViews();
+                                    this.addFilterRule(null, rules.length);
                                  },
                               },
                               {
@@ -218,12 +267,12 @@ export default function (AB, idBase) {
             this.AB = AB;
          }
 
-          buttonCancel () {
+         buttonCancel() {
             this.emit("cancel");
          }
 
          buttonSave() {
-            this.emit("save")
+            this.emit("save");
          }
 
          objectLoad(object, isLoadAll = false) {
@@ -243,9 +292,7 @@ export default function (AB, idBase) {
 
             //Convert some condition from string to integer
             (settings.queryRules || []).forEach((qr) => {
-               if (
-                  qr?.queryRules?.[0]?.rules
-               ) {
+               if (qr?.queryRules?.[0]?.rules) {
                   qr.queryRules[0].rules.forEach((rule) => {
                      if (/^[+-]?\d+(\.\d+)?$/.exec(rule.value)) {
                         rule.value = JSON.parse(rule.value);
@@ -254,7 +301,11 @@ export default function (AB, idBase) {
                }
             });
 
-            $$(ids.filterOptionRadio).setValue(settings.filterOption);
+            let option = settings.filterOption;
+            if (option == null || Number.isNaN(option)) {
+               option = ABViewPropertyFilterData.default.filterOption;
+            }
+            $$(ids.filterOptionRadio).setValue(option);
             $$(ids.filterUser).setValue(
                settings.userFilterPosition ||
                   ABViewPropertyFilterData.default.userFilterPosition
@@ -271,10 +322,10 @@ export default function (AB, idBase) {
             );
 
             // clear any existing Rules:
-               (this.queryRules ?? []).forEach((rule) => {
-                  if ($$(ids.filterRules))
-                     $$(ids.filterRules).removeView(rule.ids.component);
-               });
+            (this.queryRules ?? []).forEach((rule) => {
+               if ($$(ids.filterRules))
+                  $$(ids.filterRules).removeView(rule.ids.component);
+            });
             this.queryRules = [];
 
             (settings.queryRules || []).forEach((ruleSettings) => {
@@ -319,9 +370,24 @@ export default function (AB, idBase) {
           * @param {obj} settings
           *        The settings object from the Rule we created in .toSettings()
           */
-         addFilterRule(settings) {
+         addFilterRule(settings, indx) {
             if (this.object == null) return;
 
+            let Rule = new FilterRule(indx);
+
+            var RulesUI = $$(this.ids.filterRules);
+            if (RulesUI) {
+               var viewId = RulesUI.addView(Rule.ui());
+               Rule.init(this.AB);
+               Rule.objectLoad(this.object);
+            }
+
+            console.error(
+               "TODO: rebuild addFilterRule() with new FilterComplex."
+            );
+            return;
+
+            /*
             var Rule = getRule(instance.object, App, idBase);
             instance.queryRules.push(Rule);
 
@@ -350,17 +416,20 @@ export default function (AB, idBase) {
             if (settings) {
                Rule.fromSettings(settings);
             }
-         },
+            */
+         }
 
-         onShow: function () {
+         onShow() {
             if (!this.isLoadAll) {
-               $$(ids.needLoadAllLabel).show();
+               $$(this.ids.needLoadAllLabel).show();
             } else {
-               $$(ids.needLoadAllLabel).hide();
+               $$(this.ids.needLoadAllLabel).hide();
             }
-         },
+         }
 
-         setFilterOption: function (value) {
+         setFilterOption(value) {
+            const ids = this.ids;
+
             switch (JSON.parse(value || 0)) {
                case 1: // Enable User filters
                   $$(ids.filterMenuLayout).hide();
@@ -385,18 +454,18 @@ export default function (AB, idBase) {
                   $$(ids.filterGlobal).hide();
                   break;
             }
-         },
+         }
 
-         setFilterUser: (val) => {
+         setFilterUser(val) {
             switch (val) {
                case "toolbar":
-                  $$(ids.globalToolbar).show();
+                  $$(this.ids.globalToolbar).show();
                   break;
                case "form":
-                  $$(ids.globalToolbar).hide();
+                  $$(this.ids.globalToolbar).hide();
                   break;
             }
-         },
+         }
       };
    }
 

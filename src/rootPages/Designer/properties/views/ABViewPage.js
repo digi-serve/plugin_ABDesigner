@@ -165,9 +165,9 @@ export default function (AB) {
          ]);
       }
 
-      async init(AB) {
-         return super.init(AB);
-      }
+      // async init(AB) {
+      //    return super.init(AB);
+      // }
 
       populate(view) {
          super.populate(view);
