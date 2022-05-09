@@ -27737,7 +27737,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\r\n   }\r\n}\r\n@keyframes pulseLight {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\r\n   }\r\n}\r\n.pulseDark {\r\n   animation-name: pulseDark;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.pulseLight {\r\n   animation-name: pulseLight;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.smalltext {\r\n   font-size: small !important;\r\n}\r\n.ab-object-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-interface-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.darkorange .webix_button {\r\n   background-color: darkorange !important;\r\n}\r\n.warningtext {\r\n   color: orange;\r\n}\r\n.warningslist {\r\n   list-style-type: none;\r\n   margin: 0;\r\n   padding: 0;\r\n   line-height: 28px;\r\n   background-color: transparent;\r\n   color: white;\r\n}\r\n.warningslist li {\r\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\r\n}\r\n.webix_theme_dark {\r\n   background-color: #4a4e58;\r\n}\r\n.lighten {\r\n   opacity: 0.4;\r\n}\r\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\r\n   }\r\n}\r\n@keyframes pulseLight {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\r\n   }\r\n}\r\n.pulseDark {\r\n   animation-name: pulseDark;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.pulseLight {\r\n   animation-name: pulseLight;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.smalltext {\r\n   font-size: small !important;\r\n}\r\n.ab-object-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-interface-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.darkorange .webix_button {\r\n   background-color: darkorange !important;\r\n}\r\n.warningtext {\r\n   color: orange;\r\n}\r\n.warningslist {\r\n   list-style-type: none;\r\n   margin: 0;\r\n   padding: 0;\r\n   line-height: 28px;\r\n   background-color: transparent;\r\n   color: white;\r\n}\r\n.warningslist li {\r\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\r\n}\r\n.webix_theme_dark {\r\n   background-color: #4a4e58;\r\n}\r\n.lighten {\r\n   opacity: 0.4;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -76836,8 +76836,8 @@ var myClass = null;
          async init(AB) {
             this.AB = AB;
 
-            var FC = this.FieldClass();
-            if (FC) {
+            var VC = this.ViewClass();
+            if (VC) {
                /*
 // TODO:
                $$(this.ids.fieldDescription).define(
@@ -77291,6 +77291,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ABView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABView */ "./src/rootPages/Designer/properties/views/ABView.js");
+/* harmony import */ var _viewProperties_ABViewPropertyFilterData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./viewProperties/ABViewPropertyFilterData */ "./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyFilterData.js");
 /*
  * ABViewCarousel
  * A Property manager for our ABViewCarousel definitions
@@ -77298,18 +77299,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import FABViewPropertyFilterData from "./viewProperties/ABViewPropertyFilterData";
+
 
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
    const ABView = (0,_ABView__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
    const uiConfig = AB.Config.uiSettings();
    const L = ABView.L();
 
-   // const ABViewPropertyFilterData = FABViewPropertyFilterData(AB);
+   const base = "properties_abview_carousel";
+   const ABViewPropertyFilterData = (0,_viewProperties_ABViewPropertyFilterData__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, base);
+   const PopupCarouselFilterMenu = new ABViewPropertyFilterData();
 
    class ABViewCarouselProperty extends ABView {
       constructor() {
-         super("properties_abview_carousel", {
+         super(base, {
             // Put our ids here
             datacollection: "",
             field: "",
@@ -77327,6 +77330,15 @@ __webpack_require__.r(__webpack_exports__);
          });
 
          this.ABFieldImage = AB.Class.ABFieldManager.fieldByKey("image");
+         // {ABFieldImage}  the Class reference
+         // we use this later to help find which fields in an object
+         // are image fields.
+
+         this._preFilterSettings = null;
+         // {json}
+         // The settings that were in the Filter popup when we chose to
+         // display them.  We will use these values to undo any modifications
+         // if the user clicks [cancel] or [close];
       }
 
       static get key() {
@@ -77350,7 +77362,7 @@ __webpack_require__.r(__webpack_exports__);
                         id: ids.datacollection,
                         view: "select",
                         name: "datacollection",
-                        label: L("Object:"),
+                        label: L("Datacollection:"),
                         labelWidth: uiConfig.labelWidthLarge,
                         options: [],
                         on: {
@@ -77564,7 +77576,7 @@ __webpack_require__.r(__webpack_exports__);
                               label: L("Settings"),
                               icon: "fa fa-gear",
                               type: "icon",
-                              badge: 0,
+                              // badge: 0,
                               click: function () {
                                  _this.filterMenuShow(this.$view);
                               },
@@ -77578,7 +77590,57 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       async init(AB) {
-         return super.init(AB);
+         super.init(AB);
+
+         this._handler_onCancel = () => {
+            // we have to set the values BACK to what they were:
+            PopupCarouselFilterMenu.setSettings(this._preFilterSettings);
+            this.filter_property_popup.hide();
+         };
+
+         this.filter_property_popup = webix.ui({
+            view: "window",
+            modal: true,
+            position: "center",
+            resize: true,
+            width: 700,
+            height: 450,
+            css: "ab-main-container",
+            hidden: true,
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Filter Menu"),
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     // width: 50,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: this._handler_onCancel,
+                     on: {
+                        onAfterRender() {
+                           ABView.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            body: PopupCarouselFilterMenu.ui(),
+         });
+
+         PopupCarouselFilterMenu.on("cancel", this._handler_onCancel);
+
+         PopupCarouselFilterMenu.on("save", () => {
+            this.filter_property_popup.hide();
+            this.onChange();
+         });
+
+         return PopupCarouselFilterMenu.init(AB);
       }
 
       populate(view) {
@@ -77586,6 +77648,8 @@ __webpack_require__.r(__webpack_exports__);
          let ids = this.ids;
 
          if (!view) return;
+
+         this.viewEditing = view;
 
          // Set the objects you can choose from in the list
          // Pull data collections to options
@@ -77607,7 +77671,8 @@ __webpack_require__.r(__webpack_exports__);
          // Populate values to QueryBuilder
          var selectedDv = view.datacollection;
          if (selectedDv) {
-            // PopupCarouselFilterMenu.objectLoad(selectedDv.datasource);
+            PopupCarouselFilterMenu.objectLoad(selectedDv.datasource);
+            PopupCarouselFilterMenu.setSettings(view.settings.filter);
          }
 
          // Populate values to link page properties
@@ -77622,6 +77687,15 @@ __webpack_require__.r(__webpack_exports__);
             values = ViewClass.defaultValues();
          }
          return values;
+      }
+
+      filterMenuShow() {
+         // var currView = _logic.currentEditObject();
+
+         this._preFilterSettings = PopupCarouselFilterMenu.getSettings();
+
+         // show filter popup
+         this.filter_property_popup.show();
       }
 
       /**
@@ -77647,7 +77721,7 @@ __webpack_require__.r(__webpack_exports__);
          vals.settings.navigationType = $$(ids.navigationType).getValue();
 
          // filter
-         // vals.settings.filter = PopupCarouselFilterMenu.getSettings();
+         vals.settings.filter = PopupCarouselFilterMenu.getSettings();
 
          // link pages
          // let linkSettings = this.linkPageComponent.getSettings();
@@ -77834,22 +77908,22 @@ const ABViewContainerDefaults = {
             return super.ui(_elements, rules);
          }
 
-         async init(AB) {
-            this.AB = AB;
+         //          async init(AB) {
+         //             this.AB = AB;
 
-            var FC = this.FieldClass();
-            if (FC) {
-               /*
-// TODO:
-               $$(this.ids.fieldDescription).define(
-                  "label",
-                  L(FC.defaults().description)
-               );
-            } else {
-               $$(this.ids.fieldDescription).hide();
-*/
-            }
-         }
+         //             var VC = this.ViewClass();
+         //             if (VC) {
+
+         // // TODO:
+         //                $$(this.ids.fieldDescription).define(
+         //                   "label",
+         //                   L(FC.defaults().description)
+         //                );
+         //             } else {
+         //                $$(this.ids.fieldDescription).hide();
+
+         //             }
+         //          }
 
          clear() {}
 
@@ -78027,19 +78101,19 @@ const ABViewContainerDefaults = {
           * A method to return the proper ABViewXXX Definition.
           * NOTE: Must be overwritten by the Child Class
           */
-         ViewClass() {
-            console.error("!!! Child Class has not overwritten ViewClass()");
-            return null;
-            // return super._ViewClass("string");
-         }
+         // ViewClass() {
+         //    console.error("!!! Child Class has not overwritten ViewClass()");
+         //    return null;
+         //    // return super._ViewClass("string");
+         // }
 
-         _ViewClass(key) {
-            var app = this.CurrentApplication;
-            if (!app) {
-               app = this.AB.applicationNew({});
-            }
-            return app.viewAll((V) => V.common().key == key)[0];
-         }
+         // _ViewClass(key) {
+         //    var app = this.CurrentApplication;
+         //    if (!app) {
+         //       app = this.AB.applicationNew({});
+         //    }
+         //    return app.viewAll((V) => V.common().key == key)[0];
+         // }
       };
    }
    return myClass;
@@ -78227,9 +78301,9 @@ __webpack_require__.r(__webpack_exports__);
          ]);
       }
 
-      async init(AB) {
-         return super.init(AB);
-      }
+      // async init(AB) {
+      //    return super.init(AB);
+      // }
 
       populate(view) {
          super.populate(view);
@@ -78316,6 +78390,572 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return ABViewPageProperty;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyFilterData.js":
+/*!********************************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyFilterData.js ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ABViewPropertyFilterData
+ * This provides the UI interface for collecting the settings that drive the
+ * common ABViewPropertyFilterData component on the UI.
+ *
+ * This is a common UI interface among our View widgets that offer the ability
+ * to filter their data.
+ */
+
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, idBase) {
+   if (!myClass) {
+      const base = `${idBase}_viewpropertyfilterdata`;
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      const uiConfig = AB.Config.uiSettings();
+      var L = UIClass.L();
+
+      class FilterRule extends UIClass {
+         constructor(indx) {
+            let frbase = `${base}_filterrule_${indx}`;
+            super(frbase, {
+               label: "",
+               filter: "",
+               btnDelete: "",
+            });
+
+            this.indx = indx;
+            // use this for uniqueness in our UI
+
+            this.base = frbase;
+
+            this.rowFilter = null;
+            // {FilterComplex}
+            // the widget that generates the filter condition
+         }
+
+         ui() {
+            return {
+               id: this.ids.component,
+               cols: [
+                  {
+                     id: this.ids.label,
+                     view: "text",
+                     value: "",
+                  },
+                  {
+                     id: this.ids.filter,
+                     view: "button",
+                     css: "webix_primary",
+                     value: L("Add Filter"),
+                     click: () => {
+                        this.rowFilter.popUp($$(this.ids.filter).getNode());
+                     },
+                  },
+                  {
+                     id: this.ids.btnDelete,
+                     view: "button",
+                     css: "webix_primary",
+                     width: 28,
+                     type: "icon",
+                     icon: "fa fa-times",
+                     click: () => {
+                        webix.confirm({
+                           title: L("Remove Filter?"),
+                           message: L(
+                              "Are you sure you want to remove this filter?"
+                           ),
+                           callback: async (result) => {
+                              if (result) {
+                                 let $row = $$(this.ids.component);
+                                 let parent = $row.getParentView();
+                                 parent.removeView($row);
+                                 this.emit("deleted");
+                              }
+                           },
+                        });
+                     },
+                  },
+               ],
+            };
+         }
+
+         init(AB) {
+            this.AB = AB;
+            this.rowFilter = this.AB.filterComplexNew(`${this.ids.filter}_fc`);
+         }
+
+         fromSettings(settings) {
+            $$(this.ids.label).setValue(settings.label);
+            this.rowFilter?.setValue(settings.filters);
+         }
+
+         toSettings() {
+            let settings = {};
+            settings.label = $$(this.ids.label).getValue();
+            settings.filters = this.rowFilter?.getValue();
+            return settings;
+         }
+
+         objectLoad(object) {
+            this.object = object;
+            if (this.rowFilter) {
+               this.rowFilter.fieldsLoad(this.object.fields(), this.object);
+            }
+         }
+      }
+
+      myClass = class ABViewPropertyFilterData extends UIClass {
+         static get default() {
+            return {
+               filterOption: 1, // 0 - Not allow, 1 - Enable user filter, 2 - Predefined filter menu, 3 - Global filter input
+
+               // 1- Enable user filter options
+               userFilterPosition: "toolbar", // "toolbar" || "form"
+
+               // 2 - Predefined filter menu options
+               // queryRules: [], // An array of ABViewGridFilterRule object
+
+               // 3 - Global filter input options
+               // globalFilterPosition: "default", // "default" || "single"
+
+               isGlobalToolbar: 1, // "boolean"
+            };
+         }
+
+         constructor(options) {
+            // base: {string} unique base id reference
+
+            super(base, {
+               filterRules: "",
+               filterRulesScrollview: "",
+
+               filterOptionRadio: "",
+               filterUserLayout: "",
+               filterUser: "",
+               filterGlobal: "",
+               filterMenuLayout: "",
+
+               needLoadAllLabel: "",
+               globalToolbar: "",
+            });
+
+            this.AB = AB;
+
+            this.queryRules = [];
+            // {array}
+            // of ... ?
+
+            this.isGrid = false;
+            if (options?.isGrid) {
+               this.isGrid = true;
+            }
+         }
+
+         ui() {
+            const ids = this.ids;
+
+            return {
+               type: "form",
+               rows: [
+                  {
+                     view: "radio",
+                     id: ids.filterOptionRadio,
+                     value: 0,
+                     options: [
+                        { id: 0, value: L("Do not Allow User filters") },
+                        { id: 1, value: L("Enable User filters") },
+                        { id: 2, value: L("Use a filter menu") },
+                        { id: 3, value: L("Use a global filter input") },
+                     ],
+                     vertical: true,
+                     label: "Filter Option",
+                     labelWidth: uiConfig.labelWidthLarge,
+                     on: {
+                        onChange: (newValue /*, oldValue */) => {
+                           this.setFilterOption(newValue);
+                        },
+                     },
+                  },
+
+                  {
+                     view: "radio",
+                     id: ids.filterGlobal,
+                     hidden: true,
+                     vertical: true,
+                     label: "Show",
+                     labelWidth: uiConfig.labelWidthLarge,
+                     options: [
+                        { id: "default", value: L("All matching records") },
+                        { id: "single", value: L("Single records only") },
+                     ],
+                  },
+
+                  {
+                     view: "layout",
+                     id: ids.filterUserLayout,
+                     hidden: true,
+                     cols: [
+                        {
+                           view: "radio",
+                           vertical: true,
+                           id: ids.filterUser,
+                           value: "toolbar",
+                           label: "Display",
+                           labelWidth: uiConfig.labelWidthLarge,
+                           width: 200,
+                           options: [
+                              { id: "toolbar", value: L("Toolbar") },
+                              { id: "form", value: L("Form") },
+                           ],
+                           on: {
+                              onChange: (newValue) => {
+                                 this.setFilterUser(newValue);
+                              },
+                           },
+                        },
+                        {
+                           view: "checkbox",
+                           id: ids.globalToolbar,
+                           width: 350,
+                           labelRight: L("Include a global filter input"),
+                        },
+                        {},
+                     ],
+                  },
+
+                  {
+                     view: "layout",
+                     id: ids.filterMenuLayout,
+                     hidden: true,
+                     rows: [
+                        {
+                           css: { "padding-bottom": 10 },
+                           cols: [
+                              {
+                                 view: "button",
+                                 css: "webix_primary",
+                                 icon: "fa fa-plus",
+                                 type: "iconButton",
+                                 label: L("Add new filter"),
+                                 width: 150,
+                                 click: () => {
+                                    let rules = $$(
+                                       ids.filterRules
+                                    ).getChildViews();
+                                    this.addFilterRule(null, rules.length);
+                                 },
+                              },
+                              {
+                                 id: ids.needLoadAllLabel,
+                                 view: "label",
+                                 label: L('need "LoadAll" from datasource'),
+                                 css: { color: "red" },
+                                 hidden: true,
+                              },
+                              { fillspace: true },
+                           ],
+                        },
+                        {
+                           id: ids.filterRulesScrollview,
+                           view: "scrollview",
+                           scroll: "xy",
+                           body: {
+                              id: ids.filterRules,
+                              view: "layout",
+                              margin: 20,
+                              padding: 10,
+                              rows: [],
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     css: { "background-color": "#fff" },
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           name: "cancel",
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.buttonCancel();
+                           },
+                        },
+                        {
+                           view: "button",
+                           css: "webix_primary",
+                           name: "save",
+                           label: L("Save"),
+                           type: "form",
+                           autowidth: true,
+                           click: () => {
+                              this.buttonSave();
+                           },
+                        },
+                        { fillspace: true },
+                     ],
+                  },
+               ],
+            };
+         }
+
+         init(AB) {
+            this.AB = AB;
+         }
+
+         buttonCancel() {
+            this.emit("cancel");
+         }
+
+         buttonSave() {
+            this.emit("save");
+         }
+
+         objectLoad(object, isLoadAll = false) {
+            this.object = object;
+            this.isLoadAll = isLoadAll;
+
+            //tell each of our rules about our object
+            if (this.queryRules && this.queryRules.length) {
+               this.queryRules.forEach((r) => {
+                  r.objectLoad(object);
+               });
+            }
+         }
+
+         setSettings(settings = {}) {
+            const ids = this.ids;
+
+            //Convert some condition from string to integer
+            (settings.queryRules || []).forEach((qr) => {
+               if (qr?.queryRules?.[0]?.rules) {
+                  qr.queryRules[0].rules.forEach((rule) => {
+                     if (/^[+-]?\d+(\.\d+)?$/.exec(rule.value)) {
+                        rule.value = JSON.parse(rule.value);
+                     }
+                  });
+               }
+            });
+
+            let option = settings.filterOption;
+            if (option == null || Number.isNaN(option)) {
+               option = ABViewPropertyFilterData.default.filterOption;
+            }
+            $$(ids.filterOptionRadio).setValue(option);
+            $$(ids.filterUser).setValue(
+               settings.userFilterPosition ||
+                  ABViewPropertyFilterData.default.userFilterPosition
+            );
+            $$(ids.globalToolbar).setValue(
+               typeof settings.isGlobalToolbar != "undefined"
+                  ? settings.isGlobalToolbar
+                  : ABViewPropertyFilterData.default.isGlobalToolbar
+            );
+
+            $$(ids.filterGlobal).setValue(
+               settings.globalFilterPosition ||
+                  ABViewPropertyFilterData.default.globalFilterPosition
+            );
+
+            // clear any existing Rules:
+            (this.queryRules ?? []).forEach((rule) => {
+               if ($$(ids.filterRules))
+                  $$(ids.filterRules).removeView(rule.ids.component);
+            });
+            this.queryRules = [];
+
+            (settings.queryRules || []).forEach((ruleSettings, indx) => {
+               this.addFilterRule(ruleSettings, indx);
+            });
+         }
+
+         getSettings() {
+            const ids = this.ids;
+            var settings = {};
+            settings.filterOption = parseInt(
+               $$(ids.filterOptionRadio).getValue()
+            );
+            settings.queryRules = [];
+
+            switch (settings.filterOption) {
+               case 0: // Disable User filters
+                  settings.isGlobalToolbar = 0;
+                  break;
+               case 1: // Enable User filters
+                  if (this.isGrid) {
+                     settings.userFilterPosition = $$(
+                        ids.filterUser
+                     ).getValue();
+                     settings.isGlobalToolbar = $$(
+                        ids.globalToolbar
+                     ).getValue();
+                  } else {
+                     settings.userFilterPosition = "form";
+                     settings.isGlobalToolbar = 0;
+                  }
+
+                  break;
+               case 2: // Use a filter menu
+                  this.queryRules.forEach((r) => {
+                     settings.queryRules.push(r.toSettings());
+                  });
+                  break;
+               case 3: // Use a global filter menu
+                  settings.globalFilterPosition = $$(
+                     ids.filterGlobal
+                  ).getValue();
+                  break;
+            }
+
+            return settings;
+         }
+
+         /**
+          * @method addFilterRule
+          * Instantiate a new Rule in our list.
+          * @param {obj} settings
+          *        The settings object from the Rule we created in .toSettings()
+          */
+         addFilterRule(settings /*, indx*/) {
+            if (this.object == null) return;
+
+            // pull indx from our largest queryRules entry:
+            let indx = 0;
+            this.queryRules.forEach((r) => {
+               if (r.indx > indx) {
+                  indx = r.indx;
+               }
+            });
+            indx++;
+
+            let Rule = new FilterRule(indx);
+
+            var RulesUI = $$(this.ids.filterRules);
+            if (RulesUI) {
+               /* var viewId = */ RulesUI.addView(Rule.ui());
+               Rule.init(this.AB);
+               Rule.objectLoad(this.object);
+               if (settings) {
+                  Rule.fromSettings(settings);
+               }
+
+               Rule.on("deleted", () => {
+                  this.queryRules = this.queryRules.filter((r) => {
+                     return r.indx != Rule.indx;
+                  });
+               });
+            }
+
+            this.queryRules.push(Rule);
+
+            console.error(
+               "TODO: rebuild addFilterRule() with new FilterComplex."
+            );
+            return;
+
+            /*
+            var Rule = getRule(instance.object, App, idBase);
+            instance.queryRules.push(Rule);
+
+            // if we have tried to create our component:
+            if (ids) {
+               // if our actually exists, then populate it:
+               var RulesUI = $$(ids.filterRules);
+               if (RulesUI) {
+                  // make sure Rule.ui is created before calling .init()
+                  Rule.component(App, idBase); // prepare the UI component
+                  var viewId = RulesUI.addView(Rule.ui);
+                  Rule.showQueryBuilderContainer();
+                  Rule.init({
+                     onDelete: (deletedRule) => {
+                        $$(ids.filterRules).removeView(Rule.ids.component);
+
+                        var index = instance.queryRules.indexOf(deletedRule);
+                        if (index !== -1) {
+                           instance.queryRules.splice(index, 1);
+                        }
+                     },
+                  });
+               }
+            }
+
+            if (settings) {
+               Rule.fromSettings(settings);
+            }
+            */
+         }
+
+         onShow() {
+            if (!this.isLoadAll) {
+               $$(this.ids.needLoadAllLabel).show();
+            } else {
+               $$(this.ids.needLoadAllLabel).hide();
+            }
+         }
+
+         setFilterOption(value) {
+            const ids = this.ids;
+
+            switch (JSON.parse(value || 0)) {
+               case 1: // Enable User filters
+                  $$(ids.filterMenuLayout).hide();
+                  $$(ids.filterGlobal).hide();
+                  if (this.isGrid) {
+                     $$(ids.filterUserLayout).show();
+                  }
+                  break;
+               case 2: // Use a filter menu
+                  $$(ids.filterUserLayout).hide();
+                  $$(ids.filterGlobal).hide();
+                  $$(ids.filterMenuLayout).show();
+                  break;
+               case 3: // Use a global filter menu
+                  $$(ids.filterUserLayout).hide();
+                  $$(ids.filterMenuLayout).hide();
+                  $$(ids.filterGlobal).show();
+                  break;
+               case 0:
+               default:
+                  // Do not Allow User filters
+                  $$(ids.filterUserLayout).hide();
+                  $$(ids.filterMenuLayout).hide();
+                  $$(ids.filterGlobal).hide();
+                  break;
+            }
+         }
+
+         setFilterUser(val) {
+            switch (val) {
+               case "toolbar":
+                  $$(this.ids.globalToolbar).show();
+                  break;
+               case "form":
+                  $$(this.ids.globalToolbar).hide();
+                  break;
+            }
+         }
+      };
+   }
+
+   return myClass;
 }
 
 
@@ -83218,7 +83858,7 @@ __webpack_require__.r(__webpack_exports__);
          this.warningsPropogate([DataCollectionList, DataCollectionWorkspace]);
          this.on("warnings", () => {
             // make sure our list refreshes it's display
-            DataCollectionList.applicationLoad(this.CurrentApplication);
+            DataCollectionList.warningsRefresh();
          });
 
          await DataCollectionWorkspace.init(AB);
@@ -83417,13 +84057,46 @@ __webpack_require__.r(__webpack_exports__);
        *										we are working with.
        */
       applicationLoad(application) {
+         var oldAppID = this.CurrentApplicationID;
+         var selectedItem = null;
+
          super.applicationLoad(application);
 
+         if (oldAppID == this.CurrentApplicationID) {
+            selectedItem = this.ListComponent.selectedItem();
+         }
+
+         // NOTE: only include System Objects if the user has permission
+         var f = (obj) => !obj.isSystemObject;
+         if (this.AB.Account.isSystemDesigner()) {
+            f = () => true;
+         }
+
          // clear our list and display our data collections:
-         this.ListComponent.dataLoad(application?.datacollectionsIncluded());
+         this.ListComponent.dataLoad(application?.datacollectionsIncluded(f));
+
+         if (selectedItem) {
+            this.ListComponent.selectItem(selectedItem.id);
+         }
 
          // prepare our Popup with the current Application
          AddForm.applicationLoad(application);
+      }
+
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            // NOTE: only include System Objects if the user has permission
+            var f = (obj) => !obj.isSystemObject;
+            if (this.AB.Account.isSystemDesigner()) {
+               f = () => true;
+            }
+
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(
+               this.CurrentApplication?.datacollectionsIncluded(f)
+            );
+            this.ListComponent.selectItem(selectedItem.id);
+         }
       }
 
       /**
@@ -87607,7 +88280,7 @@ __webpack_require__.r(__webpack_exports__);
             };
 
             webix.ui(ui, $$(this.ids.editors));
-
+            newPanel.init(this.AB);
             newPanel.populate(view);
 
             newPanel.on("changed", this._handler_onChange);

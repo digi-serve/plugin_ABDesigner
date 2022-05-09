@@ -21,16 +21,19 @@ export default function (AB, idBase) {
       const uiConfig = AB.Config.uiSettings();
       var L = UIClass.L();
 
-      class FilterRule {
+      class FilterRule extends UIClass {
          constructor(indx) {
+            let frbase = `${base}_filterrule_${indx}`;
+            super(frbase, {
+               label: "",
+               filter: "",
+               btnDelete: "",
+            });
+
             this.indx = indx;
             // use this for uniqueness in our UI
 
-            this.base = `${base}_filterrule_${indx}`;
-
-            this.ids = {};
-            this.ids.label = `${this.base}_label`;
-            this.ids.filter = `${this.base}_filter`;
+            this.base = frbase;
 
             this.rowFilter = null;
             // {FilterComplex}
@@ -39,6 +42,7 @@ export default function (AB, idBase) {
 
          ui() {
             return {
+               id: this.ids.component,
                cols: [
                   {
                      id: this.ids.label,
@@ -51,7 +55,31 @@ export default function (AB, idBase) {
                      css: "webix_primary",
                      value: L("Add Filter"),
                      click: () => {
-                        this.rowFilter.popUp();
+                        this.rowFilter.popUp($$(this.ids.filter).getNode());
+                     },
+                  },
+                  {
+                     id: this.ids.btnDelete,
+                     view: "button",
+                     css: "webix_primary",
+                     width: 28,
+                     type: "icon",
+                     icon: "fa fa-times",
+                     click: () => {
+                        webix.confirm({
+                           title: L("Remove Filter?"),
+                           message: L(
+                              "Are you sure you want to remove this filter?"
+                           ),
+                           callback: async (result) => {
+                              if (result) {
+                                 let $row = $$(this.ids.component);
+                                 let parent = $row.getParentView();
+                                 parent.removeView($row);
+                                 this.emit("deleted");
+                              }
+                           },
+                        });
                      },
                   },
                ],
@@ -61,6 +89,18 @@ export default function (AB, idBase) {
          init(AB) {
             this.AB = AB;
             this.rowFilter = this.AB.filterComplexNew(`${this.ids.filter}_fc`);
+         }
+
+         fromSettings(settings) {
+            $$(this.ids.label).setValue(settings.label);
+            this.rowFilter?.setValue(settings.filters);
+         }
+
+         toSettings() {
+            let settings = {};
+            settings.label = $$(this.ids.label).getValue();
+            settings.filters = this.rowFilter?.getValue();
+            return settings;
          }
 
          objectLoad(object) {
@@ -89,7 +129,7 @@ export default function (AB, idBase) {
             };
          }
 
-         constructor() {
+         constructor(options) {
             // base: {string} unique base id reference
 
             super(base, {
@@ -111,6 +151,11 @@ export default function (AB, idBase) {
             this.queryRules = [];
             // {array}
             // of ... ?
+
+            this.isGrid = false;
+            if (options?.isGrid) {
+               this.isGrid = true;
+            }
          }
 
          ui() {
@@ -328,8 +373,8 @@ export default function (AB, idBase) {
             });
             this.queryRules = [];
 
-            (settings.queryRules || []).forEach((ruleSettings) => {
-               this.addFilterRule(ruleSettings);
+            (settings.queryRules || []).forEach((ruleSettings, indx) => {
+               this.addFilterRule(ruleSettings, indx);
             });
          }
 
@@ -346,8 +391,18 @@ export default function (AB, idBase) {
                   settings.isGlobalToolbar = 0;
                   break;
                case 1: // Enable User filters
-                  settings.userFilterPosition = $$(ids.filterUser).getValue();
-                  settings.isGlobalToolbar = $$(ids.globalToolbar).getValue();
+                  if (this.isGrid) {
+                     settings.userFilterPosition = $$(
+                        ids.filterUser
+                     ).getValue();
+                     settings.isGlobalToolbar = $$(
+                        ids.globalToolbar
+                     ).getValue();
+                  } else {
+                     settings.userFilterPosition = "form";
+                     settings.isGlobalToolbar = 0;
+                  }
+
                   break;
                case 2: // Use a filter menu
                   this.queryRules.forEach((r) => {
@@ -370,17 +425,37 @@ export default function (AB, idBase) {
           * @param {obj} settings
           *        The settings object from the Rule we created in .toSettings()
           */
-         addFilterRule(settings, indx) {
+         addFilterRule(settings /*, indx*/) {
             if (this.object == null) return;
+
+            // pull indx from our largest queryRules entry:
+            let indx = 0;
+            this.queryRules.forEach((r) => {
+               if (r.indx > indx) {
+                  indx = r.indx;
+               }
+            });
+            indx++;
 
             let Rule = new FilterRule(indx);
 
             var RulesUI = $$(this.ids.filterRules);
             if (RulesUI) {
-               var viewId = RulesUI.addView(Rule.ui());
+               /* var viewId = */ RulesUI.addView(Rule.ui());
                Rule.init(this.AB);
                Rule.objectLoad(this.object);
+               if (settings) {
+                  Rule.fromSettings(settings);
+               }
+
+               Rule.on("deleted", () => {
+                  this.queryRules = this.queryRules.filter((r) => {
+                     return r.indx != Rule.indx;
+                  });
+               });
             }
+
+            this.queryRules.push(Rule);
 
             console.error(
                "TODO: rebuild addFilterRule() with new FilterComplex."
@@ -434,7 +509,9 @@ export default function (AB, idBase) {
                case 1: // Enable User filters
                   $$(ids.filterMenuLayout).hide();
                   $$(ids.filterGlobal).hide();
-                  $$(ids.filterUserLayout).show();
+                  if (this.isGrid) {
+                     $$(ids.filterUserLayout).show();
+                  }
                   break;
                case 2: // Use a filter menu
                   $$(ids.filterUserLayout).hide();

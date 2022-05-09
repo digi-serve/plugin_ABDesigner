@@ -12,12 +12,13 @@ export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
    const L = ABView.L();
 
-   const ABViewPropertyFilterData = FABViewPropertyFilterData(AB);
+   const base = "properties_abview_carousel";
+   const ABViewPropertyFilterData = FABViewPropertyFilterData(AB, base);
    const PopupCarouselFilterMenu = new ABViewPropertyFilterData();
 
    class ABViewCarouselProperty extends ABView {
       constructor() {
-         super("properties_abview_carousel", {
+         super(base, {
             // Put our ids here
             datacollection: "",
             field: "",
@@ -281,7 +282,7 @@ export default function (AB) {
                               label: L("Settings"),
                               icon: "fa fa-gear",
                               type: "icon",
-                              badge: 0,
+                              // badge: 0,
                               click: function () {
                                  _this.filterMenuShow(this.$view);
                               },
