@@ -6,6 +6,7 @@
 import FABView from "./ABView";
 
 import FABViewPropertyFilterData from "./viewProperties/ABViewPropertyFilterData";
+import FABViewPropertyLinkPage from "./viewProperties/ABViewPropertyLinkPage";
 
 export default function (AB) {
    const ABView = FABView(AB);
@@ -15,6 +16,8 @@ export default function (AB) {
    const base = "properties_abview_carousel";
    const ABViewPropertyFilterData = FABViewPropertyFilterData(AB, base);
    const PopupCarouselFilterMenu = new ABViewPropertyFilterData();
+
+   const LinkPageHelper = new FABViewPropertyLinkPage(AB, base);
 
    class ABViewCarouselProperty extends ABView {
       constructor() {
@@ -45,6 +48,8 @@ export default function (AB) {
          // The settings that were in the Filter popup when we chose to
          // display them.  We will use these values to undo any modifications
          // if the user clicks [cancel] or [close];
+
+         this.linkPageComponent = new LinkPageHelper();
       }
 
       static get key() {
@@ -74,10 +79,7 @@ export default function (AB) {
                         on: {
                            onChange: (newv, oldv) => {
                               if (newv != oldv) {
-                                 // linkPageComponent
-                                 // maybe: linkPageComponent.clear();
-                                 // $$(ids.detailsPage).setValue("");
-                                 // $$(ids.editPage).setValue("");
+                                 this.linkPageComponent.clear();
 
                                  let imageFields = [];
 
@@ -150,7 +152,7 @@ export default function (AB) {
                   ],
                },
             },
-
+            this.linkPageComponent.ui(),
             // this.linkPageComponent.ui,
             // {
             //    view: "fieldset",
@@ -346,7 +348,11 @@ export default function (AB) {
             this.onChange();
          });
 
-         return PopupCarouselFilterMenu.init(AB);
+         let allInits = [];
+
+         allInits.push(PopupCarouselFilterMenu.init(AB));
+         allInits.push(this.linkPageComponent.init(AB));
+         return Promise.all(allInits);
       }
 
       populate(view) {
@@ -382,8 +388,8 @@ export default function (AB) {
          }
 
          // Populate values to link page properties
-         // this.linkPageComponent.viewLoad(view);
-         // this.linkPageComponent.setSettings(view.settings);
+         this.linkPageComponent.viewLoad(view);
+         this.linkPageComponent.setSettings(view.settings);
       }
 
       defaultValues() {
@@ -430,10 +436,10 @@ export default function (AB) {
          vals.settings.filter = PopupCarouselFilterMenu.getSettings();
 
          // link pages
-         // let linkSettings = this.linkPageComponent.getSettings();
-         // for (let key in linkSettings) {
-         //    // vals.settings[key] = linkSettings[key];
-         // }
+         let linkSettings = this.linkPageComponent.getSettings();
+         for (let key in linkSettings) {
+            vals.settings[key] = linkSettings[key];
+         }
 
          return vals;
       }

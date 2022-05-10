@@ -77292,10 +77292,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ABView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABView */ "./src/rootPages/Designer/properties/views/ABView.js");
 /* harmony import */ var _viewProperties_ABViewPropertyFilterData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./viewProperties/ABViewPropertyFilterData */ "./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyFilterData.js");
+/* harmony import */ var _viewProperties_ABViewPropertyLinkPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./viewProperties/ABViewPropertyLinkPage */ "./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyLinkPage.js");
 /*
  * ABViewCarousel
  * A Property manager for our ABViewCarousel definitions
  */
+
 
 
 
@@ -77309,6 +77311,8 @@ __webpack_require__.r(__webpack_exports__);
    const base = "properties_abview_carousel";
    const ABViewPropertyFilterData = (0,_viewProperties_ABViewPropertyFilterData__WEBPACK_IMPORTED_MODULE_1__["default"])(AB, base);
    const PopupCarouselFilterMenu = new ABViewPropertyFilterData();
+
+   const LinkPageHelper = new _viewProperties_ABViewPropertyLinkPage__WEBPACK_IMPORTED_MODULE_2__["default"](AB, base);
 
    class ABViewCarouselProperty extends ABView {
       constructor() {
@@ -77339,6 +77343,8 @@ __webpack_require__.r(__webpack_exports__);
          // The settings that were in the Filter popup when we chose to
          // display them.  We will use these values to undo any modifications
          // if the user clicks [cancel] or [close];
+
+         this.linkPageComponent = new LinkPageHelper();
       }
 
       static get key() {
@@ -77368,10 +77374,7 @@ __webpack_require__.r(__webpack_exports__);
                         on: {
                            onChange: (newv, oldv) => {
                               if (newv != oldv) {
-                                 // linkPageComponent
-                                 // maybe: linkPageComponent.clear();
-                                 // $$(ids.detailsPage).setValue("");
-                                 // $$(ids.editPage).setValue("");
+                                 this.linkPageComponent.clear();
 
                                  let imageFields = [];
 
@@ -77444,7 +77447,7 @@ __webpack_require__.r(__webpack_exports__);
                   ],
                },
             },
-
+            this.linkPageComponent.ui(),
             // this.linkPageComponent.ui,
             // {
             //    view: "fieldset",
@@ -77640,7 +77643,11 @@ __webpack_require__.r(__webpack_exports__);
             this.onChange();
          });
 
-         return PopupCarouselFilterMenu.init(AB);
+         let allInits = [];
+
+         allInits.push(PopupCarouselFilterMenu.init(AB));
+         allInits.push(this.linkPageComponent.init(AB));
+         return Promise.all(allInits);
       }
 
       populate(view) {
@@ -77676,8 +77683,8 @@ __webpack_require__.r(__webpack_exports__);
          }
 
          // Populate values to link page properties
-         // this.linkPageComponent.viewLoad(view);
-         // this.linkPageComponent.setSettings(view.settings);
+         this.linkPageComponent.viewLoad(view);
+         this.linkPageComponent.setSettings(view.settings);
       }
 
       defaultValues() {
@@ -77724,10 +77731,10 @@ __webpack_require__.r(__webpack_exports__);
          vals.settings.filter = PopupCarouselFilterMenu.getSettings();
 
          // link pages
-         // let linkSettings = this.linkPageComponent.getSettings();
-         // for (let key in linkSettings) {
-         //    // vals.settings[key] = linkSettings[key];
-         // }
+         let linkSettings = this.linkPageComponent.getSettings();
+         for (let key in linkSettings) {
+            vals.settings[key] = linkSettings[key];
+         }
 
          return vals;
       }
@@ -78966,6 +78973,255 @@ var myClass = null;
                   $$(this.ids.globalToolbar).hide();
                   break;
             }
+         }
+      };
+   }
+
+   return myClass;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyLinkPage.js":
+/*!******************************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyLinkPage.js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ABViewPropertyLinkPage
+ * This provides the UI interface for collecting the settings that link a
+ * component to various other Pages for editing/viewing/etc...
+ */
+
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, idBase) {
+   if (!myClass) {
+      const base = `${idBase}_viewpropertylinkpage`;
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      const uiConfig = AB.Config.uiSettings();
+      var L = UIClass.L();
+
+      myClass = class ABViewPropertyLinkPage extends UIClass {
+         constructor() {
+            super(base, {
+               detailsPage: "",
+               editPage: "",
+            });
+
+            this.AB = AB;
+         }
+
+         /**
+          * @property default
+          * return default settings
+          *
+          * @return {Object}
+          */
+         static get default() {
+            return {
+               detailsPage: null, // uuid
+               detailsTab: null, // uuid
+               editPage: null, // uuid
+               editTab: null, // uuid
+            };
+         }
+
+         ui() {
+            return {
+               view: "fieldset",
+               label: L("Linked Pages:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: this.ids.detailsPage,
+                        view: "combo",
+                        clear: true,
+                        placeholder: L("No linked view"),
+                        name: "detailsPage",
+                        label: L("Details Page:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        options: [],
+                     },
+                     {
+                        id: this.ids.editPage,
+                        view: "combo",
+                        clear: true,
+                        placeholder: L("No linked form"),
+                        name: "editPage",
+                        label: L("Edit Form:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        options: [],
+                     },
+                  ],
+               },
+            };
+         }
+
+         init(AB) {
+            this.AB = AB;
+            return Promise.resolve();
+         }
+
+         clear() {
+            $$(this.ids.detailsPage).setValue("");
+            $$(this.ids.editPage).setValue("");
+         }
+
+         viewLoad(view) {
+            this.view = view;
+            const ids = this.ids;
+
+            let filter = (v, widgetKey) => {
+               return (
+                  v.key == widgetKey &&
+                  v.settings.dataviewID == view.settings.dataviewID
+               );
+            };
+
+            // Set the options of the possible detail views
+            let pagesHasDetail = [];
+
+            pagesHasDetail = pagesHasDetail.concat(
+               view
+                  .pageRoot()
+                  .views((v) => {
+                     return filter(v, "detail");
+                  }, true)
+                  .map((p) => {
+                     return {
+                        id: p.id,
+                        value: p.label,
+                     };
+                  })
+            );
+
+            pagesHasDetail = pagesHasDetail.concat(
+               view
+                  .pageRoot()
+                  .pages((p) => {
+                     return p.views((v) => {
+                        return filter(v, "detail");
+                     }, true).length;
+                  }, true)
+                  .map((p) => {
+                     return {
+                        id: p.id,
+                        value: p.label,
+                     };
+                  })
+            );
+
+            // pagesHasDetail.unshift({
+            //    id: "",
+            //    value: L("No linked view"),
+            // });
+            $$(ids.detailsPage).define("options", pagesHasDetail);
+            $$(ids.detailsPage).refresh();
+
+            // Set the options of the possible edit forms
+            let pagesHasForm = [];
+
+            pagesHasForm = pagesHasForm.concat(
+               view
+                  .pageRoot()
+                  .views((v) => {
+                     return filter(v, "form");
+                  }, true)
+                  .map((p) => {
+                     return {
+                        id: p.id,
+                        value: p.label,
+                     };
+                  })
+            );
+
+            pagesHasForm = pagesHasForm.concat(
+               view
+                  .pageRoot()
+                  .pages((p) => {
+                     return p.views((v) => {
+                        return filter(v, "form");
+                     }, true).length;
+                  }, true)
+                  .map((p) => {
+                     return {
+                        id: p.id,
+                        value: p.label,
+                     };
+                  })
+            );
+
+            // pagesHasForm.unshift({
+            //    id: 0,
+            //    value: L("No linked form"),
+            // });
+            $$(ids.editPage).define("options", pagesHasForm);
+            $$(ids.editPage).refresh();
+         }
+
+         setSettings(settings) {
+            if (settings.detailsPage) {
+               let details = settings.detailsPage;
+               if (settings.detailsTab != "") {
+                  details += ":" + settings.detailsTab;
+               }
+               $$(this.ids.detailsPage).setValue(details);
+            } else {
+               $$(this.ids.detailsPage).setValue(null);
+            }
+
+            if (settings.editPage) {
+               var edit = settings.editPage;
+               if (settings.editTab != "") {
+                  edit += ":" + settings.editTab;
+               }
+               $$(this.ids.editPage).setValue(edit);
+            } else {
+               $$(this.ids.editPage).setValue(null);
+            }
+         }
+
+         getSettings() {
+            let settings = {};
+
+            var detailsPage = $$(this.ids.detailsPage).getValue();
+            var detailsTab = "";
+            if (detailsPage.split(":").length > 1) {
+               var detailsVals = detailsPage.split(":");
+               detailsPage = detailsVals[0];
+               detailsTab = detailsVals[1];
+            }
+            settings.detailsPage = detailsPage;
+            settings.detailsTab = detailsTab;
+
+            var editPage = $$(this.ids.editPage).getValue();
+            var editTab = "";
+            if (editPage.split(":").length > 1) {
+               var editVals = editPage.split(":");
+               editPage = editVals[0];
+               editTab = editVals[1];
+            }
+            settings.editPage = editPage;
+            settings.editTab = editTab;
+
+            return settings;
          }
       };
    }
