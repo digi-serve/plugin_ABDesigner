@@ -21,6 +21,23 @@ export default function (AB, idBase) {
       const uiConfig = AB.Config.uiSettings();
       var L = UIClass.L();
 
+      class FilterRuleSettings extends AB.Class.ABMLClass {
+         constructor() {
+            super(["label"], AB);
+         }
+
+         fromSettings(settings) {
+            super.fromValues(settings);
+            this.filters = settings.filters;
+         }
+
+         toSettings() {
+            let obj = super.toObj();
+            obj.filters = this.filters;
+            return obj;
+         }
+      }
+
       class FilterRule extends UIClass {
          constructor(indx) {
             let frbase = `${base}_filterrule_${indx}`;
@@ -92,15 +109,17 @@ export default function (AB, idBase) {
          }
 
          fromSettings(settings) {
-            $$(this.ids.label).setValue(settings.label);
-            this.rowFilter?.setValue(settings.filters);
+            this.settings = new FilterRuleSettings();
+            this.settings.fromSettings(settings);
+
+            $$(this.ids.label).setValue(this.settings.label);
+            this.rowFilter?.setValue(this.settings.filters);
          }
 
          toSettings() {
-            let settings = {};
-            settings.label = $$(this.ids.label).getValue();
-            settings.filters = this.rowFilter?.getValue();
-            return settings;
+            this.settings.label = $$(this.ids.label).getValue();
+            this.settings.filters = this.rowFilter?.getValue();
+            return this.settings.toSettings();
          }
 
          objectLoad(object) {
@@ -246,10 +265,7 @@ export default function (AB, idBase) {
                                  label: L("Add new filter"),
                                  width: 150,
                                  click: () => {
-                                    let rules = $$(
-                                       ids.filterRules
-                                    ).getChildViews();
-                                    this.addFilterRule(null, rules.length);
+                                    this.addFilterRule({});
                                  },
                               },
                               {
@@ -373,8 +389,8 @@ export default function (AB, idBase) {
             });
             this.queryRules = [];
 
-            (settings.queryRules || []).forEach((ruleSettings, indx) => {
-               this.addFilterRule(ruleSettings, indx);
+            (settings.queryRules || []).forEach((ruleSettings) => {
+               this.addFilterRule(ruleSettings);
             });
          }
 
@@ -425,8 +441,10 @@ export default function (AB, idBase) {
           * @param {obj} settings
           *        The settings object from the Rule we created in .toSettings()
           */
-         addFilterRule(settings /*, indx*/) {
+         addFilterRule(settings) {
             if (this.object == null) return;
+
+            settings = settings ?? {};
 
             // pull indx from our largest queryRules entry:
             let indx = 0;
@@ -444,10 +462,7 @@ export default function (AB, idBase) {
                /* var viewId = */ RulesUI.addView(Rule.ui());
                Rule.init(this.AB);
                Rule.objectLoad(this.object);
-               if (settings) {
-                  Rule.fromSettings(settings);
-               }
-
+               Rule.fromSettings(settings);
                Rule.on("deleted", () => {
                   this.queryRules = this.queryRules.filter((r) => {
                      return r.indx != Rule.indx;
