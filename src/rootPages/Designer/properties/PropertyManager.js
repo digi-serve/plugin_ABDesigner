@@ -34,6 +34,8 @@ export default function (AB) {
    });
 
    var Processes = [];
+   // {array}
+   // All the ABProcess... Property Interfaces Available
    [
       require("./process/ABProcessEnd.js"),
       require("./process/ABProcessParticipant.js"),
@@ -72,6 +74,10 @@ export default function (AB) {
 
       processElements: function (f = () => true) {
          return Processes.filter(f);
+      },
+
+      views: function (v = () => true) {
+         return Views.filter(v);
       },
    };
 }
