@@ -41,6 +41,10 @@ export default function (AB) {
       require("./process/ABProcessParticipant.js"),
       require("./process/ABProcessTaskEmail.js"),
       require("./process/ABProcessTriggerLifecycle.js"),
+      require("./process/ABProcessTaskService.js"),
+      require("./process/ABProcessTaskServiceInsertRecord.js"),
+      require("./process/ABProcessTaskServiceGetResetPasswordUrl.js"),
+      require("./process/ABProcessTaskServiceQuery.js"),
    ].forEach((P) => {
       let Klass = P.default(AB);
       Processes.push(Klass);
