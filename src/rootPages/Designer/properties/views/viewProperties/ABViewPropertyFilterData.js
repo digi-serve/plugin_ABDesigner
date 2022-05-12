@@ -471,10 +471,6 @@ export default function (AB, idBase) {
             }
 
             this.queryRules.push(Rule);
-
-            console.error(
-               "TODO: rebuild addFilterRule() with new FilterComplex."
-            );
             return;
 
             /*

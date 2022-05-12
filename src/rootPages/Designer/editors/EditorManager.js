@@ -11,6 +11,7 @@ export default function (AB) {
    [
       require("./views/ABViewCarousel"),
       require("./views/ABViewContainer"),
+      require("./views/ABViewGrid"),
       require("./views/ABViewPage"),
    ].forEach((E) => {
       let Klass = E.default(AB);

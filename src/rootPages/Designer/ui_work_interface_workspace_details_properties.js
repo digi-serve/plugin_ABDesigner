@@ -151,6 +151,7 @@ export default function (AB) {
 
          if (_editor) {
             let newPanel = new _editor();
+            newPanel.applicationLoad(this.CurrentApplication);
 
             let ui = {
                id: this.ids.editors,
