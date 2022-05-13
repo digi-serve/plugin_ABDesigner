@@ -68674,6 +68674,7 @@ __webpack_require__.r(__webpack_exports__);
    [
       __webpack_require__(/*! ./views/ABViewCarousel */ "./src/rootPages/Designer/editors/views/ABViewCarousel.js"),
       __webpack_require__(/*! ./views/ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js"),
+      __webpack_require__(/*! ./views/ABViewGrid */ "./src/rootPages/Designer/editors/views/ABViewGrid.js"),
       __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/editors/views/ABViewPage.js"),
    ].forEach((E) => {
       let Klass = E.default(AB);
@@ -69203,6 +69204,85 @@ var myClass = null;
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/editors/views/ABViewGrid.js":
+/*!************************************************************!*\
+  !*** ./src/rootPages/Designer/editors/views/ABViewGrid.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/**
+ * ABViewGrid
+ * The widget that displays the UI Editor Component on the screen
+ * when designing the UI.
+ */
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      // var L = UIClass.L();
+      // var L = ABViewContainer.L();
+
+      myClass = class ABViewGridEditor extends UIClass {
+         static get key() {
+            return "grid";
+         }
+
+         constructor(view, base = "interface_editor_viewgrid") {
+            // base: {string} unique base id reference
+
+            super(base, {
+               label: "",
+            });
+
+            this.view = view;
+            this.settings = view.settings;
+            // shortcut to reference the settings
+
+            this.base = base;
+            this.AB = AB;
+
+            this.component = this.view.component();
+         }
+
+         ui() {
+            return this.component.ui();
+         }
+
+         init(AB) {
+            this.AB = AB;
+            this.component.ignoreLocal = true;
+            return this.component.init(AB, 2);
+            // in our editor, we provide accessLv = 2
+         }
+
+         detatch() {
+            this.component.detatch?.();
+         }
+
+         onShow() {
+            this.component.onShow?.();
+         }
+      };
+   }
+
+   return myClass;
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/editors/views/ABViewPage.js":
 /*!************************************************************!*\
   !*** ./src/rootPages/Designer/editors/views/ABViewPage.js ***!
@@ -69295,6 +69375,8 @@ __webpack_require__.r(__webpack_exports__);
    });
 
    var Processes = [];
+   // {array}
+   // All the ABProcess... Property Interfaces Available
    [
       __webpack_require__(/*! ./process/ABProcessEnd.js */ "./src/rootPages/Designer/properties/process/ABProcessEnd.js"),
       __webpack_require__(/*! ./process/ABProcessParticipant.js */ "./src/rootPages/Designer/properties/process/ABProcessParticipant.js"),
@@ -69312,12 +69394,14 @@ __webpack_require__.r(__webpack_exports__);
    var Views = [];
    // {array}
    // All the ABViewXXX Property Interfaces Available.
-   [__webpack_require__(/*! ./views/ABViewCarousel */ "./src/rootPages/Designer/properties/views/ABViewCarousel.js"), __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/properties/views/ABViewPage.js")].forEach(
-      (V) => {
-         let Klass = V.default(AB);
-         Views.push(Klass);
-      }
-   );
+   [
+      __webpack_require__(/*! ./views/ABViewCarousel */ "./src/rootPages/Designer/properties/views/ABViewCarousel.js"),
+      __webpack_require__(/*! ./views/ABViewGrid */ "./src/rootPages/Designer/properties/views/ABViewGrid.js"),
+      __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/properties/views/ABViewPage.js"),
+   ].forEach((V) => {
+      let Klass = V.default(AB);
+      Views.push(Klass);
+   });
 
    return {
       /*
@@ -69333,6 +69417,10 @@ __webpack_require__.r(__webpack_exports__);
 
       processElements: function (f = () => true) {
          return Processes.filter(f);
+      },
+
+      views: function (v = () => true) {
+         return Views.filter(v);
       },
    };
 }
@@ -79027,6 +79115,823 @@ const ABViewContainerDefaults = {
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/properties/views/ABViewGrid.js":
+/*!***************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/views/ABViewGrid.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABView */ "./src/rootPages/Designer/properties/views/ABView.js");
+/* harmony import */ var _ui_work_object_workspace_popupCountColumns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ui_work_object_workspace_popupCountColumns */ "./src/rootPages/Designer/ui_work_object_workspace_popupCountColumns.js");
+/* harmony import */ var _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../ui_work_object_workspace_popupFrozenColumns */ "./src/rootPages/Designer/ui_work_object_workspace_popupFrozenColumns.js");
+/* harmony import */ var _ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../ui_work_object_workspace_popupHideFields */ "./src/rootPages/Designer/ui_work_object_workspace_popupHideFields.js");
+/* harmony import */ var _ui_work_object_workspace_popupSummaryColumns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../ui_work_object_workspace_popupSummaryColumns */ "./src/rootPages/Designer/ui_work_object_workspace_popupSummaryColumns.js");
+/* harmony import */ var _viewProperties_ABViewPropertyFilterData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./viewProperties/ABViewPropertyFilterData */ "./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyFilterData.js");
+/* harmony import */ var _viewProperties_ABViewPropertyLinkPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./viewProperties/ABViewPropertyLinkPage */ "./src/rootPages/Designer/properties/views/viewProperties/ABViewPropertyLinkPage.js");
+/*
+ * ABViewGrid
+ * A Property manager for our ABViewGrid definitions
+ */
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const ABView = (0,_ABView__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const uiConfig = AB.Config.uiSettings();
+   const L = ABView.L();
+
+   const base = "properties_abview_grid";
+   const ABViewPropertyFilterData = (0,_viewProperties_ABViewPropertyFilterData__WEBPACK_IMPORTED_MODULE_5__["default"])(AB, base);
+   const PopupFilterMenu = new ABViewPropertyFilterData();
+
+   const LinkPageHelper = new _viewProperties_ABViewPropertyLinkPage__WEBPACK_IMPORTED_MODULE_6__["default"](AB, base);
+
+   class ABViewGridProperty extends ABView {
+      constructor() {
+         super(base, {
+            // Put our ids here
+            isEditable: "",
+            massUpdate: "",
+            allowDelete: "",
+            isSortable: "",
+            isExportable: "",
+
+            datacollection: "",
+
+            groupBy: "",
+            groupByList: "",
+
+            buttonFieldsVisible: "",
+            buttonFieldsFreeze: "",
+            buttonSummaryFields: "",
+            buttonCountFields: "",
+            height: "",
+            hideHeader: "",
+            labelAsField: "",
+            hideButtons: "",
+         });
+
+         this._preFilterSettings = null;
+         // {json}
+         // The settings that were in the Filter popup when we chose to
+         // display them.  We will use these values to undo any modifications
+         // if the user clicks [cancel] or [close];
+
+         this.linkPageComponent = new LinkPageHelper();
+
+         this.PopupCountColumnsComponent = (0,_ui_work_object_workspace_popupCountColumns__WEBPACK_IMPORTED_MODULE_1__["default"])(
+            AB,
+            `${base}_count`
+         );
+         this.PopupCountColumnsComponent.on("changed", (settings) => {
+            this.badgesCount(settings);
+            this.onChange();
+         });
+
+         this.PopupFrozenColumnsComponent = new _ui_work_object_workspace_popupFrozenColumns__WEBPACK_IMPORTED_MODULE_2__["default"](
+            AB,
+            `${base}_frozenFields`
+         );
+         this.PopupFrozenColumnsComponent.on("changed", (settings) => {
+            this.badgesFrozen(settings);
+            this.PopupHideFieldComponent.setFrozenColumnID(settings);
+            this.onChange();
+         });
+
+         this.PopupHideFieldComponent = (0,_ui_work_object_workspace_popupHideFields__WEBPACK_IMPORTED_MODULE_3__["default"])(
+            AB,
+            `${base}_hideFields`
+         );
+         this.PopupHideFieldComponent.on("changed", (settings = []) => {
+            this.badgesHidden(settings);
+            this.PopupFrozenColumnsComponent.setHiddenFields(settings);
+            this.onChange();
+         });
+
+         this.PopupSummaryColumnsComponent = (0,_ui_work_object_workspace_popupSummaryColumns__WEBPACK_IMPORTED_MODULE_4__["default"])(
+            AB,
+            `${base}_summary`
+         );
+         this.PopupSummaryColumnsComponent.on("changed", (settings) => {
+            this.badgesSummary(settings);
+            this.onChange();
+         });
+      }
+
+      static get key() {
+         return "grid";
+      }
+
+      ui() {
+         let ids = this.ids;
+         let _this = this;
+
+         return super.ui([
+            {
+               view: "fieldset",
+               label: L("Grid Properties:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.isEditable,
+                        view: "checkbox",
+                        name: "isEditable",
+                        labelRight: L("User can edit in grid."),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+                     {
+                        id: ids.massUpdate,
+                        view: "checkbox",
+                        name: "massUpdate",
+                        labelRight: L(
+                           "User can edit multiple items at one time."
+                        ),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+                     {
+                        id: ids.allowDelete,
+                        view: "checkbox",
+                        name: "allowDelete",
+                        labelRight: L("User can delete records."),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+                     {
+                        id: ids.isSortable,
+                        view: "checkbox",
+                        name: "isSortable",
+                        labelRight: L("User can sort records."),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+                     {
+                        id: ids.isExportable,
+                        view: "checkbox",
+                        name: "isExportable",
+                        labelRight: L("User can export."),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+                  ],
+               },
+            },
+            {
+               view: "fieldset",
+               label: L("Grid Data:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.datacollection,
+                        view: "richselect",
+                        name: "datacollection",
+                        label: L("Datacollection:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        options: [],
+                        on: {
+                           onChange: (newv, oldv) => {
+                              if (newv != oldv) {
+                                 this.linkPageComponent.clear();
+
+                                 let currDC =
+                                    this.viewEditing?.AB.datacollectionByID(
+                                       newv
+                                    );
+                                 // disallow edit data of query
+                                 if (currDC && currDC.sourceType == "query") {
+                                    $$(ids.isEditable).setValue(false);
+                                    $$(ids.massUpdate).setValue(false);
+                                    $$(ids.allowDelete).setValue(false);
+                                    $$(ids.isEditable).disable();
+                                    $$(ids.massUpdate).disable();
+                                    $$(ids.allowDelete).disable();
+                                 } else {
+                                    $$(ids.isEditable).enable();
+                                    $$(ids.massUpdate).enable();
+                                    $$(ids.allowDelete).enable();
+                                 }
+
+                                 this.refreshGroupBy(currDC);
+
+                                 this.onChange();
+                              }
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+            {
+               view: "fieldset",
+               label: L("Group:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.groupBy,
+                        view: "multiselect",
+                        name: "groupBy",
+                        label: L("Group by:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        options: [],
+                        on: {
+                           onChange: (newV /*, oldV */) => {
+                              this.refreshGroupByList(newV);
+                              this.onChange();
+                           },
+                        },
+                     },
+                     {
+                        id: ids.groupByList,
+                        view: "list",
+                        name: "groupByList",
+                        drag: true,
+                        data: [],
+                        height: 200,
+                        template:
+                           "<span class='fa fa-sort'></span>&nbsp;&nbsp; #value#",
+                        on: {
+                           onAfterDrop: () => {
+                              // let currView = _logic.currentEditObject();
+                              // this.propertyEditorSave(ids, currView);
+                              this.onChange();
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+            this.linkPageComponent.ui(),
+            {
+               view: "fieldset",
+               label: L("Customize Display:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Hidden Fields:"),
+                              css: "ab-text-bold",
+                              width: uiConfig.labelWidthXLarge,
+                           },
+                           {
+                              id: ids.buttonFieldsVisible,
+                              view: "button",
+                              name: "buttonFieldsVisible",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              click: function () {
+                                 _this.PopupHideFieldComponent.show(this.$view);
+                              },
+                           },
+                        ],
+                     },
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Filter Option:"),
+                              css: "ab-text-bold",
+                              width: uiConfig.labelWidthXLarge,
+                           },
+                           {
+                              id: ids.buttonFilterData,
+                              view: "button",
+                              name: "buttonFilterData",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              click: () => {
+                                 this.filter_property_popup.show();
+                                 // PopupFilterMenu.show(this.$view);
+                              },
+                           },
+                        ],
+                     },
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Freeze Columns:"),
+                              css: "ab-text-bold",
+                              width: uiConfig.labelWidthXLarge,
+                           },
+                           {
+                              id: ids.buttonFieldsFreeze,
+                              view: "button",
+                              name: "buttonFieldsFreeze",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              click: function () {
+                                 _this.PopupFrozenColumnsComponent.show(
+                                    this.$view
+                                 );
+                              },
+                           },
+                        ],
+                     },
+
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Summary Fields:"),
+                              css: "ab-text-bold",
+                              width: uiConfig.labelWidthXLarge,
+                           },
+                           {
+                              id: ids.buttonSummaryFields,
+                              view: "button",
+                              name: "buttonSummaryFields",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              click: function () {
+                                 _this.PopupSummaryColumnsComponent.show(
+                                    this.$view
+                                 );
+                              },
+                           },
+                        ],
+                     },
+
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Count Fields:"),
+                              css: "ab-text-bold",
+                              width: uiConfig.labelWidthXLarge,
+                           },
+                           {
+                              id: ids.buttonCountFields,
+                              view: "button",
+                              name: "buttonCountFields",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              click: function () {
+                                 _this.PopupCountColumnsComponent.show(
+                                    this.$view
+                                 );
+                              },
+                           },
+                        ],
+                     },
+
+                     {
+                        id: ids.height,
+                        view: "counter",
+                        name: "height",
+                        label: L("Height:"),
+                        labelWidth: uiConfig.labelWidthXLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+
+                     {
+                        id: ids.hideHeader,
+                        view: "checkbox",
+                        name: "hideHeader",
+                        labelRight: L("Hide table header"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+
+                     {
+                        id: ids.labelAsField,
+                        view: "checkbox",
+                        name: "labelAsField",
+                        labelRight: L("Show a field using label template"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+
+                     {
+                        id: ids.hideButtons,
+                        view: "checkbox",
+                        name: "hideButtons",
+                        labelRight: L("Hide edit and view buttons"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: () => {
+                           this.onChange();
+                        },
+                     },
+                  ],
+               },
+            },
+            {},
+         ]);
+      }
+
+      async init(AB) {
+         super.init(AB);
+
+         // Load in all the Available Datacollections:
+         var listDC = this.CurrentApplication.datacollectionsIncluded().map(
+            (d) => {
+               let entry = { id: d.id, value: d.label };
+               if (d.sourceType == "query") {
+                  entry.icon = "fa fa-filter";
+               } else {
+                  entry.icon = "fa fa-database";
+               }
+               return entry;
+            }
+         );
+         $$(this.ids.datacollection).define("options", listDC);
+         $$(this.ids.datacollection).refresh();
+
+         /// Filter Data Helper:
+
+         this._handler_onCancel = () => {
+            // we have to set the values BACK to what they were:
+            PopupFilterMenu.setSettings(this._preFilterSettings);
+            this.filter_property_popup.hide();
+         };
+
+         this.filter_property_popup = webix.ui({
+            view: "window",
+            modal: true,
+            position: "center",
+            resize: true,
+            width: 700,
+            height: 450,
+            css: "ab-main-container",
+            hidden: true,
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Filter Menu"),
+                  },
+                  {
+                     view: "button",
+                     autowidth: true,
+                     // width: 50,
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: this._handler_onCancel,
+                     on: {
+                        onAfterRender() {
+                           ABView.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            body: PopupFilterMenu.ui(),
+         });
+
+         PopupFilterMenu.on("cancel", this._handler_onCancel);
+
+         PopupFilterMenu.on("save", () => {
+            this.filter_property_popup.hide();
+            this.onChange();
+         });
+
+         let allInits = [];
+
+         allInits.push(PopupFilterMenu.init(AB));
+         allInits.push(this.linkPageComponent.init(AB));
+
+         allInits.push(this.PopupFrozenColumnsComponent.init(AB));
+         allInits.push(this.PopupHideFieldComponent.init(AB));
+         allInits.push(this.PopupSummaryColumnsComponent.init(AB));
+         allInits.push(this.PopupCountColumnsComponent.init(AB));
+
+         return Promise.all(allInits);
+      }
+
+      /**
+       * @method badgesCount()
+       * Set the badge count for the Count Fields button.
+       * @param {array} settings
+       *        An array of the ABFieldXXX.id that should be hidden.
+       */
+      badgesCount(settings) {
+         let badgeCount = settings.length;
+         if (badgeCount == 0) badgeCount = false;
+         $$(this.ids.buttonCountFields).config.badge = badgeCount;
+         $$(this.ids.buttonCountFields).refresh();
+      }
+
+      /**
+       * @method badgesHidden()
+       * Set the badge count for the Hidden Fields button.
+       * @param {array} settings
+       *        An array of the ABFieldXXX.id that should be hidden.
+       */
+      badgesHidden(settings) {
+         let badgeCount = settings.length;
+         if (badgeCount == 0) badgeCount = false;
+         $$(this.ids.buttonFieldsVisible).config.badge = badgeCount;
+         $$(this.ids.buttonFieldsVisible).refresh();
+      }
+
+      /**
+       * @method badgesFrozen()
+       * Set the badge count for the Frozen Fields button.
+       * @param {string} settings
+       *        The ABFieldXXX.id that should be frozen.
+       */
+      badgesFrozen(settings) {
+         const hidden = this.viewEditing.settings.hiddenFields || [];
+
+         const visibleFields = this.viewEditing.datacollection.datasource
+            .fields((f) => hidden.indexOf(f.columnName) == -1)
+            .map((f) => f.columnName);
+
+         let badgeCount = visibleFields.indexOf(settings) + 1;
+         if (badgeCount == 0) badgeCount = false;
+         $$(this.ids.buttonFieldsFreeze).config.badge = badgeCount;
+         $$(this.ids.buttonFieldsFreeze).refresh();
+      }
+
+      /**
+       * @method badgesSummary()
+       * Set the badge count for the Hidden Fields button.
+       * @param {array} settings
+       *        An array of the ABFieldXXX.id that should be hidden.
+       */
+      badgesSummary(settings) {
+         let badgeCount = settings.length;
+         if (badgeCount == 0) badgeCount = false;
+         $$(this.ids.buttonSummaryFields).config.badge = badgeCount;
+         $$(this.ids.buttonSummaryFields).refresh();
+      }
+
+      get datacollection() {
+         return this.AB.datacollectionByID(
+            this.viewEditing.settings?.dataviewID
+         );
+      }
+
+      populate(view) {
+         super.populate(view);
+         let ids = this.ids;
+
+         if (!view) return;
+
+         this.viewEditing = view;
+
+         $$(ids.datacollection).setValue(view.settings.dataviewID);
+         $$(ids.isEditable).setValue(view.settings.isEditable);
+         $$(ids.massUpdate).setValue(view.settings.massUpdate);
+         $$(ids.allowDelete).setValue(view.settings.allowDelete);
+         $$(ids.isSortable).setValue(view.settings.isSortable);
+         $$(ids.isExportable).setValue(view.settings.isExportable);
+
+         // populate the Datacollection chooser
+         if (view.settings.datacollection != "") {
+            $$(ids.datacollection).setValue(view.settings.dataviewID);
+            // $$(ids.linkedObject).show();
+         } else {
+            $$(ids.datacollection).setValue("");
+            // $$(ids.linkedObject).hide();
+         }
+
+         $$(ids.height).setValue(view.settings.height);
+         $$(ids.hideHeader).setValue(view.settings.hideHeader);
+         $$(ids.labelAsField).setValue(view.settings.labelAsField);
+         $$(ids.hideButtons).setValue(view.settings.hideButtons);
+
+         /*
+
+   //    // initial populate of properties and popups
+   //    view.populateEditor(ids, view);
+   //    view.populatePopupEditors(view);
+   //    view.populateBadgeNumber(ids, view);
+
+*/
+
+         // Grouping options
+         this.refreshGroupBy();
+         this.refreshGroupByList(view.settings.groupBy);
+
+         // Populate values to QueryBuilder
+         // NOTE: we are going around the standard: view.datacollection getter
+         // since calling that without a datacollection set will display an error.
+         // BUT, since we are the designer, this is a normal situation, so:
+         // var selectedDv = view.datacollection;
+         let selectedDv = this.datacollection;
+         if (selectedDv) {
+            PopupFilterMenu.objectLoad(selectedDv.datasource);
+            PopupFilterMenu.setSettings(view.settings.filter);
+
+            this.PopupCountColumnsComponent.objectLoad(selectedDv.datasource);
+            this.PopupCountColumnsComponent.setValue(
+               view.settings.countColumns || ""
+            );
+
+            this.PopupFrozenColumnsComponent.objectLoad(selectedDv.datasource);
+            this.PopupFrozenColumnsComponent.setValue(
+               view.settings.frozenColumnID || ""
+            );
+            this.PopupFrozenColumnsComponent.setHiddenFields(
+               view.settings.hiddenFields
+            );
+
+            this.PopupHideFieldComponent.objectLoad(selectedDv.datasource);
+            this.PopupHideFieldComponent.setSettings(
+               view.settings.hiddenFields
+            );
+            this.PopupHideFieldComponent.setFrozenColumnID(
+               view.settings.frozenColumnID || ""
+            );
+
+            this.PopupSummaryColumnsComponent.objectLoad(selectedDv.datasource);
+            this.PopupSummaryColumnsComponent.setValue(
+               view.settings.summaryColumns || []
+            );
+
+            this.badgesCount(view.settings.countColumns);
+            this.badgesHidden(view.settings.hiddenFields);
+            this.badgesFrozen(view.settings.frozenColumnID);
+            this.badgesSummary(view.settings.summaryColumns);
+         }
+
+         // Populate values to link page properties
+         this.linkPageComponent.viewLoad(view);
+         this.linkPageComponent.setSettings(view.settings);
+      }
+
+      defaultValues() {
+         let values = {};
+         var ViewClass = this.ViewClass();
+         if (ViewClass) {
+            values = ViewClass.defaultValues();
+         }
+         return values;
+      }
+
+      filterMenuShow() {
+         // var currView = _logic.currentEditObject();
+
+         this._preFilterSettings = PopupFilterMenu.getSettings();
+
+         // show filter popup
+         this.filter_property_popup.show();
+      }
+
+      refreshGroupBy(dv) {
+         const ids = this.ids;
+         let view = this.viewEditing;
+         let groupFields = [];
+         dv = dv || this.datacollection;
+         if (dv && dv.datasource) {
+            dv.datasource
+               .fields((f) => {
+                  return (
+                     !f.isConnection &&
+                     view.settings.hiddenFields.indexOf(f.columnName) < 0
+                  );
+               })
+               .forEach((f) => {
+                  groupFields.push({
+                     id: f.columnName,
+                     value: f.label,
+                  });
+               });
+         }
+         $$(ids.groupBy).define("options", groupFields);
+         $$(ids.groupBy).refresh();
+         $$(ids.groupBy).setValue(view.settings.groupBy);
+      }
+
+      refreshGroupByList(groupBy) {
+         const ids = this.ids;
+
+         let colNames = groupBy || [];
+         if (typeof colNames == "string") {
+            colNames = colNames.split(",");
+         }
+
+         let options = $$(ids.groupBy).getList().data.find({});
+
+         $$(ids.groupByList).clearAll();
+         colNames.forEach((colName) => {
+            let opt = options.filter((o) => o.id == colName)[0];
+            if (opt) {
+               $$(ids.groupByList).add(opt);
+            }
+         });
+      }
+
+      /**
+       * @method values
+       * return the values for this form.
+       * @return {obj}
+       */
+      values() {
+         let ids = this.ids;
+         let vals = super.values();
+
+         vals.settings = vals.settings || {};
+         vals.settings.dataviewID = $$(ids.datacollection).getValue();
+         vals.settings.isEditable = $$(ids.isEditable).getValue();
+         vals.settings.massUpdate = $$(ids.massUpdate).getValue();
+         vals.settings.allowDelete = $$(ids.allowDelete).getValue();
+         vals.settings.isSortable = $$(ids.isSortable).getValue();
+         vals.settings.isExportable = $$(ids.isExportable).getValue();
+
+         vals.settings.height = $$(ids.height).getValue();
+         vals.settings.hideHeader = $$(ids.hideHeader).getValue();
+         vals.settings.labelAsField = $$(ids.labelAsField).getValue();
+         vals.settings.hideButtons = $$(ids.hideButtons).getValue();
+         //    // view.settings.groupBy = $$(ids.groupBy).getValue();
+
+         // pull order groupBy list
+         let groupByList = $$(ids.groupByList).serialize() || [];
+         vals.settings.groupBy = groupByList.map((item) => item.id).join(",");
+
+         // filter
+         vals.settings.gridFilter = PopupFilterMenu.getSettings();
+
+         //    view.settings.objectWorkspace = view.settings.objectWorkspace || {};
+         vals.settings.hiddenFields =
+            this.PopupHideFieldComponent.getSettings();
+         vals.settings.frozenColumnID =
+            this.PopupFrozenColumnsComponent.getValue();
+
+         vals.settings.summaryColumns =
+            this.PopupSummaryColumnsComponent.getValue();
+
+         vals.settings.countColumns =
+            this.PopupCountColumnsComponent.getValue();
+
+         // link pages
+         let linkSettings = this.linkPageComponent.getSettings();
+         for (let key in linkSettings) {
+            vals.settings[key] = linkSettings[key];
+         }
+
+         return vals;
+      }
+
+      /**
+       * @method FieldClass()
+       * A method to return the proper ABViewXXX Definition.
+       * NOTE: Must be overwritten by the Child Class
+       */
+      ViewClass() {
+         return super._ViewClass("grid");
+      }
+   }
+
+   return ABViewGridProperty;
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/properties/views/ABViewPage.js":
 /*!***************************************************************!*\
   !*** ./src/rootPages/Designer/properties/views/ABViewPage.js ***!
@@ -79785,10 +80690,6 @@ var myClass = null;
             }
 
             this.queryRules.push(Rule);
-
-            console.error(
-               "TODO: rebuild addFilterRule() with new FilterComplex."
-            );
             return;
 
             /*
@@ -84055,12 +84956,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       /**
-       * @function templateListItem
-       *
-       * Defines the template for each row of our ProcessList.
-       *
-       * @param {obj} obj the current instance of ABProcess for the row.
-       * @param {?} common the webix.common icon data structure
+       * @function toolTipListItem
+       * Defines the tooltip text for an item in our list.
+       * @param {obj} obj the current instance of the Object being displayed
+       *              in each row.
        * @return {string}
        */
       toolTipListItem(obj) {
@@ -89442,6 +90341,7 @@ __webpack_require__.r(__webpack_exports__);
 
          if (_editor) {
             let newPanel = new _editor();
+            newPanel.applicationLoad(this.CurrentApplication);
 
             let ui = {
                id: this.ids.editors,
@@ -93696,6 +94596,255 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/ui_work_object_workspace_popupCountColumns.js":
+/*!******************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_object_workspace_popupCountColumns.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ui_work_object_workspace_popupCountColumns
+ *
+ * Manage the Count Columns popup.
+ *
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupCountColumns";
+   // const uiConfig = AB.Config.uiSettings();
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Object_Workspace_PopupCountColumns extends UIClass {
+      constructor(base) {
+         super(base, {
+            list: "",
+         });
+
+         this.CountFieldIds = [];
+         // {array}
+         // An array of the ABField.ids that are our count fileds.
+      }
+
+      // Our webix UI definition:
+      ui() {
+         const ids = this.ids;
+
+         return {
+            id: ids.component,
+            view: "popup",
+            body: {
+               rows: [
+                  {
+                     cols: [
+                        {
+                           view: "button",
+                           css: "webix_primary",
+                           value: L("Select All"),
+                           on: {
+                              onItemClick: () => {
+                                 this.clickShowAll();
+                              },
+                           },
+                        },
+                        {
+                           view: "button",
+                           value: L("Unselect All"),
+                           on: {
+                              onItemClick: () => {
+                                 this.clickHideAll();
+                              },
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     id: ids.list,
+                     view: "list",
+                     maxHeight: 250,
+                     select: false,
+                     template:
+                        '<span style="min-width: 18px; display: inline-block;"><i class="fa ab-count-field-icon"></i>&nbsp;</span> #label#',
+                     on: {
+                        onItemClick: (id, e, node) => {
+                           this.clickListItem(id, e, node);
+                        },
+                     },
+                  },
+               ],
+            },
+            on: {
+               onShow: () => {
+                  this.onShow();
+               },
+            },
+         };
+      }
+
+      // Our init() function for setting up our UI
+      init(AB) {
+         this.AB = AB;
+
+         webix.ui(this.ui());
+         return Promise.resolve();
+      }
+
+      onChange() {
+         this.emit("changed", this.CountFieldIds);
+      }
+
+      /**
+       * @method clickHideAll
+       * the user clicked the [hide all] option.  So hide all our fields.
+       */
+      clickHideAll() {
+         var List = $$(this.ids.list);
+
+         // pass an array is empty
+         this.CountFieldIds = [];
+
+         // hide all icons
+         List.find({}).forEach((item) => {
+            this.iconHide(item.id);
+         });
+
+         this.onChange();
+      }
+
+      /**
+       * @method clickShowAll
+       * the user clicked the [show all] option.  So show all our fields.
+       */
+      clickShowAll() {
+         var List = $$(this.ids.list);
+
+         this.CountFieldIds = List.find({}).map((f) => f.id);
+
+         // show all icons
+         List.find({}).forEach((item) => {
+            this.iconShow(item.id);
+         });
+
+         this.onChange();
+      }
+
+      /**
+       * @function clickListItem
+       * update the clicked field setting.
+       */
+      clickListItem(fieldId) {
+         // select
+         if (this.CountFieldIds.indexOf(fieldId) < 0) {
+            this.CountFieldIds.push(fieldId);
+
+            this.iconShow(fieldId);
+         }
+         // unselect
+         else {
+            this.CountFieldIds = this.CountFieldIds.filter(
+               (fid) => fid != fieldId
+            );
+
+            this.iconHide(fieldId);
+         }
+
+         this.onChange();
+      }
+
+      /**
+       * @method getValue()
+       * return the current value of the Summary Columns settings.
+       */
+      getValue() {
+         return this.CountFieldIds;
+      }
+
+      /**
+       * @function iconHide
+       * Hide the icon for the given node
+       * @param {DOM} node  the html dom node of the element that contains our icon
+       */
+      iconHide(fieldId) {
+         var List = $$(this.ids.list);
+         var $node = List.getItemNode(fieldId);
+         if ($node) {
+            $node
+               .querySelector(".ab-count-field-icon")
+               .classList.remove("fa-circle");
+         }
+      }
+
+      /**
+       * @function iconShow
+       * Show the icon for the given node
+       * @param {DOM} node  the html dom node of the element that contains our icon
+       */
+      iconShow(fieldId) {
+         var List = $$(this.ids.list);
+         var $node = List.getItemNode(fieldId);
+         if ($node) {
+            $node
+               .querySelector(".ab-count-field-icon")
+               .classList.add("fa-circle");
+         }
+      }
+
+      /**
+       * @function setValue
+       *
+       * @param {array} - an array contains field ids
+       */
+      setValue(fieldIds) {
+         this.CountFieldIds = fieldIds || [];
+         this.onShow();
+      }
+
+      /**
+       * @function onShow
+       * Ready the Popup according to the current object each time it is shown (perhaps a field was created or delted)
+       */
+      onShow() {
+         // refresh list
+         var allFields = this.CurrentObject.fields().map((f) => {
+            return {
+               id: f.id,
+               label: f.label,
+            };
+         });
+
+         $$(this.ids.list).clearAll();
+         $$(this.ids.list).parse(allFields);
+
+         // update icons
+         this.CountFieldIds.forEach((fieldId) => {
+            this.iconShow(fieldId);
+         });
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       * @param {obj} $view  the webix.$view to hover the popup around.
+       */
+      show(...params) {
+         $$(this.ids.component).show(...params);
+      }
+   }
+   return new UI_Work_Object_Workspace_PopupCountColumns(ibase);
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/ui_work_object_workspace_popupCustomIndex.js":
 /*!*****************************************************************************!*\
   !*** ./src/rootPages/Designer/ui_work_object_workspace_popupCustomIndex.js ***!
@@ -96770,6 +97919,292 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return new UI_Work_Object_Workspace_PopupSortFields(ibase);
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/ui_work_object_workspace_popupSummaryColumns.js":
+/*!********************************************************************************!*\
+  !*** ./src/rootPages/Designer/ui_work_object_workspace_popupSummaryColumns.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_class */ "./src/rootPages/Designer/ui_class.js");
+/*
+ * ui_work_object_workspace_popupSummaryColumns
+ *
+ * Manage the Summary Columns popup.
+ *
+ */
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, ibase) {
+   ibase = ibase || "ui_work_object_workspace_popupSummaryColumns";
+   // const uiConfig = AB.Config.uiSettings();
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   class UI_Work_Object_Workspace_PopupSummaryColumns extends UIClass {
+      constructor(base) {
+         super(base, {
+            list: "",
+         });
+
+         // make a reference to our Field CLASS definitions
+         this.ABFieldNumber = AB.Class.ABFieldManager.fieldByKey("number");
+         this.ABFieldFormula = AB.Class.ABFieldManager.fieldByKey("formula");
+         this.ABFieldCalculate =
+            AB.Class.ABFieldManager.fieldByKey("calculate");
+
+         this.SummaryFieldIds = [];
+         // {array}
+         // an array of the {ABFieldXXX.id}s that are used as summary fields.
+      }
+
+      // Our webix UI definition:
+      ui() {
+         const ids = this.ids;
+
+         return {
+            view: "popup",
+            id: ids.component,
+            body: {
+               rows: [
+                  {
+                     cols: [
+                        {
+                           view: "button",
+                           value: L("Select All"),
+                           on: {
+                              onItemClick: () => {
+                                 this.clickHideAll();
+                              },
+                           },
+                        },
+                        {
+                           view: "button",
+                           css: "webix_primary",
+                           value: L("Unselect All"),
+                           on: {
+                              onItemClick: () => {
+                                 this.clickShowAll();
+                              },
+                           },
+                        },
+                     ],
+                  },
+                  {
+                     view: "list",
+                     id: ids.list,
+                     maxHeight: 250,
+                     select: false,
+                     template:
+                        '<span style="min-width: 18px; display: inline-block;"><i class="fa ab-summary-field-icon"></i>&nbsp;</span> #label#',
+                     on: {
+                        onItemClick: (id, e, node) => {
+                           this.clickListItem(id, e, node);
+                        },
+                     },
+                  },
+               ],
+            },
+            on: {
+               onShow: () => {
+                  this.onShow();
+               },
+            },
+         };
+      }
+
+      // Our init() function for setting up our UI
+      init(AB) {
+         this.AB = AB;
+
+         webix.ui(this.ui());
+
+         return Promise.resolve();
+      }
+
+      /**
+       * @function clickHideAll
+       * the user clicked the [hide all] option.  So hide all our fields.
+       */
+      clickHideAll() {
+         var List = $$(this.ids.list);
+
+         // pass an array is empty
+         this.SummaryFieldIds = [];
+
+         // hide all icons
+         List.find({}).forEach((item) => {
+            this.iconHide(item.id);
+         });
+
+         this.emit("changed", this.SummaryFieldIds);
+         // _logic.callbacks.onChange(SummaryFieldIds);
+      }
+
+      /**
+       * @function clickShowAll
+       * the user clicked the [show all] option.  So show all our fields.
+       */
+      clickShowAll() {
+         var List = $$(this.ids.list);
+
+         this.SummaryFieldIds = List.find({}).map((f) => f.id);
+
+         // show all icons
+         List.find({}).forEach((item) => {
+            this.iconShow(item.id);
+         });
+         this.emit("changed", this.SummaryFieldIds);
+      }
+
+      /**
+       * @function clickListItem
+       * update the clicked field setting.
+       */
+      clickListItem(fieldId) {
+         // select
+         if (this.SummaryFieldIds.indexOf(fieldId) < 0) {
+            this.SummaryFieldIds.push(fieldId);
+
+            this.iconShow(fieldId);
+         }
+         // unselect
+         else {
+            this.SummaryFieldIds = this.SummaryFieldIds.filter(
+               (fid) => fid != fieldId
+            );
+
+            this.iconHide(fieldId);
+         }
+         this.emit("changed", this.SummaryFieldIds);
+      }
+
+      /**
+       * @method getValue()
+       * return the current value of the Summary Columns settings.
+       */
+      getValue() {
+         return this.SummaryFieldIds;
+      }
+
+      /**
+       * @function iconHide
+       * Hide the icon for the given node
+       * @param {DOM} node  the html dom node of the element that contains our icon
+       */
+      iconHide(fieldId) {
+         var List = $$(this.ids.list);
+         var $node = List.getItemNode(fieldId);
+         if ($node) {
+            $node
+               .querySelector(".ab-summary-field-icon")
+               .classList.remove("fa-circle");
+         }
+      }
+
+      /**
+       * @function iconShow
+       * Show the icon for the given node
+       * @param {DOM} node  the html dom node of the element that contains our icon
+       */
+      iconShow(fieldId) {
+         var List = $$(this.ids.list);
+         var $node = List.getItemNode(fieldId);
+         if ($node) {
+            $node
+               .querySelector(".ab-summary-field-icon")
+               .classList.add("fa-circle");
+         }
+      }
+
+      /**
+       * @function objectLoad
+       * Ready the Popup according to the current object
+       * @param {ABObject} object  the currently selected object.
+       */
+      // objectLoad (object) {
+      //    CurrentObject = object;
+      // }
+
+      /**
+       * @function setValue
+       *
+       * @param {array} - an array contains field ids
+       */
+      setValue(fieldIds) {
+         this.SummaryFieldIds = fieldIds || [];
+
+         this.onShow();
+      }
+
+      /**
+       * @function onShow
+       * Ready the Popup according to the current object each time it is shown (perhaps a field was created or delted)
+       */
+      onShow() {
+         const ids = this.ids;
+
+         // refresh list
+         var numberFields = this.CurrentObject.fields(
+            (f) => f instanceof this.ABFieldNumber
+         ).map((f) => {
+            return {
+               id: f.id,
+               label: f.label,
+            };
+         });
+
+         var calculateFields = this.CurrentObject.fields(
+            (f) => f instanceof this.ABFieldCalculate
+         ).map((f) => {
+            return {
+               id: f.id,
+               label: f.label,
+            };
+         });
+
+         var formulaFields = this.CurrentObject.fields(
+            (f) => f instanceof this.ABFieldFormula
+         ).map((f) => {
+            return {
+               id: f.id,
+               label: f.label,
+            };
+         });
+
+         var fieldOptions = numberFields.concat(calculateFields);
+         fieldOptions = fieldOptions.concat(formulaFields);
+
+         $$(ids.list).clearAll();
+         $$(ids.list).parse(fieldOptions);
+
+         // update icons
+         this.SummaryFieldIds.forEach((fieldId) => {
+            this.iconShow(fieldId);
+         });
+      }
+
+      /**
+       * @function show()
+       *
+       * Show this component.
+       * @param {obj} $view  the webix.$view to hover the popup around.
+       */
+      show(...params) {
+         $$(this.ids.component).show(...params);
+      }
+   }
+
+   return new UI_Work_Object_Workspace_PopupSummaryColumns(ibase);
 }
 
 

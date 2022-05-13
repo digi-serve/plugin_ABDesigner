@@ -5,8 +5,10 @@
 
 import FABView from "./ABView";
 
+import FPopupCountFields from "../../ui_work_object_workspace_popupCountColumns";
 import FPopupFrozenColumns from "../../ui_work_object_workspace_popupFrozenColumns";
 import FPopupHideFields from "../../ui_work_object_workspace_popupHideFields";
+import FPopupSummaryFields from "../../ui_work_object_workspace_popupSummaryColumns";
 
 import FABViewPropertyFilterData from "./viewProperties/ABViewPropertyFilterData";
 import FABViewPropertyLinkPage from "./viewProperties/ABViewPropertyLinkPage";
@@ -55,6 +57,15 @@ export default function (AB) {
 
          this.linkPageComponent = new LinkPageHelper();
 
+         this.PopupCountColumnsComponent = FPopupCountFields(
+            AB,
+            `${base}_count`
+         );
+         this.PopupCountColumnsComponent.on("changed", (settings) => {
+            this.badgesCount(settings);
+            this.onChange();
+         });
+
          this.PopupFrozenColumnsComponent = new FPopupFrozenColumns(
             AB,
             `${base}_frozenFields`
@@ -72,6 +83,15 @@ export default function (AB) {
          this.PopupHideFieldComponent.on("changed", (settings = []) => {
             this.badgesHidden(settings);
             this.PopupFrozenColumnsComponent.setHiddenFields(settings);
+            this.onChange();
+         });
+
+         this.PopupSummaryColumnsComponent = FPopupSummaryFields(
+            AB,
+            `${base}_summary`
+         );
+         this.PopupSummaryColumnsComponent.on("changed", (settings) => {
+            this.badgesSummary(settings);
             this.onChange();
          });
       }
@@ -330,7 +350,9 @@ export default function (AB) {
                               icon: "fa fa-gear",
                               type: "icon",
                               click: function () {
-                                 _this.summaryColumns(this.$view);
+                                 _this.PopupSummaryColumnsComponent.show(
+                                    this.$view
+                                 );
                               },
                            },
                         ],
@@ -352,7 +374,9 @@ export default function (AB) {
                               icon: "fa fa-gear",
                               type: "icon",
                               click: function () {
-                                 _this.countColumns(this.$view);
+                                 _this.PopupCountColumnsComponent.show(
+                                    this.$view
+                                 );
                               },
                            },
                         ],
@@ -485,8 +509,23 @@ export default function (AB) {
 
          allInits.push(this.PopupFrozenColumnsComponent.init(AB));
          allInits.push(this.PopupHideFieldComponent.init(AB));
+         allInits.push(this.PopupSummaryColumnsComponent.init(AB));
+         allInits.push(this.PopupCountColumnsComponent.init(AB));
 
          return Promise.all(allInits);
+      }
+
+      /**
+       * @method badgesCount()
+       * Set the badge count for the Count Fields button.
+       * @param {array} settings
+       *        An array of the ABFieldXXX.id that should be hidden.
+       */
+      badgesCount(settings) {
+         let badgeCount = settings.length;
+         if (badgeCount == 0) badgeCount = false;
+         $$(this.ids.buttonCountFields).config.badge = badgeCount;
+         $$(this.ids.buttonCountFields).refresh();
       }
 
       /**
@@ -519,6 +558,19 @@ export default function (AB) {
          if (badgeCount == 0) badgeCount = false;
          $$(this.ids.buttonFieldsFreeze).config.badge = badgeCount;
          $$(this.ids.buttonFieldsFreeze).refresh();
+      }
+
+      /**
+       * @method badgesSummary()
+       * Set the badge count for the Hidden Fields button.
+       * @param {array} settings
+       *        An array of the ABFieldXXX.id that should be hidden.
+       */
+      badgesSummary(settings) {
+         let badgeCount = settings.length;
+         if (badgeCount == 0) badgeCount = false;
+         $$(this.ids.buttonSummaryFields).config.badge = badgeCount;
+         $$(this.ids.buttonSummaryFields).refresh();
       }
 
       get datacollection() {
@@ -579,6 +631,11 @@ export default function (AB) {
             PopupFilterMenu.objectLoad(selectedDv.datasource);
             PopupFilterMenu.setSettings(view.settings.filter);
 
+            this.PopupCountColumnsComponent.objectLoad(selectedDv.datasource);
+            this.PopupCountColumnsComponent.setValue(
+               view.settings.countColumns || ""
+            );
+
             this.PopupFrozenColumnsComponent.objectLoad(selectedDv.datasource);
             this.PopupFrozenColumnsComponent.setValue(
                view.settings.frozenColumnID || ""
@@ -595,8 +652,15 @@ export default function (AB) {
                view.settings.frozenColumnID || ""
             );
 
+            this.PopupSummaryColumnsComponent.objectLoad(selectedDv.datasource);
+            this.PopupSummaryColumnsComponent.setValue(
+               view.settings.summaryColumns || []
+            );
+
+            this.badgesCount(view.settings.countColumns);
             this.badgesHidden(view.settings.hiddenFields);
             this.badgesFrozen(view.settings.frozenColumnID);
+            this.badgesSummary(view.settings.summaryColumns);
          }
 
          // Populate values to link page properties
@@ -701,6 +765,12 @@ export default function (AB) {
             this.PopupHideFieldComponent.getSettings();
          vals.settings.frozenColumnID =
             this.PopupFrozenColumnsComponent.getValue();
+
+         vals.settings.summaryColumns =
+            this.PopupSummaryColumnsComponent.getValue();
+
+         vals.settings.countColumns =
+            this.PopupCountColumnsComponent.getValue();
 
          // link pages
          let linkSettings = this.linkPageComponent.getSettings();

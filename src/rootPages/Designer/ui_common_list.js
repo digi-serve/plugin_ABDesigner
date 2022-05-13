@@ -631,12 +631,10 @@ export default function (AB, options) {
       }
 
       /**
-       * @function templateListItem
-       *
-       * Defines the template for each row of our ProcessList.
-       *
-       * @param {obj} obj the current instance of ABProcess for the row.
-       * @param {?} common the webix.common icon data structure
+       * @function toolTipListItem
+       * Defines the tooltip text for an item in our list.
+       * @param {obj} obj the current instance of the Object being displayed
+       *              in each row.
        * @return {string}
        */
       toolTipListItem(obj) {
