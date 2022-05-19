@@ -79,6 +79,10 @@ export default function (AB) {
 
          viewLoad(view) {
             this.CurrentViewID = view?.id;
+
+            if (view?.application) {
+               this.applicationLoad(view.application);
+            }
          }
 
          /**

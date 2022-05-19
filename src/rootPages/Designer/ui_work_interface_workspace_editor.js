@@ -276,7 +276,9 @@ export default function (AB) {
          EditorLayout.show();
 
          ComponentMenu.viewLoad(view);
-         ComponentMenu.show();
+         // NOTE: ComponentMenu.viewLoad() actually determines if the
+         // menu is show()n or not.
+         // ComponentMenu.show();
       }
 
       viewModeChange(newV, oldV) {

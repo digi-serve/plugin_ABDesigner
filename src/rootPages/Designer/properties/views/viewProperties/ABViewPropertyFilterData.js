@@ -351,6 +351,8 @@ export default function (AB, idBase) {
          setSettings(settings = {}) {
             const ids = this.ids;
 
+            if (!settings) settings = {};
+
             //Convert some condition from string to integer
             (settings.queryRules || []).forEach((qr) => {
                if (qr?.queryRules?.[0]?.rules) {

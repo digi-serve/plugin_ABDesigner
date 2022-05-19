@@ -189,7 +189,7 @@ export default function (AB) {
                                  this.linkPageComponent.clear();
 
                                  let currDC =
-                                    this.viewEditing?.AB.datacollectionByID(
+                                    this.CurrentView?.AB.datacollectionByID(
                                        newv
                                     );
                                  // disallow edit data of query
@@ -548,9 +548,9 @@ export default function (AB) {
        *        The ABFieldXXX.id that should be frozen.
        */
       badgesFrozen(settings) {
-         const hidden = this.viewEditing.settings.hiddenFields || [];
+         const hidden = this.CurrentView.settings.hiddenFields || [];
 
-         const visibleFields = this.viewEditing.datacollection.datasource
+         const visibleFields = this.CurrentView.datacollection.datasource
             .fields((f) => hidden.indexOf(f.columnName) == -1)
             .map((f) => f.columnName);
 
@@ -575,7 +575,7 @@ export default function (AB) {
 
       get datacollection() {
          return this.AB.datacollectionByID(
-            this.viewEditing.settings?.dataviewID
+            this.CurrentView.settings?.dataviewID
          );
       }
 
@@ -585,7 +585,7 @@ export default function (AB) {
 
          if (!view) return;
 
-         this.viewEditing = view;
+         // this.viewEditing = view;
 
          $$(ids.datacollection).setValue(view.settings.dataviewID);
          $$(ids.isEditable).setValue(view.settings.isEditable);
@@ -688,7 +688,7 @@ export default function (AB) {
 
       refreshGroupBy(dv) {
          const ids = this.ids;
-         let view = this.viewEditing;
+         let view = this.CurrentView;
          let groupFields = [];
          dv = dv || this.datacollection;
          if (dv && dv.datasource) {

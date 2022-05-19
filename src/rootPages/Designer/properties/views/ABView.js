@@ -211,6 +211,7 @@ export default function (AB) {
           *        The ABViewXXX instance that we are editing the settings for.
           */
          populate(view) {
+            this.viewLoad(view);
             $$(this.ids.label).setValue(view.label);
          }
 

@@ -361,8 +361,6 @@ export default function (AB) {
 
          if (!view) return;
 
-         this.viewEditing = view;
-
          // Set the objects you can choose from in the list
          // Pull data collections to options
          var objectOptions = this.propertyDatacollections(view);
