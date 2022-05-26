@@ -73,7 +73,7 @@ export default function (AB) {
 
          values.id = this.element.id;
          values.diagramID = this.element.diagramID;
-         values.key = key ?? this.key;
+         values.key = key ?? UIProcessUser.key;
 
          const subtask =
             ProcessTaskManager.newTask(values, this.element.process, this.AB) ??
