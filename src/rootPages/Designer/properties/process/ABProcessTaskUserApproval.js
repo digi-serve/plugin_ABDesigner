@@ -26,7 +26,7 @@ export default function (AB) {
          });
 
          this.toUser = new ABProcessParticipantUsers(
-            this.ids.component + "_to_"
+            `${this.ids.component}_to_`
          );
          this.on("save", () => {
             this.processComponents();
