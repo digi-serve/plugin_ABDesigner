@@ -77926,6 +77926,7 @@ __webpack_require__.r(__webpack_exports__);
                         autowidth: true,
                         click: () => {
                            this.formBuilder = $$(ids.formBuilder).getFormData();
+                           this.element.formBuilder = this.formBuilder;
                            (this.formBuilder.components || []).forEach(
                               (component) => {
                                  if (

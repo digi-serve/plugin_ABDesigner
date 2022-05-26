@@ -109,6 +109,7 @@ export default function (AB) {
                         autowidth: true,
                         click: () => {
                            this.formBuilder = $$(ids.formBuilder).getFormData();
+                           this.element.formBuilder = this.formBuilder;
                            (this.formBuilder.components || []).forEach(
                               (component) => {
                                  if (
