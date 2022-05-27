@@ -62,7 +62,7 @@ var pluginConfig = Object.assign({}, baseConfig, {
 // Store our common /assets/tenant/default/ABDesigner.js
 var assetConfig = Object.assign({}, baseConfig, {
    output: {
-      path: path.join(APP, "..", "..", "..", "assets", "tenant", "default"),
+      path: path.join(APP, "..", "..", "web", "assets", "tenant", "default"),
       filename: "ABDesigner.js",
    },
 });
