@@ -321,42 +321,41 @@ export default function (AB) {
       }
 
       getValue() {
-         var values = this.FilterComplex.getValue();
-
-         // var QB = $$(this.ids.queryBuilder);
-         // if (QB) {
-         //    values = QB.getValue();
-         // }
+         var condition = this.FilterComplex.getValue();
+         let fields = this.conditionFields();
 
          // convert dates to simpler format:
          // by default we're getting long values: "Mon Feb 2, 2018 GMT xxxxxxx",
          // and webix doesn't seem to understand them when we send them back.
          // so save simple date values: "mm/dd/yyyy"
-         debugger;
-         if (values) {
-            this.cleanRules(values[0], values[1], true);
+
+         if (condition) {
+            this.cleanRules(condition, fields, true);
          }
 
-         return values;
+         return condition; // [condition, fields];
       }
 
-      setValue(values) {
-         const ids = this.ids;
-
-         values = values || [];
-         if (!Array.isArray(values)) values = [values];
-         if (values.length == 0) {
-            values.push({});
-         } // push default rules
-         if (values.length < 2) {
-            values.push(this.conditionFields());
+      setValue(condition) {
+         // previous format was [ condition, fields ]
+         if (Array.isArray(condition)) {
+            condition = condition[0];
          }
+
+         condition = condition || { glue: "and", rules: [] };
+         // if (!Array.isArray(values)) values = [values];
+         // if (values.length == 0) {
+         //    values.push({});
+         // } // push default rules
+         // if (values.length < 2) {
+         //    values.push(this.conditionFields());
+         // }
 
          // convert dates from our server side "string" format into
          // Date() objects.
-         this.cleanRules(values[0], values[1], false);
+         this.cleanRules(condition, this.conditionFields(), false);
 
-         this.FilterComplex.setValue(values[0]);
+         this.FilterComplex.setValue(condition);
 
          /*
          var QB = $$(ids.queryBuilder);

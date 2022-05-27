@@ -132,6 +132,7 @@ export default function (AB) {
          if (rules) {
             // sometimes .glue is undefined  so default to 'and'
             if (rules.glue != "or") rules.glue = "and";
+            rules.rules = rules.rules || [];
 
             this.queryRules = rules;
          }
@@ -229,7 +230,7 @@ export default function (AB) {
       // valueDisplayComponent
       // Return an ABView to display our values form.
       //
-      valueDisplayComponent(idBase) {
+      valueDisplayComponent(/* idBase */) {
          return (this._ui = {
             ui: {
                template: "ABViewRuleAction.valueDisplayComponent",

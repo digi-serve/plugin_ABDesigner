@@ -99,7 +99,7 @@ export default function (AB) {
                         label: L("From Email"),
                         validate: webix.rules.isEmail,
                         on: {
-                           onChange: function (newVal, oldVal) {
+                           onChange: function (/* newVal, oldVal */) {
                               if (this.getValue() && !this.validate()) {
                                  $$(ids.form).markInvalid(
                                     "fromEmail",
@@ -193,7 +193,7 @@ export default function (AB) {
                            return this.fieldTemplate(obj, common);
                         },
                         on: {
-                           onItemClick: function (id, e, node) {
+                           onItemClick: function (id /*, e, node */) {
                               var component = this.getItem(id);
                               _this.enterField(component);
                            },
@@ -825,7 +825,7 @@ export default function (AB) {
                      { id: "query", value: L("From query") },
                   ],
                   on: {
-                     onChange: function (newVal, oldVal) {
+                     onChange: function (newVal /* , oldVal */) {
                         _this.emailTypeChange(newVal, this);
                      },
                   },
@@ -844,7 +844,7 @@ export default function (AB) {
                         validate: webix.rules.isEmail,
                         width: 150,
                         on: {
-                           onChange: (newVal, oldVal) => {
+                           onChange: (/* newVal, oldVal */) => {
                               this.toEmailValidate();
                            },
                         },
@@ -966,7 +966,7 @@ export default function (AB) {
          else $$(this.ids.form).markInvalid("toEmails", L("Email is invalid"));
       }
 
-      fieldTemplate(field, common) {
+      fieldTemplate(field /*, common */) {
          return `<i class='fa fa-${field.icon} webix_icon_btn' aria-hidden='true'></i> ${field.label}`;
       }
 

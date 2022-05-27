@@ -359,6 +359,7 @@ export default function (AB) {
 
                      // signal the current view has been deleted.
                      deletedView.emit("destroyed", deletedView);
+                     this.emit("view.destroyed", deletedView);
 
                      let Dashboard = $$(this.ids.component);
 

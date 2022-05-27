@@ -144,6 +144,19 @@ export default function (AB) {
                (v) => v.id == this.CurrentViewID
             )[0];
          }
+
+         /**
+          * @method uniqueIDs()
+          * add a unique identifier to each of our this.ids to ensure they are
+          * unique.  Useful for components that are repeated, like items in a list.
+          */
+         uniqueIDs() {
+            let uniqueInstanceID = webix.uid();
+            Object.keys(this.ids).forEach((k) => {
+               this.ids[k] = `${this.ids[k]}_${uniqueInstanceID}`;
+            });
+         }
+
          /**
           * @method refreshWarnings()
           * reset the warnings on the provided ABObject and then start propogating

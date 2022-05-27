@@ -256,6 +256,7 @@ export default function (AB) {
             // make sure Rule.ui is created before calling .init()
             // Rule.component(this.App, this.idBase); // prepare the UI component
             RulesUI.addView(Rule.ui());
+            Rule.objectLoad(this.CurrentObject);
 
             Rule.on("delete", (deletedRule) => {
                $$(this.ids.rules).removeView(Rule.ids.component);

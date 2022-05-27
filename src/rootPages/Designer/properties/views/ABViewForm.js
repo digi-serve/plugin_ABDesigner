@@ -4,6 +4,7 @@
  */
 
 import FABViewContainer from "./ABViewContainer";
+import FABViewRuleListFormRecordRules from "../rules/ABViewRuleListFormRecordRules";
 import FABViewRuleListFormSubmitRules from "../rules/ABViewRuleListFormSubmitRules";
 
 export default function (AB) {
@@ -14,6 +15,12 @@ export default function (AB) {
    var ABViewFormPropertyComponentDefaults = {};
 
    const base = "properties_abview_form";
+
+   const PopupRecordRule = FABViewRuleListFormRecordRules(
+      AB,
+      `${base}_popupRecordRule`
+   );
+
    const PopupSubmitRule = FABViewRuleListFormSubmitRules(
       AB,
       `${base}_popupSubmitRule`
@@ -267,7 +274,11 @@ export default function (AB) {
          webix.extend($$(this.ids.component), webix.ProgressBar);
 
          let allInits = [];
-
+         allInits.push(PopupRecordRule.init(AB));
+         PopupRecordRule.on("save", () => {
+            this.onChange();
+            this.populateBadgeNumber();
+         });
          allInits.push(PopupSubmitRule.init(AB));
          PopupSubmitRule.on("save", (/* settings */) => {
             this.onChange();
@@ -339,6 +350,10 @@ export default function (AB) {
          );
 
          // NOTE: load the object and view BEFORE the .fromSettings();
+         PopupRecordRule.objectLoad(this.CurrentObject);
+         PopupRecordRule.viewLoad(view);
+         PopupRecordRule.fromSettings(view.settings.recordRules || []);
+
          PopupSubmitRule.objectLoad(this.CurrentObject);
          PopupSubmitRule.viewLoad(view);
          PopupSubmitRule.fromSettings(view.settings.submitRules || []);
@@ -389,6 +404,7 @@ export default function (AB) {
          vals.settings.clearOnLoad = $$(ids.clearOnLoad).getValue();
          vals.settings.clearOnSave = $$(ids.clearOnSave).getValue();
 
+         vals.settings.recordRules = PopupRecordRule.toSettings();
          vals.settings.submitRules = PopupSubmitRule.toSettings();
          return vals;
       }
@@ -504,6 +520,11 @@ export default function (AB) {
 
       ready() {
          $$(this.ids.component)?.hideProgress?.();
+      }
+
+      recordRuleShow() {
+         PopupRecordRule.fromSettings(this.CurrentView.settings.recordRules);
+         PopupRecordRule.show();
       }
 
       submitRuleShow() {
