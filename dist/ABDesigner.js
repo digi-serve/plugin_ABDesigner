@@ -27737,7 +27737,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\n   }\n}\n@keyframes pulseLight {\n   0% {\n      /* color: darkorange; */\n      transform: scale(1);\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\n   }\n   50% {\n      /* color: orange; */\n   }\n   100% {\n      /* color: darkorange; */\n      transform: scale(1.25);\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\n   }\n}\n.pulseDark {\n   animation-name: pulseDark;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.pulseLight {\n   animation-name: pulseLight;\n   animation-duration: 1s;\n   animation-timing-function: ease-out;\n   animation-direction: alternate;\n   animation-iteration-count: infinite;\n   animation-play-state: running;\n   color: orange !important;\n}\n.smalltext {\n   font-size: small !important;\n}\n.ab-object-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.ab-interface-list-item .webix_sidebar_dir_icon {\n   margin-right: 20px;\n}\n.darkorange .webix_button {\n   background-color: darkorange !important;\n}\n.warningtext {\n   color: orange;\n}\n.warningslist {\n   list-style-type: none;\n   margin: 0;\n   padding: 0;\n   line-height: 28px;\n   background-color: transparent;\n   color: white;\n}\n.warningslist li {\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\n}\n.webix_theme_dark {\n   background-color: #4a4e58;\n}\n.lighten {\n   opacity: 0.4;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@keyframes pulseDark {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\r\n   }\r\n}\r\n@keyframes pulseLight {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\r\n   }\r\n}\r\n.pulseDark {\r\n   animation-name: pulseDark;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.pulseLight {\r\n   animation-name: pulseLight;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.smalltext {\r\n   font-size: small !important;\r\n}\r\n.ab-object-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-interface-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.darkorange .webix_button {\r\n   background-color: darkorange !important;\r\n}\r\n.warningtext {\r\n   color: orange;\r\n}\r\n.warningslist {\r\n   list-style-type: none;\r\n   margin: 0;\r\n   padding: 0;\r\n   line-height: 28px;\r\n   background-color: transparent;\r\n   color: white;\r\n}\r\n.warningslist li {\r\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\r\n}\r\n.webix_theme_dark {\r\n   background-color: #4a4e58;\r\n}\r\n.lighten {\r\n   opacity: 0.4;\r\n}\r\n", "",{"version":3,"sources":["webpack://./styles/Designer.css"],"names":[],"mappings":"AAAA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG;MACG,uBAAuB;MACvB,mBAAmB;MACnB,uCAAuC;GAC1C;GACA;MACG,mBAAmB;GACtB;GACA;MACG,uBAAuB;MACvB,sBAAsB;MACtB,yCAAyC;GAC5C;AACH;AACA;GACG,yBAAyB;GACzB,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,0BAA0B;GAC1B,sBAAsB;GACtB,mCAAmC;GACnC,8BAA8B;GAC9B,mCAAmC;GACnC,6BAA6B;GAC7B,wBAAwB;AAC3B;AACA;GACG,2BAA2B;AAC9B;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,kBAAkB;AACrB;AACA;GACG,uCAAuC;AAC1C;AACA;GACG,aAAa;AAChB;AACA;GACG,qBAAqB;GACrB,SAAS;GACT,UAAU;GACV,iBAAiB;GACjB,6BAA6B;GAC7B,YAAY;AACf;AACA;GACG,2CAA2C;AAC9C;AACA;GACG,yBAAyB;AAC5B;AACA;GACG,YAAY;AACf","sourcesContent":["@keyframes pulseDark {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);\r\n   }\r\n}\r\n@keyframes pulseLight {\r\n   0% {\r\n      /* color: darkorange; */\r\n      transform: scale(1);\r\n      text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);\r\n   }\r\n   50% {\r\n      /* color: orange; */\r\n   }\r\n   100% {\r\n      /* color: darkorange; */\r\n      transform: scale(1.25);\r\n      text-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);\r\n   }\r\n}\r\n.pulseDark {\r\n   animation-name: pulseDark;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.pulseLight {\r\n   animation-name: pulseLight;\r\n   animation-duration: 1s;\r\n   animation-timing-function: ease-out;\r\n   animation-direction: alternate;\r\n   animation-iteration-count: infinite;\r\n   animation-play-state: running;\r\n   color: orange !important;\r\n}\r\n.smalltext {\r\n   font-size: small !important;\r\n}\r\n.ab-object-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-datacollection-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.ab-interface-list-item .webix_sidebar_dir_icon {\r\n   margin-right: 20px;\r\n}\r\n.darkorange .webix_button {\r\n   background-color: darkorange !important;\r\n}\r\n.warningtext {\r\n   color: orange;\r\n}\r\n.warningslist {\r\n   list-style-type: none;\r\n   margin: 0;\r\n   padding: 0;\r\n   line-height: 28px;\r\n   background-color: transparent;\r\n   color: white;\r\n}\r\n.warningslist li {\r\n   border-bottom: 1px solid rgba(0, 0, 0, 0.2);\r\n}\r\n.webix_theme_dark {\r\n   background-color: #4a4e58;\r\n}\r\n.lighten {\r\n   opacity: 0.4;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -68674,6 +68674,7 @@ __webpack_require__.r(__webpack_exports__);
    [
       __webpack_require__(/*! ./views/ABViewCarousel */ "./src/rootPages/Designer/editors/views/ABViewCarousel.js"),
       __webpack_require__(/*! ./views/ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js"),
+      __webpack_require__(/*! ./views/ABViewForm */ "./src/rootPages/Designer/editors/views/ABViewForm.js"),
       __webpack_require__(/*! ./views/ABViewGrid */ "./src/rootPages/Designer/editors/views/ABViewGrid.js"),
       __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/editors/views/ABViewPage.js"),
    ].forEach((E) => {
@@ -68837,6 +68838,8 @@ var myClass = null;
             this.settings = view.settings;
             // shortcut to reference the settings
 
+            this.viewLoad(view);
+
             this.base = base;
             this.AB = AB;
 
@@ -68877,10 +68880,16 @@ var myClass = null;
 
             // NOTE: need to sorting before .addView because there is a render position bug in webix 5.1.7
             // https://webix.com/snippet/404cf0c7
-            var childViews = this.view.viewsSortByPosition();
+            var childViews = this.CurrentView.viewsSortByPosition();
 
             // attach all the .UI views:
             childViews.forEach((child) => {
+               child.warningsSilent = true;
+               // let's not be alerted to unconfigured settings in this context
+
+               console.error("TODO: REMOVE THIS TESTING CODE:");
+               if (!child.componentOld) return;
+
                var component = child.component();
 
                // store
@@ -68995,7 +69004,7 @@ var myClass = null;
             var allViewUpdates = [];
 
             // save view position state to views
-            this.view.views().forEach((v) => {
+            this.CurrentView.views().forEach((v) => {
                var state = viewState.filter((vs) => vs.name == v.id)[0];
                if (state) {
                   v.position.x = state.x;
@@ -69014,7 +69023,7 @@ var myClass = null;
                // this.saveReorder()
                await Promise.all(allViewUpdates);
 
-               await this.view.save();
+               await this.CurrentView.save();
 
                this.ready();
             } catch (err) {
@@ -69027,12 +69036,12 @@ var myClass = null;
          }
 
          onShow() {
-            this.view.views().forEach((v) => {
+            this.CurrentView.views().forEach((v) => {
                var component = this.subComponents[v.id];
                component?.onShow?.();
             });
 
-            let dc = this.view.datacollection;
+            let dc = this.CurrentView.datacollection;
             if (dc && dc.dataStatus == dc.dataStatusFlag.notInitial) {
                // load data when a widget is showing
                dc.loadData();
@@ -69107,7 +69116,7 @@ var myClass = null;
           * @param {obj} trg  Webix provided object
           */
          viewDelete(e, id /*, trg */) {
-            var deletedView = this.view.views((v) => v.id == id)[0];
+            var deletedView = this.CurrentView.views((v) => v.id == id)[0];
             if (!deletedView) return false;
 
             webix.confirm({
@@ -69174,7 +69183,7 @@ var myClass = null;
           * @param {obj} trg  Webix provided object
           */
          viewEdit(e, id /*, trg */) {
-            var view = this.view.views((v) => v.id == id)[0];
+            var view = this.CurrentView.views((v) => v.id == id)[0];
 
             if (!view) return false;
 
@@ -69194,6 +69203,76 @@ var myClass = null;
             e.preventDefault();
 
             return false;
+         }
+      };
+   }
+
+   return myClass;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/editors/views/ABViewForm.js":
+/*!************************************************************!*\
+  !*** ./src/rootPages/Designer/editors/views/ABViewForm.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABViewContainer */ "./src/rootPages/Designer/editors/views/ABViewContainer.js");
+/**
+ * ABViewFormEditor
+ * The widget that displays the UI Editor Component on the screen
+ * when designing the UI.
+ */
+var myClass = null;
+// {singleton}
+// we will want to call this factory fn() repeatedly in our imports,
+// but we only want to define 1 Class reference.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   if (!myClass) {
+      const ABViewContainer = (0,_ABViewContainer__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+      // var L = UIClass.L();
+      // var L = ABViewContainer.L();
+
+      myClass = class ABViewFormEditor extends ABViewContainer {
+         static get key() {
+            return "form";
+         }
+
+         constructor(view, base = "interface_editor_viewform") {
+            // base: {string} unique base id reference
+
+            super(view, base);
+
+            // this.component = this.view.component();
+         }
+
+         ui() {
+            let _ui = super.ui();
+            _ui.rows[0].cellHeight = 75;
+            return _ui;
+         }
+
+         init(AB) {
+            this.AB = AB;
+            return super.init(AB);
+         }
+
+         detatch() {
+            this.component?.detatch?.();
+         }
+
+         onShow() {
+            this.component?.onShow?.();
          }
       };
    }
@@ -69386,6 +69465,8 @@ __webpack_require__.r(__webpack_exports__);
       __webpack_require__(/*! ./process/ABProcessTaskServiceInsertRecord.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceInsertRecord.js"),
       __webpack_require__(/*! ./process/ABProcessTaskServiceGetResetPasswordUrl.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceGetResetPasswordUrl.js"),
       __webpack_require__(/*! ./process/ABProcessTaskServiceQuery.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskServiceQuery.js"),
+      __webpack_require__(/*! ./process/ABProcessTaskUser.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskUser.js"),
+      __webpack_require__(/*! ./process/ABProcessTaskUserApproval.js */ "./src/rootPages/Designer/properties/process/ABProcessTaskUserApproval.js"),
    ].forEach((P) => {
       let Klass = P.default(AB);
       Processes.push(Klass);
@@ -69397,6 +69478,7 @@ __webpack_require__.r(__webpack_exports__);
    [
       __webpack_require__(/*! ./views/ABViewCarousel */ "./src/rootPages/Designer/properties/views/ABViewCarousel.js"),
       __webpack_require__(/*! ./views/ABViewGrid */ "./src/rootPages/Designer/properties/views/ABViewGrid.js"),
+      __webpack_require__(/*! ./views/ABViewForm */ "./src/rootPages/Designer/properties/views/ABViewForm.js"),
       __webpack_require__(/*! ./views/ABViewPage */ "./src/rootPages/Designer/properties/views/ABViewPage.js"),
    ].forEach((V) => {
       let Klass = V.default(AB);
@@ -77584,6 +77666,461 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/properties/process/ABProcessTaskUser.js":
+/*!************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/process/ABProcessTaskUser.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = UIClass.L();
+
+   const ProcessTaskManager = AB.Class.ABProcessTaskManager;
+
+   class UIProcessUser extends UIClass {
+      constructor() {
+         super("properties_process_user", {
+            name: "",
+            option: "",
+         });
+      }
+
+      static get key() {
+         return "TaskUser";
+      }
+      // {string}
+      // This should match the ABProcessTaskServiceCore.defaults().key value.
+
+      ui() {
+         // we are creating these on the fly, and should have CurrentApplication
+         // defined already.
+
+         const ids = this.ids;
+
+         return {
+            id: ids.component,
+            view: "form",
+            elements: [
+               {
+                  id: ids.name,
+                  view: "text",
+                  label: L("Name"),
+                  name: "name",
+                  value: "",
+               },
+               {
+                  id: ids.option,
+                  rows: [
+                     {
+                        view: "button",
+                        label: L("Approval Task"),
+                        click: () => {
+                           this.switchTo("Approval");
+                        },
+                     },
+                  ],
+               },
+            ],
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         return Promise.resolve();
+      }
+      /**
+       * switchTo()
+       * replace this object with an instance of one of our child classes:
+       * @param {string} classType
+       *        a key representing with subObject to create an instance of.
+       * @param {string} propertiesID
+       *        the webix ui.id container for the properties panel.
+       */
+      switchTo(key) {
+         const ids = this.ids;
+
+         const values = this.values();
+
+         values.id = this.element.id;
+         values.diagramID = this.element.diagramID;
+         values.key = key ?? UIProcessUser.key;
+
+         const subtask =
+            ProcessTaskManager.newTask(values, this.element.process, this.AB) ??
+            null;
+         if (subtask) {
+            this.element.switchTo(subtask, ids.component);
+         }
+      }
+
+      // applicationLoad(application) {
+      //    super.applicationLoad(application);
+
+      //    $$(this.ids.objList).define("data", listObj);
+      //    $$(this.ids.objList).refresh();
+      // }
+
+      // show() {
+      //    super.show();
+      //    AppList.show();
+      // }
+
+      values() {
+         const ids = this.ids;
+
+         let obj = {};
+
+         const $name = $$(ids.name);
+
+         obj.label = $name?.getValue() ?? "";
+         obj.name = $name?.getValue() ?? "";
+
+         return obj;
+      }
+
+      populate(element) {
+         const ids = this.ids;
+         const $name = $$(ids.name);
+         this.element = element;
+         $name?.setValue(element.label ?? "");
+      }
+   }
+
+   return UIProcessUser;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/process/ABProcessTaskUserApproval.js":
+/*!********************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/process/ABProcessTaskUserApproval.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+/* harmony import */ var _ABProcessParticipant_selectManagersUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ABProcessParticipant_selectManagersUI */ "./src/rootPages/Designer/properties/process/ABProcessParticipant_selectManagersUI.js");
+/*
+ * ABProcessTaskUserApproval
+ *
+ * Display the form for entering the properties for an Approval Task
+ *
+ * @return {ClassUI} The Class Definition for this UI widget.
+ */
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   var L = UIClass.L();
+
+   const ABProcessParticipantUsers = (0,_ABProcessParticipant_selectManagersUI__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+
+   class UIProcessUserApproval extends UIClass {
+      constructor() {
+         super("properties_process_user_approval", {
+            name: "",
+            who: "",
+            toUser: "",
+            formBuilder: "",
+            modalWindow: "",
+            formPreview: "",
+         });
+
+         this.toUser = new ABProcessParticipantUsers(
+            `${this.ids.component}_to_`
+         );
+         this.on("save", () => {
+            this.processComponents();
+         });
+      }
+
+      static get key() {
+         return "Approval";
+      }
+      // {string}
+      // This should match the ABProcessTaskServiceGetResetPasswordUrlCore.defaults().key value.
+
+      uiUser(obj) {
+         var usersUI = this.users.ui(obj ?? {});
+         return {
+            id: this.ids.users,
+            rows: [usersUI],
+            paddingY: 10,
+         };
+      }
+
+      ui(element) {
+         // we are creating these on the fly, and should have CurrentApplication
+         // defined already.
+
+         const ids = this.ids;
+
+         const whoOptions = [
+            // current lane/participant
+            {
+               id: 0,
+               value: L("Current Participant"),
+            },
+            // manually select User/Role
+            {
+               id: 1,
+               value: L("Select Role or User"),
+            },
+         ];
+
+         // if we don't have a lane, then remove the lane option:
+         if (!this.laneDiagramID || this.laneDiagramID == "?laneID?") {
+            whoOptions.shift();
+         }
+
+         const modalUi = () => {
+            return {
+               id: ids.modalWindow,
+               view: "window",
+               position: "center",
+               fullscreen: true,
+               modal: true,
+               head: {
+                  view: "toolbar",
+                  css: "webix_dark",
+                  cols: [
+                     {
+                        view: "spacer",
+                        width: 17,
+                     },
+                     {
+                        view: "label",
+                        label: L("Customize the approval layout"),
+                     },
+                     {
+                        view: "spacer",
+                     },
+                     {
+                        view: "button",
+                        label: L("Cancel"),
+                        autowidth: true,
+                        click: function () {
+                           $$(ids.modalWindow).close();
+                        },
+                     },
+                     {
+                        view: "button",
+                        css: "webixtype_form",
+                        label: L("Save"),
+                        autowidth: true,
+                        click: () => {
+                           this.formBuilder = $$(ids.formBuilder).getFormData();
+                           this.element.formBuilder = this.formBuilder;
+                           (this.formBuilder.components || []).forEach(
+                              (component) => {
+                                 if (
+                                    component._key &&
+                                    component.key != component._key
+                                 )
+                                    component.key = component._key;
+                              }
+                           );
+                           this.emit("save");
+                           $$(ids.modalWindow).close();
+                        },
+                     },
+                     {
+                        view: "spacer",
+                        width: 17,
+                     },
+                  ],
+               },
+               body: {
+                  id: ids.formBuilder,
+                  view: "formiobuilder",
+                  dataFields: this.dataFields,
+                  formComponents: this.formIOComponents,
+               },
+            };
+         };
+
+         const toUserUI = this.toUser.ui(element?.toUsers ?? {});
+
+         return {
+            id: ids.component,
+            view: "form",
+            rows: [
+               {
+                  id: ids.name,
+                  view: "text",
+                  label: L("Name"),
+                  name: "name",
+                  value: "",
+               },
+               {
+                  id: ids.who,
+                  view: "select",
+                  label: L("Who"),
+                  name: "who",
+                  options: whoOptions,
+                  value: whoOptions.length == 1 ? "1" : "",
+                  on: {
+                     onChange: (val) => {
+                        if (parseInt(val) == 1) {
+                           $$(ids.toUser).show();
+                        } else {
+                           $$(ids.toUser).hide();
+                        }
+                     },
+                  },
+               },
+               {
+                  id: ids.toUser,
+                  rows: [toUserUI],
+                  paddingY: 10,
+               },
+               {
+                  view: "spacer",
+                  height: 10,
+               },
+               {
+                  view: "toolbar",
+                  type: "clean",
+                  borderless: true,
+                  cols: [
+                     {
+                        view: "label",
+                        label: L("Data To Approve"),
+                     },
+                     {
+                        view: "spacer",
+                     },
+                     {
+                        view: "button",
+                        value: L("Customize Layout"),
+                        autowidth: true,
+                        click: () => {
+                           webix.ui(modalUi()).show();
+                        },
+                     },
+                  ],
+               },
+               {
+                  view: "layout",
+                  type: "form",
+                  rows: [
+                     {
+                        view: "layout",
+                        padding: 20,
+                        rows: [
+                           {
+                              id: ids.formPreview,
+                              view: "formiopreview",
+                              formComponents: [],
+                              height: 500,
+                           },
+                        ],
+                     },
+                  ],
+               },
+            ],
+         };
+      }
+
+      async init(AB) {
+         this.AB = AB;
+
+         return Promise.resolve();
+      }
+
+      /**
+       * process the formIOComponents components and data for the preview and
+       * form builder
+       * @function processComponents
+       */
+      processComponents() {
+         const ids = this.ids;
+         this.dataFields = this.element.process.processDataFields(this.element);
+         this.formIOComponents = this.element.preProcessFormIOComponents();
+
+         const $preview = $$(ids.formPreview).getParentView();
+         $preview.removeView(ids.formPreview);
+
+         $preview.addView({
+            id: ids.formPreview,
+            view: "formiopreview",
+            formComponents: this.formIOComponents,
+            height: 500,
+         });
+      }
+
+      populate(element) {
+         this.element = element;
+         const ids = this.ids;
+
+         const $name = $$(ids.name);
+         const $who = $$(ids.who);
+
+         $name.setValue(element.label);
+
+         if (element.who !== null) {
+            $who.setValue(element.who);
+            if (element.who === "0") {
+               $$(ids.toUser).hide();
+            } else {
+               let $toUser = this.toUser.ui(element.toUsers ?? {});
+               let $toUserUi = {
+                  id: ids.toUser,
+                  rows: [$toUser],
+                  paddingY: 10,
+               };
+               webix.ui($toUserUi, $$(ids.toUser));
+            }
+         }
+         this.processComponents();
+      }
+
+      /**
+       * values()
+       * return an object hash representing the values for this component.
+       * @return {json}
+       */
+
+      values() {
+         const obj = {};
+         const ids = this.ids;
+
+         const $name = $$(ids.name);
+         // "who", "toUsers", "formBuilder"
+         const $who = $$(ids.who);
+
+         obj.label = $name?.getValue() ?? "";
+         obj.name = $name?.getValue() ?? "";
+         obj.who = $who?.getValue() ?? "";
+         obj.formBuilder = this.formBuilder;
+         obj.toUsers = this.toUser.values();
+
+         return obj;
+      }
+   }
+
+   return UIProcessUserApproval;
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/properties/process/ABProcessTriggerLifecycle.js":
 /*!********************************************************************************!*\
   !*** ./src/rootPages/Designer/properties/process/ABProcessTriggerLifecycle.js ***!
@@ -77725,6 +78262,3306 @@ __webpack_require__.r(__webpack_exports__);
    }
 
    return UIProcessTriggerLifecycle;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/rules/ABViewQueryBuilderObjectFieldConditions.js":
+/*!********************************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/rules/ABViewQueryBuilderObjectFieldConditions.js ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+//
+// ABViewQueryBuilderObjectFieldConditions
+//
+// A UI component that is responsible for displaying a QueryBuilder based upon
+// the fields of a given ABObject.
+//
+// This object is also responsible for saving it's state to a settings value,
+// and generating the settings value to be saved.
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const uiConfig = AB.Config.uiSettings();
+   const L = UIClass.L();
+
+   class ABViewQueryBuilderObjectFieldConditions extends UIClass {
+      /**
+       * @param {object} App
+       *      The shared App object that is created in OP.Component
+       * @param {string} idBase
+       *      Identifier for this component
+       */
+      constructor(base, label) {
+         super(`${base}_ofc`, {
+            queryBuilder: "",
+            queryBuilderContainer: "",
+            queryBuilderLayout: "",
+            showQBButton: "",
+         });
+         this.label = label;
+
+         this.FilterComplex = AB.filterComplexNew(`${this.ids.component}_fc`);
+      }
+
+      /**
+       * cleanRules
+       * walk through all the QueryBuilder (QB) rules and make conversions
+       * of the data into their proper formats.
+       * @param {obj} rules  the {rules} obj that is returned from the QB object
+       * @param {array} fields  an array of field definitions from the QB object
+       * @param {bool} dateToString  convert Dates to String format?
+       */
+      cleanRules(rules, fields, dateToString) {
+         if (typeof dateToString == "undefined") dateToString = true;
+
+         // walk the given condition rules / values, walk them and make sure
+         // any given rules have properly formatted values.
+         function processCondition(rule) {
+            // make sure rule is provided
+            if (rule) {
+               if (rule.glue && rule.rules) {
+                  rule.rules.forEach((r) => {
+                     processCondition(r);
+                  });
+               } else {
+                  // converting a single rule:
+
+                  var field = fields.filter((f) => {
+                     return f.id == rule.key;
+                  })[0];
+                  if (field) {
+                     switch (field.type) {
+                        case "number":
+                        case "formula":
+                           // when getting data from the server, the numbers are
+                           // sent back as strings ("100.25").
+                           // make sure to convert strings to numbers:
+                           if (typeof rule.value == "string") {
+                              if (rule.value.indexOf(".") == -1) {
+                                 rule.value = parseInt(rule.value);
+                              } else {
+                                 rule.value = parseFloat(rule.value);
+                              }
+                           }
+                           break;
+                        case "date":
+                           // in some cases we want to convert the Date() object returned
+                           // by QueryBuilder into a string for saving on the Server.
+                           if (dateToString) {
+                              // if we have a Date() obj returned from QueryBuilder,
+                              // convert to a string format:
+                              if (rule.value instanceof Date) {
+                                 rule.value = webix.i18n.dateFormatStr(
+                                    rule.value
+                                 );
+                              }
+                           } else {
+                              // in other cases we want to convert the string returned
+                              // by the server into a Date() for the QB
+                              if (typeof rule.value == "string") {
+                                 rule.value = new Date(rule.value);
+                              }
+                           }
+
+                           break;
+                     }
+                  }
+               }
+            }
+         }
+         processCondition(rules);
+      }
+
+      ui() {
+         const ids = this.ids;
+
+         let _ui = {
+            id: ids.queryBuilderLayout,
+            view: "layout",
+            hidden: true,
+            type: "line",
+            rows: [
+               {
+                  id: ids.showQBButton,
+                  cols: [
+                     { fillspace: true },
+                     {
+                        view: "button",
+                        css: "webix_primary",
+                        name: "addqb",
+                        value: L("Add Custom Conditions"),
+                        autowidth: true,
+                        click: () => {
+                           $$(ids.queryBuilderContainer).show();
+                           $$(ids.showQBButton).hide();
+                           // _logic.buttonCancel();
+                           // Timing Wise, this needs to be called when the
+                           // query UI is already created.
+                           this.FilterComplex.fieldsLoad(
+                              this.conditionFields(),
+                              this.CurrentObject
+                           );
+                        },
+                     },
+                     { fillspace: true },
+                  ],
+               },
+               {
+                  hidden: true,
+                  id: ids.queryBuilderContainer,
+                  cols: [this.FilterComplex.ui],
+               },
+            ],
+         };
+
+         if (this.label) {
+            _ui.rows[1].cols.unshift({
+               view: "label",
+               css: "ab-text-bold",
+               label: this.label,
+               width: uiConfig.labelWidthLarge,
+            });
+         }
+
+         return _ui;
+      }
+
+      init(AB) {
+         this.AB = AB;
+         this.FilterComplex.init(/*{isRecordRule: true}*/);
+      }
+
+      // // component
+      // // initialize the UI display for this popup editor.
+      // component(App, idBase) {
+      //    this.App = App;
+      //    this.idBase = idBase;
+
+      //    var L = App.Label;
+
+      //    var uniqueInstanceID = webix.uid();
+      //    var myUnique = (key) => {
+      //       // return this.unique(idBase + key ) + '_' + uniqueInstanceID;
+      //       return `${idBase}_${key}_${uniqueInstanceID}`;
+      //    };
+
+      //    // internal list of Webix IDs to reference our UI components.
+      //    var ids = (this.ids = {
+      //       component: myUnique("qbObjectFieldConditions"),
+      //       queryBuilder: myUnique("qBuilder"),
+      //       queryBuilderContainer: myUnique("qBuilderContainer"),
+      //       queryBuilderLayout: myUnique("qBuilderLayout"),
+      //       showQBButton: myUnique("showQBButton"),
+      //    });
+
+      //    // webix UI definition:
+      //    this.ui = {
+      //       view: "layout",
+      //       id: ids.queryBuilderLayout,
+      //       hidden: true,
+      //       type: "line",
+      //       rows: [
+      //          {
+      //             id: ids.showQBButton,
+      //             cols: [
+      //                { fillspace: true },
+      //                {
+      //                   view: "button",
+      //                   css: "webix_primary",
+      //                   name: "addqb",
+      //                   value: L("Add Custom Conditions"),
+      //                   autowidth: true,
+      //                   click: function () {
+      //                      $$(ids.queryBuilderContainer).show();
+      //                      $$(ids.showQBButton).hide();
+      //                      // _logic.buttonCancel();
+      //                   },
+      //                },
+      //                { fillspace: true },
+      //             ],
+      //          },
+      //          {
+      //             hidden: true,
+      //             id: ids.queryBuilderContainer,
+      //             cols: [
+      //                {
+      //                   view: "querybuilder",
+      //                   id: ids.queryBuilder,
+      //                   fields: this.conditionFields(),
+      //                },
+      //             ],
+      //          },
+      //       ],
+      //    };
+
+      //    // tack on a label if provided.
+      //    if (this.label) {
+      //       this.ui.rows[1].cols.unshift({
+      //          view: "label",
+      //          css: "ab-text-bold",
+      //          label: this.label,
+      //          width: uiConfig.labelWidthLarge,
+      //       });
+      //    }
+
+      //    // for setting up UI
+      //    this.init = (options) => {
+      //       options = options || {};
+
+      //       // register callbacks:
+      //       for (var c in _logic.callbacks) {
+      //          _logic.callbacks[c] = options[c] || _logic.callbacks[c];
+      //       }
+      //    };
+
+      //    // internal business logic
+      //    var _logic = (this._logic = {
+      //       callbacks: {
+      //          onCancel: function () {
+      //             console.warn("NO onCancel()!");
+      //          },
+      //          onSave: function (field) {
+      //             console.warn("NO onSave()!");
+      //          },
+      //       },
+
+      //       /**
+      //        * cleanRules
+      //        * walk through all the QueryBuilder (QB) rules and make conversions
+      //        * of the data into their proper formats.
+      //        * @param {obj} rules  the {rules} obj that is returned from the QB object
+      //        * @param {array} fields  an array of field definitions from the QB object
+      //        * @param {bool} dateToString  convert Dates to String format?
+      //        */
+      //       cleanRules: (rules, fields, dateToString) => {
+      //          this.cleanRules(rules, fields, dateToString);
+      //       },
+
+      //       getValue: () => {
+      //          var values = null;
+      //          var QB = $$(ids.queryBuilder);
+      //          if (QB) {
+      //             values = QB.getValue();
+      //          }
+
+      //          // convert dates to simpler format:
+      //          // by default we're getting long values: "Mon Feb 2, 2018 GMT xxxxxxx",
+      //          // and webix doesn't seem to understand them when we send them back.
+      //          // so save simple date values: "mm/dd/yyyy"
+      //          if (values) {
+      //             _logic.cleanRules(values[0], values[1], true);
+      //          }
+
+      //          return values;
+      //       },
+
+      //       setValue: (values) => {
+      //          values = values || [];
+      //          if (!Array.isArray(values)) values = [values];
+      //          if (values.length == 0) {
+      //             values.push({});
+      //          } // push default rules
+      //          if (values.length < 2) {
+      //             values.push(this.conditionFields());
+      //          }
+
+      //          // convert dates from our server side "string" format into
+      //          // Date() objects.
+      //          _logic.cleanRules(values[0], values[1], false);
+
+      //          var QB = $$(ids.queryBuilder);
+      //          if (QB) {
+      //             if (values[0] && values[0].rules && values[0].rules.length) {
+      //                QB.setValue(values[0]);
+      //                $$(ids.queryBuilderContainer).show();
+      //                $$(ids.showQBButton).hide();
+      //             }
+      //          }
+      //       },
+      //    });
+
+      //    this.getValue = _logic.getValue;
+      //    this.show = _logic.show;
+      //    this.setValue = _logic.setValue;
+      // }
+
+      objectLoad(object) {
+         super.objectLoad(object);
+         this.FilterComplex.fieldsLoad(this.conditionFields(), object);
+      }
+
+      getValue() {
+         var values = this.FilterComplex.getValue();
+
+         // var QB = $$(this.ids.queryBuilder);
+         // if (QB) {
+         //    values = QB.getValue();
+         // }
+
+         // convert dates to simpler format:
+         // by default we're getting long values: "Mon Feb 2, 2018 GMT xxxxxxx",
+         // and webix doesn't seem to understand them when we send them back.
+         // so save simple date values: "mm/dd/yyyy"
+         debugger;
+         if (values) {
+            this.cleanRules(values[0], values[1], true);
+         }
+
+         return values;
+      }
+
+      setValue(values) {
+         const ids = this.ids;
+
+         values = values || [];
+         if (!Array.isArray(values)) values = [values];
+         if (values.length == 0) {
+            values.push({});
+         } // push default rules
+         if (values.length < 2) {
+            values.push(this.conditionFields());
+         }
+
+         // convert dates from our server side "string" format into
+         // Date() objects.
+         this.cleanRules(values[0], values[1], false);
+
+         this.FilterComplex.setValue(values[0]);
+
+         /*
+         var QB = $$(ids.queryBuilder);
+         if (QB) {
+            if (values[0] && values[0].rules && values[0].rules.length) {
+               QB.setValue(values[0]);
+               $$(ids.queryBuilderContainer).show();
+               $$(ids.showQBButton).hide();
+            }
+         }
+*/
+      }
+
+      // conditionFields()
+      // Return the list of fields we are able to update.
+      // @return {array} of querybuilder field definitions:
+      //					[
+      // 						{ id:"fname",   value:"First Name", type:"string" },
+      //					    { id:"lname",   value:"Last Name",  type:"string" },
+      //					    { id:"age",     value:"Age",        type:"number" },
+      //					    { id:"bdate",   value:"Birth Date", type:"date" }
+      //					]
+      conditionFields() {
+         var fieldTypes = [
+            "string",
+            "LongText",
+            "number",
+            "date",
+            "email",
+            "formula",
+            "calculate",
+         ];
+
+         var currFields = [];
+
+         if (this.CurrentObject) {
+            this.CurrentObject.fields().forEach((f) => {
+               if (fieldTypes.indexOf(f.key) != -1) {
+                  // NOTE: the .id value must match the obj[.id]  in the data set
+                  // so if your object data looks like:
+                  // 	{
+                  //		name_first:'Neo',
+                  //		name_last: 'The One'
+                  //  },
+                  // then the ids should be:
+                  // { id:'name_first', value:'xxx', type:'string' }
+
+                  ////
+                  //// New FilterComplex wants actual fields returned:
+                  ////
+
+                  // let type = f.key;
+                  // if (f.key == "formula" || f.key == "calculate")
+                  //    type = "number";
+                  // else if (f.key == "LongText") type = "string";
+
+                  // currFields.push({
+                  //    id: f.columnName,
+                  //    value: f.label,
+                  //    type: type,
+                  // });
+
+                  currFields.push(f);
+               }
+            });
+         }
+
+         return currFields;
+      }
+
+      // process
+      // Take the provided data and process each of our rules.
+      // @param {obj} options
+      // @return {promise}
+      // process(options) {
+      //    return new Promise((resolve, reject) => {
+      //       var numDone = 0;
+      //       var onDone = () => {
+      //          numDone++;
+      //          if (numDone >= this.listRules.length) {
+      //             resolve();
+      //          }
+      //       };
+
+      //       this.listRules.forEach((rule) => {
+      //          rule
+      //             .process(options)
+      //             .then(function () {
+      //                onDone();
+      //             })
+      //             .catch((err) => {
+      //                reject(err);
+      //             });
+      //       });
+
+      //       if (this.listRules.length == 0) {
+      //          resolve();
+      //       }
+      //    });
+      // }
+
+      // showQueryBuilderContainer() {
+      //    $$(this.ids.queryBuilderLayout).show();
+      //    $$(this.ids.queryBuilderContainer).show();
+      //    $$(this.ids.showQBButton).hide();
+      // }
+   }
+
+   return ABViewQueryBuilderObjectFieldConditions;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/rules/ABViewRule.js":
+/*!***************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/rules/ABViewRule.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewQueryBuilderObjectFieldConditions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABViewQueryBuilderObjectFieldConditions */ "./src/rootPages/Designer/properties/rules/ABViewQueryBuilderObjectFieldConditions.js");
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+//
+// ABViewRule
+//
+// A component that manages an individual Rule in a Rule list.
+//
+// Each rule can manage a set of given Actions.  For each Rule, one Action
+// can be chosen, A condition for when that action is executed, and then
+// inputs for any additional data required by that action.
+//
+// Rules are used in the Interface Builder to present the designer an interface
+// for defining the Action+Condition:
+//
+//
+//
+// In live apps, Rules are used when processing events and determining if an
+// action is to be performed:
+//
+//
+//
+// A Rule needs to save it's current state to an objects settings, and to
+// initialize itself from those settings.
+//
+
+// const ObjectQueryBuilder = require("./ABViewQueryBuilderObjectFieldConditions");
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const uiConfig = AB.Config.uiSettings();
+   const L = UIClass.L();
+
+   const ObjectQueryBuilder = (0,_ABViewQueryBuilderObjectFieldConditions__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+
+   class ABViewRule extends UIClass {
+      /**
+       * @param {object} App
+       *      The shared App object that is created in OP.Component
+       * @param {string} idBase
+       *      Identifier for this component
+       */
+      constructor(base, listActions) {
+         super(base, {
+            selectAction: "",
+            queryBuilder: "",
+            valueDisplay: "",
+         });
+
+         // NOTE: there can be multiple instances of this Rule displayed,
+         // so make each one unique.
+         var uniqueInstanceID = webix.uid();
+         var myUnique = (key) => {
+            // return this.unique(idBase + key ) + '_' + uniqueInstanceID;
+            return `${key}_${uniqueInstanceID}`;
+         };
+         Object.keys(this.ids).forEach((k) => {
+            this.ids[k] = myUnique(k);
+         });
+
+         this.listActions = listActions || []; // the list of Actions this Rule manages
+
+         this.actionDropList = []; // the Webix UI droplist
+         this.listActions.forEach((a) => {
+            this.actionDropList.push({ id: a.key, value: a.label });
+         });
+
+         this.selectedAction = null; // the currently selected Action.key
+         if (this.actionDropList.length > 0) {
+            this.selectedAction = this.actionDropList[0].id;
+         }
+
+         this.removable = true; // can I delete this rule?
+
+         this.objectQB = null; // The QueryBuilder (QB) object
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         this.objectQB?.init(AB);
+
+         // make sure the current Action's value display is initialized:
+         var Action = this.currentAction();
+         if (Action) {
+            Action.init(this.AB);
+            // // Action.component(this.App, this.idBase);
+            // var comp = Action.valueDisplay(this.ids.valueDisplay);
+
+            // this.replaceValueDisplay(comp);
+
+            // // webix.ui(comp.ui, $$(this.ids.valueDisplay));
+            // comp.init();
+         }
+      }
+
+      // component(App, idBase) {
+      //    this.App = App;
+      //    this.idBase = idBase;
+
+      //    // this is different because multiple instances of this View can be displayed
+      //    // at the same time.  So make each instance Unique:
+      //    var uniqueInstanceID = webix.uid();
+      //    var myUnique = (key) => {
+      //       // return this.unique(idBase + key ) + '_' + uniqueInstanceID;
+      //       return `${idBase}_${key}_${uniqueInstanceID}`;
+      //    };
+
+      //    // internal list of Webix IDs to reference our UI components.
+      //    var ids = (this.ids = {
+      //       // each instance must be unique
+      //       component: myUnique("component"),
+
+      //       selectAction: myUnique("chooseAction"),
+
+      //       queryBuilder: myUnique("queryBuilder"),
+
+      //       valueDisplay: myUnique("valueArea"),
+      //    });
+
+      //    this.objectQB.label = L("When");
+      //    this.objectQB.component(this.App, this.idBase);
+
+      //    // for setting up UI
+      //    this.init = (options) => {
+      //       // register callbacks:
+      //       for (var c in _logic.callbacks) {
+      //          _logic.callbacks[c] = options[c] || _logic.callbacks[c];
+      //       }
+
+      //       this.objectQB.init();
+
+      //       // make sure the current Action's value display is initialized:
+      //       var Action = this.currentAction();
+      //       if (Action) {
+      //          Action.component(this.App, this.idBase);
+      //          var comp = Action.valueDisplay(ids.valueDisplay);
+
+      //          _logic.replaceValueDisplay(comp);
+
+      //          // webix.ui(comp.ui, $$(this.ids.valueDisplay));
+      //          comp.init();
+      //       }
+      //    };
+
+      //    // internal business logic
+      //    var _logic = (this._logic = {
+      //       callbacks: {
+      //          onDelete: function () {
+      //             console.warn("NO onDelete()!");
+      //          },
+      //          onSave: function (field) {
+      //             console.warn("NO onSave()!");
+      //          },
+      //       },
+
+      //       replaceValueDisplay: (component) => {
+      //          // remove current content area:
+      //          var $ValueDisplay = $$(this.ids.valueDisplay);
+      //          if (!$ValueDisplay) return;
+
+      //          var children = $ValueDisplay.getChildViews();
+      //          var cloneChildren = [];
+      //          children.forEach((c) => {
+      //             cloneChildren.push(c);
+      //          });
+      //          cloneChildren.forEach((c) => {
+      //             $ValueDisplay.removeView(c);
+      //          });
+
+      //          $ValueDisplay.addView(component.ui);
+      //       },
+
+      //       selectAction: (newValue, oldVal) => {
+      //          if (newValue) {
+      //             $$(this.ids.component)
+      //                .getChildViews()
+      //                .forEach((views) => {
+      //                   views.show();
+      //                });
+      //          }
+      //          // bonus:  save current state of previous Action
+      //          var prevAction = this.getAction(oldVal);
+      //          if (prevAction) {
+      //             prevAction.stashCondition(this.objectQB.getValue());
+      //          }
+
+      //          // now switch to the new Action
+      //          this.selectedAction = newValue;
+      //          var currAction = this.currentAction();
+      //          if (currAction) {
+      //             // reset Condition filters.
+      //             this.objectQB.setValue(currAction.condition());
+
+      //             // have Action display it's values form
+      //             currAction.component(this.App, this.idBase);
+      //             var component = currAction.valueDisplay(ids.valueDisplay);
+      //             _logic.replaceValueDisplay(component);
+      //             component.init();
+      //             // currAction.valueDisplay(ids.valueDisplay);
+      //          }
+      //       },
+      //    });
+      // }
+
+      // not intended to be called externally
+      ui() {
+         return {
+            id: this.ids.component,
+            view: "layout",
+            css: "ab-component-form-rules",
+            padding: 20,
+            // margin: 10,
+
+            // this should be a CSS setting: this.AB.Config.xxxx
+            // width: 680,
+            type: "line",
+            rows: [
+               {
+                  view: "template",
+                  css: "ab-component-form-rules-delete",
+                  template: '<i class="fa fa-trash ab-component-remove"></i>',
+                  height: 30,
+                  borderless: true,
+                  hidddatasourceen: this.removable == false,
+                  onClick: {
+                     "ab-component-remove": (/*e, id, trg*/) => {
+                        this.emit("delete", this);
+                        // this._logic.callbacks.onDelete(this);
+                     },
+                  },
+               },
+               // Action
+               {
+                  id: this.ids.selectAction,
+                  view: "richselect",
+                  label: L("Action"),
+                  placeholder: L("Choose an action"),
+                  labelWidth: uiConfig.labelWidthLarge,
+                  options: this.actionDropList,
+                  on: {
+                     onChange: (newVal, oldVal) => {
+                        this.selectAction(newVal, oldVal);
+                     },
+                  },
+               },
+
+               // Values
+               {
+                  for: "values",
+                  hidden: true,
+                  cells: [
+                     {
+                        view: "layout",
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Values"),
+                              css: "ab-text-bold",
+                              width: uiConfig.labelWidthLarge,
+                           },
+                           {
+                              id: this.ids.valueDisplay,
+                              view: "layout",
+                              rows: [
+                                 {
+                                    label: L(
+                                       " ABViewRule: This should be the Set Area"
+                                    ),
+                                    css: "ab-text-bold",
+                                    height: 30,
+                                 },
+                              ],
+                           },
+                        ],
+                     },
+                  ],
+               },
+
+               // When
+               this.objectQB.ui(),
+            ],
+         };
+      }
+
+      replaceValueDisplay(component) {
+         // remove current content area:
+         var $ValueDisplay = $$(this.ids.valueDisplay);
+         if (!$ValueDisplay) return;
+
+         var children = $ValueDisplay.getChildViews();
+         var cloneChildren = [];
+         children.forEach((c) => {
+            cloneChildren.push(c);
+         });
+         cloneChildren.forEach((c) => {
+            $ValueDisplay.removeView(c);
+         });
+
+         $ValueDisplay.addView(component.ui());
+      }
+
+      selectAction(newValue, oldVal) {
+         if (newValue) {
+            $$(this.ids.component)
+               .getChildViews()
+               .forEach((views) => {
+                  views.show();
+               });
+         }
+         // bonus:  save current state of previous Action
+         var prevAction = this.getAction(oldVal);
+         if (prevAction) {
+            prevAction.stashCondition(this.objectQB.getValue());
+         }
+
+         // now switch to the new Action
+         this.selectedAction = newValue;
+         var currAction = this.currentAction();
+         if (currAction) {
+            // reset Condition filters.
+            this.objectQB?.setValue(currAction.condition());
+
+            // have Action display it's values form
+            // currAction.component(this.App, this.idBase);
+            this.replaceValueDisplay(currAction);
+            currAction.init(this.AB);
+            // var component = currAction.valueDisplay(this.ids.valueDisplay);
+            // this.replaceValueDisplay(component);
+            // this.replaceValueDisplay(currAction.ui());
+            // component.init();
+            // currAction.valueDisplay(ids.valueDisplay);
+         }
+      }
+
+      // return the QueryBuilder fields data for the currently selected Action.
+      conditionFields() {
+         var fields = [];
+
+         var selectedAction = this.currentAction();
+         if (selectedAction) {
+            fields = selectedAction.conditionFields();
+         }
+
+         return fields;
+      }
+
+      currentAction() {
+         return this.getAction(this.selectedAction);
+      }
+
+      getAction(key) {
+         return this.listActions.filter((a) => {
+            return a.key == key;
+         })[0];
+      }
+
+      objectLoad(object) {
+         super.objectLoad(object);
+         this.listActions.forEach((a) => {
+            a.objectLoad(object);
+         });
+
+         var label = L("When");
+
+         this.objectQB = new ObjectQueryBuilder(this.ids.component, label);
+         this.objectQB.objectLoad(object);
+      }
+
+      formLoad(form) {
+         this.viewLoad(form);
+         this.listActions.forEach((a) => {
+            a.formLoad(form);
+         });
+      }
+
+      get currentForm() {
+         return this.CurrentView;
+      }
+
+      // processPre(options = {}) {
+      //    let isValid = this.isValid(options.data);
+      //    if (!isValid) return;
+
+      //    let currentAction = this.currentAction();
+      //    if (!currentAction) return;
+
+      //    currentAction.processUpdateObject({}, options.data);
+      // }
+
+      // // process
+      // // Take the provided data and process this rule
+      // // @param {obj} options
+      // // @return {Promise}
+      // process(options) {
+      //    var currentAction = this.currentAction();
+      //    if (!currentAction) return Promise.resolve();
+
+      //    let isValid = this.isValid(options.data);
+      //    if (isValid) {
+      //       return currentAction.process(options);
+      //    } else {
+      //       // else just resolve and continue on
+      //       return new Promise((resolve /* , reject */) => {
+      //          resolve();
+      //       });
+      //    }
+      // }
+
+      fromSettings(settings) {
+         settings = settings || {};
+
+         if (settings.selectedAction) {
+            // store our Query Rules
+            this.selectedAction = settings.selectedAction;
+            var selectedAction = this.currentAction();
+            if (!selectedAction) return;
+            selectedAction.stashCondition(settings.queryRules || {});
+
+            // if our UI components are present, populate them properly:
+            if (this.ids) {
+               // Trigger our UI to refresh with this selected Action:
+               // NOTE: this also populates the QueryBuilder
+               $$(this.ids.selectAction).setValue(this.selectedAction);
+               // this._logic.selectAction(this.selectedAction);
+            }
+
+            // now continue with setting up our settings:
+            selectedAction.fromSettings(settings.actionSettings);
+         }
+      }
+
+      toSettings() {
+         var settings = {};
+
+         if (this.selectedAction) {
+            settings.selectedAction = this.selectedAction;
+            settings.queryRules = this.objectQB.getValue();
+            let currentAction = this.currentAction();
+            if (currentAction) {
+               settings.actionSettings = currentAction.toSettings();
+            }
+         }
+
+         return settings;
+      }
+
+      // NOTE: Querybuilder v5.2 has a bug where it won't display the [and/or]
+      // choosers properly if it hasn't been shown before the .setValue() call.
+      // so this work around allows us to refresh the display after the .show()
+      // on the popup.
+      // When they've fixed the bug, we'll remove this workaround:
+      qbFixAfterShow() {
+         var currAction = this.currentAction();
+         if (currAction && this.objectQB) {
+            this.objectQB.setValue(currAction.condition());
+            currAction.qbFixAfterShow();
+         }
+      }
+
+      /**
+       * @method isReady()
+       * returns a promise that gets resolved once our action is ready to work.
+       * @return {Promise}
+       */
+      async isReady() {
+         let currentAction = this.currentAction();
+         if (currentAction) {
+            return currentAction.isReady();
+         }
+         return Promise.resolve();
+      }
+
+      isValid(data = {}) {
+         var id = "hiddenQB_" + webix.uid();
+
+         // if our data passes the QueryRules then tell Action to process
+         var ui = {
+            id: id,
+            hidden: true,
+            view: "querybuilder",
+         };
+         var hiddenQB = webix.ui(ui);
+
+         let currentAction = this.currentAction();
+         var QBCondition = currentAction.condition();
+
+         if (this.objectQB) {
+            this.objectQB.cleanRules(QBCondition[0], QBCondition[1], false);
+         }
+
+         let query = QBCondition[0] || {},
+            fields = QBCondition[1] || [];
+
+         let convertToNumber = (text = "") => {
+            // if we have multiple rules we need to check if value is already a
+            // number before converting.
+            if (typeof text == "number") return text;
+
+            return parseFloat(text.replace(/[^-0-9.]/g, ""));
+         };
+
+         // Fix string data in number type
+         // NOTE: "1000" > "99" = false    >_<!
+         fields
+            .filter(
+               (f) =>
+                  f.type == "number" ||
+                  f.type == "calculate" ||
+                  f.type == "formula"
+            )
+            .forEach((f) => {
+               try {
+                  // filter conditions
+                  if (query && query.rules && Array.isArray(query.rules)) {
+                     query.rules.forEach((r) => {
+                        if (r.key != f.id) return;
+
+                        r.value = convertToNumber(r.value);
+                     });
+                  }
+
+                  // row data
+                  if (data[f.id] && typeof data[f.id] === "string") {
+                     data[f.id] = convertToNumber(data[f.id]);
+                  }
+               } catch (e) {
+                  // continue regardless of error
+               }
+            });
+
+         // hiddenQB.setValue(QBCondition);
+         hiddenQB.setValue({
+            query: query,
+            fields: fields,
+         });
+
+         var QBHelper = hiddenQB.getFilterHelper();
+         var isValid = QBHelper(data);
+
+         hiddenQB.destructor(); // remove the QB
+
+         return isValid;
+      }
+
+      get isPreProcess() {
+         let currentAction = this.currentAction();
+         return currentAction.isPreProcess || false;
+      }
+   }
+
+   return ABViewRule;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/rules/ABViewRuleAction.js":
+/*!*********************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/rules/ABViewRuleAction.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+//
+// ABViewRuleAction
+//
+// A component that manages an individual Action in a Rule.
+//
+// Each Action is responsible for figuring out when it can run, and what to do.
+//
+// Actions are used in the Interface Builder to present the designer an interface
+// for defining the a Condition and a set of data necessary to complete the Action:
+//
+//
+//
+// In live apps, Actions are used when processing events and determining if an
+// if and what is to be performed:
+//
+//
+//
+// An Action needs to save it's current state to an objects settings, and to
+// initialize itself from those settings.
+//
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const uiConfig = AB.Config.uiSettings();
+   const L = UIClass.L();
+
+   class ABViewRuleAction extends UIClass {
+      /**
+       * @param {object} App
+       *      The shared App object that is created in OP.Component
+       * @param {string} idBase
+       *      Identifier for this component
+       * @param {ABViewForm} currentForm	the current form this Action is associated with.
+       */
+      constructor(idBase, ids) {
+         super(idBase, ids);
+
+         let uid = webix.uid();
+         Object.keys(this.ids).forEach((k) => {
+            this.ids[k] = `${k}_${uid}`;
+         });
+
+         this.key = "ABViewRuleAction";
+
+         this.queryObject = null; // the current ABObject we use to create QueryBuilder information.
+
+         this.queryRules = {}; // default set of rules for the Query Builder condition
+
+         this.valueRules = {}; // the initial Value Rules for this Action
+         // The Action Subclass defines what this {} is.
+
+         // this.currentForm = currentForm; // the ABViewForm object that this rule Action is tied to.
+      }
+
+      ui() {
+         return {};
+      }
+
+      init(AB) {
+         this.AB = AB;
+         return Promise.resolve();
+      }
+      // component(App, idBase) {
+      //    this.App = App;
+      //    this.idBase = idBase;
+
+      //    this.label = L("generic abviewruleaction");
+
+      //    function myUnique(key) {
+      //       return App.unique(`${idBase}_${key}`);
+      //    }
+
+      //    // internal list of Webix IDs to reference our UI components.
+      //    var ids = (this.ids = {
+      //       // each instance must be unique
+      //       component: `${myUnique("component")}_${webix.uid()}`,
+      //    });
+
+      //    this._ui = null; // internally track our UI Component value Rules
+
+      //    // for setting up UI
+      //    this.init = (options) => {
+      //       // register callbacks:
+      //       for (var c in _logic.callbacks) {
+      //          _logic.callbacks[c] = options[c] || _logic.callbacks[c];
+      //       }
+      //    };
+
+      //    // internal business logic
+      //    var _logic = (this._logic = {
+      //       callbacks: {
+      //          onDelete: function () {
+      //             console.warn("NO onDelete()!");
+      //          },
+      //          onSave: function (field) {
+      //             console.warn("NO onSave()!");
+      //          },
+      //       },
+      //    });
+      // }
+
+      // condition
+      // Return the querybuilder setup structure for this Action.
+      // @return {array}  of querybuilder setup
+      //					[
+      //						{rules},
+      //						[fields]
+      //					]
+      condition() {
+         return [this.conditionRules(), this.conditionFields()];
+      }
+
+      // stashCondition
+      // capture the current set of rules provided by the QB object.
+      // This doesn't guarantee these will be saved to the App settings.
+      // Instead it is a temporary stash. Only the selected Action's
+      // values will be persisited to the App settings.
+      // @param {obj/Array} rules  The QueryBuilder rule value returned from
+      //							 .getValue()
+      //							 note: it is the first entry .getValue()[0]
+      //
+      stashCondition(rules) {
+         // check to see if they sent us the raw QueryBuilder values and only
+         // pull off the rules if they did
+         if (Array.isArray(rules)) {
+            rules = rules[0];
+         }
+
+         // sanity check on glue value: don't update if null or not given.
+         if (rules) {
+            // sometimes .glue is undefined  so default to 'and'
+            if (rules.glue != "or") rules.glue = "and";
+
+            this.queryRules = rules;
+         }
+      }
+
+      // conditionFields()
+      // Return the list of fields we are able to update.
+      // @return {array} of querybuilder field definitions:
+      //					[
+      // 						{ id:"fname",   value:"First Name", type:"string" },
+      //					    { id:"lname",   value:"Last Name",  type:"string" },
+      //					    { id:"age",     value:"Age",        type:"number" },
+      //					    { id:"bdate",   value:"Birth Date", type:"date" }
+      //					]
+      conditionFields() {
+         var fieldTypes = ["string", "number", "date", "formula", "calculate"];
+
+         var currFields = [];
+
+         if (this.queryObject) {
+            this.queryObject.fields().forEach((f) => {
+               if (fieldTypes.indexOf(f.key) != -1) {
+                  // NOTE: the .id value must match the obj[.id]  in the data set
+                  // so if your object data looks like:
+                  // 	{
+                  //		name_first:'Neo',
+                  //		name_last: 'The One'
+                  //  },
+                  // then the ids should be:
+                  // { id:'name_first', value:'xxx', type:'string' }
+                  currFields.push({
+                     id: f.columnName,
+                     value: f.label,
+                     type: f.key,
+                  });
+               }
+            });
+         }
+
+         return currFields;
+      }
+
+      // conditionRules()
+      // Return the current rule definition object for this Action.
+      // @return {obj}
+      conditionRules() {
+         return this.queryRules;
+      }
+
+      // objectLoad
+      // save the current object this Action is associated with.
+      objectLoad(object) {
+         super.objectLoad(object);
+         this.queryObjectLoad(object);
+      }
+
+      // queryObjectLoad
+      // save the current object this Action is using to build query rules.
+      queryObjectLoad(object) {
+         this.queryObject = object;
+      }
+
+      formLoad(form) {
+         this.viewLoad(form);
+      }
+
+      get currentForm() {
+         return this.CurrentView;
+      }
+
+      // process
+      // gets called when a form is submitted and the data passes the Query Builder Rules.
+      // @param {obj} options
+      // @return {Promise}
+      // process(options) {
+      //    console.error(
+      //       "!!! ABViewRuleAction.process() should be overridden by its child class."
+      //    );
+      //    return new Promise((resolve, reject) => {
+      //       reject(
+      //          new Error(
+      //             "ABViewRuleAction.process() should be overridden by its child class."
+      //          )
+      //       );
+      //    });
+      // }
+
+      // valueDisplay
+      // create the form to collect the specific data this Action needs to function.
+      // @param {string} webixID  the $$(webixID) of the area to insert our display.
+      valueDisplay(webixID) {
+         return this.valueDisplayComponent(webixID);
+      }
+
+      // valueDisplayComponent
+      // Return an ABView to display our values form.
+      //
+      valueDisplayComponent(idBase) {
+         return (this._ui = {
+            ui: {
+               template: "ABViewRuleAction.valueDisplayComponent",
+            },
+            init: (data) => {
+               console.error(
+                  "!!! ABViewRuleAction.valueDisplayComponent() should be overridden."
+               );
+               console.warn(" --> passed in data:", data);
+            },
+         });
+      }
+
+      // fromSettings
+      // initialize this Action from a given set of setting values.
+      // @param {obj}  settings
+      fromSettings(settings) {
+         // settings: {
+         //	valueRules:{}
+         // }
+         settings = settings || {};
+         this.valueRules = settings.valueRules || {};
+      }
+
+      // toSettings
+      // return an object that represents the current state of this Action
+      // @return {obj}
+      toSettings() {
+         var settings = {};
+
+         // require the child to insert the valueRules
+         return settings;
+      }
+
+      /**
+       * @method isReady()
+       * returns a promise that gets resolved once our action is ready to work.
+       * @return {Promise}
+       */
+      isReady() {
+         return Promise.resolve();
+      }
+
+      // NOTE: Querybuilder v5.2 has a bug where it won't display the [and/or]
+      // choosers properly if it hasn't been shown before the .setValue() call.
+      // so this work around allows us to refresh the display after the .show()
+      // on the popup.
+      // When they've fixed the bug, we'll remove this workaround:
+      qbFixAfterShow() {
+         // our child classes can implement this if needed.
+         // 	- ABViewRuleActionFormRecordRuleUpdateConnected
+      }
+   }
+
+   return ABViewRuleAction;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/rules/ABViewRuleList.js":
+/*!*******************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/rules/ABViewRuleList.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ui_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ui_class */ "./src/rootPages/Designer/ui_class.js");
+//
+// ABViewRuleList
+//
+// A UI component that is responsible for displaying a list of current "Rules"
+// for a given purpose.  Some examples are the
+//		Form -> Submit Rules,
+//		Form -> Display Rules
+// 		Form -> Record Rules.
+//
+
+// ABViewRuleList is the parent object that manages displaying the common popup,
+// list, adding a rule, removing rules, etc...
+//
+// It is intending to be subclassed by a Specific List object that will load
+// up a given set of Actions for their list.
+//
+// When using it in the AppBuilder Interface Builder, this object provides:
+// 	var PopupRecordList = new ABViewRuleList(App, idBase);
+//  PopupRecordList.fromSettings(CurrentObjectDefinition.rules); // populates List with current settings defined in CurrentObjectDefinition
+//  PopupRecordList.init({ onSave:()=>{}})	// displays the popup for IB
+//  CurrentObjectDefinition.rules = PopupRecordList.toSettings(); // save the settings to store in json config
+//
+// When using on a live running App:
+//  PopupRecordList = new ABViewRuleList(App, idBase);
+//  PopupRecordList.fromSettings();
+//
+//  onFormSubmit(data) {
+//		// note: this automatically validates and runs each rule:
+//		PopupRecordList.process({data:data, view:{ current ABViewForm object }})
+//		.then()
+//		.catch();
+//  }
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const UIClass = (0,_ui_class__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = UIClass.L();
+
+   class ABViewRuleList extends UIClass {
+      /**
+       * @param {object} App
+       *      The shared App object that is created in OP.Component
+       * @param {string} idBase
+       *      Identifier for this component
+       */
+      constructor(base, childSettings) {
+         base = base || "ABViewRuleList";
+         super(base, {
+            rules: "",
+            rulesScrollview: "",
+
+            action: "",
+            when: "",
+
+            values: "",
+            set: "",
+         });
+
+         this.listRules = [];
+
+         // ensure required values:
+         childSettings = childSettings || {};
+         childSettings.labels = childSettings.labels || {};
+         childSettings.labels.header =
+            childSettings.labels.header || L("Rule List");
+         childSettings.labels.headerDefault =
+            childSettings.labels.headerDefault || L("Rule List");
+         this.childSettings = childSettings;
+      }
+
+      ui() {
+         const ids = this.ids;
+
+         return {
+            view: "window",
+            id: ids.component,
+            modal: true,
+            position: "center",
+            resize: true,
+            width: 700,
+            height: 450,
+            css: "ab-main-container",
+            head: {
+               view: "toolbar",
+               css: "webix_dark",
+               cols: [
+                  {
+                     view: "label",
+                     label: this.childSettings.labels.headerDefault,
+                  },
+                  {
+                     view: "button",
+                     css: "webix_primary",
+                     icon: "fa fa-plus",
+                     type: "iconButton",
+                     label: L("Add new rule"),
+                     width: 150,
+                     click: () => {
+                        this.addRule();
+                        $$(ids.rulesScrollview).scrollTo(
+                           0,
+                           $$(ids.rules).$height
+                        );
+                     },
+                  },
+               ],
+            },
+            body: {
+               type: "form",
+               rows: [
+                  {
+                     view: "scrollview",
+                     id: ids.rulesScrollview,
+                     scroll: "xy",
+                     body: {
+                        view: "layout",
+                        id: ids.rules,
+                        margin: 20,
+                        padding: 10,
+                        rows: [],
+                     },
+                  },
+                  // {
+                  //    css: { 'background-color': '#fff' },
+                  //    cols: [
+                  //       {
+                  //          view: "button",
+                  //          icon: "plus",
+                  //          type: "iconButton",
+                  //          label: labels.component.addNewRule,
+                  //          width: 150,
+                  //          click: () => {
+                  //             this.addRule();
+                  //          }
+                  //       },
+                  //       { fillspace: true }
+                  //    ]
+                  // },
+                  {
+                     css: { "background-color": "#fff" },
+                     cols: [
+                        { fillspace: true },
+                        {
+                           view: "button",
+                           name: "cancel",
+                           value: L("Cancel"),
+                           css: "ab-cancel-button",
+                           autowidth: true,
+                           click: () => {
+                              this.buttonCancel();
+                           },
+                        },
+                        {
+                           view: "button",
+                           css: "webix_primary",
+                           name: "save",
+                           label: L("Save"),
+                           type: "form",
+                           autowidth: true,
+                           click: () => {
+                              this.buttonSave();
+                           },
+                        },
+                        { fillspace: true },
+                     ],
+                  },
+               ],
+            },
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+         webix.ui(this.ui());
+         return Promise.resolve();
+      }
+
+      buttonCancel() {
+         $$(this.ids.component)?.hide();
+      }
+
+      buttonSave() {
+         var results = this.toSettings();
+
+         this.emit("save", results);
+         // _logic.callbacks.onSave(results);
+         this.hide();
+      }
+
+      hide() {
+         $$(this.ids.component)?.hide();
+      }
+
+      show() {
+         $$(this.ids.component)?.show();
+      }
+
+      /**
+       * @method component
+       * initialize the UI display for this popup editor.
+       * @param {obj} App  The common UI App object shared among our UI components
+       * @param {string} idBase A unique Key used the the base of our unique ids
+       */
+      // component() {
+
+      //    // internal business logic
+      //    var _logic = (this._logic = {
+      //       buttonCancel: function () {
+      //          $$(ids.component).hide();
+      //       },
+
+      //       buttonSave: () => {
+      //          var results = this.toSettings();
+
+      //          _logic.callbacks.onSave(results);
+      //          _logic.hide();
+      //       },
+
+      //       callbacks: {
+      //          onCancel: function () {
+      //             console.warn("NO onCancel()!");
+      //          },
+      //          onSave: function (field) {
+      //             console.warn("NO onSave()!");
+      //          },
+      //       },
+
+      //       hide: function () {
+      //          $$(ids.component).hide();
+      //       },
+
+      //       show: function () {
+      //          $$(ids.component).show();
+      //       },
+      //    });
+
+      //    this.show = _logic.show;
+      //    this.setValue = _logic.setValue;
+      // }
+
+      /**
+       * @method addRule
+       * Instantiate a new Rule in our list.
+       * @param {obj} settings  The settings object from the Rule we created in .toSettings()
+       */
+      addRule(settings) {
+         var Rule = this.getRule();
+         if (!Rule) return;
+
+         this.listRules.push(Rule);
+
+         // if our list actually exists, then populate it:
+         var RulesUI = $$(this.ids.rules);
+         if (RulesUI) {
+            // make sure Rule.ui is created before calling .init()
+            // Rule.component(this.App, this.idBase); // prepare the UI component
+            RulesUI.addView(Rule.ui());
+
+            Rule.on("delete", (deletedRule) => {
+               $$(this.ids.rules).removeView(Rule.ids.component);
+
+               var index = this.listRules.indexOf(deletedRule);
+               if (index !== -1) {
+                  this.listRules.splice(index, 1);
+               }
+            });
+         }
+
+         if (settings) {
+            Rule.fromSettings(settings);
+         }
+      }
+
+      /**
+       * @method fromSettings
+       * Create an initial set of default values based upon our settings object.
+       * @param {obj} settings  The settings object we created in .toSettings()
+       */
+      fromSettings(settings) {
+         // settings: [
+         //  { rule.settings },
+         //  { rule.settings }
+         // ]
+
+         // clear any existing Rules:
+         this.listRules.forEach((rule) => {
+            if (this.ids?.rules && rule?.ids?.component) {
+               $$(this.ids.rules).removeView(rule.ids.component);
+            }
+         });
+         this.listRules = [];
+
+         if (settings) {
+            settings.forEach((ruleSettings) => {
+               this.addRule(ruleSettings);
+            });
+         }
+      }
+
+      /**
+       * @method objectLoad
+       * A rule is based upon a Form that was working with an Object.
+       * .objectLoad() is how we specify which object we are working with.
+       * @param {ABObject} object
+       *        The object that will be used to evaluate the Rules
+       */
+      objectLoad(object) {
+         super.objectLoad(object);
+
+         // tell each of our rules about our object
+         this.listRules.forEach((r) => {
+            r.objectLoad(object);
+         });
+      }
+      /*
+      processPre(options) {
+         (this.listRules || [])
+            .filter((rule) => rule.isPreProcess == true)
+            .forEach((rule) => {
+               rule.processPre(options, options.data);
+            });
+      }
+*/
+      /**
+       * @method process
+       * Take the provided data and process each of our rules.
+       * @param {obj} options
+       * @return {promise}
+       */ /*
+      process(options) {
+         return new Promise((resolve, reject) => {
+            let listRules = (this.listRules || []).filter(
+               (rule) => !rule.isPreProcess
+            );
+
+            var numDone = 0;
+            var onDone = () => {
+               numDone++;
+               if (numDone >= listRules.length) {
+                  resolve();
+               }
+            };
+
+            listRules.forEach((rule) => {
+               rule
+                  .process(options)
+                  .then(function () {
+                     onDone();
+                  })
+                  .catch((err) => {
+                     reject(err);
+                  });
+            });
+
+            if (listRules.length == 0) {
+               resolve();
+            }
+         });
+      }
+*/
+
+      /**
+       * @method toSettings
+       * create a settings object to be persisted with the application.
+       * @return {array} of rule settings.
+       */
+      toSettings() {
+         var settings = [];
+         this.listRules.forEach((r) => {
+            settings.push(r.toSettings());
+         });
+         return settings;
+      }
+
+      getRule() {
+         console.error(
+            "!!! ABViewRuleList.getRule() should be overridded by a child object."
+         );
+         return null;
+      }
+
+      formLoad(form) {
+         this.viewLoad(form);
+      }
+
+      get currentForm() {
+         return this.CurrentView;
+      }
+
+      /**
+       * @method isReady()
+       * returns a promise that gets resolved once our action is ready to work.
+       * @return {Promise}
+       */
+      rulesReady() {
+         // This base class should be overwritten by any subclass that needs
+         // to prepare:
+         return Promise.resolve();
+      }
+
+      // NOTE: Querybuilder v5.2 has a bug where it won't display the [and/or]
+      // choosers properly if it hasn't been shown before the .setValue() call.
+      // so this work around allows us to refresh the display after the .show()
+      // on the popup.
+      // When they've fixed the bug, we'll remove this workaround:
+      qbFixAfterShow() {
+         this.listRules.forEach((r) => {
+            r.qbFixAfterShow();
+         });
+      }
+   }
+
+   return ABViewRuleList;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/rules/ABViewRuleListFormSubmitRules.js":
+/*!**********************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/rules/ABViewRuleListFormSubmitRules.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewRuleList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABViewRuleList */ "./src/rootPages/Designer/properties/rules/ABViewRuleList.js");
+/* harmony import */ var _ABViewRule__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ABViewRule */ "./src/rootPages/Designer/properties/rules/ABViewRule.js");
+/* harmony import */ var _ruleActions_ABViewRuleActionFormSubmitRuleConfirmMessage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage */ "./src/rootPages/Designer/properties/rules/ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage.js");
+/* harmony import */ var _ruleActions_ABViewRuleActionFormSubmitRuleEmail__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ruleActions/ABViewRuleActionFormSubmitRuleEmail */ "./src/rootPages/Designer/properties/rules/ruleActions/ABViewRuleActionFormSubmitRuleEmail.js");
+//
+// ABViewRuleListFormSubmitRules
+//
+// A component that is responsible for displaying the specific list of Submit
+// Rules for a form.
+//
+
+
+
+
+// const RuleExistPage = require("./ruleActions/ABViewRuleActionFormSubmitRuleExistPage");
+// const RuleParentPage = require("./ruleActions/ABViewRuleActionFormSubmitRuleParentPage");
+// const RuleClosePopup = require("./ruleActions/ABViewRuleActionFormSubmitRuleClosePopup");
+// const RuleWebsite = require("./ruleActions/ABViewRuleActionFormSubmitRuleWebsite");
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB, iBase) {
+   const ABViewRuleList = (0,_ABViewRuleList__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const ABViewRule = (0,_ABViewRule__WEBPACK_IMPORTED_MODULE_1__["default"])(AB);
+   const L = ABViewRuleList.L();
+
+   const RuleConfirmMessage = (0,_ruleActions_ABViewRuleActionFormSubmitRuleConfirmMessage__WEBPACK_IMPORTED_MODULE_2__["default"])(AB);
+   const RuleEmail = (0,_ruleActions_ABViewRuleActionFormSubmitRuleEmail__WEBPACK_IMPORTED_MODULE_3__["default"])(AB);
+
+   class ABViewRuleListFormSubmitRules extends ABViewRuleList {
+      constructor(base = `ABViewRuleListFormSubmitRules`) {
+         var settings = {
+            labels: {
+               header: L("Submit Rules"),
+               headerDefault: L("Submit Rules"),
+            },
+         };
+         super(base, settings);
+         this.base = base;
+      }
+
+      // must return the actual Rule object.
+      getRule() {
+         var listActions = [
+            new RuleConfirmMessage(`${this.idBase}_ruleActionConfirmMessage`),
+            // new RuleExistPage(this.App, `${this.idBase}_ruleActionExistPage`),
+            // new RuleParentPage(this.App, `${this.idBase}_ruleActionParentPage`),
+            // new RuleClosePopup(this.App, `${this.idBase}_ruleActionClosePopup`),
+            // new RuleWebsite(this.App, `${this.idBase}_ruleActionWebsite`),
+            new RuleEmail(`${this.idBase}_ruleActionEmail`),
+         ];
+
+         var Rule = new ABViewRule(`${this.base}_rule`, listActions);
+         Rule.init(this.AB);
+         Rule.objectLoad(this.CurrentObject);
+         Rule.formLoad(this.currentForm);
+         return Rule;
+      }
+   }
+
+   return new ABViewRuleListFormSubmitRules(iBase);
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/rules/ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage.js":
+/*!*************************************************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/rules/ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage.js ***!
+  \*************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewRuleAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ABViewRuleAction */ "./src/rootPages/Designer/properties/rules/ABViewRuleAction.js");
+//
+// ABViewRuleActionFormSubmitRuleConfirmMessage
+//
+//
+//
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const ABViewRuleAction = (0,_ABViewRuleAction__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABViewRuleAction.L();
+
+   class ABViewRuleActionFormSubmitRuleConfirmMessage extends ABViewRuleAction {
+      /**
+       * @param {object} App
+       *      The shared App object that is created in OP.Component
+       * @param {string} idBase
+       *      Identifier for this component
+       */
+      constructor(idBase) {
+         super(idBase, {
+            message: "",
+         });
+
+         this.key = "ABViewRuleActionFormSubmitRuleConfirmMessage";
+         this.label = L("Show a confirmation message");
+
+         this.formRows = []; // keep track of the Value Components being set
+         // [
+         //		{ fieldId: xxx, value:yyy, type:key['string', 'number', 'date',...]}
+         // ]
+      }
+
+      // conditionFields() {
+      //    var fieldTypes = ["string", "number", "date", "formula", "calculate"];
+
+      //    var currFields = [];
+
+      //    if (this.currentObject) {
+      //       this.currentObject.fields().forEach((f) => {
+      //          if (fieldTypes.indexOf(f.key) != -1) {
+      //             // NOTE: the .id value must match the obj[.id]  in the data set
+      //             // so if your object data looks like:
+      //             // 	{
+      //             //		name_first:'Neo',
+      //             //		name_last: 'The One'
+      //             //  },
+      //             // then the ids should be:
+      //             // { id:'name_first', value:'xxx', type:'string' }
+      //             currFields.push({
+      //                id: f.columnName,
+      //                value: f.label,
+      //                type: f.key
+      //             });
+      //          }
+      //       });
+      //    }
+
+      //    return currFields;
+      // }
+
+      ui() {
+         return {
+            id: this.ids.message,
+            view: "textarea",
+            height: 130,
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+         return Promise.resolve();
+      }
+
+      // valueDisplayComponent
+      // Return an ABView to display our values form.
+      //
+      // valueDisplayComponent(idBase) {
+      //    var ids = {
+      //       message: `${idBase}_message`,
+      //    };
+
+      //    this._ui = {
+      //       ui: {
+      //          id: ids.message,
+      //          view: "textarea",
+      //          // label: this.labels.component.message,
+      //          // labelWidth: this.AB.UISettings.config().labelWidthLarge,
+      //          height: 130,
+      //       },
+
+      //       init: () => {},
+
+      //       _logic: _logic,
+
+      //       fromSettings: (valueRules) => {
+      //          _logic.fromSettings(valueRules);
+      //       },
+      //       toSettings: () => {
+      //          return _logic.toSettings();
+      //       },
+      //    };
+
+      //    var _logic = {
+      //       fromSettings: (valueRules) => {
+      //          valueRules = valueRules || {};
+
+      //          $$(ids.message).setValue(valueRules.message || "");
+      //       },
+
+      //       toSettings: () => {
+      //          // return the confirm message
+      //          return {
+      //             message: $$(ids.message).getValue() || "",
+      //          };
+      //       },
+      //    };
+
+      //    return this._ui;
+      // }
+
+      // // process
+      // // gets called when a form is submitted and the data passes the Query Builder Rules.
+      // // @param {obj} options
+      // process(options) {
+      //    return new Promise((resolve, reject) => {
+      //       var confirmMessage = this.valueRules.message || "";
+
+      //       webix.message({
+      //          text: confirmMessage,
+      //          type: "info",
+      //       });
+
+      //       resolve();
+      //    });
+      // }
+
+      // fromSettings
+      // initialize this Action from a given set of setting values.
+      // @param {obj}  settings
+      fromSettings(settings) {
+         settings = settings || {};
+         super.fromSettings(settings); // let the parent handle the QB
+
+         // if we have a display component, then populate it:
+         $$(this.ids.message)?.setValue(settings.message || "");
+      }
+
+      // toSettings
+      // return an object that represents the current state of this Action
+      // @return {obj}
+      toSettings() {
+         // settings: {
+         //	message:''
+         // }
+
+         // let our parent store our QB settings
+         var settings = super.toSettings();
+
+         settings.message = $$(this.ids.message)?.getValue() || "";
+
+         return settings;
+      }
+   }
+
+   return ABViewRuleActionFormSubmitRuleConfirmMessage;
+}
+
+
+/***/ }),
+
+/***/ "./src/rootPages/Designer/properties/rules/ruleActions/ABViewRuleActionFormSubmitRuleEmail.js":
+/*!****************************************************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/rules/ruleActions/ABViewRuleActionFormSubmitRuleEmail.js ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewRuleAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ABViewRuleAction */ "./src/rootPages/Designer/properties/rules/ABViewRuleAction.js");
+//
+// ABViewRuleActionFormSubmitRuleEmail
+//
+//
+//
+
+
+// const ABViewRuleAction = require("../ABViewRuleAction");
+// const ABFieldConnect = require("../../platform/dataFields/ABFieldConnect");
+// const ABFieldEmail = require("../../platform/dataFields/ABFieldEmail");
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const ABViewRuleAction = (0,_ABViewRuleAction__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const L = ABViewRuleAction.L();
+
+   class ABViewRuleActionFormSubmitRuleEmail extends ABViewRuleAction {
+      /**
+       * @param {object} App
+       *      The shared App object that is created in OP.Component
+       * @param {string} idBase
+       *      Identifier for this component
+       */
+      constructor(idBase) {
+         super(idBase, {
+            form: "",
+            popup: "",
+            list: "",
+            toEmailsContainer: "",
+            toEmails: "",
+
+            fromName: "",
+
+            message: "",
+         });
+
+         this.key = "ABViewRuleActionFormSubmitRuleEmail";
+         this.label = L("Send a custom email");
+
+         this.formRows = []; // keep track of the Value Components being set
+         // [
+         //		{ fieldId: xxx, value:yyy, type:key['string', 'number', 'date',...]}
+         // ]
+      }
+
+      // conditionFields() {
+      //    var fieldTypes = ["string", "number", "date", "formula", "calculate"];
+
+      //    var currFields = [];
+
+      //    if (this.CurrentObject) {
+      //       this.CurrentObject.fields().forEach((f) => {
+      //          if (fieldTypes.indexOf(f.key) != -1) {
+      //             // NOTE: the .id value must match the obj[.id]  in the data set
+      //             // so if your object data looks like:
+      //             // 	{
+      //             //		name_first:'Neo',
+      //             //		name_last: 'The One'
+      //             //  },
+      //             // then the ids should be:
+      //             // { id:'name_first', value:'xxx', type:'string' }
+      //             currFields.push({
+      //                id: f.columnName,
+      //                value: f.label,
+      //                type: f.key
+      //             });
+      //          }
+      //       });
+      //    }
+
+      //    return currFields;
+      // }
+
+      ui() {
+         const ids = this.ids;
+         const _this = this;
+
+         return {
+            id: ids.form,
+            view: "form",
+            width: 450,
+            elementsConfig: {
+               labelPosition: "top",
+               labelWidth: 100,
+            },
+            cols: [
+               // email form
+               {
+                  width: 330,
+                  rows: [
+                     {
+                        // id: ids.fromName,
+                        view: "text",
+                        name: "fromName",
+                        label: L("From Name"),
+                     },
+                     {
+                        view: "text",
+                        name: "fromEmail",
+                        label: L("From Email"),
+                        validate: webix.rules.isEmail,
+                        on: {
+                           onChange: function (newVal, oldVal) {
+                              if (this.getValue() && !this.validate()) {
+                                 $$(ids.form).markInvalid(
+                                    "fromEmail",
+                                    L("Email is invalid")
+                                 );
+                              } else {
+                                 $$(ids.form).markInvalid("fromEmail", false);
+                              }
+                           },
+                        },
+                     },
+                     {
+                        id: ids.toEmailsContainer,
+                        view: "forminput",
+                        name: "toEmails",
+                        label: L("Send"),
+                        css: "ab-rich-text",
+                        width: 320,
+                        body: {
+                           width: 320,
+                           rows: [
+                              {
+                                 height: 25,
+                              },
+                              {
+                                 id: ids.toEmails,
+                                 width: 320,
+                                 view: "layout",
+                                 rows: [],
+                              },
+                              {
+                                 view: "button",
+                                 css: "webix_primary",
+                                 type: "icon",
+                                 icon: "fa fa-plus",
+                                 label: L("Add a recipient"),
+                                 width: 150,
+                                 click: () => {
+                                    this.toEmailAdd();
+                                 },
+                              },
+                           ],
+                        },
+                     },
+                     {
+                        view: "text",
+                        name: "subject",
+                        label: L("Subject"),
+                     },
+                     {
+                        id: ids.message,
+                        view: "textarea",
+                        name: "message",
+                        label: L("Message"),
+                        width: 320,
+                        height: 400,
+                     },
+                     // {
+                     //    view: 'label',
+                     //    label: 'Message',
+                     //    css: { 'font-weight': 'bold' }
+                     // },
+                     // {
+                     //    view: 'forminput',
+                     //    id: ids.message,
+                     //    name: 'message',
+                     //    label: 'Message',
+                     //    css: "ab-rich-text",
+                     //    width: 320,
+                     //    height: 400,
+                     //    body: {
+                     //       view: 'tinymce-editor'
+                     //    }
+                     // }
+                  ],
+               },
+               // field list
+               {
+                  rows: [
+                     {
+                        view: "template",
+                        type: "header",
+                        template: "Fields",
+                     },
+                     {
+                        id: ids.list,
+                        view: "list",
+                        width: 120,
+                        css: { "background-color": "#fff !important;" },
+                        template: (obj, common) => {
+                           return this.fieldTemplate(obj, common);
+                        },
+                        on: {
+                           onItemClick: function (id, e, node) {
+                              var component = this.getItem(id);
+                              _this.enterField(component);
+                           },
+                        },
+                     },
+                  ],
+               },
+            ],
+         };
+      }
+
+      init(AB) {
+         this.AB = AB;
+
+         const ids = this.ids;
+
+         if (this.CurrentObject) {
+            $$(ids.list).parse(
+               this.CurrentObject.fields((f) => f.fieldUseAsLabel())
+            );
+            $$(ids.list).refresh();
+         }
+
+         this.refreshUI();
+      }
+
+      // // valueDisplayComponent
+      // // Return an ABView to display our values form.
+      // //
+      // valueDisplayComponent(idBase) {
+      //    var ids = {
+      //       form: `${idBase}_form`,
+      //       popup: `${idBase}_popup`,
+      //       list: `${idBase}_fieldList`,
+      //       toEmailsContainer: `${idBase}_toEmailsContainer`,
+      //       toEmails: `${idBase}_toEmails`,
+      //       message: `${idBase}_message`,
+      //    };
+
+      //    this._ui = {
+      //       ui: {
+      //          id: ids.form,
+      //          view: "form",
+      //          width: 450,
+      //          elementsConfig: {
+      //             labelPosition: "top",
+      //             labelWidth: 100,
+      //          },
+      //          cols: [
+      //             // email form
+      //             {
+      //                width: 330,
+      //                rows: [
+      //                   {
+      //                      view: "text",
+      //                      name: "fromName",
+      //                      label: L("From Name"),
+      //                   },
+      //                   {
+      //                      view: "text",
+      //                      name: "fromEmail",
+      //                      label: L("From Email"),
+      //                      validate: webix.rules.isEmail,
+      //                      on: {
+      //                         onChange: function (newVal, oldVal) {
+      //                            if (this.getValue() && !this.validate()) {
+      //                               $$(ids.form).markInvalid(
+      //                                  "fromEmail",
+      //                                  "Email is invalid"
+      //                               );
+      //                            } else {
+      //                               $$(ids.form).markInvalid(
+      //                                  "fromEmail",
+      //                                  false
+      //                               );
+      //                            }
+      //                         },
+      //                      },
+      //                   },
+      //                   {
+      //                      id: ids.toEmailsContainer,
+      //                      view: "forminput",
+      //                      name: "toEmails",
+      //                      label: L("Send"),
+      //                      css: "ab-rich-text",
+      //                      width: 320,
+      //                      body: {
+      //                         width: 320,
+      //                         rows: [
+      //                            {
+      //                               height: 25,
+      //                            },
+      //                            {
+      //                               id: ids.toEmails,
+      //                               width: 320,
+      //                               view: "layout",
+      //                               rows: [],
+      //                            },
+      //                            {
+      //                               view: "button",
+      //                               css: "webix_primary",
+      //                               type: "icon",
+      //                               icon: "fa fa-plus",
+      //                               label: L("Add a recipient"),
+      //                               width: 150,
+      //                               click: () => {
+      //                                  _logic.toEmailAdd();
+      //                               },
+      //                            },
+      //                         ],
+      //                      },
+      //                   },
+      //                   {
+      //                      view: "text",
+      //                      name: "subject",
+      //                      label: L("Subject"),
+      //                   },
+      //                   {
+      //                      view: "textarea",
+      //                      id: ids.message,
+      //                      name: "message",
+      //                      label: L("Message"),
+      //                      width: 320,
+      //                      height: 400,
+      //                   },
+      //                   // {
+      //                   // 	view: 'label',
+      //                   // 	label: 'Message',
+      //                   // 	css: { 'font-weight': 'bold' }
+      //                   // },
+      //                   // {
+      //                   // 	view: 'forminput',
+      //                   // 	id: ids.message,
+      //                   // 	name: 'message',
+      //                   // 	label: 'Message',
+      //                   // 	css: "ab-rich-text",
+      //                   // 	width: 320,
+      //                   // 	height: 400,
+      //                   // 	body: {
+      //                   // 		view: 'tinymce-editor'
+      //                   // 	}
+      //                   // }
+      //                ],
+      //             },
+      //             // field list
+      //             {
+      //                rows: [
+      //                   {
+      //                      view: "template",
+      //                      type: "header",
+      //                      template: "Fields",
+      //                   },
+      //                   {
+      //                      id: ids.list,
+      //                      view: "list",
+      //                      width: 120,
+      //                      css: { "background-color": "#fff !important;" },
+      //                      template: function (obj, common) {
+      //                         return _logic.fieldTemplate(obj, common);
+      //                      },
+      //                      on: {
+      //                         onItemClick: function (id, e, node) {
+      //                            var component = this.getItem(id);
+
+      //                            _logic.enterField(component);
+      //                         },
+      //                      },
+      //                   },
+      //                ],
+      //             },
+      //          ],
+      //       },
+
+      //       init: () => {
+      //          if (this.CurrentObject) {
+      //             $$(ids.list).parse(
+      //                this.CurrentObject.fields((f) => f.fieldUseAsLabel())
+      //             );
+      //             $$(ids.list).refresh();
+      //          }
+
+      //          _logic.refreshUI();
+      //       },
+
+      //       _logic: _logic,
+
+      //       fromSettings: (valueRules) => {
+      //          _logic.fromSettings(valueRules);
+      //       },
+      //       toSettings: () => {
+      //          return _logic.toSettings();
+      //       },
+      //    };
+
+      //    var _logic = {
+      //       fromSettings: (valueRules) => {
+      //          valueRules = valueRules || {};
+
+      //          $$(ids.form).setValues(valueRules);
+
+      //          // Populate recipients
+      //          var recipients = valueRules.toEmails || [];
+      //          recipients.forEach((r) => {
+      //             _logic.toEmailAdd({
+      //                type: r.type, // 'to', 'cc' or 'bcc'
+      //                emailType: r.emailType, // 'email' or 'field'
+      //                value: r.value,
+      //             });
+      //          });
+
+      //          _logic.refreshUI();
+      //       },
+
+      //       toSettings: () => {
+      //          var formVals = $$(ids.form).getValues() || {};
+
+      //          // Get recipients
+      //          var recipients = [];
+      //          $$(ids.toEmails)
+      //             .getChildViews()
+      //             .forEach((e) => {
+      //                // var type = e.queryView({ name: 'type' }).getValue();
+      //                var type = "to"; // TODO
+      //                var emailType = e
+      //                   .queryView({ name: "emailType" })
+      //                   .getValue();
+      //                var value = e.queryView({ name: emailType }).getValue();
+
+      //                recipients.push({
+      //                   type: type,
+      //                   emailType: emailType,
+      //                   value: value,
+      //                });
+      //             });
+
+      //          // return the confirm message
+      //          return {
+      //             fromName: formVals["fromName"],
+      //             fromEmail: formVals["fromEmail"],
+      //             toEmails: recipients,
+      //             subject: formVals["subject"],
+      //             message: formVals["message"],
+      //          };
+      //       },
+
+      //       /**
+      //        * @method toEmailTemplate
+      //        *
+      //        * @param settings - {
+      //        * 			type: string, // 'to', 'cc' or 'bcc'
+      //        * 			emailType: string, // 'email' or 'field'
+      //        * 			value: string
+      //        * }
+      //        */
+      //       toEmailTemplate: (settings) => {
+      //          settings = settings || {};
+
+      //          return {
+      //             width: 320,
+      //             cols: [
+      //                // {
+      //                // 	view: 'richselect',
+      //                // 	name: 'type',
+      //                // 	value: settings.type || 'to',
+      //                // 	width: 80,
+      //                // 	options: [
+      //                // 		{ id: 'to', value: "To:" },
+      //                // 		// EmailNotification does not support cc, bcc and reply.
+      //                // 		// { id: 'cc', value: "Cc:" },
+      //                // 		// { id: 'bcc', value: "Bcc:" },
+      //                // 		// { id: 'reply', value: "Reply-To:" }
+      //                // 	]
+      //                // },
+      //                {
+      //                   view: "richselect",
+      //                   name: "emailType",
+      //                   value: settings.emailType || "email",
+      //                   width: 150,
+      //                   options: [
+      //                      {
+      //                         id: "email",
+      //                         value: L("A custom email address"),
+      //                      },
+      //                      { id: "field", value: L("An email field") },
+      //                      { id: "query", value: L("From query") },
+      //                   ],
+      //                   on: {
+      //                      onChange: function (newVal, oldVal) {
+      //                         _logic.emailTypeChange(newVal, this);
+      //                      },
+      //                   },
+      //                },
+      //                {
+      //                   width: 150,
+      //                   name: "emailValue",
+      //                   visibleBatch: settings.emailType || "email",
+      //                   cols: [
+      //                      {
+      //                         view: "text",
+      //                         name: "email",
+      //                         batch: "email",
+      //                         value:
+      //                            settings.emailType == "email"
+      //                               ? settings.value
+      //                               : "",
+      //                         validate: webix.rules.isEmail,
+      //                         width: 150,
+      //                         on: {
+      //                            onChange: function (newVal, oldVal) {
+      //                               _logic.toEmailValidate();
+      //                            },
+      //                         },
+      //                      },
+      //                      {
+      //                         view: "richselect",
+      //                         name: "field",
+      //                         batch: "field",
+      //                         value:
+      //                            settings.emailType == "field"
+      //                               ? settings.value
+      //                               : "",
+      //                         width: 150,
+      //                         suggest: {
+      //                            on: {
+      //                               onBeforeShow: function () {
+      //                                  this.define("width", 300);
+      //                                  this.resize();
+      //                               },
+      //                            },
+      //                            data: _logic.emailFieldOptions(),
+      //                         },
+      //                      },
+      //                      {
+      //                         view: "richselect",
+      //                         name: "query",
+      //                         batch: "query",
+      //                         value:
+      //                            settings.emailType == "query"
+      //                               ? settings.value
+      //                               : "",
+      //                         width: 150,
+      //                         suggest: {
+      //                            on: {
+      //                               onBeforeShow: function () {
+      //                                  this.define("width", 300);
+      //                                  this.resize();
+      //                               },
+      //                            },
+      //                            data: _logic.queryOptions(),
+      //                         },
+      //                      },
+      //                   ],
+      //                },
+      //                {
+      //                   view: "button",
+      //                   css: "webix_danger",
+      //                   type: "icon",
+      //                   icon: "fa fa-trash-o",
+      //                   width: 32,
+      //                   click: function () {
+      //                      var $toView = this.getParentView();
+
+      //                      _logic.toEmailRemove($toView);
+      //                   },
+      //                },
+      //             ],
+      //          };
+      //       },
+
+      //       toEmailAdd: (settings) => {
+      //          var count = $$(ids.toEmails).getChildViews().length;
+
+      //          $$(ids.toEmails).addView(
+      //             _logic.toEmailTemplate(settings),
+      //             count
+      //          );
+
+      //          _logic.refreshUI();
+      //       },
+
+      //       emailTypeChange: (type, $select) => {
+      //          var $recipient = $select.getParentView();
+      //          var $emailValue = $recipient.queryView({ name: "emailValue" });
+
+      //          switch (type) {
+      //             case "field":
+      //                $emailValue.showBatch("field");
+      //                break;
+      //             case "query":
+      //                $emailValue.showBatch("query");
+      //                break;
+      //             default:
+      //                $emailValue.showBatch("email");
+      //                break;
+      //          }
+
+      //          $$(ids.toEmailsContainer).adjust();
+      //       },
+
+      //       toEmailRemove: ($toView) => {
+      //          $$(ids.toEmails).removeView($toView);
+
+      //          _logic.refreshUI();
+      //       },
+
+      //       toEmailValidate: () => {
+      //          var isAllValid = true;
+
+      //          $$(ids.toEmails)
+      //             .getChildViews()
+      //             .forEach((v) => {
+      //                let emailText = v.queryView({ name: "email" });
+      //                if (emailText.getValue() && !emailText.validate()) {
+      //                   isAllValid = false;
+      //                }
+      //             });
+
+      //          if (isAllValid) $$(ids.form).markInvalid("toEmails", false);
+      //          else $$(ids.form).markInvalid("toEmails", "Email is invalid");
+      //       },
+
+      //       fieldTemplate: (field, common) => {
+      //          return `<i class='fa fa-${field.icon} webix_icon_btn' aria-hidden='true'></i> ${field.label}`;
+      //       },
+
+      //       emailFieldOptions: () => {
+      //          var existsFieldIds = [];
+      //          var options = [];
+
+      //          var fnAddOptions = (currObj, fLink) => {
+      //             var emailFields = currObj
+      //                .fields((f) => f instanceof ABFieldEmail)
+      //                .map((f) => {
+      //                   var optId = "",
+      //                      optLabel = "";
+
+      //                   if (fLink) {
+      //                      optId = `${fLink.id}|${f.urlPointer()}`;
+      //                      optLabel = `${currObj.label}.${f.label} (${fLink.label})`;
+      //                   } else {
+      //                      optId = `|${f.urlPointer()}`;
+      //                      optLabel = `${currObj.label}.${f.label}`;
+      //                   }
+
+      //                   return {
+      //                      id: optId, // linkFieldId|fieldUrl
+      //                      value: optLabel,
+      //                   };
+      //                });
+
+      //             // TODO: prevent duplicate
+
+      //             options = options.concat(emailFields);
+      //          };
+
+      //          fnAddOptions(this.CurrentObject);
+
+      //          this.CurrentObject.connectFields().forEach((f) => {
+      //             // prevent looping
+      //             if (
+      //                // - prevent include connect objects of the base object
+      //                // f.datasourceLink.id == this.CurrentObject.id ||
+      //                // - check duplicate include objects
+      //                existsFieldIds.indexOf(f.id) > -1
+      //             )
+      //                return;
+
+      //             // store
+      //             existsFieldIds.push(f.id);
+
+      //             // add email fields of link object
+      //             fnAddOptions(f.datasourceLink, f);
+      //          });
+
+      //          return options;
+      //       },
+
+      //       queryOptions: () => {
+      //          var options = [];
+
+      //          // get data collections who is query and contains email field
+      //          let dcQueries = this.currentForm.AB.datacollections((dc) => {
+      //             let obj = dc.datasource;
+      //             return (
+      //                dc.settings.isQuery &&
+      //                obj &&
+      //                obj.fields((f) => f.key == "email").length > 0
+      //             );
+      //          });
+
+      //          dcQueries.forEach((dv) => {
+      //             if (dv.datasource) {
+      //                dv.datasource
+      //                   .fields((f) => f.key == "email")
+      //                   .forEach((f) => {
+      //                      options.push({
+      //                         id: `${dv.id}|${f.id}`, // ABDatacollectionID|fieldID
+      //                         value: `${dv.label}.${f.label}`,
+      //                      });
+      //                   });
+      //             }
+      //          });
+
+      //          return options;
+      //       },
+
+      //       enterField: (field) => {
+      //          var focusElem = webix.UIManager.getFocus();
+      //          var val = "";
+
+      //          if (
+      //             focusElem.config.view != "text" ||
+      //             focusElem.config.view != "textarea"
+      //          ) {
+      //             if (focusElem.getValue) val = focusElem.getValue();
+
+      //             if (focusElem.setValue)
+      //                focusElem.setValue(`${val}${field.label}`);
+
+      //             webix.UIManager.setFocus(focusElem);
+      //          }
+      //       },
+
+      //       refreshUI: () => {
+      //          $$(ids.toEmailsContainer).adjust();
+      //          $$(ids.message).adjust();
+      //       },
+      //    };
+
+      //    return this._ui;
+      // }
+
+      fromSettings(settings) {
+         super.fromSettings(settings); // let the parent handle the QB
+
+         let valueRules = settings.valueRules || {};
+
+         $$(this.ids.form).setValues(valueRules);
+
+         // Populate recipients
+         var recipients = valueRules.toEmails || [];
+         recipients.forEach((r) => {
+            this.toEmailAdd({
+               type: r.type, // 'to', 'cc' or 'bcc'
+               emailType: r.emailType, // 'email' or 'field'
+               value: r.value,
+            });
+         });
+
+         this.refreshUI();
+      }
+
+      toSettings() {
+         const ids = this.ids;
+
+         var settings = super.toSettings();
+
+         var formVals = $$(ids.form).getValues() || {};
+
+         // Get recipients
+         var recipients = [];
+         $$(ids.toEmails)
+            .getChildViews()
+            .forEach((e) => {
+               // var type = e.queryView({ name: 'type' }).getValue();
+               var type = "to"; // TODO
+               var emailType = e.queryView({ name: "emailType" }).getValue();
+               var value = e.queryView({ name: emailType }).getValue();
+
+               recipients.push({
+                  type: type,
+                  emailType: emailType,
+                  value: value,
+               });
+            });
+
+         // return the confirm message
+         settings.valueRules = {
+            fromName: formVals["fromName"],
+            fromEmail: formVals["fromEmail"],
+            toEmails: recipients,
+            subject: formVals["subject"],
+            message: formVals["message"],
+         };
+
+         return settings;
+      }
+
+      /**
+       * @method toEmailTemplate
+       *
+       * @param settings - {
+       *          type: string, // 'to', 'cc' or 'bcc'
+       *          emailType: string, // 'email' or 'field'
+       *          value: string
+       * }
+       */
+      toEmailTemplate(settings) {
+         settings = settings || {};
+         const _this = this;
+
+         return {
+            width: 320,
+            cols: [
+               // {
+               //    view: 'richselect',
+               //    name: 'type',
+               //    value: settings.type || 'to',
+               //    width: 80,
+               //    options: [
+               //       { id: 'to', value: "To:" },
+               //       // EmailNotification does not support cc, bcc and reply.
+               //       // { id: 'cc', value: "Cc:" },
+               //       // { id: 'bcc', value: "Bcc:" },
+               //       // { id: 'reply', value: "Reply-To:" }
+               //    ]
+               // },
+               {
+                  view: "richselect",
+                  name: "emailType",
+                  value: settings.emailType || "email",
+                  width: 150,
+                  options: [
+                     {
+                        id: "email",
+                        value: L("A custom email address"),
+                     },
+                     { id: "field", value: L("An email field") },
+                     { id: "query", value: L("From query") },
+                  ],
+                  on: {
+                     onChange: function (newVal, oldVal) {
+                        _this.emailTypeChange(newVal, this);
+                     },
+                  },
+               },
+               {
+                  width: 150,
+                  name: "emailValue",
+                  visibleBatch: settings.emailType || "email",
+                  cols: [
+                     {
+                        view: "text",
+                        name: "email",
+                        batch: "email",
+                        value:
+                           settings.emailType == "email" ? settings.value : "",
+                        validate: webix.rules.isEmail,
+                        width: 150,
+                        on: {
+                           onChange: (newVal, oldVal) => {
+                              this.toEmailValidate();
+                           },
+                        },
+                     },
+                     {
+                        view: "richselect",
+                        name: "field",
+                        batch: "field",
+                        value:
+                           settings.emailType == "field" ? settings.value : "",
+                        width: 150,
+                        suggest: {
+                           on: {
+                              onBeforeShow: function () {
+                                 this.define("width", 300);
+                                 this.resize();
+                              },
+                           },
+                           data: this.emailFieldOptions(),
+                        },
+                     },
+                     {
+                        view: "richselect",
+                        name: "query",
+                        batch: "query",
+                        value:
+                           settings.emailType == "query" ? settings.value : "",
+                        width: 150,
+                        suggest: {
+                           on: {
+                              onBeforeShow: function () {
+                                 this.define("width", 300);
+                                 this.resize();
+                              },
+                           },
+                           data: this.queryOptions(),
+                        },
+                     },
+                  ],
+               },
+               {
+                  view: "button",
+                  css: "webix_danger",
+                  type: "icon",
+                  icon: "fa fa-trash-o",
+                  width: 32,
+                  click: function () {
+                     var $toView = this.getParentView();
+                     _this.toEmailRemove($toView);
+                  },
+               },
+            ],
+         };
+      }
+
+      toEmailAdd(settings) {
+         var count = $$(this.ids.toEmails).getChildViews().length;
+
+         $$(this.ids.toEmails).addView(this.toEmailTemplate(settings), count);
+
+         this.refreshUI();
+      }
+
+      emailTypeChange(type, $select) {
+         var $recipient = $select.getParentView();
+         var $emailValue = $recipient.queryView({ name: "emailValue" });
+
+         switch (type) {
+            case "field":
+               var fields = this.emailFieldOptions();
+               if (fields.length > 0) {
+                  $emailValue.showBatch("field");
+               } else {
+                  $select.setValue("email");
+                  webix.message(
+                     L("This form's chosen Datacollection has no Email Fields")
+                  );
+               }
+               break;
+            case "query":
+               var queries = this.queryOptions();
+               if (queries.length > 0) {
+                  $emailValue.showBatch("query");
+               } else {
+                  $select.setValue("email");
+                  webix.message(
+                     L(
+                        "There are no queries with Email Fields in this Application"
+                     )
+                  );
+               }
+               break;
+            default:
+               $emailValue.showBatch("email");
+               break;
+         }
+
+         $$(this.ids.toEmailsContainer).adjust();
+      }
+
+      toEmailRemove($toView) {
+         $$(this.ids.toEmails).removeView($toView);
+         this.refreshUI();
+      }
+
+      toEmailValidate() {
+         let isAllValid = true;
+
+         $$(this.ids.toEmails)
+            .getChildViews()
+            .forEach((v) => {
+               let emailText = v.queryView({ name: "email" });
+               if (emailText.getValue() && !emailText.validate()) {
+                  isAllValid = false;
+               }
+            });
+
+         if (isAllValid) $$(this.ids.form).markInvalid("toEmails", false);
+         else $$(this.ids.form).markInvalid("toEmails", L("Email is invalid"));
+      }
+
+      fieldTemplate(field, common) {
+         return `<i class='fa fa-${field.icon} webix_icon_btn' aria-hidden='true'></i> ${field.label}`;
+      }
+
+      emailFieldOptions() {
+         var existsFieldIds = [];
+         var options = [];
+
+         var fnAddOptions = (currObj, fLink) => {
+            var emailFields = currObj
+               .fields((f) => f.key == "email")
+               .map((f) => {
+                  var optId = "",
+                     optLabel = "";
+
+                  if (fLink) {
+                     optId = `${fLink.id}|${f.urlPointer()}`;
+                     optLabel = `${currObj.label}.${f.label} (${fLink.label})`;
+                  } else {
+                     optId = `|${f.urlPointer()}`;
+                     optLabel = `${currObj.label}.${f.label}`;
+                  }
+
+                  return {
+                     id: optId, // linkFieldId|fieldUrl
+                     value: optLabel,
+                  };
+               });
+
+            // TODO: prevent duplicate
+
+            options = options.concat(emailFields);
+         };
+
+         fnAddOptions(this.CurrentObject);
+
+         this.CurrentObject.connectFields().forEach((f) => {
+            // prevent looping
+            if (
+               // - prevent include connect objects of the base object
+               // f.datasourceLink.id == this.CurrentObject.id ||
+               // - check duplicate include objects
+               existsFieldIds.indexOf(f.id) > -1
+            )
+               return;
+
+            // store
+            existsFieldIds.push(f.id);
+
+            // add email fields of link object
+            fnAddOptions(f.datasourceLink, f);
+         });
+
+         return options;
+      }
+
+      queryOptions() {
+         var options = [];
+
+         // get data collections who is query and contains email field
+         // Limit ourselves to what is Included in our current Application
+         let dcQueries = this.currentForm.application.datacollectionsIncluded(
+            (dc) => {
+               let obj = dc.datasource;
+               return (
+                  dc.settings.isQuery &&
+                  obj &&
+                  obj.fields((f) => f.key == "email").length > 0
+               );
+            }
+         );
+
+         dcQueries.forEach((dv) => {
+            if (dv.datasource) {
+               dv.datasource
+                  .fields((f) => f.key == "email")
+                  .forEach((f) => {
+                     options.push({
+                        id: `${dv.id}|${f.id}`,
+                        // ABDatacollectionID|fieldID
+                        value: `${dv.label}.${f.label}`,
+                     });
+                  });
+            }
+         });
+
+         return options;
+      }
+
+      enterField(field) {
+         var focusElem = webix.UIManager.getFocus();
+         var val = "";
+
+         if (
+            focusElem.config.view != "text" ||
+            focusElem.config.view != "textarea"
+         ) {
+            if (focusElem.getValue) val = focusElem.getValue();
+
+            if (focusElem.setValue) focusElem.setValue(`${val}${field.label}`);
+
+            webix.UIManager.setFocus(focusElem);
+         }
+      }
+
+      refreshUI() {
+         $$(this.ids.toEmailsContainer).adjust();
+         $$(this.ids.message).adjust();
+      }
+
+      // // process
+      // // gets called when a form is submitted and the data passes the Query Builder Rules.
+      // // @param {obj} options - {
+      // //							data: {obj} rowData,
+      // //							form: {ABViewForm}
+      // //						}
+      // process(options) {
+      //    // validate sender's email is invalid
+      //    if (!webix.rules.isEmail(this.valueRules.fromEmail)) {
+      //       return Promise.resolve();
+      //    }
+
+      //    var recipients = [];
+
+      //    return Promise.resolve()
+      //       .then(() => {
+      //          // Pull recipients data
+      //          return new Promise((resolve, reject) => {
+      //             var tasks = [];
+
+      //             this.valueRules.toEmails.forEach((rec) => {
+      //                tasks.push(
+      //                   new Promise((next, err) => {
+      //                      // TODO: Cc, Bcc
+
+      //                      // field
+      //                      if (rec.emailType == "field") {
+      //                         var emailFieldUrl = rec.value.split("|")[1]; // linkFieldId|emailFieldUrl
+      //                         var emailField =
+      //                            this.CurrentObject.application.urlResolve(
+      //                               emailFieldUrl
+      //                            );
+      //                         if (emailField) {
+      //                            // Pull email source object
+      //                            if (
+      //                               emailField.object.id == this.CurrentObject.id
+      //                            ) {
+      //                               var emailData =
+      //                                  options.data[emailField.columnName];
+      //                               if (emailData)
+      //                                  recipients =
+      //                                     recipients.concat(emailData);
+      //                            }
+      //                            // Pull emails from link object
+      //                            else {
+      //                               let linkFieldId = rec.value.split("|")[0];
+      //                               let linkFields = this.CurrentObject.fields(
+      //                                  (f) =>
+      //                                     f instanceof ABFieldConnect &&
+      //                                     f.id == linkFieldId
+      //                               );
+      //                               linkFields.forEach((f) => {
+      //                                  var linkedData =
+      //                                     options.data[f.relationName()] || [];
+
+      //                                  // convert to an array
+      //                                  if (
+      //                                     linkedData &&
+      //                                     !Array.isArray(linkedData)
+      //                                  )
+      //                                     linkedData = [linkedData];
+
+      //                                  // pull email address
+      //                                  linkedData.forEach((d) => {
+      //                                     var email = d[emailField.columnName];
+      //                                     if (email)
+      //                                        recipients =
+      //                                           recipients.concat(email);
+      //                                  });
+      //                               });
+      //                            }
+
+      //                            next();
+      //                         } else {
+      //                            next();
+      //                         }
+      //                      }
+
+      //                      // query
+      //                      else if (rec.emailType == "query") {
+      //                         var dvIdAndFieldId = rec.value; // ABDatacollectionId|fieldId
+      //                         if (!dvIdAndFieldId) return next();
+
+      //                         var dcId = dvIdAndFieldId.split("|")[0];
+      //                         var fieldId = dvIdAndFieldId.split("|")[1];
+
+      //                         var dcQuery =
+      //                            this.currentForm.AB.datacollectionByID(dcId);
+      //                         if (!dcQuery) return next();
+
+      //                         var field = dcQuery.datasource.fieldByID(fieldId);
+      //                         if (!field) return next();
+
+      //                         // get data of data collection
+      //                         dcQuery.getData().forEach((data) => {
+      //                            var emailAddr = data[field.columnName];
+      //                            if (emailAddr) recipients.push(emailAddr);
+      //                         });
+
+      //                         next();
+      //                      }
+
+      //                      // email
+      //                      else {
+      //                         recipients.push(rec.value);
+      //                         next();
+      //                      }
+      //                   })
+      //                );
+      //             });
+
+      //             Promise.all(tasks).catch(reject).then(resolve);
+      //          });
+      //       })
+      //       .then(() => {
+      //          // send out
+      //          return new Promise((resolve, reject) => {
+      //             recipients = this.AB.uniq(recipients).filter((r) => r);
+
+      //             if (!recipients || recipients.length < 1) return resolve();
+
+      //             // replace form value to template
+      //             var fromName = this.valueRules.fromName,
+      //                subject = this.valueRules.subject,
+      //                message = this.valueRules.message;
+
+      //             this.CurrentObject
+      //                .fields((f) => f.fieldUseAsLabel())
+      //                .forEach((f) => {
+      //                   var template = new RegExp(`{${f.label}}`, "g"),
+      //                      data = f.format(options.data);
+
+      //                   fromName = fromName.replace(template, data);
+      //                   subject = subject.replace(template, data);
+      //                   message = message.replace(template, data);
+      //                });
+
+      //             // send a email
+      //             this.AB.Network.post({
+      //                url: "/app_builder/email",
+      //                params: {
+      //                   fromName: fromName,
+      //                   fromEmail: this.valueRules.fromEmail,
+      //                   subject: subject,
+      //                   message: message,
+      //                   recipients: this.AB.uniq(recipients),
+      //                },
+      //             })
+      //                .then(() => {
+      //                   resolve();
+      //                })
+      //                .catch(reject);
+      //          });
+      //       });
+      // }
+   }
+
+   return ABViewRuleActionFormSubmitRuleEmail;
 }
 
 
@@ -77955,6 +81792,7 @@ var myClass = null;
           *        The ABViewXXX instance that we are editing the settings for.
           */
          populate(view) {
+            this.viewLoad(view);
             $$(this.ids.label).setValue(view.label);
          }
 
@@ -78642,8 +82480,6 @@ __webpack_require__.r(__webpack_exports__);
 
          if (!view) return;
 
-         this.viewEditing = view;
-
          // Set the objects you can choose from in the list
          // Pull data collections to options
          var objectOptions = this.propertyDatacollections(view);
@@ -79115,6 +82951,732 @@ const ABViewContainerDefaults = {
 
 /***/ }),
 
+/***/ "./src/rootPages/Designer/properties/views/ABViewForm.js":
+/*!***************************************************************!*\
+  !*** ./src/rootPages/Designer/properties/views/ABViewForm.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ABViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ABViewContainer */ "./src/rootPages/Designer/properties/views/ABViewContainer.js");
+/* harmony import */ var _rules_ABViewRuleListFormSubmitRules__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../rules/ABViewRuleListFormSubmitRules */ "./src/rootPages/Designer/properties/rules/ABViewRuleListFormSubmitRules.js");
+/*
+ * ABViewForm
+ * A Property manager for our ABViewForm definitions
+ */
+
+
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(AB) {
+   const ABViewContainer = (0,_ABViewContainer__WEBPACK_IMPORTED_MODULE_0__["default"])(AB);
+   const uiConfig = AB.Config.uiSettings();
+   const L = ABViewContainer.L();
+
+   var ABViewFormPropertyComponentDefaults = {};
+
+   const base = "properties_abview_form";
+   const PopupSubmitRule = (0,_rules_ABViewRuleListFormSubmitRules__WEBPACK_IMPORTED_MODULE_1__["default"])(
+      AB,
+      `${base}_popupSubmitRule`
+   );
+
+   class ABViewFormProperty extends ABViewContainer {
+      constructor() {
+         super(base, {
+            // Put our ids here
+            datacollection: "",
+            fields: "",
+            showLabel: "",
+            labelPosition: "",
+            labelWidth: "",
+            height: "",
+            clearOnLoad: "",
+            clearOnSave: "",
+
+            buttonSubmitRules: "",
+            buttonRecordRules: "",
+         });
+
+         this.AB = AB;
+         ABViewFormPropertyComponentDefaults =
+            this.AB.Class.ABViewManager.viewClass("form").defaultValues();
+      }
+
+      static get key() {
+         return "form";
+      }
+
+      ui() {
+         let ids = this.ids;
+
+         return super.ui([
+            {
+               id: ids.datacollection,
+               view: "richselect",
+               name: "datacollection",
+               label: L("Datacollection"),
+               labelWidth: uiConfig.labelWidthLarge,
+               skipAutoSave: true,
+               on: {
+                  onChange: (newId, oldId) => {
+                     this.selectSource(newId, oldId);
+                  },
+               },
+            },
+
+            {
+               view: "fieldset",
+               label: L("Form Fields:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.fields,
+                        view: "list",
+                        name: "fields",
+
+                        select: false,
+                        minHeight: 200,
+                        template: (...params) => {
+                           return this.listTemplate(...params);
+                        },
+                        type: {
+                           markCheckbox: function (item) {
+                              return (
+                                 "<span class='check webix_icon fa fa-" +
+                                 (item.selected ? "check-" : "") +
+                                 "square-o'></span>"
+                              );
+                           },
+                        },
+                        onClick: {
+                           check: (...params) => {
+                              return this.check(...params);
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
+            {
+               id: ids.showLabel,
+               name: "showLabel",
+               view: "checkbox",
+               label: L("Display Label"),
+               labelWidth: uiConfig.labelWidthLarge,
+               click: () => {
+                  this.onChange();
+               },
+            },
+            {
+               id: ids.labelPosition,
+               view: "richselect",
+               name: "labelPosition",
+
+               label: L("Label Position"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [
+                  {
+                     id: "left",
+                     value: L("Left"),
+                  },
+                  {
+                     id: "top",
+                     value: L("Top"),
+                  },
+               ],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.labelWidth,
+               view: "counter",
+               name: "labelWidth",
+
+               label: L("Label Width"),
+               labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.height,
+               view: "counter",
+               name: "height",
+               label: L("Height"),
+               labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.clearOnLoad,
+               view: "checkbox",
+               name: "clearOnLoad",
+
+               label: L("Clear on load"),
+               labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.clearOnSave,
+               view: "checkbox",
+               name: "clearOnSave",
+               label: L("Clear on save"),
+               labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               view: "fieldset",
+               label: L("Rules:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Submit Rules:"),
+                              width: uiConfig.labelWidthLarge,
+                           },
+                           {
+                              id: ids.buttonSubmitRules,
+                              view: "button",
+                              css: "webix_primary",
+                              name: "buttonSubmitRules",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              badge: 0,
+                              click: () => {
+                                 this.submitRuleShow();
+                              },
+                           },
+                        ],
+                     },
+                     // {
+                     //    cols: [
+                     //       {
+                     //          view: "label",
+                     //          label: L("Display Rules:"),
+                     //          width: uiConfig.labelWidthLarge,
+                     //       },
+                     //       {
+                     //          view: "button",
+                     //          name: "buttonDisplayRules",
+                     //          css: "webix_primary",
+                     //          label: L("Settings"),
+                     //          icon: "fa fa-gear",
+                     //          type: "icon",
+                     //          badge: 0,
+                     //          click: () => {
+                     //             this.displayRuleShow();
+                     //          },
+                     //       },
+                     //    ],
+                     // },
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Record Rules:"),
+                              width: uiConfig.labelWidthLarge,
+                           },
+                           {
+                              id: ids.buttonRecordRules,
+                              view: "button",
+                              name: "buttonRecordRules",
+                              css: "webix_primary",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              badge: 0,
+                              click: () => {
+                                 this.recordRuleShow();
+                              },
+                           },
+                        ],
+                     },
+                  ],
+               },
+            },
+         ]);
+      }
+
+      async init(AB) {
+         super.init(AB);
+
+         webix.extend($$(this.ids.component), webix.ProgressBar);
+
+         let allInits = [];
+
+         allInits.push(PopupSubmitRule.init(AB));
+         PopupSubmitRule.on("save", (/* settings */) => {
+            this.onChange();
+            this.populateBadgeNumber();
+         });
+
+         return Promise.all(allInits);
+      }
+
+      populate(view) {
+         super.populate(view);
+         let ids = this.ids;
+         if (!view) return;
+
+         let formCom = view.parentFormComponent();
+         let datacollectionId = formCom.settings.dataviewID
+            ? formCom.settings.dataviewID
+            : null;
+         var SourceSelector = $$(ids.datacollection);
+
+         // Pull data collections to options
+         var dcOptions = view.application
+            .datacollectionsIncluded()
+            .filter((dc) => {
+               var obj = dc.datasource;
+               return dc.sourceType == "object" && obj && !obj.isImported;
+            })
+            .map((d) => {
+               let entry = { id: d.id, value: d.label };
+               if (d.sourceType == "query") {
+                  entry.icon = "fa fa-filter";
+               } else {
+                  entry.icon = "fa fa-database";
+               }
+               return entry;
+            });
+         SourceSelector.define("options", dcOptions);
+         SourceSelector.define("value", datacollectionId);
+         SourceSelector.refresh();
+
+         this.propertyUpdateFieldOptions(datacollectionId);
+
+         // update properties when a field component is deleted
+         view.views().forEach((v) => {
+            if (v instanceof this.AB.Class.ABViewFormComponent)
+               v.once("destroyed", () => this.populate(view));
+         });
+
+         SourceSelector.enable();
+         $$(ids.showLabel).setValue(view.settings.showLabel);
+         $$(ids.labelPosition).setValue(
+            view.settings.labelPosition ||
+               ABViewFormPropertyComponentDefaults.labelPosition
+         );
+         $$(ids.labelWidth).setValue(
+            view.settings.labelWidth ||
+               ABViewFormPropertyComponentDefaults.labelWidth
+         );
+         $$(ids.height).setValue(
+            view.settings.height || ABViewFormPropertyComponentDefaults.height
+         );
+         $$(ids.clearOnLoad).setValue(
+            view.settings.clearOnLoad ||
+               ABViewFormPropertyComponentDefaults.clearOnLoad
+         );
+         $$(ids.clearOnSave).setValue(
+            view.settings.clearOnSave ||
+               ABViewFormPropertyComponentDefaults.clearOnSave
+         );
+
+         // NOTE: load the object and view BEFORE the .fromSettings();
+         PopupSubmitRule.objectLoad(this.CurrentObject);
+         PopupSubmitRule.viewLoad(view);
+         PopupSubmitRule.fromSettings(view.settings.submitRules || []);
+
+         // this.propertyUpdateRules(ids, view, datacollectionId);
+         this.populateBadgeNumber();
+
+         // when a change is made in the properties the popups need to reflect the change
+         this.updateEventIds = this.updateEventIds || {}; // { viewId: boolean, ..., viewIdn: boolean }
+         if (!this.updateEventIds[view.id]) {
+            this.updateEventIds[view.id] = true;
+
+            view.addListener("properties.updated", () => {
+               this.populateBadgeNumber();
+            });
+         }
+      }
+
+      defaultValues() {
+         let values = {};
+         var ViewClass = this.ViewClass();
+         if (ViewClass) {
+            values = ViewClass.defaultValues();
+         }
+         return values;
+      }
+
+      /**
+       * @method values
+       * return the values for this form.
+       * @return {obj}
+       */
+      values() {
+         let ids = this.ids;
+         let vals = super.values();
+
+         vals.settings = vals.settings || {};
+
+         vals.settings.dataviewID = $$(ids.datacollection).getValue();
+         vals.settings.showLabel = $$(ids.showLabel).getValue();
+         vals.settings.labelPosition =
+            $$(ids.labelPosition).getValue() ||
+            ABViewFormPropertyComponentDefaults.labelPosition;
+         vals.settings.labelWidth =
+            $$(ids.labelWidth).getValue() ||
+            ABViewFormPropertyComponentDefaults.labelWidth;
+         vals.settings.height = $$(ids.height).getValue();
+         vals.settings.clearOnLoad = $$(ids.clearOnLoad).getValue();
+         vals.settings.clearOnSave = $$(ids.clearOnSave).getValue();
+
+         vals.settings.submitRules = PopupSubmitRule.toSettings();
+         return vals;
+      }
+
+      /**
+       * @method FieldClass()
+       * A method to return the proper ABViewXXX Definition.
+       * NOTE: Must be overwritten by the Child Class
+       */
+      ViewClass() {
+         return super._ViewClass("carousel");
+      }
+
+      //
+      //
+      //
+
+      busy() {
+         $$(this.ids.component)?.showProgress?.({ type: "icon" });
+      }
+
+      check(e, fieldId) {
+         const ids = this.ids;
+         let currView = this.CurrentView;
+         let formView = currView.parentFormComponent();
+
+         // update UI list
+         let item = $$(ids.fields).getItem(fieldId);
+         item.selected = item.selected ? 0 : 1;
+         $$(ids.fields).updateItem(fieldId, item);
+
+         let doneFn = () => {
+            formView
+               .refreshDefaultButton(ids)
+               .save()
+               .then(() => {
+                  // refresh UI
+                  currView.emit("properties.updated", currView);
+                  this.onChange();
+               });
+
+            // // trigger a save()
+            // this.propertyEditorSave(ids, currView);
+         };
+
+         // add a field to the form
+         if (item.selected) {
+            let fieldView = currView.addFieldToForm(item);
+            if (fieldView) {
+               fieldView.save().then(() => {
+                  fieldView.once("destroyed", () => this.populate(currView));
+                  currView.viewInsert(fieldView).then(() => {
+                     doneFn();
+                  });
+               });
+            }
+         }
+         // remove field in the form
+         else {
+            let fieldView = formView
+               .fieldComponents()
+               .filter((c) => c.settings.fieldId == fieldId)[0];
+            if (fieldView) {
+               // let remainingViews = formView.views(c => c.settings.fieldId != fieldId);
+               // formView._views = remainingViews;
+
+               fieldView.destroy();
+               currView.viewRemove(fieldView).then(() => {
+                  doneFn();
+               });
+            }
+         }
+      }
+
+      populateBadgeNumber(/* */) {
+         const ids = this.ids;
+
+         let view = this.CurrentView;
+
+         if (!view) return;
+
+         if (view.settings.submitRules) {
+            $$(ids.buttonSubmitRules).define(
+               "badge",
+               view.settings.submitRules.length || null
+            );
+         } else {
+            $$(ids.buttonSubmitRules).define("badge", null);
+         }
+         $$(ids.buttonSubmitRules).refresh();
+
+         // if (view.settings.displayRules) {
+         //    $$(ids.buttonDisplayRules).define(
+         //       "badge",
+         //       view.settings.displayRules.length || null
+         //    );
+         //    $$(ids.buttonDisplayRules).refresh();
+         // } else {
+         //    $$(ids.buttonDisplayRules).define("badge", null);
+         //    $$(ids.buttonDisplayRules).refresh();
+         // }
+
+         if (view.settings.recordRules) {
+            $$(ids.buttonRecordRules).define(
+               "badge",
+               view.settings.recordRules.length || null
+            );
+         } else {
+            $$(ids.buttonRecordRules).define("badge", null);
+         }
+         $$(ids.buttonRecordRules).refresh();
+      }
+
+      ready() {
+         $$(this.ids.component)?.hideProgress?.();
+      }
+
+      submitRuleShow() {
+         PopupSubmitRule.fromSettings(this.CurrentView.settings.submitRules);
+         PopupSubmitRule.show();
+      }
+
+      listTemplate(field, common) {
+         let currView = this.CurrentView;
+
+         // disable in form
+         var fieldComponent = field.formComponent();
+         if (fieldComponent == null)
+            return `<i class='fa fa-times'></i>  ${field.label} <div class='ab-component-form-fields-component-info'> Disable </div>`;
+
+         var componentKey = fieldComponent.common().key;
+         var formComponent = currView.application.viewAll(
+            (v) => v.common().key == componentKey
+         )[0];
+
+         return `${common.markCheckbox(field)} ${
+            field.label
+         } <div class='ab-component-form-fields-component-info'> <i class='fa fa-${
+            formComponent ? formComponent.common().icon : "fw"
+         }'></i> ${
+            formComponent ? L(formComponent.common().labelKey) : ""
+         } </div>`;
+      }
+
+      /**
+       * @method propertyUpdateFieldOptions
+       * Populate fields of object to select list in property
+       *
+       * @param {ABViewForm} view - the current component
+       * @param {string} dcId - id of ABDatacollection
+       */
+      propertyUpdateFieldOptions(dcId) {
+         const ids = this.ids;
+         var formComponent = this.CurrentView.parentFormComponent();
+         var existsFields = formComponent.fieldComponents();
+         var datacollection = this.AB.datacollectionByID(dcId);
+         var object = datacollection ? datacollection.datasource : null;
+
+         // Pull field list
+         var fieldOptions = [];
+         if (object != null) {
+            fieldOptions = object.fields().map((f) => {
+               f.selected =
+                  existsFields.filter((com) => {
+                     return f.id == com.settings.fieldId;
+                  }).length > 0;
+
+               return f;
+            });
+
+            this.objectLoad(object);
+         }
+
+         $$(ids.fields).clearAll();
+         $$(ids.fields).parse(fieldOptions);
+      }
+
+      refreshDefaultButton() {
+         const ids = this.ids;
+
+         // If default button is not exists, then skip this
+         let defaultButton = this.views(
+            (v) => v instanceof this.ABViewFormButton && v.settings.isDefault
+         )[0];
+
+         // Add a default button
+         if (defaultButton == null) {
+            defaultButton = ABViewFormButton.newInstance(
+               this.application,
+               this
+            );
+            defaultButton.settings.isDefault = true;
+         }
+         // Remove default button from array, then we will add it to be the last item later (.push)
+         else {
+            this._views = this.views(
+               (v) => !(v instanceof ABViewFormButton) && !v.settings.isDefault
+            );
+         }
+
+         // Calculate position Y of the default button
+         let yList = this.views().map((v) => (v.position.y || 0) + 1);
+         yList.push(this._views.length || 0);
+         yList.push($$(ids.fields).length || 0);
+         let posY = Math.max(...yList);
+
+         // Update to be the last item
+         defaultButton.position.y = posY;
+
+         // Keep the default button is always the last item of array
+         this._views.push(defaultButton);
+
+         return defaultButton;
+      }
+
+      selectSource(dcId /*, oldDcId */) {
+         // TODO : warning message
+         const ids = this.ids;
+         this.busy();
+
+         let currView = this.CurrentView;
+         let formView = currView.parentFormComponent();
+
+         currView.settings.dataviewID = dcId;
+
+         // clear sub views
+         var viewsToRemove = currView._views;
+         currView._views = [];
+
+         return (
+            Promise.resolve()
+               .then(() => {
+                  var allRemoves = [];
+                  viewsToRemove.forEach((v) => {
+                     allRemoves.push(v.destroy());
+                  });
+                  return Promise.all(allRemoves);
+               })
+               // .then(() => {
+               //    // remove all old components
+               //    let destroyTasks = [];
+               //    if (oldDcId != null) {
+               //       let oldComps = formView.views();
+               //       oldComps.forEach(child => destroyTasks.push(() => child.destroy()));
+               //    }
+
+               //    return destroyTasks.reduce((promiseChain, currTask) => {
+               //       return promiseChain.then(currTask);
+               //    }, Promise.resolve([]));
+               // })
+               .then(() => {
+                  // refresh UI
+                  // formView.emit('properties.updated', currView);
+
+                  // Update field options in property
+                  this.propertyUpdateFieldOptions(dcId);
+
+                  // add all fields to editor by default
+                  if (currView._views.length > 0) return Promise.resolve();
+
+                  let saveTasks = [];
+                  let fields = $$(ids.fields).find({});
+                  fields.reverse();
+                  fields.forEach((f, index) => {
+                     if (!f.selected) {
+                        let yPosition = fields.length - index - 1;
+
+                        // Add new form field
+                        let newFieldView = currView.addFieldToForm(
+                           f,
+                           yPosition
+                        );
+                        if (newFieldView) {
+                           newFieldView.once("destroyed", () =>
+                              this.populate(currView)
+                           );
+
+                           // // Call save API
+                           saveTasks.push(newFieldView.save());
+                        }
+
+                        // update item to UI list
+                        f.selected = 1;
+                        $$(ids.fields).updateItem(f.id, f);
+                     }
+                  });
+
+                  let defaultButton = formView.refreshDefaultButton(ids);
+                  if (defaultButton) saveTasks.push(defaultButton.save());
+
+                  return Promise.all(saveTasks);
+               })
+               // Saving
+               .then(() => {
+                  //// NOTE: the way the .addFieldToForm() works, it will prevent
+                  //// the typical field.save() -> triggering the form.save() on a
+                  //// new Field.  So once all our field.saves() are finished, we
+                  //// need to perform a form.save() to persist the changes.
+                  return currView.save();
+               })
+               // Finally
+               .then(() => {
+                  // refresh UI
+                  formView.emit("properties.updated", currView);
+
+                  // Update field options in property
+                  this.propertyUpdateRules(ids, currView, dcId);
+
+                  this.ready();
+                  this.onChange();
+                  return Promise.resolve();
+               })
+         );
+      }
+   }
+
+   return ABViewFormProperty;
+}
+
+
+/***/ }),
+
 /***/ "./src/rootPages/Designer/properties/views/ABViewGrid.js":
 /*!***************************************************************!*\
   !*** ./src/rootPages/Designer/properties/views/ABViewGrid.js ***!
@@ -79324,7 +83886,7 @@ __webpack_require__.r(__webpack_exports__);
                                  this.linkPageComponent.clear();
 
                                  let currDC =
-                                    this.viewEditing?.AB.datacollectionByID(
+                                    this.CurrentView?.AB.datacollectionByID(
                                        newv
                                     );
                                  // disallow edit data of query
@@ -79683,9 +84245,9 @@ __webpack_require__.r(__webpack_exports__);
        *        The ABFieldXXX.id that should be frozen.
        */
       badgesFrozen(settings) {
-         const hidden = this.viewEditing.settings.hiddenFields || [];
+         const hidden = this.CurrentView.settings.hiddenFields || [];
 
-         const visibleFields = this.viewEditing.datacollection.datasource
+         const visibleFields = this.CurrentView.datacollection.datasource
             .fields((f) => hidden.indexOf(f.columnName) == -1)
             .map((f) => f.columnName);
 
@@ -79710,7 +84272,7 @@ __webpack_require__.r(__webpack_exports__);
 
       get datacollection() {
          return this.AB.datacollectionByID(
-            this.viewEditing.settings?.dataviewID
+            this.CurrentView.settings?.dataviewID
          );
       }
 
@@ -79720,7 +84282,7 @@ __webpack_require__.r(__webpack_exports__);
 
          if (!view) return;
 
-         this.viewEditing = view;
+         // this.viewEditing = view;
 
          $$(ids.datacollection).setValue(view.settings.dataviewID);
          $$(ids.isEditable).setValue(view.settings.isEditable);
@@ -79823,7 +84385,7 @@ __webpack_require__.r(__webpack_exports__);
 
       refreshGroupBy(dv) {
          const ids = this.ids;
-         let view = this.viewEditing;
+         let view = this.CurrentView;
          let groupFields = [];
          dv = dv || this.datacollection;
          if (dv && dv.datasource) {
@@ -80569,6 +85131,8 @@ var myClass = null;
 
          setSettings(settings = {}) {
             const ids = this.ids;
+
+            if (!settings) settings = {};
 
             //Convert some condition from string to integer
             (settings.queryRules || []).forEach((qr) => {
@@ -84219,6 +88783,10 @@ var myClass = null;
 
          viewLoad(view) {
             this.CurrentViewID = view?.id;
+
+            if (view?.application) {
+               this.applicationLoad(view.application);
+            }
          }
 
          /**
@@ -90657,7 +95225,9 @@ __webpack_require__.r(__webpack_exports__);
          EditorLayout.show();
 
          ComponentMenu.viewLoad(view);
-         ComponentMenu.show();
+         // NOTE: ComponentMenu.viewLoad() actually determines if the
+         // menu is show()n or not.
+         // ComponentMenu.show();
       }
 
       viewModeChange(newV, oldV) {
