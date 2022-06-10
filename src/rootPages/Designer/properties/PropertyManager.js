@@ -43,6 +43,7 @@ export default function (AB) {
       require("./process/ABProcessTriggerLifecycle.js"),
       require("./process/ABProcessTaskService.js"),
       require("./process/ABProcessTaskServiceInsertRecord.js"),
+      require("./process/ABProcessTaskServiceCalculate.js"),
       require("./process/ABProcessTaskServiceGetResetPasswordUrl.js"),
       require("./process/ABProcessTaskServiceQuery.js"),
       require("./process/ABProcessTaskUser.js"),
