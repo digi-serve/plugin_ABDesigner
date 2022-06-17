@@ -4,10 +4,10 @@
   "description": "(AppBuilder) A UI for designing AB resources.",
   "main": "index.js",
   "scripts": {
-    "build": "node_modules/.bin/webpack-cli --progress",
-    "build:update": "node_modules/.bin/webpack-cli",
+    "build": "webpack-cli --progress",
+    "build:update": "webpack-cli",
     "test": "mocha --config test/.mocharc.js test/**/*.test.js test/**/**/*.test.js",
-    "watch": "node_modules/.bin/webpack-cli --watch --progress"
+    "watch": "webpack-cli --watch --progress"
   },
   "author": "",
   "license": "ISC",
