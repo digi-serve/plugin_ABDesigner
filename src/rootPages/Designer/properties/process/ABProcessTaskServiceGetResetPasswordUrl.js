@@ -45,11 +45,10 @@ export default function (AB) {
                },
                {
                   id: ids.email,
-                  view: "text",
+                  view: "multicombo",
                   label: L("Email"),
-                  placeholder: L("Type email address here..."),
                   name: "email",
-                  value: "",
+                  options: [],
                },
             ],
          };
@@ -57,7 +56,6 @@ export default function (AB) {
 
       async init(AB) {
          this.AB = AB;
-
          return Promise.resolve();
       }
 
@@ -74,6 +72,16 @@ export default function (AB) {
       // }
 
       populate(element) {
+         const processData = (
+            element.process.processDataFields(element) ?? []
+         ).filter((item) => item.field?.key == "email").map((item) => {
+            return {
+               id: item.key,
+               value: item.label,
+            };
+         });
+
+
          const ids = this.ids;
 
          const $name = $$(ids.name);
@@ -81,6 +89,9 @@ export default function (AB) {
 
          $name.setValue(element.label);
          $email.setValue(element.email);
+         $email.define("options", processData);
+         $email.refresh();
+
       }
 
       /**
