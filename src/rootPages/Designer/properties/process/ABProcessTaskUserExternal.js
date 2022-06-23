@@ -72,13 +72,6 @@ export default function (AB) {
                   rows: [this.toUsers.ui({})],
                },
                {
-                  view: "select",
-                  label: L("Method"),
-                  name: "method",
-                  value: 0,
-                  options: ["GET", "POST", "PUT", "DELETE"],
-               },
-               {
                   view: "text",
                   label: L("URL"),
                   name: "url",
@@ -99,7 +92,6 @@ export default function (AB) {
          const obj = {
             name: element.name,
             who: element.who,
-            method: element.method,
             url: element.url,
          };
          const $component = $$(ids.component);
