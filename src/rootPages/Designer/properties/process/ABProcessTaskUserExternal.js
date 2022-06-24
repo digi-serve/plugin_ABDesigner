@@ -10,7 +10,7 @@ import FABProcessParticipant from "./ABProcessParticipant_selectManagersUI";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
 
    const ABProcessParticipantUsers = FABProcessParticipant(AB);
 
