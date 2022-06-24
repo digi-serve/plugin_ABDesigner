@@ -48,6 +48,7 @@ export default function (AB) {
       require("./process/ABProcessTaskServiceQuery.js"),
       require("./process/ABProcessTaskUser.js"),
       require("./process/ABProcessTaskUserApproval.js"),
+      require("./process/ABProcessTaskUserExternal.js"),
    ].forEach((P) => {
       let Klass = P.default(AB);
       Processes.push(Klass);

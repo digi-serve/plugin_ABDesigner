@@ -47,6 +47,13 @@ export default function (AB) {
                            this.switchTo("Approval");
                         },
                      },
+                     {
+                        view: "button",
+                        label: L("External Task"),
+                        click: () => {
+                           this.switchTo("External");
+                        },
+                     },
                   ],
                },
             ],
@@ -78,6 +85,7 @@ export default function (AB) {
          const subtask =
             ProcessTaskManager.newTask(values, this.element.process, this.AB) ??
             null;
+
          if (subtask) {
             this.element.switchTo(subtask, ids.component);
          }
