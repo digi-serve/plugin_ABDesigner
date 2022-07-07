@@ -72,10 +72,15 @@ export default function (AB) {
                   rows: [this.toUsers.ui({})],
                },
                {
-                  view: "text",
+                  view: "texthighlight",
                   label: L("URL"),
                   name: "url",
                   value: "",
+                  highlight: (string) => {
+                     return string.replace(/{%=[^%]*%}/g, (x) => {
+                        return `<span style="font-weight:500;background-color:#ebedf0;">${x}</span>`
+                     })
+                  },
                },
             ],
          };
