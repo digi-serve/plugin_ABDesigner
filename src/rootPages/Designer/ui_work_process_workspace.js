@@ -2,6 +2,7 @@ import UI_Class from "./ui_class";
 import UI_Warnings from "./ui_warnings";
 
 import UI_Work_Process_Workspace_MODEL from "./ui_work_process_workspace_model";
+import UI_Work_Process_Workspace_MONITOR from "./ui_work_process_workspace_monitor";
 
 export default function (AB) {
    const ibase = "ui_work_process_workspace";
@@ -20,7 +21,7 @@ export default function (AB) {
    };
    const ModelUI = UI_Work_Process_Workspace_MODEL(AB);
    const TestUI = mockUI;
-   const MonitorUI = mockUI;
+   const MonitorUI = UI_Work_Process_Workspace_MONITOR(AB);
 
    var Warnings = UI_Warnings(AB, `${ibase}_view_warnings`);
 
@@ -148,7 +149,11 @@ export default function (AB) {
                      {
                         id: ids.multiview,
                         view: "multiview",
-                        cells: [ModelUI.ui() /*, TestUI.ui(), MonitorUI.ui()*/],
+                        cells: [
+                           ModelUI.ui(),
+                           // TestUI.ui(),
+                           MonitorUI.ui(),
+                        ],
                      },
                      Warnings.ui(),
                   ],
