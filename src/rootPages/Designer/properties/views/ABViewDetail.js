@@ -115,12 +115,11 @@ export default function (AB) {
 
       populate(view) {
          super.populate(view);
-         let ids = this.ids;
          if (!view) return;
 
-         let formCom = view.parentFormComponent();
-         let datacollectionId =
-            view.settings?.dataviewID ?? formCom?.settings?.dataviewID;
+         let ids = this.ids;
+
+         let datacollectionId = view.settings?.dataviewID;
          let SourceSelector = $$(ids.datacollection);
 
          // Pull data collections to options
@@ -143,7 +142,7 @@ export default function (AB) {
          SourceSelector.define("value", datacollectionId);
          SourceSelector.refresh();
 
-         this.propertyUpdateFieldOptions(datacollectionId);
+         this.propertyUpdateFieldOptions(datacollectionId, view);
 
          $$(ids.showLabel).setValue(
             view.settings.showLabel ??
@@ -164,7 +163,7 @@ export default function (AB) {
          );
 
          // update properties when a field component is deleted
-         view.views().forEach((v) => {
+         view?.views().forEach((v) => {
             if (v instanceof this.AB.Class.ABViewDetailComponent)
                v.once("destroyed", () => this.populate(view));
          });
@@ -204,7 +203,7 @@ export default function (AB) {
        * NOTE: Must be overwritten by the Child Class
        */
       ViewClass() {
-         return super._ViewClass("form");
+         return super._ViewClass("detail");
       }
 
       /**
@@ -213,29 +212,21 @@ export default function (AB) {
        *
        * @param {string} dcId - id of ABDatacollection
        */
-      propertyUpdateFieldOptions(dcId) {
+      propertyUpdateFieldOptions(dcId, view) {
          const ids = this.ids;
-         let datacollection = this.AB.datacollectionByID(dcId);
-         let object = datacollection ? datacollection.datasource : null;
-         let formComponent = this.CurrentView.parentFormComponent();
-         let existsFields = formComponent.fieldComponents();
+         let datacollection = this.AB.datacollections((dc) => dc.id == dcId)[0];
+         let object = datacollection?.datasource;
 
          // Pull field list
-         let fieldOptions = [];
-         if (object != null) {
-            fieldOptions = object.fields().map((f) => {
-               f.selected =
-                  existsFields.filter((com) => f.id == com.settings.fieldId)
-                     .length > 0;
+         let fieldOptions = object?.fields().map((f) => {
+            f.selected =
+               view?.views((com) => f.id == com.settings.fieldId).length > 0;
 
-               return f;
-            });
-
-            this.objectLoad(object);
-         }
+            return f;
+         });
 
          $$(ids.fields).clearAll();
-         $$(ids.fields).parse(fieldOptions);
+         $$(ids.fields).parse(fieldOptions ?? []);
       }
 
       selectSource(dcId) {
@@ -280,7 +271,7 @@ export default function (AB) {
                         let yPosition = fields.length - index - 1;
 
                         // Add new form field
-                        let newFieldView = currView.addFieldToForm(
+                        let newFieldView = currView.addFieldToDetail(
                            f,
                            yPosition
                         );
@@ -307,7 +298,7 @@ export default function (AB) {
                })
                // Finally
                .then(() => {
-                  let detailView = currView.parentFormComponent();
+                  let detailView = currView.parentDetailComponent();
                   detailView?.emit("properties.updated", currView);
 
                   // _logic.ready();
@@ -327,7 +318,7 @@ export default function (AB) {
       check(e, fieldId) {
          const ids = this.ids;
          let currView = this.CurrentView;
-         let formView = currView.parentFormComponent();
+         let detailView = currView.parentDetailComponent();
 
          // update UI list
          let item = $$(ids.fields).getItem(fieldId);
@@ -354,9 +345,9 @@ export default function (AB) {
          }
          // remove field in the form
          else {
-            let fieldView = formView
-               .fieldComponents()
-               .views((c) => c.settings.fieldId == fieldId)[0];
+            let fieldView = detailView.views(
+               (c) => c.settings.fieldId == fieldId
+            )[0];
 
             if (fieldView) {
                fieldView.destroy();
