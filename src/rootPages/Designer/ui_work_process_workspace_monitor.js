@@ -276,7 +276,7 @@ export default function (AB) {
       }
 
       // Our init() function for setting up our UI
-      init(AB) {
+      async init(AB) {
          this.model = AB.objectProcessInstance().model();
       }
 
