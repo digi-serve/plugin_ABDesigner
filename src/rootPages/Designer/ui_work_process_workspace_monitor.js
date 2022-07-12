@@ -69,11 +69,11 @@ export default function (AB) {
                                        id: "completed",
                                        value: L("Completed"),
                                     },
-                                    { id: "error", value: L("Error") },
                                     {
                                        id: "created",
                                        value: L("Created"),
                                     },
+                                    { id: "error", value: L("Error") },
                                  ],
                                  on: {
                                     onValueSuggest: () => {
@@ -173,6 +173,7 @@ export default function (AB) {
                                     type: "icon",
                                     icon: "fa fa-refresh",
                                     label: L("Reset"),
+                                    click: () => this.resetInstance(),
                                  },
                                  {
                                     id: ids.deleteButton,
@@ -280,6 +281,7 @@ export default function (AB) {
       }
 
       async processLoad(process) {
+         super.processLoad(process);
          const processIdField = "d5afbc83-17dd-4b38-bded-1bf3f4594135";
          const where = {};
          where[processIdField] = process.id;
@@ -388,6 +390,36 @@ export default function (AB) {
                text: L("No rows were effected.  This does not seem right."),
                type: "warn",
             });
+         }
+      }
+
+      async resetInstance() {
+         const item = $$(this.ids.taskList).getItem(this.instance);
+         const errorTasks = Object.keys(item.errorTasks);
+         if (errorTasks.length < 1) return;
+         const task = this.CurrentProcess.elements().filter((e) => {
+            return e.diagramID === errorTasks[0];
+         })[0];
+
+         const confirmed = await webix
+            .confirm({
+               title: L("Reset Instance"),
+               text: `${L("Restart from")} '${task.label}' (${task.key} ${L(
+                  "Task"
+               )})?`,
+            })
+            .catch(() => {}); //supress console.error
+         if (!confirmed) return;
+         const response = await this.AB.Network.put({
+            url: `/process/reset/${task.id}`,
+            params: { instanceID: this.instance },
+         });
+         if (response == 1) {
+            webix.message({
+               text: L("Instance Reset"),
+               type: "success",
+            });
+            this.processLoad(this.CurrentProcess);
          }
       }
 
