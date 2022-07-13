@@ -95,6 +95,11 @@ export default function (AB) {
                      value: L("Top"),
                   },
                ],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.labelWidth,
@@ -102,6 +107,11 @@ export default function (AB) {
                view: "counter",
                label: L("Label Width"),
                labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.height,
@@ -109,6 +119,11 @@ export default function (AB) {
                view: "counter",
                label: L("Height:"),
                labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
          ]);
       }
@@ -164,7 +179,7 @@ export default function (AB) {
 
          // update properties when a field component is deleted
          view?.views().forEach((v) => {
-            if (v instanceof this.AB.Class.ABViewDetailComponent)
+            if (v instanceof this.AB.Class.ABViewDetailItem)
                v.once("destroyed", () => this.populate(view));
          });
       }
@@ -333,7 +348,7 @@ export default function (AB) {
 
          // add a field to the form
          if (item.selected) {
-            let fieldView = currView.addFieldToView(item);
+            let fieldView = currView.addFieldToDetail(item);
             if (fieldView) {
                fieldView.save().then(() => {
                   fieldView.once("destroyed", () => this.populate(currView));
