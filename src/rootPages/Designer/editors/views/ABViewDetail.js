@@ -3,7 +3,7 @@
  * The widget that displays the UI Editor Component on the screen
  * when designing the UI.
  */
-var myClass = null;
+let myClass = null;
 // {singleton}
 // we will want to call this factory fn() repeatedly in our imports,
 // but we only want to define 1 Class reference.
