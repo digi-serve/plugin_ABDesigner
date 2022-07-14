@@ -246,7 +246,7 @@ export default function (AB) {
          $$(ids.fields).parse(fieldOptions ?? []);
       }
 
-      selectSource(dcId) {
+      async selectSource(dcId) {
          const ids = this.ids;
          // _logic.busy();
 
@@ -258,71 +258,55 @@ export default function (AB) {
          let viewsToRemove = currView._views;
          currView._views = [];
 
-         return (
-            Promise.resolve()
-               // remove all old field components
-               .then(() => {
-                  let allRemoves = [];
-                  viewsToRemove.forEach((v) => {
-                     allRemoves.push(v.destroy());
-                  });
-                  return Promise.all(allRemoves);
-               })
-               // refresh UI
-               .then(() => {
-                  // currView.emit('properties.updated', currView);
+         // remove all old field components
+         let allRemoves = [];
+         viewsToRemove.forEach((v) => {
+            allRemoves.push(v.destroy());
+         });
+         await Promise.all(allRemoves);
 
-                  // _logic.busy();
+         // refresh UI
+         // Update field options in property
+         this.propertyUpdateFieldOptions(dcId);
 
-                  // Update field options in property
-                  this.propertyUpdateFieldOptions(dcId);
+         // add all fields to editor by default
+         if (currView._views.length < 1) {
+            let saveTasks = [];
+            let fields = $$(ids.fields).find({});
+            fields.reverse();
+            fields.forEach((f, index) => {
+               if (!f.selected) {
+                  const yPosition = fields.length - index - 1;
 
-                  // add all fields to editor by default
-                  if (currView._views.length > 0) return Promise.resolve();
+                  // Add new form field
+                  const newFieldView = currView.addFieldToDetail(f, yPosition);
+                  if (newFieldView) {
+                     newFieldView.once("destroyed", () =>
+                        this.populate(currView)
+                     );
 
-                  let saveTasks = [];
-                  let fields = $$(ids.fields).find({});
-                  fields.reverse();
-                  fields.forEach((f, index) => {
-                     if (!f.selected) {
-                        const yPosition = fields.length - index - 1;
+                     // // Call save API
+                     saveTasks.push(newFieldView.save());
+                  }
 
-                        // Add new form field
-                        const newFieldView = currView.addFieldToDetail(
-                           f,
-                           yPosition
-                        );
-                        if (newFieldView) {
-                           newFieldView.once("destroyed", () =>
-                              this.populate(currView)
-                           );
+                  // update item to UI list
+                  f.selected = 1;
+                  $$(ids.fields).updateItem(f.id, f);
+               }
+            });
 
-                           // // Call save API
-                           saveTasks.push(newFieldView.save());
-                        }
+            await Promise.all(saveTasks);
+         }
 
-                        // update item to UI list
-                        f.selected = 1;
-                        $$(ids.fields).updateItem(f.id, f);
-                     }
-                  });
+         // Saving
+         await currView.save();
 
-                  return Promise.all(saveTasks);
-               })
-               // Saving
-               .then(() => {
-                  return currView.save();
-               })
-               // Finally
-               .then(() => {
-                  const detailView = currView.parentDetailComponent();
-                  detailView?.emit("properties.updated", currView);
+         // Finally
+         const detailView = currView.parentDetailComponent();
+         detailView?.emit("properties.updated", currView);
 
-                  // _logic.ready();
-                  this.onChange();
-                  return Promise.resolve();
-               })
-         );
+         // _logic.ready();
+         this.onChange();
       }
 
       listTemplate(field, common) {
