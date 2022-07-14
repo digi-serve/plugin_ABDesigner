@@ -202,7 +202,7 @@ export default function (AB) {
          const ids = this.ids;
          let vals = super.values();
 
-         vals.settings = vals.settings || {};
+         vals.settings = vals.settings ?? {};
          vals.settings.dataviewID = $$(ids.datacollection).getValue();
          vals.settings.showLabel = $$(ids.showLabel).getValue();
          vals.settings.labelPosition = $$(ids.labelPosition).getValue();
