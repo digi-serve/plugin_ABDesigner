@@ -36,7 +36,7 @@ export default function (AB) {
       }
 
       ui() {
-         let ids = this.ids;
+         const ids = this.ids;
 
          return super.ui([
             {
@@ -132,16 +132,16 @@ export default function (AB) {
          super.populate(view);
          if (!view) return;
 
-         let ids = this.ids;
+         const ids = this.ids;
 
-         let datacollectionId = view.settings?.dataviewID;
-         let SourceSelector = $$(ids.datacollection);
+         const datacollectionId = view.settings?.dataviewID;
+         const SourceSelector = $$(ids.datacollection);
 
          // Pull data collections to options
-         let dcOptions = view.application
+         const dcOptions = view.application
             .datacollectionsIncluded()
             .filter((dc) => {
-               let obj = dc.datasource;
+               const obj = dc.datasource;
                return dc.sourceType == "object" && obj && !obj.isImported;
             })
             .map((d) => {
@@ -186,7 +186,7 @@ export default function (AB) {
 
       defaultValues() {
          let values = {};
-         let ViewClass = this.ViewClass();
+         const ViewClass = this.ViewClass();
          if (ViewClass) {
             values = ViewClass.defaultValues();
          }
@@ -199,7 +199,7 @@ export default function (AB) {
        * @return {obj}
        */
       values() {
-         let ids = this.ids;
+         const ids = this.ids;
          let vals = super.values();
 
          vals.settings = vals.settings || {};
@@ -229,11 +229,13 @@ export default function (AB) {
        */
       propertyUpdateFieldOptions(dcId, view) {
          const ids = this.ids;
-         let datacollection = this.AB.datacollections((dc) => dc.id == dcId)[0];
-         let object = datacollection?.datasource;
+         const datacollection = this.AB.datacollections(
+            (dc) => dc.id == dcId
+         )[0];
+         const object = datacollection?.datasource;
 
          // Pull field list
-         let fieldOptions = object?.fields().map((f) => {
+         const fieldOptions = object?.fields().map((f) => {
             f.selected =
                view?.views((com) => f.id == com.settings.fieldId).length > 0;
 
@@ -283,10 +285,10 @@ export default function (AB) {
                   fields.reverse();
                   fields.forEach((f, index) => {
                      if (!f.selected) {
-                        let yPosition = fields.length - index - 1;
+                        const yPosition = fields.length - index - 1;
 
                         // Add new form field
-                        let newFieldView = currView.addFieldToDetail(
+                        const newFieldView = currView.addFieldToDetail(
                            f,
                            yPosition
                         );
@@ -313,7 +315,7 @@ export default function (AB) {
                })
                // Finally
                .then(() => {
-                  let detailView = currView.parentDetailComponent();
+                  const detailView = currView.parentDetailComponent();
                   detailView?.emit("properties.updated", currView);
 
                   // _logic.ready();
@@ -332,15 +334,15 @@ export default function (AB) {
 
       check(e, fieldId) {
          const ids = this.ids;
-         let currView = this.CurrentView;
-         let detailView = currView.parentDetailComponent();
+         const currView = this.CurrentView;
+         const detailView = currView.parentDetailComponent();
 
          // update UI list
-         let item = $$(ids.fields).getItem(fieldId);
+         const item = $$(ids.fields).getItem(fieldId);
          item.selected = item.selected ? 0 : 1;
          $$(ids.fields).updateItem(fieldId, item);
 
-         let doneFn = () => {
+         const doneFn = () => {
             // refresh UI
             currView.emit("properties.updated", currView);
             this.onChange();
@@ -348,7 +350,7 @@ export default function (AB) {
 
          // add a field to the form
          if (item.selected) {
-            let fieldView = currView.addFieldToDetail(item);
+            const fieldView = currView.addFieldToDetail(item);
             if (fieldView) {
                fieldView.save().then(() => {
                   fieldView.once("destroyed", () => this.populate(currView));
@@ -360,7 +362,7 @@ export default function (AB) {
          }
          // remove field in the form
          else {
-            let fieldView = detailView.views(
+            const fieldView = detailView.views(
                (c) => c.settings.fieldId == fieldId
             )[0];
 
