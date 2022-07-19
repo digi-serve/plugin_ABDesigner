@@ -60,6 +60,7 @@ export default function (AB) {
    [
       require("./views/ABViewCarousel"),
       require("./views/ABViewDetail"),
+      require("./views/ABViewDocxBuilder"),
       require("./views/ABViewGrid"),
       require("./views/ABViewForm"),
       require("./views/ABViewPage"),
