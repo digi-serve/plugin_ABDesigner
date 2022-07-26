@@ -382,14 +382,9 @@ export default function (AB) {
             );
             if (!domNode) return false;
 
-            // TODO : use to render selectivity to set default values
-            let selectivityRender = new ABFieldSelectivity(
-               {
-                  settings: {},
-               },
-               {},
-               {}
-            );
+            const values = this.values();
+
+            const selectivityRender = new ABFieldSelectivity(values, this);
 
             selectivityRender.selectivityRender(domNode, {
                multiple: true,
