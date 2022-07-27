@@ -15,16 +15,22 @@ export default function (AB) {
    const base = "properties_abview_detail";
 
    class ABViewDetailProperty extends ABViewContainer {
-      constructor() {
-         super(base, {
-            // Put our ids here
-            datacollection: "",
-            fields: "",
-            showLabel: "",
-            labelPosition: "",
-            labelWidth: "",
-            height: "",
-         });
+      constructor(base, ids = {}) {
+         super(
+            base,
+            Object.assign(
+               {
+                  // Put our ids here
+                  datacollection: "",
+                  fields: "",
+                  showLabel: "",
+                  labelPosition: "",
+                  labelWidth: "",
+                  height: "",
+               },
+               ids
+            )
+         );
 
          this.AB = AB;
          ABViewDetailPropertyComponentDefaults =
@@ -35,10 +41,10 @@ export default function (AB) {
          return "detail";
       }
 
-      ui() {
+      ui(elements) {
          const ids = this.ids;
 
-         return super.ui([
+         let _ui = [
             {
                id: ids.datacollection,
                name: "datacollection",
@@ -125,7 +131,12 @@ export default function (AB) {
                   },
                },
             },
-         ]);
+         ];
+
+         // Union arrays
+         _ui = [...new Set([..._ui, ...elements])];
+
+         return super.ui(_ui);
       }
 
       populate(view) {
