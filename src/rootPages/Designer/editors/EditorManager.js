@@ -5,17 +5,21 @@
  *
  */
 export default function (AB) {
-   var Editors = [];
+   const Editors = [];
    // {array}
    // All the ABField Component Inerfaces available.
    [
       require("./views/ABViewCarousel"),
       require("./views/ABViewContainer"),
+      require("./views/ABViewDetail"),
+      require("./views/ABViewDocxBuilder"),
       require("./views/ABViewForm"),
       require("./views/ABViewGrid"),
       require("./views/ABViewPage"),
+      require("./views/ABViewTab"),
    ].forEach((E) => {
-      let Klass = E.default(AB);
+      const Klass = E.default(AB);
+
       Editors.push(Klass);
    });
 
