@@ -61,6 +61,9 @@ export default function (AB, idBase) {
                         label: L("Details Page:"),
                         labelWidth: uiConfig.labelWidthLarge,
                         options: [],
+                        on: {
+                           onChange: () => this.emit("change"),
+                        },
                      },
                      {
                         id: this.ids.editPage,
@@ -71,6 +74,9 @@ export default function (AB, idBase) {
                         label: L("Edit Form:"),
                         labelWidth: uiConfig.labelWidthLarge,
                         options: [],
+                        on: {
+                           onChange: () => this.emit("change"),
+                        },
                      },
                   ],
                },
