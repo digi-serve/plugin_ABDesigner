@@ -182,11 +182,12 @@ export default function (AB) {
                   autoheight: false,
                   height: 1,
                   width: 0,
-                  template:
-                     '<div class="ab-component-tools ab-layout-view ab-tab-tools">' +
-                     '<i class="fa fa-trash ab-component-remove"></i>' +
-                     '<i class="fa fa-edit ab-component-edit"></i>' +
+                  template: [
+                     '<div class="ab-component-tools ab-layout-view ab-tab-tools">',
+                     '<i class="fa fa-trash ab-component-remove"></i>',
+                     '<i class="fa fa-edit ab-component-edit"></i>',
                      "</div>",
+                  ].join(""),
                   onClick: {
                      "ab-component-edit": (e, id, trg) => {
                         this.tabEdit(e, id, trg);
@@ -203,11 +204,12 @@ export default function (AB) {
                   autoheight: false,
                   height: 1,
                   width: 0,
-                  template:
-                     '<div class="ab-component-tools ab-layout-view ab-tab-tools">' +
-                     '<i class="fa fa-trash ab-component-remove"></i>' +
-                     '<i class="fa fa-edit ab-component-edit"></i>' +
+                  template: [
+                     '<div class="ab-component-tools ab-layout-view ab-tab-tools">',
+                     '<i class="fa fa-trash ab-component-remove"></i>',
+                     '<i class="fa fa-edit ab-component-edit"></i>',
                      "</div>",
+                  ].join(""),
                   onClick: {
                      "ab-component-edit": (e) => {
                         this.tabEdit(e);
