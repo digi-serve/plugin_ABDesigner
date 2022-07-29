@@ -133,8 +133,10 @@ export default function (AB) {
             },
          ];
 
-         // Union arrays
-         _ui = [...new Set([..._ui, ...elements])];
+         // Union arrays: ._ui + .elements
+         (elements ?? []).forEach((elem) => {
+            _ui.push(elem);
+         });
 
          return super.ui(_ui);
       }

@@ -4,15 +4,17 @@
  */
 
 import FABViewDetail from "./ABViewDetail";
+import ABViewPropertyLinkPage from "./viewProperties/ABViewPropertyLinkPage";
 
 export default function (AB) {
+   const base = "properties_abview_dataview";
+
    const ABViewDetail = FABViewDetail(AB);
+   const LinkPageProperty = ABViewPropertyLinkPage(AB, base);
    const uiConfig = AB.Config.uiSettings();
    const L = ABViewDetail.L();
 
    let ABViewDataviewPropertyComponentDefaults = {};
-
-   const base = "properties_abview_dataview";
 
    class ABViewDataviewProperty extends ABViewDetail {
       constructor() {
@@ -24,6 +26,8 @@ export default function (AB) {
          this.AB = AB;
          ABViewDataviewPropertyComponentDefaults =
             this.AB.Class.ABViewManager.viewClass("dataview").defaultValues();
+
+         this.linkPageComponent = new LinkPageProperty(AB, base);
       }
 
       static get key() {
@@ -42,9 +46,23 @@ export default function (AB) {
                label: L("Items in a row"),
                labelWidth: uiConfig.labelWidthLarge,
                step: 1,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
-            //  this.linkPageComponent.ui
+            this.linkPageComponent.ui(),
          ]);
+      }
+
+      init() {
+         super.init(this.AB);
+
+         this.linkPageComponent.init();
+         this.linkPageComponent.on("change", () => {
+            this.onChange();
+         });
       }
 
       populate(view) {
@@ -58,8 +76,8 @@ export default function (AB) {
                ABViewDataviewPropertyComponentDefaults.xCount
          );
 
-         //  this.linkPageComponent.viewLoad(view);
-         //  this.linkPageComponent.setSettings(view.settings);
+         this.linkPageComponent.viewLoad(view);
+         this.linkPageComponent.setSettings(view.settings);
       }
 
       defaultValues() {
@@ -83,10 +101,10 @@ export default function (AB) {
          vals.settings = vals.settings ?? {};
          vals.settings.xCount = $$(ids.xCount).getValue();
 
-         //  let linkSettings = this.linkPageComponent.getSettings();
-         //  for (let key in linkSettings) {
-         //     vals.settings[key] = linkSettings[key];
-         //  }
+         let linkSettings = this.linkPageComponent.getSettings();
+         for (let key in linkSettings) {
+            vals.settings[key] = linkSettings[key];
+         }
 
          return vals;
       }
