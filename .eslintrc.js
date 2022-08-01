@@ -20,6 +20,7 @@ module.exports = {
       // io: true,
       $$: true,
       webix: true,
+      window: true,
    },
 
    parserOptions: {

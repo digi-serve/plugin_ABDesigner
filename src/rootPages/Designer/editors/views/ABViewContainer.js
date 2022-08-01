@@ -96,8 +96,8 @@ export default function (AB) {
                child.warningsSilent = true;
                // let's not be alerted to unconfigured settings in this context
 
-               console.error("TODO: REMOVE THIS TESTING CODE:");
-               if (!child.componentOld) return;
+               // console.error("TODO: REMOVE THIS TESTING CODE:");
+               // if (!child.componentOld) return;
 
                var component = child.component();
 
