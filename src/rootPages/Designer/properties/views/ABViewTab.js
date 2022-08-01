@@ -1,6 +1,6 @@
 /*
- * ABViewCarousel
- * A Property manager for our ABViewCarousel definitions
+ * ABViewTab
+ * A Property manager for our ABViewTab definitions
  */
 
 import FABView from "./ABView";

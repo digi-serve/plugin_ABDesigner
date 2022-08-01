@@ -42,12 +42,6 @@ export default function (AB) {
                elements: [
                   {
                      view: "text",
-                     name: "id",
-                     label: L("ID"),
-                     disabled: true,
-                  },
-                  {
-                     view: "text",
                      name: "label",
                      label: L("Label"),
                      required: true,
