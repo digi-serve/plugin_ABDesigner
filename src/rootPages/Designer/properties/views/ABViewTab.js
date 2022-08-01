@@ -4,6 +4,7 @@
  */
 
 import FABView from "./ABView";
+import FTabPopup from "../../interface_common/ui_tab_form_popup";
 
 export default function (AB) {
    const BASE_ID = "properties_abview_tab";
@@ -11,6 +12,8 @@ export default function (AB) {
    const ABView = FABView(AB);
    const uiConfig = AB.Config.uiSettings();
    const L = ABView.L();
+
+   const TabPopup = FTabPopup(AB);
 
    class ABViewTabProperty extends ABView {
       constructor() {
@@ -39,11 +42,21 @@ export default function (AB) {
                id: ids.height,
                view: "counter",
                label: L("Height"),
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.minWidth,
                view: "counter",
                label: L("Minimum width"),
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.stackTabs,
@@ -61,6 +74,7 @@ export default function (AB) {
                         $$(ids.sidebarPos).hide();
                         $$(ids.iconOnTop).show();
                      }
+                     this.onChange();
                   },
                },
             },
@@ -69,18 +83,33 @@ export default function (AB) {
                view: "checkbox",
                labelRight: L("Position icon above text"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.darkTheme,
                view: "checkbox",
                labelRight: L("Use Dark Theme"),
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.sidebarWidth,
                view: "counter",
                label: L("Width of Sidebar"),
                labelWidth: uiConfig.labelWidthXLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.sidebarPos,
@@ -91,6 +120,11 @@ export default function (AB) {
                   { id: "left", value: L("Left") },
                   { id: "right", value: L("Right") },
                ],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             // [button] : add tab
             {
@@ -98,7 +132,9 @@ export default function (AB) {
                css: "webix_primary",
                value: L("Add Tab"),
                click: () => {
-                  this.addTabPopup.show();
+                  const baseView = this.CurrentView;
+
+                  baseView.tabPopup.show();
                },
             },
          ]);
@@ -107,10 +143,17 @@ export default function (AB) {
       async init(AB) {
          await super.init(AB);
 
-         this.addTabPopup = this.CurrentView.getPopup();
-         this.addTabPopup.on("saved", () => {
-            this.onChange();
-         });
+         const baseView = this.CurrentView;
+
+         if (!baseView.tabPopup) {
+            baseView.tabPopup = new TabPopup(baseView);
+
+            await baseView.tabPopup.init(AB);
+
+            baseView.tabPopup.on("saved", () => {
+               this.onChange();
+            });
+         }
       }
 
       populate(view) {

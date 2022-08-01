@@ -9,6 +9,7 @@ let myClass = null;
 // but we only want to define 1 Class reference.
 
 import UI_Class from "../../ui_class";
+import FTabPopup from "../../interface_common/ui_tab_form_popup";
 
 export default function (AB) {
    if (!myClass) {
@@ -16,6 +17,8 @@ export default function (AB) {
 
       const UIClass = UI_Class(AB);
       const L = UIClass.L();
+
+      const TabPopup = FTabPopup(AB);
 
       myClass = class ABViewTabEditor extends UIClass {
          static get key() {
@@ -31,7 +34,6 @@ export default function (AB) {
             this.AB = AB;
             this.view = view;
             this.component = this.view.component();
-            this.tabPopup = this.view.getPopup();
          }
 
          ui() {
@@ -58,7 +60,7 @@ export default function (AB) {
 
                         // Rename
                         if (e.target.classList.contains("rename")) {
-                           this.tabPopup.show(tab);
+                           baseView.tabPopup.show(tab);
                         }
                         // Reorder back
                         else if (e.target.classList.contains("move-back")) {
@@ -120,10 +122,8 @@ export default function (AB) {
                      component.onShow(tabID);
 
                      // Rename
-                     if (e.target.classList.contains("rename")) {
-                        this.tabPopup.show(tab);
-                        // component.popupShow(tab);
-                     }
+                     if (e.target.classList.contains("rename"))
+                        baseView.tabPopup.show(tab);
                      // Reorder back
                      else if (e.target.classList.contains("move-back")) {
                         baseView.viewReorder(tabID, currIndex - 1);
@@ -221,6 +221,13 @@ export default function (AB) {
                });
             }
 
+            const baseView = this.view;
+
+            if (!baseView.tabPopup) {
+               baseView.tabPopup = new TabPopup(baseView);
+               baseView.tabPopup.init(AB);
+            }
+
             // this.component.onShow();
             // in our editor, we provide accessLv = 2
          }
@@ -265,7 +272,9 @@ export default function (AB) {
          }
 
          tabRemove(element) {
-            const $component = $$(this.ids.component);
+            const ids = this.ids;
+
+            const $component = $$(ids.component);
 
             const tabID = $component.getValue();
             const deletedView = this.view.views((view) => view.id == tabID)[0];
@@ -281,8 +290,22 @@ export default function (AB) {
                         // this.viewDestroy(deletedView);
                         deletedView.destroy();
 
+                        const componentUI = this.component.ui();
+
                         // remove tab option
-                        $component.removeView(tabID);
+                        if (componentUI.rows) $component.removeView(tabID);
+                        else {
+                           let $sidebar = null;
+
+                           for (let i = 0; i < componentUI.cols.length; i++)
+                              if (componentUI.cols[i].view === "sidebar") {
+                                 $sidebar = $$(componentUI.cols[i].id);
+
+                                 break;
+                              }
+
+                           $sidebar.remove(`${tabID}_menu`);
+                        }
                      }
                   },
                });
