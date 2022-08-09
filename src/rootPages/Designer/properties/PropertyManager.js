@@ -64,6 +64,7 @@ export default function (AB) {
       require("./views/ABViewDocxBuilder"),
       require("./views/ABViewGrid"),
       require("./views/ABViewForm"),
+      require("./views/ABViewMenu"),
       require("./views/ABViewPage"),
       require("./views/ABViewTab"),
    ].forEach((V) => {
