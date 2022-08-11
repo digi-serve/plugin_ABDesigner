@@ -4,10 +4,12 @@
   "description": "(AppBuilder) A UI for designing AB resources.",
   "main": "index.js",
   "scripts": {
-    "build": "webpack-cli --progress",
-    "build:update": "webpack-cli",
+    "build": "webpack-cli --config webpack.prod.js --progress",
+    "build:dev": "webpack-cli --config webpack.dev.js",
+    "build:update": "webpack-cli --config webpack.prod.js",
     "test": "mocha --config test/.mocharc.js test/**/*.test.js test/**/**/*.test.js",
-    "watch": "webpack-cli --watch --progress"
+    "watch": "webpack-cli --config webpack.dev.js --watch --progress",
+    "break": "node --inspect-brk=9229 ./node_modules/.bin/webpack-cli --watch --progress"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +18,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.15.8",
     "@babel/register": "^7.15.3",
+    "compression-webpack-plugin": "^10.0.0",
     "css-loader": "^6.7.1",
     "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.5.0",
@@ -28,7 +31,8 @@
     "sinon": "^11.1.2",
     "style-loader": "^3.3.1",
     "webpack": "^5.51.2",
-    "webpack-cli": "^4.8.0"
+    "webpack-cli": "^4.8.0",
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "bpmn-js": "^9.0.3",

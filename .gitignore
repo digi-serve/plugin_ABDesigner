@@ -23,4 +23,3 @@ lib-cov
 *.log
 *.out
 *.pid
-/dist
