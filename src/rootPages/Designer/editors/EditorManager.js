@@ -18,6 +18,7 @@ export default function (AB) {
       require("./views/ABViewGrid"),
       require("./views/ABViewPage"),
       require("./views/ABViewTab"),
+      require("./views/ABViewText"),
    ].forEach((E) => {
       const Klass = E.default(AB);
 
