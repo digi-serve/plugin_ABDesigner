@@ -66,6 +66,7 @@ export default function (AB) {
       require("./views/ABViewForm"),
       require("./views/ABViewPage"),
       require("./views/ABViewTab"),
+      require("./views/ABViewText"),
    ].forEach((V) => {
       let Klass = V.default(AB);
       Views.push(Klass);
