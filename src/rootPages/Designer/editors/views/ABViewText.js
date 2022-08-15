@@ -27,7 +27,6 @@ export default function (AB) {
 
             this.AB = AB;
             this.view = view;
-            this.view._onChangeFunction = view._onChangeFunction ?? null;
             this.component = this.view.component();
          }
 
