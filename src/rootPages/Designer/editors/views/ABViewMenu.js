@@ -24,7 +24,7 @@ export default function (AB) {
          constructor(view, base = "interface_editor_viewmenu") {
             // base: {string} unique base id reference
 
-            super(view, base);
+            super(base);
 
             this.view = view;
             this.component = this.view.component();
@@ -42,7 +42,15 @@ export default function (AB) {
          init(AB) {
             this.AB = AB;
 
-            const ids = this.ids;
+            this.onShow();
+         }
+
+         detatch() {
+            this.component?.detatch?.();
+         }
+
+         onShow() {
+            const ids = this.component.ids;
             const currView = this.view;
 
             const $menu = $$(ids.menu);
@@ -52,13 +60,7 @@ export default function (AB) {
                // } else if (this.settings.pages && this.settings.pages.length) {
                //    this.AddPagesToView(Menu, this.settings.pages);
             }
-         }
 
-         detatch() {
-            this.component?.detatch?.();
-         }
-
-         onShow() {
             this.component?.onShow?.();
          }
       };

@@ -63,6 +63,11 @@ export default function (AB) {
                      value: L("Vertical"),
                   },
                ],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.buttonStyle,
@@ -81,6 +86,11 @@ export default function (AB) {
                      value: L("Link"),
                   },
                ],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.menuAlignment,
@@ -103,6 +113,11 @@ export default function (AB) {
                      value: L("Right"),
                   },
                ],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.menuInToolbar,
@@ -111,6 +126,11 @@ export default function (AB) {
                labelRight: L("Put menu in toolbar"),
                value: ABViewMenuPropertyComponentDefaults.menuInToolbar,
                labelWidth: uiConfig.labelWidthCheckbox,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                name: "toolbarFieldset",
@@ -129,6 +149,11 @@ export default function (AB) {
                         label: L("Toolbar padding"),
                         value: ABViewMenuPropertyComponentDefaults.menuPadding,
                         labelWidth: uiConfig.labelWidthLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                      {
                         id: ids.menuTheme,
@@ -151,6 +176,11 @@ export default function (AB) {
                               value: L("Dark"),
                            },
                         ],
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                      {
                         id: ids.menuPosition,
@@ -173,6 +203,11 @@ export default function (AB) {
                               value: L("Right"),
                            },
                         ],
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                      {
                         id: ids.menuTextLeft,
@@ -182,6 +217,11 @@ export default function (AB) {
                         placeholder: L("Place text in left region of toolbar."),
                         labelWidth: uiConfig.labelWidthLarge,
                         labelPosition: "top",
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                      {
                         id: ids.menuTextCenter,
@@ -193,6 +233,11 @@ export default function (AB) {
                         ),
                         labelWidth: uiConfig.labelWidthLarge,
                         labelPosition: "top",
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                      {
                         id: ids.menuTextRight,
@@ -204,6 +249,11 @@ export default function (AB) {
                         ),
                         labelWidth: uiConfig.labelWidthLarge,
                         labelPosition: "top",
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                   ],
                },
@@ -382,23 +432,18 @@ export default function (AB) {
             view.settings.menuPosition ??
                ABViewMenuPropertyComponentDefaults.menuPosition
          );
-         if (view.menuTextLeft == "" && view.settings.menuTextLeft) {
-            view.menuTextLeft = view.settings.menuTextLeft;
-         }
+         view.menuTextLeft = view.menuTextLeft || view.settings.menuTextLeft;
          $$(ids.menuTextLeft).setValue(
             view.menuTextLeft ??
                ABViewMenuPropertyComponentDefaults.menuTextLeft
          );
-         if (view.menuTextCenter == "" && view.settings.menuTextCenter) {
-            view.menuTextCenter = view.settings.menuTextCenter;
-         }
+         view.menuTextCenter =
+            view.menuTextCenter || view.settings.menuTextCenter;
          $$(ids.menuTextCenter).setValue(
             view.menuTextCenter ??
                ABViewMenuPropertyComponentDefaults.menuTextCenter
          );
-         if (view.menuTextRight == "" && view.settings.menuTextRight) {
-            view.menuTextRight = view.settings.menuTextRight;
-         }
+         view.menuTextRight = view.menuTextRight || view.settings.menuTextRight;
          $$(ids.menuTextRight).setValue(
             view.menuTextRight ??
                ABViewMenuPropertyComponentDefaults.menuTextRight
