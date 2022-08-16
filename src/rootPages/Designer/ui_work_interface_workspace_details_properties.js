@@ -41,7 +41,14 @@ export default function (AB) {
             let values = this.currentPanel.values();
 
             // to update the label, add it before we ask for .toObj():
-            this.CurrentView.label = values.label;
+            // this.CurrentView.label = values.label;
+
+            // to update the label (and other properties like .menuTextLeft, menuTextCenter, and .menuTextRight of the Menu widget), add it before we ask for .toObj():
+            Object.keys(values).forEach((k) => {
+               if (k == "settings") return;
+               this.CurrentView[k] = values[k];
+            });
+
             var objVals = this.CurrentView.toObj();
             Object.keys(values.settings).forEach((k) => {
                objVals.settings[k] = values.settings[k];
