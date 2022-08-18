@@ -165,7 +165,7 @@ export default function (AB) {
                         options: [
                            {
                               id: "white",
-                              value: L("White (Default)"),
+                              value: L("White"),
                            },
                            {
                               id: "bg_gray",
