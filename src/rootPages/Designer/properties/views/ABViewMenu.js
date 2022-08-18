@@ -298,7 +298,7 @@ export default function (AB) {
                               this.updateTreeDnD(id, state);
                            },
                            onBeforeEditStart: function (id) {
-                              var item = this.getItem(id);
+                              const item = this.getItem(id);
                               if (!item.aliasname) {
                                  item.aliasname = item.label;
                                  this.updateItem(item);
@@ -550,7 +550,6 @@ export default function (AB) {
             vals.settings.menuTextRight = "";
          }
 
-         // var pagesIdList = [];
          if ($$(ids.pages)) {
             for (let i = 0; i < $$(ids.pages).data.count(); i++) {
                let currentPageId = $$(ids.pages).getIdByIndex(i);
@@ -609,7 +608,7 @@ export default function (AB) {
          const $treeDnD = $$(ids.treeDnD);
          const $pages = $$(ids.pages);
 
-         // var curPage = currView.settings.pages.filter((page) => {
+         // let curPage = currView.settings.pages.filter((page) => {
          //    return page.pageId == id || page.tabId == id;
          // })[0];
 
@@ -669,7 +668,7 @@ export default function (AB) {
          // loop through tree to reorder pages
          $treeDnD.data.each((obj) => {
             // find the page in settings that matches the item in the tree
-            // var curPage = currView.settings.pages.filter((page) => {
+            // let curPage = currView.settings.pages.filter((page) => {
             //    return page.pageId == obj.id || page.tabId == obj.id;
             // })[0];
 
@@ -711,11 +710,11 @@ export default function (AB) {
         */
          pages.forEach((page) => {
             if (page) {
-               var thisPage = {};
+               const thisPage = {};
                // get the id of the element we are clicking to
-               var id = page.id;
+               const id = page.id;
                // get the object of the data with the id in the tree view
-               var treeItem = $$(ids.treeDnD).getItem(id);
+               const treeItem = $$(ids.treeDnD).getItem(id);
                // set the parent element in the page if the treeItem has one
                thisPage.parent = treeItem.$parent;
                // store the position so we can put it back in the right spot later
@@ -770,7 +769,7 @@ export default function (AB) {
          pageTree.add(page, index, parentId);
 
          // add sub-pages
-         var subPages = page.pages ? page.pages() : [];
+         const subPages = page.pages ? page.pages() : [];
          subPages.forEach((childPage, childIndex) => {
             this.addPage(view, childPage, childIndex, pageTree, page.id);
          });
