@@ -16,7 +16,7 @@ export default function (AB) {
 
       const UIClass = UI_Class(AB);
 
-      myClass = class ABViewTabEditor extends UIClass {
+      myClass = class ABViewTextEditor extends UIClass {
          static get key() {
             return "text";
          }
