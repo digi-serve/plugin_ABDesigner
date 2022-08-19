@@ -187,7 +187,7 @@ export default function (AB) {
 
          const $component = $$(ids.component);
 
-         const values = {};
+         const values = super.values();
 
          values.settings = $component.getValues();
 

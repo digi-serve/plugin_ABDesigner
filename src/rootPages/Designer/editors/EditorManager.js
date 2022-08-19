@@ -16,6 +16,7 @@ export default function (AB) {
       require("./views/ABViewDocxBuilder"),
       require("./views/ABViewForm"),
       require("./views/ABViewGrid"),
+      require("./views/ABViewLabel"),
       require("./views/ABViewMenu"),
       require("./views/ABViewPage"),
       require("./views/ABViewTab"),
