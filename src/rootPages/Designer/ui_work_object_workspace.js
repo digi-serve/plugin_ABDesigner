@@ -21,6 +21,7 @@ import FPopupImport from "./ui_work_object_workspace_popupImport";
 import FPopupNewDataField from "./ui_work_object_workspace_popupNewDataField";
 import FPopupSortField from "./ui_work_object_workspace_popupSortFields";
 import FPopupViewSettings from "./ui_work_object_workspace_popupViewSettings";
+import FPopupFilterDataTable from "./ui_work_object_workspace_popupFilter";
 
 import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 
@@ -179,10 +180,40 @@ export default function (AB, ibase, init_settings) {
                this.callbackDefineLabel();
             });
          }
-         // var PopupFilterDataTableComponent = new ABPopupFilterDataTable(
-         //    App,
-         //    idBase
+
+         // ! how to properly import this?
+         // this.__dfLookup = {};
+         // this.conditions =
+         //    this.CurrentObject?.objectWorkspace?.filterConditions || {};
+         // old filters???
+         // this.CurrentObject.objectWorkspace.filterConditions
+
+         // fields
+         // this.CurrentObject._fields
+
+         // get fields
+         // var listDataFields = this.process.processDataFields(this);
+         // TODO get a map of fields inc UUIDs and labels ?!?
+         // this.CurrentObject.fieldByID(this.CurrentObject.fieldIDs[0]).label;
+         // var abFields = (listDataFields || []).map((f) => {
+         //    return f.field;
+         // });
+         // Load the filter complex
+         // this.PopupFilterDataTableComponent = AB
+         //    .filterComplexNew
+         //    // `${this.CurrentObject.createdInAppID}_${this.CurrentObject.id}_filter`
+         //    ();
+         // this.PopupFilterDataTableComponent.applicationLoad(this.application);
+         // // update the filters after they have been .show()n
+         // this.PopupFilterDataTableComponent.fieldsLoad(
+         //    this.CurrentObject._fields
          // );
+
+         //
+         this.PopupFilterDataTableComponent = new FPopupFilterDataTable(
+            AB,
+            `${base}_popupFilter`
+         );
 
          this.PopupFrozenColumnsComponent = new FPopupFrozenColumns(
             AB,
@@ -687,9 +718,19 @@ export default function (AB, ibase, init_settings) {
             allInits.push(this.PopupDefineLabelComponent.init(AB));
          }
 
-         // PopupFilterDataTableComponent.init({
+         //
          //    onChange: _logic.callbackFilterDataTable, // be notified when there is a change in the filters
-         // });
+
+         // this.PopupFilterDataTableComponent = this.AB.filterComplexNew(
+         //    `${this.CurrentObject.createdInAppID}_${this.CurrentObject.id}_filter`
+         // );
+         // this.PopupFilterDataTableComponent.applicationLoad(this.application);
+         // // update the filters after they have been .show()n
+         // this.PopupFilterDataTableComponent.fieldsLoad(
+         //    this.CurrentObject._fields
+         // );
+
+         allInits.push(this.PopupFilterDataTableComponent.init(AB));
 
          allInits.push(this.PopupFrozenColumnsComponent.init(AB));
 
@@ -1275,7 +1316,7 @@ export default function (AB, ibase, init_settings) {
        * show the popup to add a filter to the datatable
        */
       toolbarFilter($view, fieldId) {
-         PopupFilterDataTableComponent.show($view, fieldId);
+         this.PopupFilterDataTableComponent.show($view, fieldId);
       }
 
       /**
@@ -1334,7 +1375,7 @@ export default function (AB, ibase, init_settings) {
             this.PopupNewDataFieldComponent.objectLoad(object);
             this.PopupDefineLabelComponent.objectLoad(object);
          }
-         // PopupFilterDataTableComponent.objectLoad(object);
+         this.PopupFilterDataTableComponent.objectLoad(object);
          this.PopupFrozenColumnsComponent.objectLoad(object);
 
          this.PopupHideFieldComponent.objectLoad(object);
