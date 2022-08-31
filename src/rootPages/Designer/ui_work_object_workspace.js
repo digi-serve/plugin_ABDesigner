@@ -819,18 +819,34 @@ export default function (AB, ibase, init_settings) {
        */
       async callbackFilterDataTable(filterData) {
          var currentView = this.workspaceViews.getCurrentView();
-         currentView.filterConditions = [filterData];
-         // Since we are making server side requests lets offload the badge count to another function so it can be called independently
-         _logic.getBadgeFilters();
-         // this will be handled by the server side request now
+         // this.workspaceViews._currentView.filterConditions.push(filterData)
+         this.mockDataCollection.filterCondition(filterData);
+         this.mockDataCollection.reloadData();
 
-         try {
-            await this.workspaceViews.save();
-         } catch (e) {
-            // intentionally left blank
+         var ids = this.ids;
+         var $ButtonFilter = $$(ids.buttonFilter);
+         if ($ButtonFilter) {
+            var badge = null;
+            if (filterData?.rules?.length) {
+               badge = 1;
+            }
+            $ButtonFilter.define("badge", badge);
+            $ButtonFilter.refresh();
          }
 
-         this.loadData();
+         // var currentView = this.workspaceViews.getCurrentView();
+         // currentView.filterConditions = [filterData];
+         // // Since we are making server side requests lets offload the badge count to another function so it can be called independently
+         // this.getBadgeFilters();
+         // // this will be handled by the server side request now
+
+         // try {
+         //    await this.workspaceViews.save();
+         // } catch (e) {
+         //    // intentionally left blank
+         // }
+
+         // this.loadData();
          this.refreshView();
       }
 

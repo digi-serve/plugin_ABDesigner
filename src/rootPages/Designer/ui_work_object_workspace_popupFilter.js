@@ -129,7 +129,7 @@ export default function (AB, ibase) {
 
          if (this.rowFilter) {
             // this.rowFilter.applicationLoad(object.application);
-            this.rowFilter.fieldsLoad(object.fields());
+            this.rowFilter.fieldsLoad(object.fields(), object);
 
             // Add event listener
             this.rowFilter.on("save", (...params) => {
