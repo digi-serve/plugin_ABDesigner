@@ -34,13 +34,6 @@ export default function (AB, ibase) {
          // When .userFilterPosition == "toolbar" we use this RowFilter to
          // display a form in a popup where the toolbar button is.
 
-         this.rowFilterForm = this.AB.filterComplexNew(
-            `${this.ids.component}_filter_form`
-         );
-         // {RowFilter}
-         // When .userFilterPosition == "form" we use this RowFilter to
-         // display a form under the toolbar.
-
          this._settings = [];
          // {array}
          // an array of the ABField.columnNames of the fields
@@ -137,11 +130,11 @@ export default function (AB, ibase) {
          if (this.rowFilter) {
             // this.rowFilter.applicationLoad(object.application);
             this.rowFilter.fieldsLoad(object.fields());
-         }
 
-         if (this.rowFilterForm) {
-            // this.rowFilterForm.applicationLoad(object.application);
-            this.rowFilterForm.fieldsLoad(object.fields());
+            // Add event listener
+            this.rowFilter.on("save", (...params) => {
+               this.emit("save", ...params);
+            });
          }
       }
 
@@ -160,7 +153,7 @@ export default function (AB, ibase) {
             id: ids.component,
             // modal: true,
             // autoheight:true,
-            body: this.rowFilterForm.ui,
+            body: this.rowFilter.ui,
             on: {
                onShow: () => {
                   this.onShow();
@@ -199,12 +192,13 @@ export default function (AB, ibase) {
       // },
 
       /**
-       * @method clickHideAll
+       * @method clickSave
        * the user clicked the [hide all] option.  So hide all our fields.
        */
-      clickHideAll() {
+      clickSave(id, e, node) {
+         debugger;
          // create an array of all our field.id's:
-         var allFields = this.CurrentObject.fields();
+         var allFields = this.object._fields;
          var newHidden = [];
          allFields.forEach(function (f) {
             newHidden.push(f.columnName);

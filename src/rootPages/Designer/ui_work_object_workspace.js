@@ -731,6 +731,9 @@ export default function (AB, ibase, init_settings) {
          // );
 
          allInits.push(this.PopupFilterDataTableComponent.init(AB));
+         this.PopupFilterDataTableComponent.on("save", (...params) => {
+            this.callbackFilterDataTable(...params);
+         });
 
          allInits.push(this.PopupFrozenColumnsComponent.init(AB));
 
@@ -814,11 +817,21 @@ export default function (AB, ibase, init_settings) {
        *
        * call back for when the Define Label popup is finished.
        */
-      callbackFilterDataTable() {
+      async callbackFilterDataTable(filterData) {
+         var currentView = this.workspaceViews.getCurrentView();
+         currentView.filterConditions = [filterData];
          // Since we are making server side requests lets offload the badge count to another function so it can be called independently
          _logic.getBadgeFilters();
          // this will be handled by the server side request now
-         _logic.loadData();
+
+         try {
+            await this.workspaceViews.save();
+         } catch (e) {
+            // intentionally left blank
+         }
+
+         this.loadData();
+         this.refreshView();
       }
 
       /**
