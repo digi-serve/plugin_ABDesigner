@@ -45,50 +45,6 @@ export default function (AB, ibase) {
       }
 
       /**
-       * @property default
-       * return default settings
-       *
-       * @return {Object}
-       */
-      static get default() {
-         return {
-            filterOption: 1,
-            // {integer}
-            // 0 - Not allow
-            // 1 - Enable user filter
-            // 2 - Predefined filter menu
-            // 3 - Global filter input
-
-            // filterOptions == 1 options
-            userFilterPosition: "toolbar",
-            // {string} the location of the filter:
-            //    "toolbar" : there will be an "Add Filters" button on
-            //                the toolbar that will trigger the form popup
-            //    "form"    : there will be a button under the toolbar that
-            //                will bring up the form popup.
-
-            isGlobalToolbar: 1,
-            // {boolean|truthy}
-            // when "toolbar" is chosen for userFilterPosition, this setting
-            // allows us to also include the search criteria specified in
-            // the search box on the toolbar.
-
-            // filterOptions == 2 options
-            // predefined filters created by the builders. There will be
-            // an area under the toolbar that displays buttons to choose
-            // between one of the predefined queryRules.
-            // queryRules: [], // An array of ABViewGridFilterRule object
-
-            // filterOptions == 3 options
-            // globalFilterPosition: "default",
-            // {string} [ "default", "single" ]
-            //    "default" : shows default grid with all potential matches
-            //    "single"  : grid only shows when it has a match.  only 1
-            //                match is shown. ( is this true?? )
-         };
-      }
-
-      /**
        * @method fromSettings
        * Create an initial set of default values based upon our settings object.
        * @param {obj} settings  The settings object we created in .toSettings()
@@ -156,7 +112,7 @@ export default function (AB, ibase) {
             body: this.rowFilter.ui,
             on: {
                onShow: () => {
-                  this.onShow();
+                  this.show();
                   this.iconsReset();
                },
             },
@@ -208,8 +164,6 @@ export default function (AB, ibase) {
 
          this.iconsReset();
          this.changed();
-
-         // _logic.callbacks.onChange(this._settings);
       }
 
       /**
@@ -218,13 +172,6 @@ export default function (AB, ibase) {
        */
       clickListItem(id, e, node) {
          var item = this.$List.getItem(id);
-         if (this._frozenColumnID == item.columnName) {
-            webix.alert({
-               text: L("Sorry, you cannot hide your last frozen column."),
-            });
-            return;
-         }
-
          var newFields = [];
          var isHidden =
             (this._settings || []).filter((fID) => {
@@ -266,57 +213,6 @@ export default function (AB, ibase) {
             // node.querySelector('.ab-visible-field-icon').classList.add("fa-circle");
          }
       }
-
-      /**
-       * @method iconFreezeOn
-       * Show a thumb tack if the field is the choosen frozen column field
-       * @param {DOM} node
-       *        the html dom node of the element that contains our icon
-       */
-      iconFreezeOn(node) {
-         if (node) {
-            // node.querySelector('.ab-visible-field-icon')
-            // .classList.remove("fa-circle");
-            node
-               .querySelector(".ab-visible-field-icon")
-               .classList.add("fa-thumb-tack");
-         }
-      }
-
-      /**
-       * @method iconHide
-       * Hide the icon for the given node
-       * @param {DOM} node
-       *        the html dom node of the element that contains our icon
-       */
-      iconHide(node) {
-         if (node) {
-            // node.querySelector('.ab-visible-field-icon').style.visibility = "hidden";
-            // node.querySelector('.ab-visible-field-icon').classList.remove("fa-circle");
-            node
-               .querySelector(".ab-visible-field-icon")
-               .classList.add("fa-eye-slash");
-            node.style.opacity = 0.4;
-         }
-      }
-
-      /**
-       * @method iconShow
-       * Show the icon for the given node
-       * @param {DOM} node
-       *        the html dom node of the element that contains our icon
-       */
-      iconShow(node) {
-         if (node) {
-            // node.querySelector('.ab-visible-field-icon').style.visibility = "visible";
-            node
-               .querySelector(".ab-visible-field-icon")
-               .classList.remove("fa-eye-slash");
-            // node.querySelector('.ab-visible-field-icon').classList.add("fa-circle");
-            node.style.opacity = 1;
-         }
-      }
-
       /**
        * @method iconsReset
        * Reset the icon displays according to the current values in our
@@ -352,38 +248,10 @@ export default function (AB, ibase) {
       }
 
       /**
-       * @method objectLoad
-       * Ready the Popup according to the current object
-       * @param {ABObject} object
-       *        the currently selected ABObject.
-       */
-      // objectLoad(object) {
-      //    this.CurrentObjectID = object.id;
-      // }
-
-      /**
-       * @method onShow
-       * Ready the Popup according to the current object each time it is
-       * shown (perhaps a field was created or delted)
-       */
-      onShow() {
-         // refresh list
-         var allFields = this.CurrentObject.fields();
-         var listFields = [];
-         allFields.forEach((f) => {
-            listFields.push({
-               id: f.id,
-               label: f.label,
-               columnName: f.columnName,
-            });
-         });
-         this.$List.clearAll();
-         this.$List.parse(allFields);
-      }
-
-      /**
        * @method show()
        * Show this component.
+       * Ready the Popup according to the current object each time it is
+       * shown (perhaps a field was created or delted)
        * @param {obj} $view
        *        the webix.$view to hover the popup around.
        */
@@ -398,13 +266,18 @@ export default function (AB, ibase) {
       setSettings(settings) {
          this._settings = this.AB.cloneDeep(settings || []);
       }
+      /*
+       * this runs on workspace switch
+       */
+      setFilter(filter) {
+         if (!filter.rules?.length) {
+            filter = filter[0] || [];
+         }
+         this.rowFilter.setValue(filter);
+      }
 
       getSettings() {
          return this._settings || [];
-      }
-
-      setFrozenColumnID(frozenColumnID) {
-         this._frozenColumnID = frozenColumnID;
       }
    }
 

@@ -818,8 +818,6 @@ export default function (AB, ibase, init_settings) {
        * call back for when the Define Label popup is finished.
        */
       async callbackFilterDataTable(filterData) {
-         var currentView = this.workspaceViews.getCurrentView();
-         // this.workspaceViews._currentView.filterConditions.push(filterData)
          this.mockDataCollection.filterCondition(filterData);
          this.mockDataCollection.reloadData();
 
@@ -833,21 +831,6 @@ export default function (AB, ibase, init_settings) {
             $ButtonFilter.define("badge", badge);
             $ButtonFilter.refresh();
          }
-
-         // var currentView = this.workspaceViews.getCurrentView();
-         // currentView.filterConditions = [filterData];
-         // // Since we are making server side requests lets offload the badge count to another function so it can be called independently
-         // this.getBadgeFilters();
-         // // this will be handled by the server side request now
-
-         // try {
-         //    await this.workspaceViews.save();
-         // } catch (e) {
-         //    // intentionally left blank
-         // }
-
-         // this.loadData();
-         this.refreshView();
       }
 
       /**
@@ -1494,7 +1477,14 @@ export default function (AB, ibase, init_settings) {
             glue: "and",
             rules: [],
          };
-         if (this.workspaceViews?.filterConditions?.rules?.length > 0) {
+         // ! there is some strange data coming from the server
+         // TODO @achoobert fix it
+         if (this.workspaceViews?.filterConditions[0]?.rules?.length > 0) {
+            wheres = this.workspaceViews.filterConditions[0].rules;
+            // fix this so it can be used later
+            this.workspaceViews.filterConditions.rules =
+               this.workspaceViews.filterConditions[0].rules;
+         } else if (this.workspaceViews?.filterConditions?.rules?.length > 0) {
             wheres = this.workspaceViews.filterConditions;
          }
 
@@ -1567,6 +1557,7 @@ export default function (AB, ibase, init_settings) {
             this.refreshToolBarView();
 
             // make sure our Popups are updated:
+            this.PopupFilterDataTableComponent.setFilter(view.filterConditions);
             this.PopupFrozenColumnsComponent.setValue(
                view.frozenColumnID || ""
             );
