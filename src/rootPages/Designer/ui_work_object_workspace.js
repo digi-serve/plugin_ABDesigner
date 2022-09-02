@@ -816,7 +816,7 @@ export default function (AB, ibase, init_settings) {
          try {
             await this.workspaceViews.save();
          } catch (e) {
-            // intentionally left blank
+            console.error(e);
          }
 
          this.mockDataCollection.reloadData();
