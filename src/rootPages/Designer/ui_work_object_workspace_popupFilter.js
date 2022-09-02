@@ -74,13 +74,15 @@ export default function (AB, ibase) {
          return {
             view: "popup",
             id: ids.component,
-            modal: true,
             autoheight: true,
             minHeight: 275,
             body: this.rowFilter.ui,
             on: {
                onShow: () => {
                   this.show();
+               },
+               onHide: () => {
+                  this.hide();
                },
             },
          };
