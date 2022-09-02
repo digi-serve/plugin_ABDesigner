@@ -1527,6 +1527,7 @@ export default function (AB, ibase, init_settings) {
             this.mockDataCollection.loadData(0);
          } else {
             this.mockDataCollection.loadData(0, 30).catch((err) => {
+               this.toolbarFilter(this.$view);
                var message = err.toString();
                if (typeof err == "string") {
                   try {

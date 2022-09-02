@@ -8,7 +8,7 @@ import UI_Class from "./ui_class";
 export default function (AB, ibase) {
    ibase = ibase || "ui_work_object_workspace_popupHideFields";
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   // var L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupFilter extends UIClass {
       constructor(base) {
@@ -30,32 +30,6 @@ export default function (AB, ibase) {
          // {RowFilter}
          // we use this RowFilter to
          // display a form in a popup where the toolbar button is.
-
-         this._settings = [];
-         // {array}
-         // an array of the ABField.columnNames of the fields
-         // that we can filter by.
-      }
-
-      /**
-       * @method fromSettings
-       * Create an initial set of default values based upon our settings object.
-       * @param {obj} settings  The settings object we created in .toSettings()
-       */
-      fromSettings(settings) {
-         settings = settings || {};
-
-         settings.filterOption =
-            typeof settings.filterOption != "undefined"
-               ? settings.filterOption
-               : ABViewPropertyFilterData.default.filterOption;
-
-         settings.isGlobalToolbar =
-            typeof settings.isGlobalToolbar != "undefined"
-               ? settings.isGlobalToolbar
-               : ABViewPropertyFilterData.default.isGlobalToolbar;
-
-         this.settings = settings;
       }
 
       /**
@@ -122,24 +96,6 @@ export default function (AB, ibase) {
          this.$List = $$(this.ids.list);
       }
 
-      changed() {
-         this.emit("changed", this._settings);
-      }
-
-      // our internal business logic
-
-      // callbacks: {
-      //    *
-      //     * @function onChange
-      //     * called when we have made changes to the hidden field settings
-      //     * of our Current Object.
-      //     *
-      //     * this is meant to alert our parent component to respond to the
-      //     * change.
-
-      //    onChange: function (settings) {},
-      // },
-
       /**
        * @method show()
        * Show this component.
@@ -170,10 +126,6 @@ export default function (AB, ibase) {
             this.$Component.hide($view);
          }
       }
-
-      setSettings(settings) {
-         this._settings = this.AB.cloneDeep(settings || []);
-      }
       /*
        * this runs on workspace switch
        */
@@ -182,10 +134,6 @@ export default function (AB, ibase) {
             filter = filter[0] || [];
          }
          this.rowFilter.setValue(filter);
-      }
-
-      getSettings() {
-         return this._settings || [];
       }
    }
 
