@@ -181,35 +181,6 @@ export default function (AB, ibase, init_settings) {
             });
          }
 
-         // ! how to properly import this?
-         // this.__dfLookup = {};
-         // this.conditions =
-         //    this.CurrentObject?.objectWorkspace?.filterConditions || {};
-         // old filters???
-         // this.CurrentObject.objectWorkspace.filterConditions
-
-         // fields
-         // this.CurrentObject._fields
-
-         // get fields
-         // var listDataFields = this.process.processDataFields(this);
-         // TODO get a map of fields inc UUIDs and labels ?!?
-         // this.CurrentObject.fieldByID(this.CurrentObject.fieldIDs[0]).label;
-         // var abFields = (listDataFields || []).map((f) => {
-         //    return f.field;
-         // });
-         // Load the filter complex
-         // this.PopupFilterDataTableComponent = AB
-         //    .filterComplexNew
-         //    // `${this.CurrentObject.createdInAppID}_${this.CurrentObject.id}_filter`
-         //    ();
-         // this.PopupFilterDataTableComponent.applicationLoad(this.application);
-         // // update the filters after they have been .show()n
-         // this.PopupFilterDataTableComponent.fieldsLoad(
-         //    this.CurrentObject._fields
-         // );
-
-         //
          this.PopupFilterDataTableComponent = new FPopupFilterDataTable(
             AB,
             `${base}_popupFilter`

@@ -12,13 +12,7 @@ export default function (AB, ibase) {
 
    class UI_Work_Object_Workspace_PopupFilter extends UIClass {
       constructor(base) {
-         super(base, {
-            // filterPanel: `${base}_filterPanel`,
-            // globalFilterFormContainer: `${base}__globalFilterFormContainer`,
-            // globalFilterForm: `${base}_globalFilterForm`,
-            // filterMenutoolbar: `${base}_filterMenuToolbar`,
-            // resetFilterButton: `${base}_resetFilterButton`,
-         });
+         super(base, {});
 
          this.AB = AB;
          this.base = base;
@@ -42,14 +36,6 @@ export default function (AB, ibase) {
        */
       objectLoad(object) {
          this.object = object;
-
-         //tell each of our rules about our object
-         // if (this.queryRules &&
-         // 	this.queryRules.length) {
-         // 	this.queryRules.forEach((r) => {
-         // 		r.objectLoad(object);
-         // 	});
-         // }
 
          if (this.rowFilter) {
             this.rowFilter.fieldsLoad(object.fields(), object);
