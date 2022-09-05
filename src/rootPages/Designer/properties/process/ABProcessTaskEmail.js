@@ -218,12 +218,21 @@ export default function (AB) {
          return Promise.resolve();
       }
 
-      // applicationLoad(application) {
+      applicationLoad(application) {
       //    super.applicationLoad(application);
+         super.applicationLoad(application);
 
-      //    $$(this.ids.objList).define("data", listObj);
-      //    $$(this.ids.objList).refresh();
-      // }
+         // $$(this.ids.objList).define("data", listObj);
+         // $$(this.ids.objList).refresh();
+      }
+
+      processLoad(process) {
+         debugger;
+         super.processLoad(process);
+
+         // $$(this.ids.objList).define("data", listObj);
+         // $$(this.ids.objList).refresh();
+      }
 
       // show() {
       //    super.show();

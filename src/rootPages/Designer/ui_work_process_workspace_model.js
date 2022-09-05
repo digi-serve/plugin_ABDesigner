@@ -275,6 +275,12 @@ export default function (AB) {
          super.processLoad(process);
          var ids = this.ids;
 
+         Object.keys(this.panelsByType).forEach((k) => {
+            if (this.panelsByType[k].processLoad) {
+               this.panelsByType[k].processLoad(process);
+            }
+         });
+
          // initialize the BPMN Viewer if not already initialized:
          if (!this.viewer) {
             $$(ids.modelerBroken).hide();
