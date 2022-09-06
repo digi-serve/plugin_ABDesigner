@@ -62,12 +62,14 @@ export default function (AB) {
       require("./views/ABViewDataview"),
       require("./views/ABViewDetail"),
       require("./views/ABViewDocxBuilder"),
-      require("./views/ABViewGrid"),
       require("./views/ABViewForm"),
+      require("./views/ABViewGrid"),
+      require("./views/ABViewLabel"),
       require("./views/ABViewLayout"),
       require("./views/ABViewMenu"),
       require("./views/ABViewPage"),
       require("./views/ABViewTab"),
+      require("./views/ABViewText"),
    ].forEach((V) => {
       let Klass = V.default(AB);
       Views.push(Klass);
