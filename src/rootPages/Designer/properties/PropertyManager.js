@@ -59,6 +59,7 @@ export default function (AB) {
    // All the ABViewXXX Property Interfaces Available.
    [
       require("./views/ABViewCarousel"),
+      require("./views/ABViewComment"),
       require("./views/ABViewDataview"),
       require("./views/ABViewDetail"),
       require("./views/ABViewDocxBuilder"),
