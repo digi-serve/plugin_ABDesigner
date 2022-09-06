@@ -230,6 +230,7 @@ export default function (AB) {
             let newEditor = this._editorsByType[view.key];
 
             editorComponent = new newEditor(view); // view.editorComponent(this.AB._App, "preview");
+            editorComponent.viewLoad(view);
             $$(ids.editAreaContainer).define({ width: 0 });
             $$(ids.editArea).define({ height: 0 });
             webix.html.removeCss(
