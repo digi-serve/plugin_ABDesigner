@@ -23,7 +23,9 @@ export default function (AB) {
             from: "",
             subject: "",
             fromUser: "",
+            fromUserField: "",
             toUser: "",
+            toUserField: "",
             message: "",
             toCustom: "",
             fromCustom: "",
@@ -227,7 +229,6 @@ export default function (AB) {
       }
 
       processLoad(process) {
-         debugger;
          super.processLoad(process);
 
          // $$(this.ids.objList).define("data", listObj);
@@ -241,6 +242,12 @@ export default function (AB) {
 
       populate(obj) {
          let ids = this.ids;
+
+         let userProcessFieldData = obj.process
+            .processDataFields(obj)
+            .filter((e) => e.field?.key == "user");
+         obj.toUsers["userFields"] = userProcessFieldData;
+         obj.fromUsers["userFields"] = userProcessFieldData;
 
          $$(ids.name).setValue(obj.name);
          $$(ids.to).setValue(obj.to);

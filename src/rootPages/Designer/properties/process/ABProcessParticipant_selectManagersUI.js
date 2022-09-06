@@ -20,7 +20,9 @@ export default function (AB) {
             role: "",
             useRole: "",
             useAccount: "",
+            useField: "",
             account: "",
+            fields: "",
          });
       }
 
@@ -31,6 +33,17 @@ export default function (AB) {
          var __Users = AB.Account.userList().map((u) => {
             return { id: u.uuid, value: u.username };
          });
+         var __UserFields = [];
+         if (obj.userFields) {
+            __UserFields = obj.userFields.map((u) => {
+               return {
+                  uuid: u.field.id,
+                  id: u.key,
+                  value: u.label,
+                  key: u.key,
+               };
+            });
+         }
 
          var ids = this.ids;
 
@@ -192,6 +205,91 @@ export default function (AB) {
                            onChange: (/* newVal, oldVal */) => {
                               // trigger the onAfterRender function from the list so we can add data-cy to dom
                               $$(this.ids.account)
+                                 .getList()
+                                 .callEvent("onAfterRender");
+                           },
+                        },
+                     },
+                  ],
+               },
+               {
+                  cols: [
+                     {
+                        view: "checkbox",
+                        id: this.ids.useField,
+                        labelRight: L("by Field"),
+                        labelWidth: 0,
+                        width: 120,
+                        value: obj.useField == "1" ? 1 : 0,
+                        click: function (id /*, event */) {
+                           if ($$(id).getValue()) {
+                              $$(ids.userField).enable();
+                           } else {
+                              $$(ids.userField).disable();
+                           }
+                        },
+                        on: {
+                           onAfterRender() {
+                              UIClass.CYPRESS_REF(this);
+                           },
+                        },
+                     },
+                     {
+                        // TODO @achoobert look these up
+                        id: this.ids.userField,
+                        view: "multicombo",
+                        value: obj.fields ? obj.fields : 0,
+                        disabled: obj.useField == "1" ? false : true,
+                        suggest: {
+                           body: {
+                              data: __UserFields,
+                              on: {
+                                 //
+                                 // TODO: looks like a Webix Bug that has us
+                                 // doing all this work.  Let's see if Webix
+                                 // can fix this for us.
+                                 onAfterRender() {
+                                    this.data.each((a) => {
+                                       UIClass.CYPRESS_REF(
+                                          this.getItemNode(a.id),
+                                          `${ids.userField}_${a.id}`
+                                       );
+                                    });
+                                 },
+                                 onItemClick: function (id) {
+                                    var $userFieldsCombo = $$(ids.userField);
+                                    var currentItems =
+                                       $userFieldsCombo.getValue();
+                                    var indOf = currentItems.indexOf(id);
+                                    if (indOf == -1) {
+                                       currentItems.push(id);
+                                    } else {
+                                       currentItems.splice(indOf, 1);
+                                    }
+                                    $userFieldsCombo.setValue(currentItems);
+                                    // var item = this.getItem(id);
+                                    // UIClass.CYPRESS_REF(
+                                    //    this.getItemNode(item.id),
+                                    //    `${ids.userField}_${item.id}`
+                                    // );
+                                 },
+                              },
+                           },
+                        },
+                        labelAlign: "left",
+                        placeholder: L("Click or type to add user..."),
+                        stringResult: false /* returns data as an array of [id] */,
+                        on: {
+                           onAfterRender: function () {
+                              // set data-cy for original field to track clicks to open option list
+                              UIClass.CYPRESS_REF(
+                                 this.getNode(),
+                                 ids.userField
+                              );
+                           },
+                           onChange: (/* newVal, oldVal */) => {
+                              // trigger the onAfterRender function from the list so we can add data-cy to dom
+                              $$(this.ids.userField)
                                  .getList()
                                  .callEvent("onAfterRender");
                            },

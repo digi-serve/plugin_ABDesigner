@@ -693,6 +693,9 @@ export default function (AB) {
        * stashed
        */
       propertiesSave() {
+         if (!this.CurrentPanel) {
+            return;
+         }
          var thisObj = this.CurrentPropertiesObj;
          var values = this.CurrentPanel.values();
          var objVals = thisObj.toObj();
