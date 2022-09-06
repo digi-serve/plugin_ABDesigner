@@ -343,6 +343,18 @@ export default function (AB) {
             obj.account = null;
          }
 
+         if ($$(ids.useField)) {
+            obj.useField = $$(ids.useField).getValue();
+         }
+
+         if ($$(ids.useField)) {
+            obj["fields"] = $$(ids.userField).getValue();
+            debugger;
+            if (!obj.fields) obj.fields = [];
+         } else {
+            obj.fields = [];
+         }
+
          return obj;
       }
    }

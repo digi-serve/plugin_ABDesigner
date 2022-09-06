@@ -23,9 +23,7 @@ export default function (AB) {
             from: "",
             subject: "",
             fromUser: "",
-            fromUserField: "",
             toUser: "",
-            toUserField: "",
             message: "",
             toCustom: "",
             fromCustom: "",
@@ -221,7 +219,7 @@ export default function (AB) {
       }
 
       applicationLoad(application) {
-      //    super.applicationLoad(application);
+         //    super.applicationLoad(application);
          super.applicationLoad(application);
 
          // $$(this.ids.objList).define("data", listObj);
@@ -230,9 +228,6 @@ export default function (AB) {
 
       processLoad(process) {
          super.processLoad(process);
-
-         // $$(this.ids.objList).define("data", listObj);
-         // $$(this.ids.objList).refresh();
       }
 
       // show() {
