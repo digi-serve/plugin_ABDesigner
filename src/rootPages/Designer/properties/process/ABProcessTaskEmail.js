@@ -26,7 +26,12 @@ export default function (AB) {
             toUser: "",
             message: "",
             toCustom: "",
+            toCustomFields: "",
             fromCustom: "",
+            fromCustomFields: "",
+            customFrom: "",
+            toEmailForm: "",
+            fromEmailForm: "",
          });
 
          this.toUser = new ABProcessParticipant(this.ids.component + "_to_");
@@ -92,13 +97,13 @@ export default function (AB) {
                            onChange: (val) => {
                               if (parseInt(val) == 1) {
                                  $$(ids.toUser).show();
-                                 $$(ids.toCustom).hide();
+                                 $$(ids.toEmailForm).hide();
                               } else if (parseInt(val) == 2) {
                                  $$(ids.toUser).hide();
-                                 $$(ids.toCustom).show();
+                                 $$(ids.toEmailForm).show();
                               } else {
                                  $$(ids.toUser).hide();
-                                 $$(ids.toCustom).hide();
+                                 $$(ids.toEmailForm).hide();
                               }
                            },
                         },
@@ -110,12 +115,77 @@ export default function (AB) {
                         hidden: parseInt(this.to) == 1 ? false : true,
                      },
                      {
-                        id: ids.toCustom,
-                        view: "text",
-                        label: L("Email"),
-                        placeholder: L("Type email address here..."),
-                        name: "toCustom",
-                        value: this.toCustom,
+                        id: ids.toEmailForm,
+                        name: "toEmailForm",
+                        type: "form",
+                        css: "no-margin",
+                        rows: [
+                           {
+                              id: ids.toCustom,
+                              view: "text",
+                              label: L("Email"),
+                              placeholder: L("Type email address here..."),
+                              name: "toCustom",
+                              value: this.toCustom,
+                           },
+                           {
+                              // process fields TO
+                              id: ids.toCustomFields,
+                              label: L("toCustomFields"),
+                              name: "toCustomFields",
+                              value: this.toCustomFields,
+                              view: "multicombo",
+                              placeholder: L("..."),
+                              suggest: {
+                                 body: {
+                                    data: [],
+                                    on: {
+                                       onAfterRender() {
+                                          this.data.each((a) => {
+                                             UIClass.CYPRESS_REF(
+                                                this.getItemNode(a.id),
+                                                `${ids.toCustomFields}_${a.id}`
+                                             );
+                                          });
+                                       },
+                                       onItemClick: function (id) {
+                                          var $toCustomFields = $$(
+                                             ids.toCustomFields
+                                          );
+                                          var currentItems =
+                                             $toCustomFields.getValue();
+                                          var indOf = currentItems.indexOf(id);
+                                          if (indOf == -1) {
+                                             currentItems.push(id);
+                                          } else {
+                                             currentItems.splice(indOf, 1);
+                                          }
+                                          $toCustomFields.setValue(
+                                             currentItems
+                                          );
+                                       },
+                                    },
+                                 },
+                              },
+                              labelAlign: "left",
+                              stringResult: false /* returns data as an array of [id] */,
+                              on: {
+                                 onAfterRender: function () {
+                                    // set data-cy for original field to track clicks to open option list
+                                    UIClass.CYPRESS_REF(
+                                       this.getNode(),
+                                       ids.toCustomFields
+                                    );
+                                 },
+                                 onChange: (/* newVal, oldVal */) => {
+                                    // trigger the onAfterRender function from the list so we can add data-cy to dom
+                                    $$(this.ids.toCustomFields)
+                                       .getList()
+                                       .callEvent("onAfterRender");
+                                 },
+                              },
+                           },
+                        ],
                         hidden: parseInt(this.to) == 2 ? false : true,
                      },
                      {
@@ -142,13 +212,13 @@ export default function (AB) {
                            onChange: (val) => {
                               if (parseInt(val) == 1) {
                                  $$(ids.fromUser).show();
-                                 $$(ids.fromCustom).hide();
+                                 $$(ids.fromEmailForm).hide();
                               } else if (parseInt(val) == 2) {
                                  $$(ids.fromUser).hide();
-                                 $$(ids.fromCustom).show();
+                                 $$(ids.fromEmailForm).show();
                               } else {
                                  $$(ids.fromUser).hide();
-                                 $$(ids.fromCustom).hide();
+                                 $$(ids.fromEmailForm).hide();
                               }
                            },
                         },
@@ -160,12 +230,78 @@ export default function (AB) {
                         hidden: parseInt(this.from) == 1 ? false : true,
                      },
                      {
-                        id: ids.fromCustom,
-                        view: "text",
-                        label: L("Email"),
-                        placeholder: L("Type email address here..."),
-                        name: "fromCustom",
-                        value: this.fromCustom,
+                        id: ids.fromEmailForm,
+                        name: "fromEmailForm",
+                        type: "form",
+                        css: "no-margin",
+                        rows: [
+                           {
+                              id: ids.fromCustom,
+                              view: "text",
+                              label: L("Email"),
+                              placeholder: L("Type email address here..."),
+                              name: "fromCustom",
+                              value: this.fromCustom,
+                              // hidden: parseInt(this.from) == 2 ? false : true,
+                           },
+                           {
+                              id: ids.fromCustomFields,
+                              view: "multicombo",
+                              label: L("Process"),
+                              placeholder: L("..."),
+                              name: "fromCustomFields",
+                              suggest: {
+                                 body: {
+                                    data: [],
+                                    on: {
+                                       onAfterRender() {
+                                          this.data.each((a) => {
+                                             UIClass.CYPRESS_REF(
+                                                this.getItemNode(a.id),
+                                                `${ids.fromCustomFields}_${a.id}`
+                                             );
+                                          });
+                                       },
+                                       onItemClick: function (id) {
+                                          var $fromCustomFields = $$(
+                                             ids.fromCustomFields
+                                          );
+                                          var currentItems =
+                                             $fromCustomFields.getValue();
+                                          var indOf = currentItems.indexOf(id);
+                                          if (indOf == -1) {
+                                             currentItems.push(id);
+                                          } else {
+                                             currentItems.splice(indOf, 1);
+                                          }
+                                          $fromCustomFields.setValue(
+                                             currentItems
+                                          );
+                                       },
+                                    },
+                                 },
+                              },
+                              labelAlign: "left",
+                              value: this.fromCustomFields,
+                              // hidden: parseInt(this.from) == 2 ? false : true,
+                              stringResult: false /* returns data as an array of [id] */,
+                              on: {
+                                 onAfterRender: function () {
+                                    // set data-cy for original field to track clicks to open option list
+                                    UIClass.CYPRESS_REF(
+                                       this.getNode(),
+                                       ids.fromCustomFields
+                                    );
+                                 },
+                                 onChange: (/* newVal, oldVal */) => {
+                                    // trigger the onAfterRender function from the list so we can add data-cy to dom
+                                    $$(this.ids.fromCustomFields)
+                                       .getList()
+                                       .callEvent("onAfterRender");
+                                 },
+                              },
+                           },
+                        ],
                         hidden: parseInt(this.from) == 2 ? false : true,
                      },
                      {
@@ -228,6 +364,7 @@ export default function (AB) {
 
       processLoad(process) {
          super.processLoad(process);
+         this.process = process;
       }
 
       // show() {
@@ -238,11 +375,25 @@ export default function (AB) {
       populate(obj) {
          let ids = this.ids;
 
+         // get process data user-fields
          let userProcessFieldData = obj.process
             .processDataFields(obj)
             .filter((e) => e.field?.key == "user");
          obj.toUsers["userFields"] = userProcessFieldData;
          obj.fromUsers["userFields"] = userProcessFieldData;
+
+         // get process data email-fields
+         let emailProcessFieldData = obj.process
+            .processDataFields(obj)
+            .filter((e) => e.field?.key == "email");
+         let __EmailFields = emailProcessFieldData.map((u) => {
+            return {
+               uuid: u.field.id,
+               id: u.key,
+               value: u.label,
+               key: u.key,
+            };
+         });
 
          $$(ids.name).setValue(obj.name);
          $$(ids.to).setValue(obj.to);
@@ -251,6 +402,11 @@ export default function (AB) {
          $$(ids.message).setValue(obj.message);
          $$(ids.toCustom).setValue(obj.toCustom);
          $$(ids.fromCustom).setValue(obj.fromCustom);
+
+         $$(ids.fromCustomFields).options_setter(__EmailFields);
+         $$(ids.fromCustomFields).refresh();
+         $$(ids.toCustomFields).options_setter(__EmailFields);
+         $$(ids.toCustomFields).refresh();
 
          let $toUser = this.toUser.ui(obj.toUsers ?? {});
          let $newToUser = {
@@ -300,7 +456,9 @@ export default function (AB) {
          obj.subject = $$(ids.subject).getValue();
          obj.message = $$(ids.message).getValue();
          obj.toCustom = $$(ids.toCustom).getValue();
+         obj.toCustomFields = $$(ids.toCustomFields).getValue();
          obj.fromCustom = $$(ids.fromCustom).getValue();
+         obj.fromCustomFields = $$(ids.fromCustomFields).getValue();
          obj.toUsers = this.toUser.values();
          obj.fromUsers = this.fromUser.values();
 
