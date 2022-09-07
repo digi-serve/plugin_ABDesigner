@@ -79,7 +79,7 @@ export default function (AB, ibase) {
             resize: true,
             modal: true,
             boarderless: true,
-            height: 503,
+            height: 500,
             width: 700,
             head: {
                view: "toolbar",
@@ -157,11 +157,13 @@ export default function (AB, ibase) {
                         {
                            view: "dataview",
                            id: ids.types,
+                           borderless: true,
                            type: {
                               width: 87.5,
-                              height: 87.5,
+                              height: 85,
+                              borderless: true,
                               template:
-                                 '<button type="button" class="webix_button webix_img_btn_top" style="text-align: center;"><span style="font-size: 50px;"><i class="#icon#"></i><br></span><span style="font-size: 12px;">#label#</span></button>',
+                                 '<button type="button" class="webix_button webix_img_btn_top" style="text-align: center;"><span style="font-size: 30px; color: #94a1b3;"><i class="#icon#"></i><br></span><span style="font-size: 12px; line-height: 13px; display: inline-block; margin: 3px 3px 0;">#label#</span></button>',
                               css: "webix_transparent",
                            },
                            data: [],
