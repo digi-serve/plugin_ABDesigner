@@ -21,6 +21,7 @@ import FPopupImport from "./ui_work_object_workspace_popupImport";
 import FPopupNewDataField from "./ui_work_object_workspace_popupNewDataField";
 import FPopupSortField from "./ui_work_object_workspace_popupSortFields";
 import FPopupViewSettings from "./ui_work_object_workspace_popupViewSettings";
+import FPopupFilterDataTable from "./ui_work_object_workspace_popupFilter";
 
 import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 
@@ -179,10 +180,11 @@ export default function (AB, ibase, init_settings) {
                this.callbackDefineLabel();
             });
          }
-         // var PopupFilterDataTableComponent = new ABPopupFilterDataTable(
-         //    App,
-         //    idBase
-         // );
+
+         this.PopupFilterDataTableComponent = new FPopupFilterDataTable(
+            AB,
+            `${base}_popupFilter`
+         );
 
          this.PopupFrozenColumnsComponent = new FPopupFrozenColumns(
             AB,
@@ -377,8 +379,8 @@ export default function (AB, ibase, init_settings) {
                         icon: "fa fa-filter",
                         css: "webix_transparent",
                         type: "icon",
-                        // minWidth: 70,
-                        // autowidth: true,
+                        minWidth: 70,
+                        autowidth: true,
                         badge: null,
                         click: function () {
                            _logic.toolbarFilter(this.$view);
@@ -687,9 +689,10 @@ export default function (AB, ibase, init_settings) {
             allInits.push(this.PopupDefineLabelComponent.init(AB));
          }
 
-         // PopupFilterDataTableComponent.init({
-         //    onChange: _logic.callbackFilterDataTable, // be notified when there is a change in the filters
-         // });
+         allInits.push(this.PopupFilterDataTableComponent.init(AB));
+         this.PopupFilterDataTableComponent.on("save", (...params) => {
+            this.callbackFilterDataTable(...params);
+         });
 
          allInits.push(this.PopupFrozenColumnsComponent.init(AB));
 
@@ -773,11 +776,40 @@ export default function (AB, ibase, init_settings) {
        *
        * call back for when the Define Label popup is finished.
        */
-      callbackFilterDataTable() {
-         // Since we are making server side requests lets offload the badge count to another function so it can be called independently
-         _logic.getBadgeFilters();
-         // this will be handled by the server side request now
-         _logic.loadData();
+      async callbackFilterDataTable(filterData) {
+         this.mockDataCollection.filterCondition(filterData);
+
+         this.updateFilterButton(filterData);
+
+         var currentView = this.workspaceViews.getCurrentView();
+         currentView.filterConditions = filterData;
+
+         try {
+            await this.workspaceViews.save();
+         } catch (e) {
+            console.error(e);
+         }
+
+         this.mockDataCollection.reloadData();
+         this.refreshView();
+      }
+
+      /**
+       * @function updateFilterButton
+       *
+       * call back for when the Define Label popup is finished.
+       */
+      async updateFilterButton(filterData) {
+         var ids = this.ids;
+         var $ButtonFilter = $$(ids.buttonFilter);
+         if ($ButtonFilter) {
+            var badge = null;
+            if (filterData?.rules?.length) {
+               badge = 1;
+            }
+            $ButtonFilter.define("badge", badge);
+            $ButtonFilter.refresh();
+         }
       }
 
       /**
@@ -1275,7 +1307,7 @@ export default function (AB, ibase, init_settings) {
        * show the popup to add a filter to the datatable
        */
       toolbarFilter($view, fieldId) {
-         PopupFilterDataTableComponent.show($view, fieldId);
+         this.PopupFilterDataTableComponent.show($view, fieldId);
       }
 
       /**
@@ -1334,7 +1366,7 @@ export default function (AB, ibase, init_settings) {
             this.PopupNewDataFieldComponent.objectLoad(object);
             this.PopupDefineLabelComponent.objectLoad(object);
          }
-         // PopupFilterDataTableComponent.objectLoad(object);
+         this.PopupFilterDataTableComponent.objectLoad(object);
          this.PopupFrozenColumnsComponent.objectLoad(object);
 
          this.PopupHideFieldComponent.objectLoad(object);
@@ -1424,7 +1456,14 @@ export default function (AB, ibase, init_settings) {
             glue: "and",
             rules: [],
          };
-         if (this.workspaceViews?.filterConditions?.rules?.length > 0) {
+         // ! there is some strange data coming from the server
+         // TODO @achoobert fix it
+         if (this.workspaceViews?.filterConditions[0]?.rules?.length > 0) {
+            wheres = this.workspaceViews.filterConditions[0].rules;
+            // fix this so it can be used later
+            this.workspaceViews.filterConditions.rules =
+               this.workspaceViews.filterConditions[0].rules;
+         } else if (this.workspaceViews?.filterConditions?.rules?.length > 0) {
             wheres = this.workspaceViews.filterConditions;
          }
 
@@ -1445,6 +1484,10 @@ export default function (AB, ibase, init_settings) {
             },
          });
 
+         // update the DC with workspace filter conditions sent from the server
+         this.mockDataCollection.filterCondition(wheres);
+         this.updateFilterButton(wheres);
+
          this.mockDataCollection.refreshFilterConditions(wheres);
          this.mockDataCollection.clearAll();
 
@@ -1455,6 +1498,7 @@ export default function (AB, ibase, init_settings) {
             this.mockDataCollection.loadData(0);
          } else {
             this.mockDataCollection.loadData(0, 30).catch((err) => {
+               this.toolbarFilter(this.$view);
                var message = err.toString();
                if (typeof err == "string") {
                   try {
@@ -1497,6 +1541,7 @@ export default function (AB, ibase, init_settings) {
             this.refreshToolBarView();
 
             // make sure our Popups are updated:
+            this.PopupFilterDataTableComponent.setFilter(view.filterConditions);
             this.PopupFrozenColumnsComponent.setValue(
                view.frozenColumnID || ""
             );
