@@ -11,6 +11,7 @@ export default function (AB) {
    [
       require("./views/ABViewCarousel"),
       require("./views/ABViewComment"),
+      require("./views/ABViewConditionalContainer"),
       require("./views/ABViewContainer"),
       require("./views/ABViewDataview"),
       require("./views/ABViewDetail"),
