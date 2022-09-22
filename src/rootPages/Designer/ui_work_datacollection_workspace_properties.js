@@ -736,6 +736,9 @@ export default function (AB) {
             this.FilterComponent.fieldsLoad(
                datasource ? datasource.fields() : []
             );
+            this.FilterComponent.queriesLoad(
+               this.CurrentApplication?.queriesIncluded()
+            );
             this.FilterComponent.setValue(filterConditions);
             this.CurrentDatacollection.refreshFilterConditions(
                filterConditions
