@@ -10,6 +10,11 @@ export default function (AB) {
    // All the ABField Component Inerfaces available.
    [
       require("./views/ABViewCarousel"),
+      require("./views/ABViewChart"),
+      require("./views/ABViewChartArea"),
+      require("./views/ABViewChartBar"),
+      require("./views/ABViewChartLine"),
+      require("./views/ABViewChartPie"),
       require("./views/ABViewComment"),
       require("./views/ABViewContainer"),
       require("./views/ABViewDataview"),
