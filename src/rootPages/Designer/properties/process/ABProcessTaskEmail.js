@@ -379,8 +379,8 @@ export default function (AB) {
          let userProcessFieldData = obj.process
             .processDataFields(obj)
             .filter((e) => e.field?.key == "user");
-         obj.toUsers["userFields"] = userProcessFieldData;
-         obj.fromUsers["userFields"] = userProcessFieldData;
+         obj.toUsers["userProcessFieldData"] = userProcessFieldData;
+         obj.fromUsers["userProcessFieldData"] = userProcessFieldData;
 
          // get process data email-fields
          let emailProcessFieldData = obj.process
@@ -405,8 +405,10 @@ export default function (AB) {
 
          $$(ids.fromCustomFields).options_setter(__EmailFields);
          $$(ids.fromCustomFields).refresh();
+         $$(ids.fromCustomFields).setValue(obj.fromCustomFields);
          $$(ids.toCustomFields).options_setter(__EmailFields);
          $$(ids.toCustomFields).refresh();
+         $$(ids.toCustomFields).setValue(obj.toCustomFields);
 
          let $toUser = this.toUser.ui(obj.toUsers ?? {});
          let $newToUser = {

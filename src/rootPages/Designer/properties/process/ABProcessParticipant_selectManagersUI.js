@@ -20,9 +20,10 @@ export default function (AB) {
             role: "",
             useRole: "",
             useAccount: "",
-            useField: "",
+            useField: "", // bool on whether to use userFields from process
             account: "",
-            fields: "",
+            fields: "", // to\fromUsers.fields
+            userField: "",
          });
       }
 
@@ -34,8 +35,8 @@ export default function (AB) {
             return { id: u.uuid, value: u.username };
          });
          var __UserFields = [];
-         if (obj.userFields) {
-            __UserFields = obj.userFields.map((u) => {
+         if (obj.userProcessFieldData) {
+            __UserFields = obj.userProcessFieldData.map((u) => {
                return {
                   uuid: u.field.id,
                   id: u.key,
@@ -238,7 +239,7 @@ export default function (AB) {
                         // TODO @achoobert look these up
                         id: this.ids.userField,
                         view: "multicombo",
-                        value: obj.fields ? obj.fields : 0,
+                        value: obj.userFields ? obj.userFields : 0,
                         disabled: obj.useField == "1" ? false : true,
                         suggest: {
                            body: {
@@ -348,11 +349,9 @@ export default function (AB) {
          }
 
          if ($$(ids.useField)) {
-            obj["fields"] = $$(ids.userField).getValue();
-            debugger;
-            if (!obj.fields) obj.fields = [];
+            obj["userFields"] = $$(ids.userField).getValue();
          } else {
-            obj.fields = [];
+            obj.userFields = [];
          }
 
          return obj;
