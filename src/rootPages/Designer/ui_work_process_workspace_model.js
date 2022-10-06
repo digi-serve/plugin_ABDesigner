@@ -275,6 +275,12 @@ export default function (AB) {
          super.processLoad(process);
          var ids = this.ids;
 
+         Object.keys(this.panelsByType).forEach((k) => {
+            if (this.panelsByType[k].processLoad) {
+               this.panelsByType[k].processLoad(process);
+            }
+         });
+
          // initialize the BPMN Viewer if not already initialized:
          if (!this.viewer) {
             $$(ids.modelerBroken).hide();
@@ -687,6 +693,9 @@ export default function (AB) {
        * stashed
        */
       propertiesSave() {
+         if (!this.CurrentPanel) {
+            return;
+         }
          var thisObj = this.CurrentPropertiesObj;
          var values = this.CurrentPanel.values();
          var objVals = thisObj.toObj();
