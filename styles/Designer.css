@@ -81,3 +81,68 @@
 .lighten {
    opacity: 0.4;
 }
+.app_form_window {
+   border-radius: 8px;
+}
+.app_form_window .webix_win_head {
+   background-color: #B8B8B8;
+}
+.app_form_window div.webix_view.webix_control.webix_el_icon.alert {
+   padding: 0px;
+}
+/* main view background (transparent by default) */
+.app_form_window .alert {
+   background-color: transparent;
+}
+/* main font color */
+.app_form_window .alert .webix_icon {
+   color:#EED202;
+}
+/* circle background (hover) */
+.app_form_window .alert .webix_icon_button:hover:before {
+   opacity: 0.8;
+}
+/* hover: font color */
+.app_form_window .alert .webix_icon_button:hover .webix_icon {
+   color: #D6BD01;
+}
+.app_form_window .webix_template {
+   font-size: 18px;
+   background-color: #B8B8B8;
+}
+.app_form_window .webix_label_right {
+   font-weight: 500;
+   color: rgb(49, 49, 49);
+   width: 340px;
+   padding-left: 10px;
+}
+.app_form_window .webix_scroll_cont .npr_smallLabels .webix_el_box {
+   font-size: 16px;
+   font-weight: 500;
+   color: #33b5e5;
+   text-align: right;
+}
+.app_form_window .webix_multicombo {
+   border: 2px solid #eee;
+   border-radius: 6px;
+}
+.app_form_window .webix_view .webix_layout_form {
+   border: 1px solid #eee;
+   border-radius: 6px;
+}
+.app_form_window div.webix_view.webix_form.no-margin.webix_layout_form {
+   background-color: #eee;
+}
+.app_form_window .webix_button {
+   border-radius: 6px;
+}
+.app_form_window_2 {
+   border-radius: 6px;
+}
+.app_form_window_2 .webix_win_head {
+   background-color: #B8B8B8;
+}
+.app_form_window_2 .webix_template {
+   font-size: 18px;
+   background-color: #B8B8B8;
+}
