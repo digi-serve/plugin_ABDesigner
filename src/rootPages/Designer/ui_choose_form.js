@@ -21,32 +21,7 @@ export default function (AB, init_settings) {
    var issue_icon =
       "<span class='webix_icon wxi-alert' style='font-size:18px; color:#EED202;'>&nbsp;</span>";
 
-   var richselect_icon = [
-      {
-         id: "fa-child",
-         icon: "<span class='fa fa-child' style='color: #33b5e5;'></span>&nbsp; Child",
-      },
-      {
-         id: "fa-cloud",
-         icon: "<span class='fa fa-cloud' style='color: #33b5e5;'></span>&nbsp; Cloud",
-      },
-      {
-         id: "fa-heart",
-         icon: "<span class='fa fa-heart' style='color: #33b5e5;'></span>&nbsp; Heart",
-      },
-      {
-         id: "fa-home",
-         icon: "<span class='fa fa-home' style='color: #33b5e5;'></span>&nbsp; Home",
-      },
-      {
-         id: "fa-leaf",
-         icon: "<span class='fa fa-leaf' style='color: #33b5e5;'></span>&nbsp; Leaf",
-      },
-      {
-         id: "fa-umbrella",
-         icon: "<span class='fa fa-umbrella' style='color: #33b5e5;'></span>&nbsp; Umbrella",
-      },
-   ];
+   var richselect_icon = AB._App.icons.map((x) => `fa-${x}`);
 
    class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
@@ -177,7 +152,8 @@ export default function (AB, init_settings) {
                                     placeholder: L("Menu Icon"),
                                     options: {
                                        body: {
-                                          template: "#icon#",
+                                          template:
+                                             "<span class='fa #value#' style='color: #33b5e5;'></span>&nbsp; #value#",
                                           yCount: 3,
                                           data: richselect_icon,
                                        },
@@ -488,7 +464,7 @@ export default function (AB, init_settings) {
       init(AB) {
          this.AB = AB;
 
-         this.$win = this.AB.Webix.ui(this.ui());
+         this.AB.Webix.ui(this.ui());
 
          webix.extend($$(this.ids.form), this.AB.Webix.ProgressBar);
          webix.extend(
@@ -599,7 +575,7 @@ export default function (AB, init_settings) {
             await app.save();
             webix.message({
                type: "success",
-               text: L("{0} Successfully Created", [values.label]),
+               text: L("{0}&nbsp; Successfully Created", [values.label]),
             });
 
             // NOTE: the new App isn't actually stored in AB.applications()

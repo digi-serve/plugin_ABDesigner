@@ -297,7 +297,7 @@ export default function (AB) {
                            this.refreshList();
                            webix.message({
                               type: "success",
-                              text: L("{0} Successfully Deleted", [
+                              text: L("{0}&nbsp; Successfully Deleted", [
                                  selectedApp.label,
                               ]),
                            });

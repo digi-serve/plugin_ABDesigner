@@ -133,10 +133,6 @@ export default function (AB) {
                               $$(this.ids.role)
                                  .getList()
                                  .callEvent("onAfterRender");
-                              webix.message({
-                                 text: L("Data was changed"),
-                                 type: "success",
-                              });
                            },
                         },
                      },
@@ -223,10 +219,6 @@ export default function (AB) {
                               $$(this.ids.account)
                                  .getList()
                                  .callEvent("onAfterRender");
-                              webix.message({
-                                 text: L("Data was changed"),
-                                 type: "success",
-                              });
                            },
                         },
                      },
@@ -318,10 +310,6 @@ export default function (AB) {
                               $$(this.ids.userField)
                                  .getList()
                                  .callEvent("onAfterRender");
-                              webix.message({
-                                 text: L("Data was changed"),
-                                 type: "success",
-                              });
                            },
                         },
                      },
