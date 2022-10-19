@@ -18,6 +18,11 @@ export default function (AB, init_settings) {
 
    var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
 
+   var issue_icon =
+      "<span class='webix_icon wxi-alert' style='font-size:18px; color:#EED202;'>&nbsp;</span>";
+
+   var richselect_icon = AB._App.icons.map((x) => `fa-${x}`);
+
    class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
 
@@ -32,6 +37,9 @@ export default function (AB, init_settings) {
             accessManagerToolbar: "",
             translationManager: "",
             translationManagerToolbar: "",
+
+            issue_id: "",
+            issue_list: "",
          });
       }
 
@@ -42,411 +50,413 @@ export default function (AB, init_settings) {
          );
 
          return {
+            view: "window",
             id: this.ids.component,
-            view: "scrollview",
-            scroll: "y",
-            body: {
-               rows: [
+            css: "app_form_window",
+            height: 670,
+            width: 770,
+            position: "center",
+            move: true,
+            scroll: true,
+            resize: true,
+            modal: true,
+            head: {
+               type: "clean",
+               cols: [
+                  // Warnings.ui(),
                   {
-                     responsive: "hide",
-                     type: "space",
-                     cols: [
-                        {
-                           maxWidth: uiConfig.appListSpacerColMaxWidth,
-                           minWidth: uiConfig.appListSpacerColMinWidth,
-                           width: uiConfig.appListSpacerColMaxWidth,
-                        },
-                        {
-                           responsiveCell: false,
-                           rows: [
-                              {},
-                              Warnings.ui(),
-                              {
-                                 view: "toolbar",
-                                 css: "webix_dark",
-                                 cols: [
-                                    { view: "spacer", width: 10 },
-                                    {
-                                       view: "label",
-                                       label: L("Application Info"), //labels.component.formHeader,
-                                       fillspace: true,
-                                    },
-                                 ],
-                              },
-                              {
-                                 view: "form",
-                                 id: this.ids.form,
-                                 autoheight: true,
-                                 margin: 0,
-                                 rules: {
-                                    label: (value) => {
-                                       return (
-                                          0 < value.length && value.length <= 20
-                                       );
-                                    },
-                                 },
-                                 elements: [
-                                    {
-                                       name: "label",
-                                       view: "text",
-                                       label: L("Name"),
-                                       placeholder: L("Application name"),
-                                       invalidMessage: L(
-                                          "Name must be less than or equal to 20"
-                                       ),
-                                       labelWidth: 100,
-                                       on: {
-                                          onAfterRender() {
-                                             AB.ClassUI.CYPRESS_REF(
-                                                this,
-                                                "abd_choose_form_label"
-                                             );
-                                          },
-                                       },
-                                    },
-                                    {
-                                       name: "icon",
-                                       view: "text",
-                                       label: L("Icon"),
-                                       placeholder: L("Menu Icon"),
-                                       labelWidth: 100,
-                                       on: {
-                                          onAfterRender() {
-                                             AB.ClassUI.CYPRESS_REF(
-                                                this,
-                                                "abd_choose_form_icon"
-                                             );
-                                          },
-                                       },
-                                    },
-                                    { height: uiConfig.smallSpacer },
-                                    {
-                                       name: "description",
-                                       view: "textarea",
-                                       label: L("Description"),
-                                       labelAlign: "left",
-                                       labelWidth: 100,
-                                       placeholder: L(
-                                          "Application Description"
-                                       ),
-                                       height: 100,
-                                       on: {
-                                          onAfterRender() {
-                                             AB.ClassUI.CYPRESS_REF(
-                                                this,
-                                                "abd_choose_form_description"
-                                             );
-                                          },
-                                       },
-                                    },
-                                    { height: uiConfig.smallSpacer },
-                                    {
-                                       name: "isSystemObject",
-                                       view: "checkbox",
-                                       labelRight: L(
-                                          "is this a System Object?"
-                                       ),
-                                       labelWidth: 0,
-                                       on: {
-                                          onAfterRender() {
-                                             AB.ClassUI.CYPRESS_REF(
-                                                this,
-                                                "abd_choose_form_isSystemObj"
-                                             );
-                                          },
-                                       },
-                                    },
-                                    { height: uiConfig.smallSpacer },
-                                    {
-                                       view: "toolbar",
-                                       css: "ab-toolbar-submenu webix_dark",
-                                       cols: [
-                                          {
-                                             template: L(
-                                                "Who can use this app?"
-                                             ),
-                                             type: "header",
-                                             borderless: true,
-                                          },
-                                          {},
-                                          // {
-                                          //    view: "checkbox",
-                                          //    id: this.ids.appFormCreateRoleButton,
-                                          //    align: "right",
-                                          //    labelRight: L("Create new role"),
-                                          //    labelWidth: 0,
-                                          //    width: 150,
-                                          //    on: {
-                                          //       onItemClick: (/* id, e */) => {
-                                          //          this.createRoleButtonClick();
-                                          //       },
-                                          //    },
-                                          // },
-                                       ],
-                                    },
-                                    {
-                                       name: "permissions",
-                                       id: this.ids.appFormPermissionList,
-                                       view: "list",
-                                       autowidth: true,
-                                       height: 140,
-                                       margin: 0,
-                                       css: "ab-app-form-permission",
-                                       template:
-                                          "{common.markCheckbox()} #name#",
-                                       type: {
-                                          markCheckbox: function (obj) {
-                                             return `<span class="check webix_icon fa fa-fw fa-${
-                                                obj.markCheckbox ? "check-" : ""
-                                             }square-o" data-cy="check_${
-                                                obj.id
-                                             }"></span>`;
+                     view: "spacer",
+                     width: 4,
+                  },
+                  {
+                     view: "icon",
+                     icon: "wxi-alert",
+                     css: "alert",
+                     on: {
+                        onItemClick: () => {
+                           const $issueID = $$(this.ids.issue_id);
+                           const $issueList = $$(this.ids.issue_list);
 
-                                             // (
-                                             //    "<span class='check webix_icon fa fa-fw fa-" +
-                                             //    (obj.markCheckbox
-                                             //       ? "check-"
-                                             //       : "") +
-                                             //    "square-o' data-cy='check_"+obj.id+"'></span>"
-                                             // );
-                                          },
-                                       },
-                                       on: {
-                                          onAfterRender() {
-                                             this.data.each((a) => {
-                                                AB.ClassUI.CYPRESS_REF(
-                                                   this.getItemNode(a.id),
-                                                   `perm_role_${a.id}`
-                                                );
-                                             });
-                                          },
-                                          onItemClick: (id, e, node) => {
-                                             this.permissionClick(id, e, node);
-                                          },
-                                       },
-                                    },
-                                    { height: uiConfig.smallSpacer },
-                                    {
-                                       name: "isAccessManaged",
-                                       view: "checkbox",
-                                       labelRight: L(
-                                          "Enable Page/Tab Access Management"
-                                       ),
-                                       labelWidth: 0,
-                                       on: {
-                                          onAfterRender() {
-                                             AB.ClassUI.CYPRESS_REF(
-                                                this,
-                                                "abd_choose_form_isAccessManaged"
-                                             );
-                                          },
-                                          onChange: (newv /* , oldv */) => {
-                                             if (newv) {
-                                                $$(
-                                                   this.ids.accessManager
-                                                ).show();
-                                                $$(
-                                                   this.ids.accessManagerToolbar
-                                                ).show();
-                                             } else {
-                                                $$(
-                                                   this.ids.accessManager
-                                                ).hide();
-                                                $$(
-                                                   this.ids.accessManagerToolbar
-                                                ).hide();
-                                             }
-                                          },
-                                          onItemClick: (id /*, e */) => {
-                                             var enabled = $$(id).getValue();
-                                             if (enabled) {
-                                                $$(
-                                                   this.ids.accessManager
-                                                ).show();
-                                                $$(
-                                                   this.ids.accessManagerToolbar
-                                                ).show();
-                                             } else {
-                                                $$(
-                                                   this.ids.accessManager
-                                                ).hide();
-                                                $$(
-                                                   this.ids.accessManagerToolbar
-                                                ).hide();
-                                             }
-                                          },
-                                       },
-                                    },
-                                    { height: uiConfig.smallSpacer },
-                                    {
-                                       view: "toolbar",
-                                       id: this.ids.accessManagerToolbar,
-                                       css: "ab-toolbar-submenu webix_dark",
-                                       hidden:
-                                          parseInt(this.accessManagement) == 1
-                                             ? false
-                                             : true,
-                                       cols: [
-                                          {
-                                             template: L(
-                                                "Who can manage page/tab access for this app?"
-                                             ), //labels.component.managerHeader,
-                                             type: "header",
-                                             borderless: true,
-                                          },
-                                          {},
-                                       ],
-                                    },
-                                    {
-                                       id: this.ids.accessManager,
-                                       rows: [this.accessManagerUI.ui()],
-                                       paddingY: 10,
-                                       hidden:
-                                          parseInt(this.accessManagement) == 1
-                                             ? false
-                                             : true,
-                                    },
-                                    {
-                                       name: "isTranslationManaged",
-                                       view: "checkbox",
-                                       labelRight: L("Enable Translation Tool"), // labels.component.enableTranslationManagement,
-                                       labelWidth: 0,
-                                       on: {
-                                          onAfterRender() {
-                                             AB.ClassUI.CYPRESS_REF(
-                                                this,
-                                                "abd_choose_form_isTranslationManaged"
-                                             );
-                                          },
-                                          onChange: (newv /*, oldv */) => {
-                                             if (newv) {
-                                                $$(
-                                                   this.ids.translationManager
-                                                ).show();
-                                                $$(
-                                                   this.ids
-                                                      .translationManagerToolbar
-                                                ).show();
-                                             } else {
-                                                $$(
-                                                   this.ids.translationManager
-                                                ).hide();
-                                                $$(
-                                                   this.ids
-                                                      .translationManagerToolbar
-                                                ).hide();
-                                             }
-                                          },
-                                          onItemClick: (id /*, e*/) => {
-                                             var enabled = $$(id).getValue();
-                                             if (enabled) {
-                                                $$(
-                                                   this.ids.translationManager
-                                                ).show();
-                                                $$(
-                                                   this.ids
-                                                      .translationManagerToolbar
-                                                ).show();
-                                             } else {
-                                                $$(
-                                                   this.ids.translationManager
-                                                ).hide();
-                                                $$(
-                                                   this.ids
-                                                      .translationManagerToolbar
-                                                ).hide();
-                                             }
-                                          },
-                                       },
-                                    },
-                                    { height: uiConfig.smallSpacer },
-                                    {
-                                       view: "toolbar",
-                                       id: this.ids.translationManagerToolbar,
-                                       css: "ab-toolbar-submenu webix_dark",
-                                       hidden:
-                                          parseInt(
-                                             this.translationManagement
-                                          ) == 1
-                                             ? false
-                                             : true,
-                                       cols: [
-                                          {
-                                             template: L(
-                                                "Who can translate this app?"
-                                             ),
-                                             type: "header",
-                                             borderless: true,
-                                          },
-                                          {},
-                                       ],
-                                    },
-                                    {
-                                       id: this.ids.translationManager,
-                                       rows: [this.translationManagerUI.ui()],
-                                       paddingY: 10,
-                                       hidden:
-                                          parseInt(
-                                             this.translationManagement
-                                          ) == 1
-                                             ? false
-                                             : true,
-                                    },
-                                    { height: uiConfig.smallSpacer },
-                                    {
-                                       margin: 5,
-                                       cols: [
-                                          { fillspace: true },
-                                          {
-                                             view: "button",
-                                             value: L("Cancel"),
-                                             width: uiConfig.buttonWidthSmall,
-                                             css: "ab-cancel-button",
-                                             click: () => {
-                                                this.cancel();
-                                             },
-                                             on: {
-                                                onAfterRender() {
-                                                   AB.ClassUI.CYPRESS_REF(
-                                                      this,
-                                                      "abd_choose_form_cancel"
-                                                   );
-                                                },
-                                             },
-                                          },
-                                          {
-                                             id: this.ids.saveButton,
-                                             view: "button",
-                                             css: "webix_primary",
-                                             label: L("Save"),
-                                             type: "form",
-                                             width: uiConfig.buttonWidthSmall,
-                                             click: () => {
-                                                this.buttonSaveClick();
-                                             }, // end click()
-                                             on: {
-                                                onAfterRender() {
-                                                   AB.ClassUI.CYPRESS_REF(this);
-                                                },
-                                             },
-                                          },
-                                       ],
-                                    },
-                                 ],
-                              },
-                              {
-                                 view: "spacer",
-                              },
-                           ],
+                           $issueList.define("data", this.warningData());
+                           $issueList.refresh();
+                           $issueID.show();
                         },
-                        {
-                           maxWidth: uiConfig.appListSpacerColMaxWidth,
-                           minWidth: uiConfig.appListSpacerColMinWidth,
-                           width: uiConfig.appListSpacerColMaxWidth,
-                        },
-                     ],
+                     },
+                  },
+                  {
+                     template: L("Application Info"),
+                     type: "header",
+                     css: "webix_win_title",
+                  },
+                  {
+                     view: "icon",
+                     icon: "wxi-close",
+                     click() {
+                        this.getTopParentView().hide();
+                     },
+                  },
+                  {
+                     view: "spacer",
+                     width: 4,
                   },
                ],
+            },
+            body: {
+               view: "scrollview",
+               scroll: true,
+               body: {
+                  padding: 4,
+                  cols: [
+                     {
+                        view: "spacer",
+                        width: 2,
+                     },
+                     {
+                        rows: [
+                           {
+                              view: "form",
+                              id: this.ids.form,
+                              rules: {
+                                 label: (value) => {
+                                    return (
+                                       0 < value.length && value.length <= 20
+                                    );
+                                 },
+                              },
+                              borderless: true,
+                              elements: [
+                                 {
+                                    name: "label",
+                                    view: "text",
+                                    label: L("Name"),
+                                    labelWidth: 100,
+                                    placeholder: L("Application Name"),
+                                    invalidMessage: L(
+                                       "&nbsp; Name must be less than or equal to 20 letters."
+                                    ),
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_label"
+                                          );
+                                       },
+                                    },
+                                 },
+                                 {
+                                    name: "icon",
+                                    view: "richselect",
+                                    id: "richselect1",
+                                    label: L("Icon"),
+                                    labelWidth: 100,
+                                    placeholder: L("Menu Icon"),
+                                    options: {
+                                       body: {
+                                          template:
+                                             "<span class='fa #value#' style='color: #33b5e5;'></span>&nbsp; #value#",
+                                          yCount: 3,
+                                          data: richselect_icon,
+                                       },
+                                    },
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_icon"
+                                          );
+                                       },
+                                    },
+                                 },
+                                 { height: uiConfig.smallSpacer },
+                                 {
+                                    name: "description",
+                                    view: "textarea",
+                                    label: L("Description"),
+                                    labelWidth: 100,
+                                    height: 100,
+                                    placeholder: L("Application Description"),
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_description"
+                                          );
+                                       },
+                                    },
+                                 },
+                                 {
+                                    view: "spacer",
+                                    height: 4,
+                                 },
+                                 {
+                                    name: "isSystemObject",
+                                    view: "checkbox",
+                                    labelRight: L("Is this a System Object?"),
+                                    labelWidth: 0,
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_isSystemObj"
+                                          );
+                                       },
+                                    },
+                                 },
+                                 {
+                                    view: "label",
+                                    label: L("Who can use this app?"),
+                                    css: "npr_smallLabels",
+                                 },
+                                 // {
+                                 //    view: "checkbox",
+                                 //    id: this.ids.appFormCreateRoleButton,
+                                 //    align: "right",
+                                 //    labelRight: L("Create new role"),
+                                 //    labelWidth: 0,
+                                 //    width: 150,
+                                 //    on: {
+                                 //       onItemClick: (/* id, e */) => {
+                                 //          this.createRoleButtonClick();
+                                 //       },
+                                 //    },
+                                 // },
+                                 {
+                                    name: "roleAccess",
+                                    view: "multicombo",
+                                    id: this.ids.appFormPermissionList,
+                                    label: "",
+                                    labelPosition: "top",
+                                    placeholder: L("Click to add Role"),
+                                    button: true,
+                                    on: {
+                                       onAfterRender() {
+                                          this.data.value.forEach((a) => {
+                                             AB.ClassUI.CYPRESS_REF(
+                                                // this.getItemNode(a.id),
+                                                `perm_role_${a.id}`
+                                             );
+                                          });
+                                       },
+                                       // onItemClick: (id, e, node) => {
+                                       //    this.permissionClick(id, e, node);
+                                       // },
+                                       onChange: function () {
+                                          webix.message({
+                                             text: L("Data was changed"),
+                                             type: "success",
+                                          });
+                                       },
+                                    },
+                                 },
+                                 {
+                                    name: "isAccessManaged",
+                                    view: "checkbox",
+                                    labelRight: L(
+                                       "Enable Page / Tab Access Management"
+                                    ),
+                                    labelWidth: 0,
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_isAccessManaged"
+                                          );
+                                       },
+                                       onChange: (newv /* , oldv */) => {
+                                          if (newv) {
+                                             $$(this.ids.accessManager).show();
+                                             $$(
+                                                this.ids.accessManagerToolbar
+                                             ).show();
+                                          } else {
+                                             $$(this.ids.accessManager).hide();
+                                             $$(
+                                                this.ids.accessManagerToolbar
+                                             ).hide();
+                                          }
+                                       },
+                                       onItemClick: (id /*, e */) => {
+                                          var enabled = $$(id).getValue();
+                                          if (enabled) {
+                                             $$(this.ids.accessManager).show();
+                                             $$(
+                                                this.ids.accessManagerToolbar
+                                             ).show();
+                                          } else {
+                                             $$(this.ids.accessManager).hide();
+                                             $$(
+                                                this.ids.accessManagerToolbar
+                                             ).hide();
+                                          }
+                                       },
+                                    },
+                                 },
+                                 {
+                                    view: "toolbar",
+                                    id: this.ids.accessManagerToolbar,
+                                    cols: [
+                                       {
+                                          view: "label",
+                                          label: L(
+                                             "Who can manage page / tab access for this app?"
+                                          ), // labels.component.managerHeader,
+                                          css: "npr_smallLabels",
+                                       },
+                                    ],
+                                    borderless: true,
+                                    hidden:
+                                       parseInt(this.accessManagement) == 1
+                                          ? false
+                                          : true,
+                                 },
+                                 {
+                                    id: this.ids.accessManager,
+                                    rows: [this.accessManagerUI.ui()],
+                                    paddingY: 10,
+                                    hidden:
+                                       parseInt(this.accessManagement) == 1
+                                          ? false
+                                          : true,
+                                 },
+                                 {
+                                    view: "spacer",
+                                    height: 6,
+                                 },
+                                 {
+                                    name: "isTranslationManaged",
+                                    view: "checkbox",
+                                    labelRight: L("Enable Translation Tool"), // labels.component.enableTranslationManagement,
+                                    labelWidth: 0,
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_isTranslationManaged"
+                                          );
+                                       },
+                                       onChange: (newv /*, oldv */) => {
+                                          if (newv) {
+                                             $$(
+                                                this.ids.translationManager
+                                             ).show();
+                                             $$(
+                                                this.ids
+                                                   .translationManagerToolbar
+                                             ).show();
+                                          } else {
+                                             $$(
+                                                this.ids.translationManager
+                                             ).hide();
+                                             $$(
+                                                this.ids
+                                                   .translationManagerToolbar
+                                             ).hide();
+                                          }
+                                       },
+                                       onItemClick: (id /*, e*/) => {
+                                          var enabled = $$(id).getValue();
+                                          if (enabled) {
+                                             $$(
+                                                this.ids.translationManager
+                                             ).show();
+                                             $$(
+                                                this.ids
+                                                   .translationManagerToolbar
+                                             ).show();
+                                          } else {
+                                             $$(
+                                                this.ids.translationManager
+                                             ).hide();
+                                             $$(
+                                                this.ids
+                                                   .translationManagerToolbar
+                                             ).hide();
+                                          }
+                                       },
+                                    },
+                                 },
+                                 {
+                                    view: "toolbar",
+                                    id: this.ids.translationManagerToolbar,
+                                    cols: [
+                                       {
+                                          view: "label",
+                                          label: L(
+                                             "Who can translate this app?"
+                                          ),
+                                          css: "npr_smallLabels",
+                                       },
+                                    ],
+                                    borderless: true,
+                                    hidden:
+                                       parseInt(this.translationManagement) == 1
+                                          ? false
+                                          : true,
+                                 },
+                                 {
+                                    id: this.ids.translationManager,
+                                    rows: [this.translationManagerUI.ui()],
+                                    paddingY: 10,
+                                    hidden:
+                                       parseInt(this.translationManagement) == 1
+                                          ? false
+                                          : true,
+                                 },
+                                 {
+                                    view: "spacer",
+                                    height: 2,
+                                 },
+                                 {
+                                    view: "toolbar",
+                                    margin: 14,
+                                    paddingY: 20,
+                                    cols: [
+                                       {
+                                          view: "button",
+                                          value: L("Cancel"),
+                                          css: "ab-cancel-button",
+                                          inputWidth: 100,
+                                          align: "right",
+                                          click: () => {
+                                             this.cancel();
+                                          },
+                                          on: {
+                                             onAfterRender() {
+                                                AB.ClassUI.CYPRESS_REF(
+                                                   this,
+                                                   "abd_choose_form_cancel"
+                                                );
+                                             },
+                                          },
+                                       },
+                                       {
+                                          view: "button",
+                                          id: this.ids.saveButton,
+                                          value: L("Save"),
+                                          css: "webix_primary",
+                                          inputWidth: 100,
+                                          click: () => {
+                                             this.buttonSaveClick();
+                                          }, // end click()
+                                          on: {
+                                             onAfterRender() {
+                                                AB.ClassUI.CYPRESS_REF(this);
+                                             },
+                                          },
+                                       },
+                                    ],
+                                    borderless: true,
+                                 },
+                              ],
+                           },
+                        ],
+                     },
+                     {
+                        view: "spacer",
+                        width: 8,
+                     },
+                  ],
+               },
             },
          };
       } // ui()
@@ -454,10 +464,74 @@ export default function (AB, init_settings) {
       init(AB) {
          this.AB = AB;
 
-         this.$form = $$(this.ids.form);
+         this.AB.Webix.ui(this.ui());
 
-         webix.extend(this.$form, webix.ProgressBar);
-         webix.extend($$(this.ids.appFormPermissionList), webix.ProgressBar);
+         webix.extend($$(this.ids.form), this.AB.Webix.ProgressBar);
+         webix.extend(
+            $$(this.ids.appFormPermissionList),
+            this.AB.Webix.ProgressBar
+         );
+
+         // Warnings.init(AB);
+
+         // $$(Warnings.ids.buttonWarning).show();
+
+         const $warningsWindow = this.AB.Webix.ui({
+            view: "window",
+            id: this.ids.issue_id,
+            css: "app_form_window_2",
+            height: 222,
+            width: 700,
+            head: {
+               type: "clean",
+               cols: [
+                  {
+                     view: "spacer",
+                     width: 50,
+                  },
+                  {
+                     template: issue_icon + L(" Issues"),
+                     type: "header",
+                     css: "webix_win_title",
+                  },
+                  {
+                     view: "icon",
+                     icon: "wxi-close",
+                     click() {
+                        this.getTopParentView().hide();
+                     },
+                  },
+                  {
+                     view: "spacer",
+                     width: 4,
+                  },
+               ],
+            },
+            position: "center",
+            close: true,
+            modal: true,
+            move: true,
+            scroll: true,
+            body: {
+               rows: [
+                  {
+                     view: "list",
+                     id: this.ids.issue_list,
+                     template: issue_icon + " #issue#",
+                     scrollX: true,
+                     scrollY: true,
+                     select: true,
+                     editable: false,
+                     autoheight: false,
+                     autowidth: false,
+                     data: [],
+                     click() {
+                        this.getParentView().show();
+                     },
+                  },
+               ],
+            },
+         });
 
          // Make sure we listen for New/Updated Role information
 
@@ -466,6 +540,21 @@ export default function (AB, init_settings) {
 
       toList() {
          this.emit("view.list");
+      }
+
+      warningData() {
+         const apps = this.AB.applications();
+         const warnings = [];
+
+         apps.forEach((e) => {
+            warnings.push(...e.warningsAll());
+         });
+
+         return warnings?.length
+            ? warnings.map((e, i) => {
+                 return { id: i, issue: L(e.message) };
+              })
+            : [{ id: 1, issue: L("No Issues Found") }];
       }
 
       /**
@@ -486,7 +575,7 @@ export default function (AB, init_settings) {
             await app.save();
             webix.message({
                type: "success",
-               text: L("{0} successfully created.", [values.label]),
+               text: L("{0}&nbsp; Successfully Created", [values.label]),
             });
 
             // NOTE: the new App isn't actually stored in AB.applications()
@@ -498,7 +587,7 @@ export default function (AB, init_settings) {
          } catch (e) {
             webix.message({
                type: "error",
-               text: L("Error creating {0}", [values.label]),
+               text: L("Error Creating {0}", [values.label]),
             });
             this.AB.notify.developer(e, {
                plugin: "ABDesigner",
@@ -532,12 +621,12 @@ export default function (AB, init_settings) {
             await Application.save();
             webix.message({
                type: "success",
-               text: L("{0} successfully updated.", [Application.label]),
+               text: L("{0} Successfully Updated", [Application.label]),
             });
          } catch (e) {
             webix.message({
                type: "error",
-               text: L("Error updating {0}", [Application.label]),
+               text: L("Error Updating {0}", [Application.label]),
             });
             this.AB.notify.developer(e, {
                context: "ui_choose_form:applicationUpdate()",
@@ -641,6 +730,7 @@ export default function (AB, init_settings) {
 
                this.formReady();
                this.buttonSaveEnable();
+               $$(this.ids.component).hide();
             }
          } else {
             // else this is a Create
@@ -654,6 +744,7 @@ export default function (AB, init_settings) {
                }
                this.formReady();
                this.buttonSaveEnable();
+               $$(this.ids.component).hide();
             }
          }
       }
@@ -681,6 +772,7 @@ export default function (AB, init_settings) {
       cancel() {
          this.formReset();
          this.toList();
+         $$(this.ids.component).hide();
          // App.actions.transitionApplicationList();
       }
 
@@ -709,7 +801,7 @@ export default function (AB, init_settings) {
        * progress.
        */
       formBusy() {
-         this.$form.showProgress({ type: "icon" });
+         $$(this.ids.form).showProgress({ type: "icon" });
       }
 
       /**
@@ -730,8 +822,8 @@ export default function (AB, init_settings) {
                "isAccessManaged",
                "isTranslationManaged",
             ].forEach((f) => {
-               if (this.$form.elements[f]) {
-                  this.$form.elements[f].setValue(application[f]);
+               if ($$(this.ids.form).elements[f]) {
+                  $$(this.ids.form).elements[f].setValue(application[f]);
                }
             });
 
@@ -765,7 +857,7 @@ export default function (AB, init_settings) {
        * remove the busy indicator from the form.
        */
       formReady() {
-         this.$form.hideProgress();
+         $$(this.ids.form).hideProgress();
       }
 
       /**
@@ -776,8 +868,8 @@ export default function (AB, init_settings) {
       formReset() {
          super.applicationLoad(null);
 
-         this.$form.clear();
-         this.$form.clearValidation();
+         $$(this.ids.form).clear();
+         $$(this.ids.form).clearValidation();
 
          this.permissionPopulate(); // leave empty to clear selections.
 
@@ -806,7 +898,7 @@ export default function (AB, init_settings) {
       formValidate(op) {
          // op : ['add', 'update', 'destroy']
 
-         if (!this.$form.validate()) {
+         if (!$$(this.ids.form).validate()) {
             // TODO : Error message
 
             this.formReady();
@@ -834,7 +926,9 @@ export default function (AB, init_settings) {
                if (matchingApps.length > 0) {
                   errors.push({
                      attr: "label",
-                     msg: L("Name ({0}) is already in use.", [mockApp.label]),
+                     msg: L("&nbsp; Name ({0}) is already in use.", [
+                        mockApp.label,
+                     ]),
                   });
                }
                break;
@@ -843,9 +937,9 @@ export default function (AB, init_settings) {
          if (errors.length > 0) {
             var hasFocus = false;
             errors.forEach((e) => {
-               this.$form.markInvalid(e.attr, e.msg);
+               $$(this.ids.form).markInvalid(e.attr, e.msg);
                if (!hasFocus) {
-                  this.$form.elements[e.attr].focus();
+                  $$(this.ids.form).elements[e.attr].focus();
                   hasFocus = true;
                }
             });
@@ -867,11 +961,12 @@ export default function (AB, init_settings) {
        */
       formValues() {
          // return the current values of the Form elements.
-         var values = this.$form.getValues();
-         values.roleAccess = $$(this.ids.appFormPermissionList).getSelectedId();
-         if (!Array.isArray(values.roleAccess)) {
-            values.roleAccess = [values.roleAccess];
-         }
+         const values = $$(this.ids.form).getValues();
+         values.roleAccess = (values.roleAccess ?? "").split(","); // Convert to an array
+         // values.roleAccess = $$(this.ids.appFormPermissionList).getValue();
+         // if (!Array.isArray(values.roleAccess)) {
+         //    values.roleAccess = [values.roleAccess];
+         // }
          values.accessManagers = this.accessManagerUI.values();
          values.translationManagers = this.translationManagerUI.values();
          return values;
@@ -911,33 +1006,33 @@ export default function (AB, init_settings) {
        *
        * Process when a permission entry in the list is clicked.
        */
-      permissionClick(id /*, e, node*/) {
-         var List = $$(this.ids.appFormPermissionList);
+      // permissionClick(id /*, e, node*/) {
+      //    var List = $$(this.ids.appFormPermissionList);
 
-         var item = List.getItem(id);
+      //    var item = List.getItem(id);
 
-         if (List.getItem(id).isApplicationRole) {
-            return;
-         }
+      //    if (List.getItem(id).isApplicationRole) {
+      //       return;
+      //    }
 
-         if (List.isSelected(id)) {
-            item.markCheckbox = 0;
-            List.unselect(id);
-         } else {
-            item.markCheckbox = 1;
-            var selectedIds = List.getSelectedId();
+      //    if (List.isSelected(id)) {
+      //       item.markCheckbox = 0;
+      //       List.unselect(id);
+      //    } else {
+      //       item.markCheckbox = 1;
+      //       var selectedIds = List.getSelectedId();
 
-            if (typeof selectedIds === "string" || !isNaN(selectedIds)) {
-               if (selectedIds) selectedIds = [selectedIds];
-               else selectedIds = [];
-            }
+      //       if (typeof selectedIds === "string" || !isNaN(selectedIds)) {
+      //          if (selectedIds) selectedIds = [selectedIds];
+      //          else selectedIds = [];
+      //       }
 
-            selectedIds.push(id);
+      //       selectedIds.push(id);
 
-            List.select(selectedIds);
-            List.updateItem(id, item);
-         }
-      }
+      //       List.select(selectedIds);
+      //       List.updateItem(id, item);
+      //    }
+      // }
 
       /**
        * @function permissionName
@@ -957,13 +1052,13 @@ export default function (AB, init_settings) {
        * @param {ABApplication} application	the current ABApplication we are editing
        */
       permissionPopulate(application) {
-         var PermForm = $$(this.ids.appFormPermissionList);
-         // Get user's roles
-         PermForm.showProgress({ type: "icon" });
+         const PermForm = $$(this.ids.appFormPermissionList);
 
-         var availableRoles = this.AB.Account.rolesAll().map((r) => {
-            return { id: r.id, name: r.name };
+         // Get user's roles
+         const availableRoles = this.AB.Account.rolesAll().map((r) => {
+            return { id: r.id, value: r.name };
          });
+
          if (application) {
             availableRoles
                .filter((r) => application.roleAccess.indexOf(r.id) > -1)
@@ -971,20 +1066,20 @@ export default function (AB, init_settings) {
                   r.markCheckbox = 1;
                });
          }
-         PermForm.clearAll();
-         PermForm.parse(availableRoles);
-         var selectedIDs = availableRoles
+
+         const selectedIDs = availableRoles
             .filter((r) => r.markCheckbox)
             .map((r) => r.id);
-         PermForm.select(selectedIDs);
-         availableRoles.forEach(function (r) {
-            if (selectedIDs.indexOf(r.id) > -1) {
-               var item = PermForm.getItem(r.id);
-               item.markCheckbox = 1;
-               PermForm.updateItem(r.id, item);
-            }
-         });
-         PermForm.hideProgress();
+
+         // availableRoles.forEach(function (r) {
+         //    if (selectedIDs.indexOf(r.id) > -1) {
+         //       const item = PermForm.getValue();
+         //       item.markCheckbox = 1;
+         //    }
+         // });
+
+         PermForm.define("suggest", availableRoles);
+         PermForm.refresh();
       }
 
       /**
@@ -1168,7 +1263,7 @@ export default function (AB, init_settings) {
        */
       show() {
          $$(this.ids.component).show();
-         Warnings.show(this.CurrentApplication);
+         // Warnings.show(this.CurrentApplication);
       }
 
       /*

@@ -27,7 +27,7 @@ export default function (AB) {
             id: this.ids.component,
             view: "multiview",
             animate: false,
-            cells: [AppList.ui(), AppForm.ui()],
+            cells: [AppList.ui()],
          };
       }
 

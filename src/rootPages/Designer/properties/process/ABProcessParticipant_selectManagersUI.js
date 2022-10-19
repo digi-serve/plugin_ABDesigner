@@ -49,18 +49,17 @@ export default function (AB) {
          var ids = this.ids;
 
          return {
+            view: "form",
             id: this.ids.component,
-            type: "form",
             css: "no-margin",
-            rows: [
+            elements: [
                {
                   cols: [
                      {
                         view: "checkbox",
                         id: this.ids.useRole,
-                        labelRight: L("by Role"),
+                        width: 34,
                         labelWidth: 0,
-                        width: 120,
                         value: obj.useRole == "1" ? 1 : 0,
                         click: function (id /*, event */) {
                            if ($$(id).getValue()) {
@@ -76,12 +75,18 @@ export default function (AB) {
                         },
                      },
                      {
-                        id: this.ids.role,
+                        view: "label",
+                        label: L("by Role"),
+                        width: 88,
+                     },
+                     {
                         view: "multicombo",
+                        id: this.ids.role,
                         value: obj.role ? obj.role : 0,
                         disabled: obj.useRole == "1" ? false : true,
                         suggest: {
                            body: {
+                              yCount: 4,
                               data: __Roles,
                               on: {
                                  //
@@ -115,7 +120,7 @@ export default function (AB) {
                               },
                            },
                         },
-                        placeholder: L("Click or type to add role..."),
+                        placeholder: L("Click to add Role"),
                         labelAlign: "left",
                         stringResult: false /* returns data as an array of [id] */,
                         on: {
@@ -133,14 +138,14 @@ export default function (AB) {
                      },
                   ],
                },
+               {},
                {
                   cols: [
                      {
                         view: "checkbox",
                         id: this.ids.useAccount,
-                        labelRight: L("by Account"),
+                        width: 34,
                         labelWidth: 0,
-                        width: 120,
                         value: obj.useAccount == "1" ? 1 : 0,
                         click: function (id /*, event */) {
                            if ($$(id).getValue()) {
@@ -156,12 +161,18 @@ export default function (AB) {
                         },
                      },
                      {
-                        id: this.ids.account,
+                        view: "label",
+                        label: L("by Account"),
+                        width: 88,
+                     },
+                     {
                         view: "multicombo",
+                        id: this.ids.account,
                         value: obj.account ? obj.account : 0,
                         disabled: obj.useAccount == "1" ? false : true,
                         suggest: {
                            body: {
+                              yCount: 4,
                               data: __Users,
                               on: {
                                  //
@@ -195,8 +206,8 @@ export default function (AB) {
                               },
                            },
                         },
+                        placeholder: L("Click to add User"),
                         labelAlign: "left",
-                        placeholder: L("Click or type to add user..."),
                         stringResult: false /* returns data as an array of [id] */,
                         on: {
                            onAfterRender: function () {
@@ -213,14 +224,14 @@ export default function (AB) {
                      },
                   ],
                },
+               {},
                {
                   cols: [
                      {
                         view: "checkbox",
                         id: this.ids.useField,
-                        labelRight: L("by Field"),
+                        width: 34,
                         labelWidth: 0,
-                        width: 120,
                         value: obj.useField == "1" ? 1 : 0,
                         click: function (id /*, event */) {
                            if ($$(id).getValue()) {
@@ -236,13 +247,19 @@ export default function (AB) {
                         },
                      },
                      {
+                        view: "label",
+                        label: L("by Field"),
+                        width: 88,
+                     },
+                     {
                         // TODO @achoobert look these up
-                        id: this.ids.userField,
                         view: "multicombo",
+                        id: this.ids.userField,
                         value: obj.userFields ? obj.userFields : 0,
                         disabled: obj.useField == "1" ? false : true,
                         suggest: {
                            body: {
+                              yCount: 4,
                               data: __UserFields,
                               on: {
                                  //
@@ -277,8 +294,8 @@ export default function (AB) {
                               },
                            },
                         },
+                        placeholder: L("Click to add User"),
                         labelAlign: "left",
-                        placeholder: L("Click or type to add user..."),
                         stringResult: false /* returns data as an array of [id] */,
                         on: {
                            onAfterRender: function () {
