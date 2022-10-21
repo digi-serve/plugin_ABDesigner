@@ -21,7 +21,7 @@ export default function (AB, init_settings) {
    var issue_icon =
       "<span class='webix_icon wxi-alert' style='font-size:18px; color:#EED202;'>&nbsp;</span>";
 
-   var richselect_icon = AB._App.icons.map((x) => `fa-${x}`);
+   var richselect_icon = AB.UISettings.icons.map((x) => `fa-${x}`);
 
    class ABChooseForm extends UIClass {
       // .extend(idBase, function(App) {
