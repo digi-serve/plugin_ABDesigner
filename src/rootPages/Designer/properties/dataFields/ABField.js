@@ -814,10 +814,6 @@ export default function (AB) {
             let isValid = $$(ids.component).validate(),
                colName = this.formValues()["columnName"];
 
-            setTimeout(() => {
-               $$(ids.component).clearValidation();
-            }, 500);
-
             // validate reserve column names
             const FC = this.FieldClass();
             if (!FC) {
