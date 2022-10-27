@@ -194,7 +194,12 @@ export default function (AB, ibase, isettings) {
        */
       async save() {
          this._settings[this.CurrentObjectID] = this.toObj();
-         await this.AB.Storage.set("workspaceviews", this._settings);
+         try {
+            await this.AB.Storage.set("workspaceviews", this._settings);
+         } catch (e) {
+            // WORKAROUND: to ignore Failed to execute 'setItem' on 'Storage': Setting the value of 'admin.workspaceviews' exceeded the quota error
+            console.error(e);
+         }
       }
 
       /**
