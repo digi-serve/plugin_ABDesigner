@@ -119,7 +119,7 @@ export default function (AB) {
 
          obj.label = $$(ids.name)?.getValue();
          obj.objectID = $$(ids.objList)?.getValue();
-         obj.lifecycleKey = $$(ids.lifecycleList).getValue();
+         obj.lifecycleKey = $$(ids.lifecycleList)?.getValue();
          obj.triggerKey = `${obj.objectID}.${obj.lifecycleKey}`;
 
          return obj;

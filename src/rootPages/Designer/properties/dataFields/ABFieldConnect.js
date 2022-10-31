@@ -265,11 +265,9 @@ export default function (AB) {
          const selectedObjId = $$(ids.linkObject).getValue();
          if (!selectedObjId) {
             this.markInvalid("linkObject", L("Select an object"));
-            // webix.html.addCss($$(ids.linkObject).$view, "webix_invalid");
             isValid = false;
          } else {
-            console.error("!!! Don't forget to refactor this .removeCss()");
-            webix.html.removeCss($$(ids.linkObject).$view, "webix_invalid");
+            this.clearInvalid("linkObject");
          }
 
          return isValid;

@@ -20,11 +20,10 @@ export default function (AB) {
       }
 
       ui() {
-         const App = AB._App;
          const FC = this.FieldClass();
          const ids = this.ids;
 
-         this.rowFilter = AB.rowfilterNew(App, ids.component);
+         this.rowFilter = AB.rowfilterNew(null, ids.component);
 
          return super.ui([
             {
