@@ -38,6 +38,7 @@ export default function (AB, init_settings) {
             translationManager: "",
             translationManagerToolbar: "",
 
+            icon: "",
             issue_id: "",
             issue_list: "",
          });
@@ -70,16 +71,13 @@ export default function (AB, init_settings) {
                   },
                   {
                      view: "icon",
+                     id: this.ids.icon,
                      icon: "wxi-alert",
                      css: "alert",
+                     hidden: true,
                      on: {
                         onItemClick: () => {
-                           const $issueID = $$(this.ids.issue_id);
-                           const $issueList = $$(this.ids.issue_list);
-
-                           $issueList.define("data", this.warningData());
-                           $issueList.refresh();
-                           $issueID.show();
+                           this.showWarningList();
                         },
                      },
                   },
@@ -517,7 +515,7 @@ export default function (AB, init_settings) {
                   {
                      view: "list",
                      id: this.ids.issue_list,
-                     template: issue_icon + " #issue#",
+                     template: `${issue_icon} #message#`,
                      scrollX: true,
                      scrollY: true,
                      select: true,
@@ -542,19 +540,34 @@ export default function (AB, init_settings) {
          this.emit("view.list");
       }
 
+      warningPopulate() {
+         const $warningButton = $$(this.ids.icon);
+         const warnings = this.warningData();
+
+         warnings?.length ? $warningButton.show() : $warningButton.hide();
+      }
+
       warningData() {
-         const apps = this.AB.applications();
+         const apps = this.AB.applications(
+            (app) => app.id == this.CurrentApplicationID
+         );
          const warnings = [];
 
          apps.forEach((e) => {
             warnings.push(...e.warningsAll());
          });
 
-         return warnings?.length
-            ? warnings.map((e, i) => {
-                 return { id: i, issue: L(e.message) };
-              })
-            : [{ id: 1, issue: L("No Issues Found") }];
+         return warnings;
+      }
+
+      showWarningList() {
+         const $issueID = $$(this.ids.issue_id);
+         const $issueList = $$(this.ids.issue_list);
+
+         $issueList?.clearAll();
+         $issueList?.define("data", this.warningData());
+         $issueList?.refresh();
+         $issueID?.show();
       }
 
       /**
@@ -848,6 +861,7 @@ export default function (AB, init_settings) {
             );
          }
 
+         this.warningPopulate();
          this.permissionPopulate(application);
       }
 
