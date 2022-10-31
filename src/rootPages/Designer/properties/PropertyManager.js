@@ -38,6 +38,7 @@ export default function (AB) {
    // All the ABProcess... Property Interfaces Available
    [
       require("./process/ABProcessEnd.js"),
+      require("./process/ABProcessGatewayExclusive.js"),
       require("./process/ABProcessParticipant.js"),
       require("./process/ABProcessTaskEmail.js"),
       require("./process/ABProcessTriggerLifecycle.js"),
