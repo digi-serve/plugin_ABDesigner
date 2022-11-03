@@ -70,6 +70,7 @@ export default function (AB) {
       require("./views/ABViewDetail"),
       require("./views/ABViewDocxBuilder"),
       require("./views/ABViewForm"),
+      require("./views/ABViewGantt"),
       require("./views/ABViewGrid"),
       require("./views/ABViewLabel"),
       require("./views/ABViewLayout"),

@@ -2,7 +2,7 @@
 //
 // Manages the settings for a Gantt Chart View in the AppBuilder Object Workspace
 
-var defaultValues = {
+const defaultValues = {
    name: "Default Gantt",
    filterConditions: [], // array of filters to apply to the data table
    sortFields: [],
@@ -44,7 +44,7 @@ import UI_Class from "../../ui_class";
 
 export default function (AB, ibase) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
 
    const ABFieldDate = AB.Class.ABFieldManager.fieldByKey("date");
    const ABFieldNumber = AB.Class.ABFieldManager.fieldByKey("number");
@@ -54,12 +54,12 @@ export default function (AB, ibase) {
    class ABObjectWorkspaceViewGantt extends UIClass {
       constructor(idBase) {
          super(idBase, {
-            title: "",
-            startDate: "",
-            endDate: "",
-            duration: "",
-            progress: "",
-            notes: "",
+            titleFieldID: "",
+            startDateFieldID: "",
+            endDateFieldID: "",
+            durationFieldID: "",
+            progressFieldID: "",
+            notesFieldID: "",
          });
 
          this.on("field.added", (field) => {
@@ -96,10 +96,10 @@ export default function (AB, ibase) {
          return "fa fa-tasks";
       }
 
-      refreshOptions(object, view) {
-         let ids = this.ids;
+      refreshOptions(object, settings) {
+         const ids = this.ids;
 
-         let dateFields = object
+         const dateFields = object
             .fields((f) => f instanceof ABFieldDate)
             .map(({ id, label }) => ({ id, value: label }));
 
@@ -108,19 +108,19 @@ export default function (AB, ibase) {
 
          // Add default option
          dateFields.unshift({
-            id: "none",
+            id: null,
             value: L("Select a date field"),
          });
          this._dateFields = dateFields;
 
          // Start date
-         $$(ids.startDate).define("options", dateFields);
+         $$(ids.startDateFieldID).define("options", dateFields);
 
          // // End date
-         $$(ids.endDate).define("options", dateFields);
+         $$(ids.endDateFieldID).define("options", dateFields);
 
          // Duration
-         let numberFields = object
+         const numberFields = object
             .fields((f) => f instanceof ABFieldNumber)
             .map(({ id, label }) => ({ id, value: label }));
 
@@ -129,15 +129,15 @@ export default function (AB, ibase) {
 
          // Add default option
          numberFields.unshift({
-            id: "none",
+            id: null,
             value: L("Select a number field"),
          });
          this._numberFields = numberFields;
 
-         $$(ids.duration).define("options", numberFields);
+         $$(ids.durationFieldID).define("options", numberFields);
 
          // Progress
-         // let decimalFields = object
+         // const decimalFields = object
          //    .fields((f) => f instanceof ABFieldNumber)
          //    .map(({ id, label }) => ({ id, value: label }));
 
@@ -146,13 +146,13 @@ export default function (AB, ibase) {
 
          // // Add default option
          // decimalFields.unshift({
-         //    id: "none",
+         //    id: "",
          //    value: L("Select a number field"),
          // });
-         $$(ids.progress).define("options", numberFields);
+         $$(ids.progressFieldID).define("options", numberFields);
 
          // Title & Notes
-         let stringFields = object
+         const stringFields = object
             .fields(
                (f) => f instanceof ABFieldString || f instanceof ABFieldLongText
             )
@@ -163,49 +163,77 @@ export default function (AB, ibase) {
 
          // Add default option
          stringFields.unshift({
-            id: "none",
+            id: null,
             value: L("Select a string field"),
          });
          this._stringFields = stringFields;
 
-         $$(ids.title).define("options", stringFields);
-         $$(ids.notes).define("options", stringFields);
+         $$(ids.titleFieldID).define("options", stringFields);
+         $$(ids.notesFieldID).define("options", stringFields);
 
-         // Select view's values
-         if (view && view.title) {
-            $$(ids.title).define("value", view.title);
-            $$(ids.title).refresh();
-         }
+         if (!settings) return;
 
-         if (view && view.startDateFieldID) {
-            $$(ids.startDate).define("value", view.startDateFieldID);
-            $$(ids.startDate).refresh();
-         }
-
-         if (view && view.endDateFieldID) {
-            $$(ids.endDate).define(
-               "value",
-               view.endDateFieldID || defaultValues.settings.endDateFieldID
+         // Select settings's values
+         if (settings.titleFieldID) {
+            $$(ids.titleFieldID).define("value", settings.titleFieldID);
+            $$(ids.titleFieldID).refresh();
+            this.syncCommonLists(
+               [ids.titleFieldID, ids.notesFieldID],
+               this._stringFields
             );
-            $$(ids.endDate).refresh();
          }
 
-         if (view && view.durationFieldID) {
-            $$(ids.duration).define(
-               "value",
-               view.durationFieldID || defaultValues.settings.durationFieldID
+         if (settings.startDateFieldID) {
+            $$(ids.startDateFieldID).define("value", settings.startDateFieldID);
+            $$(ids.startDateFieldID).refresh();
+            this.syncCommonLists(
+               [ids.startDateFieldID, ids.endDateFieldID],
+               this._dateFields
             );
-            $$(ids.duration).refresh();
          }
 
-         if (view && view.progressFieldID) {
-            $$(ids.progress).define("value", view.progressFieldID);
-            $$(ids.progress).refresh();
+         if (settings.endDateFieldID) {
+            $$(ids.endDateFieldID).define(
+               "value",
+               settings.endDateFieldID ||
+                  defaultValues.settings.endDateFieldIDFieldID
+            );
+            $$(ids.endDateFieldID).refresh();
+            this.syncCommonLists(
+               [ids.startDateFieldID, ids.endDateFieldID],
+               this._dateFields
+            );
          }
 
-         if (view && view.notesFieldID) {
-            $$(ids.notes).define("value", view.notesFieldID);
-            $$(ids.notes).refresh();
+         if (settings.durationFieldID) {
+            $$(ids.durationFieldID).define(
+               "value",
+               settings.durationFieldID ||
+                  defaultValues.settings.durationFieldID
+            );
+            $$(ids.durationFieldID).refresh();
+            this.syncCommonLists(
+               [ids.durationFieldID, ids.progressFieldID],
+               this._numberFields
+            );
+         }
+
+         if (settings.progressFieldID) {
+            $$(ids.progressFieldID).define("value", settings.progressFieldID);
+            $$(ids.progressFieldID).refresh();
+            this.syncCommonLists(
+               [ids.durationFieldID, ids.progressFieldID],
+               this._numberFields
+            );
+         }
+
+         if (settings.notesFieldID) {
+            $$(ids.notesFieldID).define("value", settings.notesFieldID);
+            $$(ids.notesFieldID).refresh();
+            this.syncCommonLists(
+               [ids.titleFieldID, ids.notesFieldID],
+               this._stringFields
+            );
          }
       }
 
@@ -226,14 +254,14 @@ export default function (AB, ibase) {
          // for each of the Other lists
 
          commonIDs.forEach((idCurr) => {
-            let otherVals = [];
-            let otherIDs = commonIDs.filter((i) => i != idCurr);
+            const otherVals = [];
+            const otherIDs = commonIDs.filter((i) => i != idCurr);
             otherIDs.forEach((idOther) => {
                otherVals.push($$(idOther).getValue());
             });
 
-            let $list = $$(idCurr);
-            let newOptions = fullOptions.filter(
+            const $list = $$(idCurr);
+            const newOptions = fullOptions.filter(
                (o) => otherVals.indexOf(o.id) == -1
             );
             $list.define("options", newOptions);
@@ -242,17 +270,17 @@ export default function (AB, ibase) {
       }
 
       ui() {
-         let ids = this.ids;
+         const ids = this.ids;
 
-         // let labels = {
+         // const labels = {
          //    common: App.labels,
          //    component: {
-         //       title: L("ab.add_view.gantt.title", "*Title"),
-         //       startDate: L("ab.add_view.gantt.startDate", "*Start Date"),
-         //       endDate: L("ab.add_view.gantt.endDate", "*End Date"),
-         //       duration: L("ab.add_view.gantt.duration", "*Duration"),
-         //       progress: L("ab.add_view.gantt.progress", "*Progress"),
-         //       notes: L("ab.add_view.gantt.notes", "*Notes"),
+         //       titleFieldID: L("ab.add_view.gantt.title", "*Title"),
+         //       startDateFieldID: L("ab.add_view.gantt.startDate", "*Start Date"),
+         //       endDateFieldID: L("ab.add_view.gantt.endDate", "*End Date"),
+         //       durationFieldID: L("ab.add_view.gantt.duration", "*Duration"),
+         //       progressFieldID: L("ab.add_view.gantt.progress", "*Progress"),
+         //       notesFieldID: L("ab.add_view.gantt.notes", "*Notes"),
 
          //       datePlaceholder: L(
          //          "ab.add_view.gantt.datePlaceholder",
@@ -269,7 +297,7 @@ export default function (AB, ibase) {
          //    },
          // };
 
-         // var PopupNewDataFieldComponent = new ABPopupNewDataField(
+         // const PopupNewDataFieldComponent = new ABPopupNewDataField(
          //    App,
          //    idBase + "_gantt"
          // );
@@ -280,7 +308,7 @@ export default function (AB, ibase) {
                {
                   cols: [
                      {
-                        id: ids.title,
+                        id: ids.titleFieldID,
                         view: "richselect",
                         label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Title"
@@ -292,7 +320,7 @@ export default function (AB, ibase) {
                         on: {
                            onChange: (newValue, oldValue) => {
                               this.syncCommonLists(
-                                 [ids.title, ids.notes],
+                                 [ids.titleFieldID, ids.notesFieldID],
                                  this._stringFields
                               );
                            },
@@ -306,7 +334,7 @@ export default function (AB, ibase) {
                         label: "",
                         width: 30,
                         click: () => {
-                           this._autoSelectInput = ids.title;
+                           this._autoSelectInput = ids.titleFieldID;
                            this.emit("new.field", ABFieldString.defaults().key);
                         },
                      },
@@ -315,7 +343,7 @@ export default function (AB, ibase) {
                {
                   cols: [
                      {
-                        id: ids.startDate,
+                        id: ids.startDateFieldID,
                         view: "richselect",
                         label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "Start Date"
@@ -328,7 +356,7 @@ export default function (AB, ibase) {
                         on: {
                            onChange: (newValue, oldValue) => {
                               this.syncCommonLists(
-                                 [ids.startDate, ids.endDate],
+                                 [ids.startDateFieldID, ids.endDateFieldID],
                                  this._dateFields
                               );
                            },
@@ -342,7 +370,7 @@ export default function (AB, ibase) {
                         label: "",
                         width: 30,
                         click: () => {
-                           this._autoSelectInput = ids.startDate;
+                           this._autoSelectInput = ids.startDateFieldID;
                            this.emit("new.field", ABFieldDate.defaults().key);
                         },
                      },
@@ -351,7 +379,7 @@ export default function (AB, ibase) {
                {
                   cols: [
                      {
-                        id: ids.endDate,
+                        id: ids.endDateFieldID,
                         view: "richselect",
                         label: `<span style='opacity: 0.6;' class='webix_icon fa fa-calendar'></span> ${L(
                            "End Date"
@@ -363,7 +391,7 @@ export default function (AB, ibase) {
                         on: {
                            onChange: (newValue, oldValue) => {
                               this.syncCommonLists(
-                                 [ids.startDate, ids.endDate],
+                                 [ids.startDateFieldID, ids.endDateFieldID],
                                  this._dateFields
                               );
                            },
@@ -377,7 +405,7 @@ export default function (AB, ibase) {
                         label: "",
                         width: 30,
                         click: () => {
-                           this._autoSelectInput = ids.endDate;
+                           this._autoSelectInput = ids.endDateFieldID;
                            this.emit("new.field", ABFieldDate.defaults().key);
                         },
                      },
@@ -386,7 +414,7 @@ export default function (AB, ibase) {
                {
                   cols: [
                      {
-                        id: ids.duration,
+                        id: ids.durationFieldID,
                         view: "richselect",
                         label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Duration"
@@ -398,7 +426,7 @@ export default function (AB, ibase) {
                         on: {
                            onChange: (newValue, oldValue) => {
                               this.syncCommonLists(
-                                 [ids.duration, ids.progress],
+                                 [ids.durationFieldID, ids.progressFieldID],
                                  this._numberFields
                               );
                            },
@@ -412,7 +440,7 @@ export default function (AB, ibase) {
                         label: "",
                         width: 30,
                         click: () => {
-                           this._autoSelectInput = ids.duration;
+                           this._autoSelectInput = ids.durationFieldID;
                            this.emit("new.field", ABFieldNumber.defaults().key);
                         },
                      },
@@ -421,7 +449,7 @@ export default function (AB, ibase) {
                {
                   cols: [
                      {
-                        id: ids.progress,
+                        id: ids.progressFieldID,
                         view: "richselect",
                         label: `<span style='opacity: 0.6;' class='webix_icon fa fa-hashtag'></span> ${L(
                            "Progress"
@@ -434,7 +462,7 @@ export default function (AB, ibase) {
                         on: {
                            onChange: (newValue, oldValue) => {
                               this.syncCommonLists(
-                                 [ids.duration, ids.progress],
+                                 [ids.durationFieldID, ids.progressFieldID],
                                  this._numberFields
                               );
                            },
@@ -448,7 +476,7 @@ export default function (AB, ibase) {
                         label: "",
                         width: 30,
                         click: () => {
-                           this._autoSelectInput = ids.progress;
+                           this._autoSelectInput = ids.progressFieldID;
                            this.emit("new.field", ABFieldNumber.defaults().key);
                         },
                      },
@@ -457,7 +485,7 @@ export default function (AB, ibase) {
                {
                   cols: [
                      {
-                        id: ids.notes,
+                        id: ids.notesFieldID,
                         view: "richselect",
                         label: `<span style='opacity: 0.6;' class='webix_icon fa fa-align-right'></span> ${L(
                            "Notes"
@@ -470,7 +498,7 @@ export default function (AB, ibase) {
                         on: {
                            onChange: (newValue, oldValue) => {
                               this.syncCommonLists(
-                                 [ids.title, ids.notes],
+                                 [ids.titleFieldID, ids.notesFieldID],
                                  this._stringFields
                               );
                            },
@@ -484,7 +512,7 @@ export default function (AB, ibase) {
                         label: "",
                         width: 30,
                         click: () => {
-                           this._autoSelectInput = ids.notes;
+                           this._autoSelectInput = ids.notesFieldID;
                            this.emit(
                               "new.field",
                               ABFieldLongText.defaults().key
@@ -500,52 +528,51 @@ export default function (AB, ibase) {
       init(object, view) {
          this.objectLoad(object);
          this._view = view;
-         this.refreshOptions(object, view);
+         this.refreshOptions(object, view?.settings);
       }
 
       validate($form) {
-         let ids = this.ids;
+         const ids = this.ids;
+         const endDateFieldID =
+            $$(ids.endDateFieldID).getValue() ||
+            defaultValues.settings.endDateFieldID;
+         const durationFieldID =
+            $$(ids.durationFieldID).getValue() ||
+            defaultValues.settings.durationFieldID;
 
-         let endDate =
-               $$(ids.endDate).getValue() ||
-               defaultValues.settings.endDateFieldID,
-            duration =
-               $$(ids.duration).getValue() ||
-               defaultValues.settings.durationFieldID;
-
-         if (
-            endDate == defaultValues.settings.endDateFieldID &&
-            duration == defaultValues.settings.durationFieldID
-         ) {
+         if (!endDateFieldID && !durationFieldID) {
             $form.markInvalid("endDateFieldID", "Required");
-            $form.markInvalid("duration", "Required");
+            $form.markInvalid("durationFieldID", "Required");
 
             return false;
-         } else {
-            return true;
          }
+
+         return true;
       }
 
       values() {
-         let ids = this.ids;
+         const ids = this.ids;
 
-         let result = {};
+         const result = {};
 
          result.titleFieldID =
-            $$(ids.title).getValue() || defaultValues.settings.titleFieldID;
+            $$(ids.titleFieldID).getValue() ||
+            defaultValues.settings.titleFieldID;
          result.startDateFieldID =
-            $$(ids.startDate).getValue() ||
+            $$(ids.startDateFieldID).getValue() ||
             defaultValues.settings.startDateFieldID;
          result.endDateFieldID =
-            $$(ids.endDate).getValue() || defaultValues.settings.endDateFieldID;
+            $$(ids.endDateFieldID).getValue() ||
+            defaultValues.settings.endDateFieldID;
          result.durationFieldID =
-            $$(ids.duration).getValue() ||
+            $$(ids.durationFieldID).getValue() ||
             defaultValues.settings.durationFieldID;
          result.progressFieldID =
-            $$(ids.progress).getValue() ||
+            $$(ids.progressFieldID).getValue() ||
             defaultValues.settings.progressFieldID;
          result.notesFieldID =
-            $$(ids.notes).getValue() || defaultValues.settings.notesFieldID;
+            $$(ids.notesFieldID).getValue() ||
+            defaultValues.settings.notesFieldID;
 
          return result;
       }
@@ -557,15 +584,14 @@ export default function (AB, ibase) {
        * @param {json} data  the persisted data
        */
       fromSettings(data) {
-         for (let v in defaultValues) {
-            if (v != "settings") {
-               this[v] = data[v] || defaultValues[v];
-            }
-         }
-         this.settings = {};
-         for (let v in defaultValues.settings) {
-            this.settings[v] = data.settings?.[v] ?? defaultValues.settings[v];
-         }
+         for (const key in defaultValues)
+            this[v] = data[key] || defaultValues[key];
+
+         this.settings = Object.assign(
+            {},
+            defaultValues.settings,
+            data.settings ?? {}
+         );
 
          this.type = this.type();
       }
@@ -576,20 +602,19 @@ export default function (AB, ibase) {
        * that can be persisted.
        */
       toSettings() {
-         var obj = {}; //super.toObj();
+         const obj = {}; //super.toObj();
 
-         for (let v in defaultValues) {
-            if (v != "settings") {
-               obj[v] = this[v] || defaultValues[v];
-            }
-         }
-         obj.settings = {};
-         for (let s in defaultValues.settings) {
-            obj.settings[s] = this.settings?.[s] || defaultValues.settings[s];
-         }
+         for (const key in defaultValues)
+            obj[key] = this[key] || defaultValues[key];
 
+         obj.settings = Object.assign(
+            {},
+            defaultValues.settings,
+            obj.settings ?? {}
+         );
          obj.key = this.type();
          obj.type = this.type();
+
          return obj;
       }
    }

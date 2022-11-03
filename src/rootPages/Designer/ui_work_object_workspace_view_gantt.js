@@ -14,7 +14,7 @@ import FViewGanttProperties from "./properties/workspaceViews/ABViewGantt";
 export default function (AB, ibase) {
    ibase = ibase || "ui_work_object_workspace_view_gantt";
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
 
    const ViewGanttProperties = FViewGanttProperties(AB);
 
@@ -25,7 +25,7 @@ export default function (AB, ibase) {
 
       // Our webix UI definition:
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          return {
             id: ids.component,
@@ -47,15 +47,16 @@ export default function (AB, ibase) {
 
       defaultSettings(data) {
          // Pull the ABViewGantt definitions
-         var defaultSettings = ViewGanttProperties.toSettings();
+         const defaultSettings = ViewGanttProperties.toSettings();
 
          // transfer our specific field settings
-         Object.keys(defaultSettings.settings).forEach((d) => {
-            defaultSettings.settings[d] = data[d];
-         });
+         defaultSettings.settings = Object.assign(
+            defaultSettings.settings,
+            data.settings ?? {}
+         );
 
-         var defaultView = this.AB.viewNewDetatched(defaultSettings);
-         var defaultGantt = defaultView.toObj();
+         const defaultView = this.AB.viewNewDetatched(defaultSettings);
+         const defaultGantt = defaultView.toObj();
          defaultGantt.id = data.id ?? AB.jobID();
 
          return {
@@ -97,9 +98,9 @@ export default function (AB, ibase) {
          this._currentComponent?.eventsClear();
 
          this.currentView = this.AB.viewNewDetatched(view.component);
-         var component = this.currentView.component();
+         const component = this.currentView.component();
 
-         var ui = component.ui();
+         const ui = component.ui();
          ui.id = this.ids.component;
          webix.ui(ui, $$(this.ids.component));
 
@@ -121,10 +122,7 @@ export default function (AB, ibase) {
        *        The configuration information for this ABView.
        */
       viewNew(data) {
-         var defaults = this.defaultSettings(data);
-         Object.keys(data).forEach((k) => {
-            defaults[k] = data[k];
-         });
+         const defaults = Object.assign(this.defaultSettings(data), data);
 
          return defaults;
       }
@@ -166,8 +164,8 @@ export default function (AB, ibase) {
       //    sorts,
       //    frozenColumnID
       // ) {
-      //    var object = this.CurrentObject;
-      //    var columnHeaders = object.columnHeaders(true, true, [], [], []);
+      //    const object = this.CurrentObject;
+      //    const columnHeaders = object.columnHeaders(true, true, [], [], []);
 
       //    // this calculation is done in the ABViewGridComponent.refreshHeader():
       //    // columnHeaders.forEach((h) => {
@@ -197,13 +195,13 @@ export default function (AB, ibase) {
          debugger;
          if (!settings.isEditable) return;
 
-         var emptyObj = CurrentObject.defaultValues();
+         const emptyObj = CurrentObject.defaultValues();
          CurrentObject.model()
             .create(emptyObj)
             .then((obj) => {
                if (obj == null) return;
 
-               // var DataTable = $$(ids.component);
+               // const DataTable = $$(ids.component);
                // if (!DataTable.exists(obj.id))
                //     DataTable.add(obj, 0);
                if (
