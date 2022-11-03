@@ -608,7 +608,7 @@ export default function (AB, options) {
        *
        * Defines the template for each row of our ProcessList.
        *
-       * @param {obj} obj the current instance of ABProcess for the row.
+       * @param {obj} obj the current instance of ABxxxx for the row.
        * @param {?} common the webix.common icon data structure
        * @return {string}
        */
