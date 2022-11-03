@@ -513,21 +513,40 @@ export default function (AB) {
                      }
 
                      this.CurrentPropertiesObj = newObj;
-                     this.CurrentPropertiesObj.on("switchTo", (switchObj) => {
-                        this.CurrentPropertiesObj = switchObj;
-                        this.panelShow(switchObj);
-                     });
+
+                     // NOTE: this is trying to prevent adding the same
+                     // listener repeatedly
+                     if (!this.CurrentPropertiesObj._handlerSwitchTo) {
+                        this.CurrentPropertiesObj._handlerSwitchTo = (
+                           switchObj
+                        ) => {
+                           this.CurrentPropertiesObj = switchObj;
+                           this.panelShow(switchObj);
+                        };
+                        this.CurrentPropertiesObj.on(
+                           "switchTo",
+                           this.CurrentPropertiesObj._handlerSwitchTo
+                        );
+                     }
                      this.panelShow(newObj);
                      // newObj.propertiesShow(ids.properties /*, App */);
 
-                     this.CurrentPropertiesObj.on("save", () => {
-                        console.warn("TEST: save <== are we overloading this?");
-                        this.saveProcess(this.CurrentProcess);
+                     if (!this.CurrentPropertiesObj._handlerSave) {
+                        this.CurrentPropertiesObj._handlerSave = () => {
+                           console.warn(
+                              "TEST: save <== are we overloading this?"
+                           );
+                           this.saveProcess(this.CurrentProcess);
 
-                        this.CurrentPropertiesObj?.propertiesShow(
-                           ids.properties
+                           this.CurrentPropertiesObj?.propertiesShow(
+                              ids.properties
+                           );
+                        };
+                        this.CurrentPropertiesObj.on(
+                           "save",
+                           this.CurrentPropertiesObj._handlerSave
                         );
-                     });
+                     }
                   } else {
                      this.CurrentPropertiesObj = null;
                      console.warn(
