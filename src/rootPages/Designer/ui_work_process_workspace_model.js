@@ -92,25 +92,33 @@ export default function (AB) {
          this.panelSelectElement = {
             id: this.ids.properties,
             view: "template",
-            template: `<div id="${this.ids.properties}_div">Select an element to edit.</div>`,
+            template: `<div id="${this.ids.properties}_div">${L(
+               "Select an element to edit."
+            )}</div>`,
          };
 
          this.panelGenericEndEvent = {
             id: this.ids.properties,
             view: "template",
-            template: `<div id="${this.ids.properties}_div">This is a generic BPMN End Event placeholder. Change it to one of our Specific End Event Types to edit.</div>`,
+            template: `<div id="${this.ids.properties}_div">${L(
+               "This is a generic BPMN End Event placeholder. Change it to one of our Specific End Event Types to edit."
+            )}</div>`,
          };
 
          this.panelGenericTrigger = {
             id: this.ids.properties,
             view: "template",
-            template: `<div id="${this.ids.properties}_div">This is a generic BPMN Trigger placeholder. Change it to one of our Specific Trigger Types to edit.</div>`,
+            template: `<div id="${this.ids.properties}_div">${L(
+               "This is a generic BPMN Trigger placeholder. Change it to one of our Specific Trigger Types to edit."
+            )}</div>`,
          };
 
          this.panelGenericService = {
             id: this.ids.properties,
             view: "template",
-            template: `<div id="${this.ids.properties}_div">This is a generic BPMN Task placeholder. Change it to one of our Specific Tasks to edit.</div>`,
+            template: `<div id="${this.ids.properties}_div">${L(
+               "This is a generic BPMN Task placeholder. Change it to one of our Specific Tasks to edit."
+            )}</div>`,
          };
       }
 
@@ -276,9 +284,9 @@ export default function (AB) {
          var ids = this.ids;
 
          Object.keys(this.panelsByType).forEach((k) => {
-            if (this.panelsByType[k].processLoad) {
-               this.panelsByType[k].processLoad(process);
-            }
+            // if (this.panelsByType[k].processLoad) {
+            this.panelsByType[k]?.processLoad?.(process);
+            // }
          });
 
          // initialize the BPMN Viewer if not already initialized:

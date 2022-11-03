@@ -640,6 +640,16 @@ export default function (AB) {
             $$(ids.numberOfNull).hide();
          }
 
+         /**
+          * @method clearInvalid
+          * clear the given control of any invalid warnings
+          * @param {string} name
+          *        The .name parameter value of the form control
+          */
+         clearInvalid(name) {
+            $$(this.ids.component).markInvalid(name, false);
+         }
+
          resetDefaultValidation() {
             const ids = this.ids;
 
@@ -857,12 +867,20 @@ export default function (AB) {
             return isValid;
          }
 
+         /**
+          * @method markInvalid
+          * display the given control as invalid data.
+          * @param {string} name
+          *        The .name parameter value of the form control
+          * @param {string} message
+          *        The invalid message to display.
+          */
          markInvalid(name, message) {
             $$(this.ids.component).markInvalid(name, message);
          }
 
          /**
-          * @function populate
+          * @method populate
           * populate the property form with the given ABField instance provided.
           * @param {ABField} field
           *        The ABFieldXXX instance that we are editing the settings for.

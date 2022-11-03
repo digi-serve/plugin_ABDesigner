@@ -16,7 +16,6 @@ export default function (AB, ibase) {
 
          this.AB = AB;
          this.base = base;
-         this.object = null;
 
          this.rowFilter = this.AB.filterComplexNew(
             `${this.ids.component}_filter`
@@ -24,6 +23,12 @@ export default function (AB, ibase) {
          // {RowFilter}
          // we use this RowFilter to
          // display a form in a popup where the toolbar button is.
+
+         // Add event listener
+         this.rowFilter.on("save", (...params) => {
+            this.emit("save", ...params);
+            this.hide();
+         });
       }
 
       /**
@@ -35,16 +40,10 @@ export default function (AB, ibase) {
        * @param {ABObject} The object that will be used to evaluate the Rules
        */
       objectLoad(object) {
-         this.object = object;
+         super.objectLoad(object);
 
          if (this.rowFilter) {
             this.rowFilter.fieldsLoad(object.fields(), object);
-
-            // Add event listener
-            this.rowFilter.on("save", (...params) => {
-               this.emit("save", ...params);
-               this.hide();
-            });
          }
       }
 

@@ -375,6 +375,10 @@ export default function (AB) {
       populate(obj) {
          let ids = this.ids;
 
+         // make sure these are initialized.
+         obj.toUsers = obj.toUsers ?? {};
+         obj.fromUsers = obj.fromUsers ?? {};
+
          // get process data user-fields
          let userProcessFieldData = obj.process
             .processDataFields(obj)
