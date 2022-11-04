@@ -279,7 +279,7 @@ export default function (AB, ibase, isettings) {
                if (this.comKanban.validate && !this.comKanban?.validate($form))
                   return;
 
-               view = this.comKanban.values();
+               view.settings = this.comKanban.values();
 
                break;
 
