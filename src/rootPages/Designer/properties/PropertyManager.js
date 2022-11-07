@@ -47,6 +47,7 @@ export default function (AB) {
       require("./process/ABProcessTaskServiceCalculate.js"),
       require("./process/ABProcessTaskServiceGetResetPasswordUrl.js"),
       require("./process/ABProcessTaskServiceQuery.js"),
+      require("./process/ABProcessTaskSubProcess.js"),
       require("./process/ABProcessTaskUser.js"),
       require("./process/ABProcessTaskUserApproval.js"),
       require("./process/ABProcessTaskUserExternal.js"),

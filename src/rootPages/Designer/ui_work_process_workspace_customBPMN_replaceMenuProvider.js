@@ -404,7 +404,10 @@ export default function (AB) {
       }
 
       // expanded sub processes
-      if (is(businessObject, "bpmn:SubProcess") && isExpanded(businessObject)) {
+      // [fix] in bpmnjs v9.x it seems like we can no longer ask a SubProcess
+      // businessObject for it's "di".  We have to ask the element instead.
+      // see: https://github.com/bpmn-io/bpmn-js/issues/1472
+      if (is(element, "bpmn:SubProcess") && isExpanded(element)) {
          entries = filter(replaceOptions.SUBPROCESS_EXPANDED, differentType);
 
          return this._createEntries(element, entries);
