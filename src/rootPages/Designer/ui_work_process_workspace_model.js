@@ -5,6 +5,7 @@
  *
  */
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 import BpmnModeler from "bpmn-js/lib/Modeler";
 
 import "bpmn-js/dist/assets/bpmn-js.css";
@@ -53,6 +54,8 @@ export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
+
+   const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`);
 
    const CustomBPMN = FCustomBPMN(AB);
    const PropertyManager = FPropertyManager(AB);
@@ -195,6 +198,7 @@ export default function (AB) {
                //     maxHeight: App.config.xxxLargeSpacer,
                //     hidden: App.config.hideMobile
                // }
+               Warnings.ui(),
             ],
          };
       }
@@ -265,6 +269,9 @@ export default function (AB) {
             _process.modelUpdate(xml);
             await _process.save();
             this.unsavedChanges = false;
+            // now we refresh our warnings.
+            this.warningsRefresh(this.CurrentProcess);
+            Warnings.show(this.CurrentProcess);
             $$(this.ids.button).hide();
          } catch (err) {
             this.AB.notify.developer(err, {
@@ -692,6 +699,9 @@ export default function (AB) {
 
             $$(ids.modelerBroken).hide();
             $$(ids.modelerWorking).show();
+
+            this.warningsRefresh(this.CurrentProcess);
+            Warnings.show(this.CurrentProcess);
          });
       }
 
@@ -746,6 +756,9 @@ export default function (AB) {
             properties.forEach((prop) => {
                this.updateElementProperties(prop.id, prop.def);
             });
+
+            this.warningsRefresh(this.CurrentProcess);
+            Warnings.show(this.CurrentProcess);
          }, 0);
       }
 
