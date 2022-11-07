@@ -238,7 +238,7 @@ export default function (AB, ibase, init_settings) {
          );
          if (!this.settings.isReadOnly) {
             this.PopupViewSettingsComponent.on("new.field", (key) => {
-               this.PopupNewDataFieldComponent.show(null, key);
+               this.PopupNewDataFieldComponent.show(null, key, false);
             });
          }
 
