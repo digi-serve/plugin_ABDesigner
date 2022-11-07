@@ -661,7 +661,7 @@ export default function (AB, ibase) {
        * @param {string} fieldKey
        *        show the editor for this ABField.key
        */
-      modeAdd(fieldKey) {
+      modeAdd(fieldKey, isAllowedToChooseField = true) {
          // show default editor:
          this.defaultEditorComponent.show(false, false);
          this._currentEditor = this.defaultEditorComponent;
@@ -678,6 +678,8 @@ export default function (AB, ibase) {
             const connectMenuName = connectField.defaults().menuName;
             // $$(ids.types).setValue(connectMenuName);
             // $$(ids.chooseFieldType).disable();
+
+            if (!isAllowedToChooseField) $$(this.ids.buttonBack).hide();
 
             this.onClick(connectMenuName);
          }
@@ -840,13 +842,13 @@ export default function (AB, ibase) {
        * @param {string} fieldKey
        *        allow only this field type
        */
-      show(field, fieldKey) {
+      show(field, fieldKey, isChoosableField = true) {
          this._editField = field;
 
          if (this._editField) {
             this.modeEdit(field);
          } else {
-            this.modeAdd(fieldKey);
+            this.modeAdd(fieldKey, isChoosableField);
          }
 
          $$(this.ids.component).show();

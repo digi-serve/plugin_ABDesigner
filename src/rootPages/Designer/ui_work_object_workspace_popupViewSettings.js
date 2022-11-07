@@ -12,7 +12,7 @@ import FormABViewKanBan from "./properties/workspaceViews/ABViewKanban";
 export default function (AB, ibase, isettings) {
    ibase = ibase || "abd_work_object_workspace_popupAddView";
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
 
    class UI_Work_Object_Workspace_PopupAddView extends UIClass {
       constructor(base, settings = {}) {
@@ -51,10 +51,10 @@ export default function (AB, ibase, isettings) {
       }
 
       ui() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          // Our webix UI definition:
-         var formUI = {
+         const formUI = {
             view: "form",
             id: ids.form,
             visibleBatch: "global",
@@ -221,7 +221,7 @@ export default function (AB, ibase, isettings) {
       }
 
       onShow() {
-         var ids = this.ids;
+         const ids = this.ids;
 
          // clear field options in the form
          $$(ids.form).clear();
@@ -265,50 +265,48 @@ export default function (AB, ibase, isettings) {
       }
 
       buttonSave() {
-         var ids = this.ids;
-         if (!$$(ids.form).validate()) return;
+         const ids = this.ids;
+         const $form = $$(ids.form);
 
-         var view = {};
+         if (!$form.validate()) return;
 
-         switch ($$(ids.typeInput).getValue()) {
+         const view = {};
+         const $typeInput = $$(ids.typeInput);
+
+         switch ($typeInput.getValue()) {
             case this.comKanban.type():
                // validate
-               if (
-                  this.comKanban.validate &&
-                  !this.comKanban.validate($$(ids.form))
-               )
+               if (this.comKanban.validate && !this.comKanban?.validate($form))
                   return;
 
-               view = this.comKanban.values();
+               view.settings = this.comKanban.values();
+
                break;
 
             case this.comGantt.type():
                // validate
-               if (
-                  this.comGantt.validate &&
-                  !this.comGantt.validate($$(ids.form))
-               )
+               if (this.comGantt.validate && !this.comGantt.validate($form))
                   return;
 
-               view = this.comGantt.values($$(ids.form));
+               view.settings = this.comGantt.values();
+
                break;
          }
 
          // save the new/updated view
          view.name = $$(ids.nameInput).getValue();
-         view.type = $$(ids.typeInput).getValue();
+         view.type = $typeInput.getValue();
 
-         // var viewObj;
+         // let viewObj;
          if (this._view) {
-            Object.keys(view).forEach((k) => {
-               this._view[k] = view[k];
-            });
+            this._view = Object.assign(this._view, view);
             this.emit("updated", this._view);
             // this.callbacks.onViewUpdated(viewObj);
          } else {
             // viewObj = this.CurrentObject.workspaceViews.addView(view);
             this.emit("added", view);
          }
+
          this.hide();
       }
    }
