@@ -63,9 +63,9 @@ export default function (AB, ibase) {
             minHeight: 275,
             body: this.rowFilter.ui,
             on: {
-               onShow: () => {
-                  this.show();
-               },
+               // onShow: () => {
+               //    this.show();
+               // },
                onHide: () => {
                   this.hide();
                },
