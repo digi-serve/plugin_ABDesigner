@@ -1,5 +1,5 @@
 /*
- * ABProcessParticipant_SelectManagersUI
+ * ABProcessParticipant_selectManagersUI
  *
  * Display the form for entering how to select "managers".
  * this form allows you to choose Roles, or Users directly.
@@ -12,7 +12,7 @@ export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   class UIProcessParticipant_SelectManagersUI extends UIClass {
+   class UIProcessParticipant_selectManagersUI extends UIClass {
       constructor(id) {
          super(id, {
             form: "",
@@ -375,5 +375,5 @@ export default function (AB) {
       }
    }
 
-   return UIProcessParticipant_SelectManagersUI;
+   return UIProcessParticipant_selectManagersUI;
 }
