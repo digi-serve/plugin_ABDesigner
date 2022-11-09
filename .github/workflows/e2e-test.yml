@@ -42,6 +42,8 @@ jobs:
               port: 8080
               folder: ab
               repository: digi-serve/ab_service_web
+         
+         - run: ls
               
          - name: Check out kitchen-sink tests
            uses: actions/checkout@v2
