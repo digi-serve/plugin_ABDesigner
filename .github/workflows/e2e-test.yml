@@ -36,12 +36,31 @@ jobs:
            working-directory: plugins/plugin_ABDesigner
            
         # webpack expects the folder to be called "web" ab-install action expects "ab_service_web"
-         - run: mv web ab_service_web
+         - run: mv web ab_service_web 
          - uses: digi-serve/ab-install-action@v1
            with:
               port: 8080
               folder: ab
               repository: digi-serve/ab_service_web
+
+         - run: cp ./plugins/plugin_ABDesigner/compose.override.yml ./ab/
+         - run: ls -la
+         - run: docker images
+         - run: cat ./compose.override.yml
+           working-directory: ab
+         - run: sleep 30
+        #  - run: docker stack deploy -c docker-compose.yml -c docker-compose.override.yml -c compose.override.yml -c ./test/setup/ci-test.overide.yml ab
+        #    working-directory: ab
+         - run: docker stack deploy -c docker-compose.yml -c docker-compose.override.yml -c ./test/setup/ci-test.overide.yml ab
+           working-directory: ab
+         - run: sleep 30
+         - run: docker service update --image ab_service_web:test $(docker service ls | grep "web" | awk '{print $2}')
+           working-directory: ab
+         - run: sleep 10
+         - run: docker service ls
+           working-directory: ab
+         - run: docker service logs ab_web
+           working-directory: ab
               
          - name: Check out kitchen-sink tests
            uses: actions/checkout@v2
