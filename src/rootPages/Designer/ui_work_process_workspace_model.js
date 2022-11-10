@@ -240,6 +240,52 @@ export default function (AB) {
       }
 
       /**
+       * @method checkKnownElement()
+       * Given an element on the BPMN diagram, check to see if it is
+       * known by the process or not.  If not, it is most likely a generic
+       * element that needs to be assigned one of our specific tasks.
+       * This method will assign warnings to the element that will be
+       * noted on the diagram.
+       * @param {BPMNShape} shape
+       * @param {BPMNElement} parent
+       */
+      checkKnownElement(shape, parent) {
+         // if this is one of our generic types, and it isn't currently
+         // tracked by our CurrentProcess, then it should show a warning.
+         if (genericElementTypes.indexOf(shape.type) > -1) {
+            const currElement = this.CurrentProcess.elementForDiagramID(
+               shape.id
+            );
+            if (!currElement) {
+               // skip elements that are Start and End markers in a SubProcess
+
+               // we might get {Shape}s or {BPMNElement} objects. Referencing
+               // the parent type is different for the two objects.
+               let parentType = parent?.type ?? "unknown";
+               parentType =
+                  shape.parent?.type ??
+                  shape.businessObject?.$parent?.$type ??
+                  parentType;
+
+               if (
+                  parentType != "bpmn:SubProcess" ||
+                  ["bpmn:StartEvent", "bpmn:EndEvent"].indexOf(shape.type) == -1
+               ) {
+                  shape.___abwarnings = ["generic task"];
+                  // NOTE: this warning will be removed once the property
+                  // panel for this element has been saved.
+
+                  // make sure the process knows about it
+                  this.CurrentProcess.unknownShape(shape);
+                  this.emit("warnings");
+               } else {
+                  delete shape.___abwarnings;
+               }
+            }
+         }
+      }
+
+      /**
        * @method clearWorkspace()
        * Clear the object workspace.
        */
@@ -328,6 +374,8 @@ export default function (AB) {
 
             // to find possible events:
             // do a file search on bpmn-js for ".fire(""
+            // or, put a breakpoint in diagram-js/lib/core/EventBus.js
+            //     in the .fire() method and look at: this._listeners
 
             this.viewer.on(["bpmnElement.added"], (event) => {
                // catch elements .added so we can initialize our
@@ -359,6 +407,12 @@ export default function (AB) {
             //     //
             // });
 
+            // When a Shape is added to the diagram, decide if it should
+            // show a warning.
+            this.viewer.on("shape.add", (event) => {
+               this.checkKnownElement(event.element, event.parent);
+            });
+
             this.viewer.on("shape.remove", (event) => {
                // console.log("shape.remove:", event.element);
                if (this.CurrentProcess) {
@@ -387,6 +441,8 @@ export default function (AB) {
                         currTask.destroy();
                      }
                   }
+
+                  this.CurrentProcess.unknownShapeRemove(element);
                }
             });
             this.viewer.on("element.changed", (event) => {
@@ -741,6 +797,7 @@ export default function (AB) {
          });
          if (!thisObj.name) objVals.name = values.label;
          thisObj.fromValues(objVals);
+         thisObj.warningsEval(); // resets the warnings
 
          // thisObj.save();
 
@@ -754,7 +811,7 @@ export default function (AB) {
          setTimeout(() => {
             var properties = thisObj.diagramProperties(this.viewer);
             properties.forEach((prop) => {
-               this.updateElementProperties(prop.id, prop.def);
+               this.updateElementProperties(prop.id, prop.def, prop.warn);
             });
 
             this.warningsRefresh(this.CurrentProcess);
@@ -779,10 +836,17 @@ export default function (AB) {
        * @param {obj} properies
        *        a { 'name':'value' } of the updated properties
        */
-      updateElementProperties(diagramID, values) {
+      updateElementProperties(diagramID, values, warnings) {
          var elementRegistry = this.viewer.get("elementRegistry");
          var elementShape = elementRegistry.get(diagramID);
+
          if (elementShape) {
+            if (warnings) {
+               elementShape.___abwarnings = warnings;
+            } else {
+               delete elementShape.___abwarnings;
+            }
+
             var modeling = this.viewer.get("modeling");
             modeling.updateProperties(elementShape, values);
          }
