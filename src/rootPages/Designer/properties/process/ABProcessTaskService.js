@@ -44,14 +44,14 @@ export default function (AB) {
                         view: "button",
                         label: L("Accounting: Process Batch"),
                         click: () => {
-                           this.switchTo("accountingBatch");
+                           this.switchTo("AccountingBatchProcessing");
                         },
                      },
                      {
                         view: "button",
                         label: L("Accounting: Fiscal Period Close"),
                         click: () => {
-                           this.switchTo("accountingFPClose");
+                           this.switchTo("AccountingFPClose");
                         },
                      },
                      {
@@ -59,7 +59,7 @@ export default function (AB) {
                         label: L("Accounting: Fiscal Period Year Close"),
                         click: () => {
                            this.switchTo(
-                              "accountingFPYearClose",
+                              "AccountingFPYearClose",
                               ids.component
                            );
                         },
@@ -68,14 +68,14 @@ export default function (AB) {
                         view: "button",
                         label: L("Accounting: Journal Entry Archive"),
                         click: () => {
-                           this.switchTo("accountingJEArchive");
+                           this.switchTo("AccountingJEArchive");
                         },
                      },
                      {
                         view: "button",
                         label: L("Query Task"),
                         click: () => {
-                           this.switchTo("query");
+                           this.switchTo("TaskServiceQuery");
                         },
                      },
                      {
@@ -89,7 +89,7 @@ export default function (AB) {
                         view: "button",
                         label: L("Calculate Task"),
                         click: () => {
-                           this.switchTo("calculate");
+                           this.switchTo("Calculate");
                         },
                      },
                      {
