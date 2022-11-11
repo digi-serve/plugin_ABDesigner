@@ -103,7 +103,7 @@ export default function (AB) {
 
       populate(element) {
          let ids = this.ids;
-         $$(ids.name).setValue(element.name);
+         $$(ids.name).setValue(element.label);
          $$(ids.objList).setValue(element.objectID);
          $$(ids.lifecycleList).setValue(element.lifecycleKey);
       }
