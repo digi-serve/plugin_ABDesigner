@@ -146,6 +146,11 @@ export default function (AB) {
          AddForm.applicationLoad(application);
       }
 
+      /**
+       * @method warningRefresh()
+       * Perform a reload of our list, so the list can refresh the warnings
+       * listed.
+       */
       warningsRefresh() {
          if (this.CurrentApplication) {
             // NOTE: only include System Objects if the user has permission

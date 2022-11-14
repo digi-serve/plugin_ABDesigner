@@ -49,6 +49,17 @@ function series(list, cb) {
    }
 }
 
+/**
+ * @function isInSubProcess()
+ * a helper fn() to determine if a provided BPMN:Element is contained in a
+ * Sub Process.
+ * @param {BPMNElement} element
+ * @return {bool}
+ */
+function isInSubProcess(element) {
+   return element.parent?.type == "bpmn:SubProcess";
+}
+
 export default function (AB) {
    const ibase = "ui_work_process_workspace_model";
    const uiConfig = AB.Config.uiSettings();
@@ -333,7 +344,9 @@ export default function (AB) {
        *        current ABProcess instance we are working with.
        */
       processLoad(process) {
-         super.processLoad(process);
+         // NOTE: do not do super.processLoad() here!  Wait until we have saved
+         // any unsaved data below.
+         // super.processLoad(process);
          var ids = this.ids;
 
          Object.keys(this.panelsByType).forEach((k) => {
@@ -419,7 +432,7 @@ export default function (AB) {
                   // let isSubTask = false;
                   let processTask = this.CurrentProcess;
                   var element = event.element;
-                  if (element.parent?.type == "bpmn:SubProcess") {
+                  if (isInSubProcess(element)) {
                      processTask =
                         this.CurrentProcess.elementForDiagramID(
                            element.parent.id
@@ -454,7 +467,7 @@ export default function (AB) {
                }
 
                let processTask = this.CurrentProcess;
-               if (element.parent?.type == "bpmn:SubProcess") {
+               if (isInSubProcess(element)) {
                   processTask =
                      this.CurrentProcess.elementForDiagramID(
                         element.parent.id
@@ -554,10 +567,7 @@ export default function (AB) {
                   var newObj = this.CurrentProcess.elementForDiagramID(
                      element.id
                   );
-                  if (
-                     element.parent?.type == "bpmn:SubProcess" &&
-                     newObj == null
-                  ) {
+                  if (isInSubProcess(element) && newObj == null) {
                      let subProcessTask =
                         this.CurrentProcess.elementForDiagramID(
                            element.parent.id
@@ -596,9 +606,6 @@ export default function (AB) {
 
                      if (!this.CurrentPropertiesObj._handlerSave) {
                         this.CurrentPropertiesObj._handlerSave = () => {
-                           console.warn(
-                              "TEST: save <== are we overloading this?"
-                           );
                            this.saveProcess(this.CurrentProcess);
 
                            this.CurrentPropertiesObj?.propertiesShow(
@@ -612,10 +619,19 @@ export default function (AB) {
                      }
                   } else {
                      this.CurrentPropertiesObj = null;
-                     console.warn(
-                        "Selected Element is unknown to this Process: " +
-                           event.newSelection[0].id
-                     );
+
+                     // don't show this warning if a SubProcess Start/End element.
+                     if (
+                        !isInSubProcess(element) ||
+                        ["bpmn:StartEvent", "bpmn:EndEvent"].indexOf(
+                           element.type
+                        ) == -1
+                     ) {
+                        console.warn(
+                           "Selected Element is unknown to this Process: " +
+                              event.newSelection[0].id
+                        );
+                     }
 
                      let genPanel = this.panelSelectElement;
                      switch (element.type) {
@@ -673,8 +689,8 @@ export default function (AB) {
             processSequence.push((done) => {
                webix.confirm({
                   title: L("Save?"),
-                  message: L("Save your changes to {0}?", [
-                     this.CurrentProcess.name,
+                  text: L("Save your changes to {0}?", [
+                     this.CurrentProcess.label,
                   ]),
                   callback: (isOK) => {
                      if (isOK) {
@@ -701,7 +717,7 @@ export default function (AB) {
             // process all the deletes triggered by the .clear()
             this.CurrentProcessID = null;
             this.viewer.clear();
-            this.CurrentProcessID = process.id;
+            super.processLoad(process);
 
             // new process, so let's clear our properties selection.
             this.CurrentPropertiesObj = null;
@@ -776,7 +792,7 @@ export default function (AB) {
          webix.ui(newPanelUI, $$(this.ids.properties));
 
          // populate the panel with element data
-         newPanel.populate(element);
+         newPanel.populate?.(element);
          this.CurrentPanel = newPanel;
       }
 
@@ -807,7 +823,6 @@ export default function (AB) {
          // and we need to let that complete before trying to update the
          // diagram element properties.
          // an immediate timeout should let the other process complete.
-
          setTimeout(() => {
             var properties = thisObj.diagramProperties(this.viewer);
             properties.forEach((prop) => {
@@ -850,6 +865,20 @@ export default function (AB) {
             var modeling = this.viewer.get("modeling");
             modeling.updateProperties(elementShape, values);
          }
+      }
+
+      /**
+       * @method warningsRefresh()
+       * reset the warnings on the provided ABObject and then start propogating
+       * the "warnings" display updates.
+       */
+      warningsRefresh(process) {
+         // #HACK: .warningsRefresh() can cause a Process to reset it's
+         // current ._elements to what is in our definitions. This can loose
+         // any current  unsaved changes. So, lets restore our working copy:
+         let currElements = process.elements();
+         super.warningsRefresh(process);
+         currElements.forEach((e) => process.elementAdd(e));
       }
    }
 

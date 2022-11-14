@@ -36,16 +36,16 @@ class CustomRenderer extends BaseRenderer {
       // will mark an element with .___abwarnings if it should be
       // marked with our warning symbol.
       if (element.___abwarnings) {
-         const rect = drawRect(
+         const rect = drawTriangle(
             parentNode,
-            30,
             20,
-            TASK_BORDER_RADIUS,
-            "#cc0000"
+            20
+            // TASK_BORDER_RADIUS,
+            // "#cc0000"
          );
 
          svgAttr(rect, {
-            transform: "translate(-20, -10)",
+            transform: "translate(-10, 10)",
          });
       }
       return shape;
@@ -83,14 +83,32 @@ function drawRect(parentNode, width, height, borderRadius, strokeColor) {
    return rect;
 }
 
-/*
 function drawTriangle(parentNode, width, height) {
-   const tri = svgCreate("polygon");
+   let mid = width / 2;
 
-   var points = [{x:}]
-   svgAttr(tri)
+   let points = [
+      { x: 0, y: 0 },
+      { x: width, y: 0 },
+      { x: mid, y: -1 * height },
+   ];
+   let pointsString = points
+      .map(function (point) {
+         return point.x + "," + point.y;
+      })
+      .join(" ");
+
+   const tri = svgCreate("polygon");
+   svgAttr(tri, {
+      points: pointsString,
+      stroke: "#f90",
+      strokeWidth: 2,
+      fill: "#f90",
+   });
+
+   svgAppend(parentNode, tri);
+
+   return tri;
 }
-*/
 
 // copied from https://github.com/bpmn-io/diagram-js/blob/master/lib/core/GraphicsFactory.js
 function prependTo(newNode, parentNode, siblingNode) {

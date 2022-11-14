@@ -158,7 +158,7 @@ export default function (AB) {
          }
 
          /**
-          * @method refreshWarnings()
+          * @method warningsRefresh()
           * reset the warnings on the provided ABObject and then start propogating
           * the "warnings" display updates.
           */

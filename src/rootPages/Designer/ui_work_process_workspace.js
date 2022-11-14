@@ -238,9 +238,9 @@ export default function (AB) {
 
          $$(this.ids.selectedItem).show();
 
-         ModelUI.processLoad(process);
-         TestUI.processLoad(process);
-         MonitorUI.processLoad(process);
+         ModelUI.processLoad(this.CurrentProcess);
+         TestUI.processLoad(this.CurrentProcess);
+         MonitorUI.processLoad(this.CurrentProcess);
       }
    }
 
