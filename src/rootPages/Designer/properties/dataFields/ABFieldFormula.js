@@ -16,6 +16,7 @@ export default function (AB) {
          super("properties_abfield_formula", {
             field: "",
             fieldList: "",
+            rowFilterContainer: "",
          });
       }
 
@@ -23,7 +24,10 @@ export default function (AB) {
          const FC = this.FieldClass();
          const ids = this.ids;
 
-         this.rowFilter = AB.rowfilterNew(null, ids.component);
+         // this.rowFilter = AB.rowfilterNew(null, ids.component);
+         this.rowFilter = AB.filterComplexNew(ids.component, {
+            isSaveHidden: true,
+         });
 
          return super.ui([
             {
@@ -93,7 +97,17 @@ export default function (AB) {
                   },
                ],
             },
-            this.rowFilter.ui,
+            {
+               id: ids.rowFilterContainer,
+               height: 200,
+               rows: [
+                  {
+                     fillspace: true,
+                     height: 10,
+                  },
+                  this.rowFilter.ui,
+               ],
+            },
          ]);
       }
 
@@ -139,21 +153,15 @@ export default function (AB) {
       }
 
       refreshFilter() {
+         const $$rowFilterContainer = $$(this.ids.rowFilterContainer);
          const selectedField = this.getSelectedField();
-         if (
-            selectedField &&
-            selectedField.fieldLink &&
-            selectedField.fieldLink.object
-         ) {
-            // ABFieldFormulaComponent.rowFilter.applicationLoad(
-            //    selectedField.fieldLink.object.application
-            // );
+         if (selectedField?.fieldLink?.object) {
             this.rowFilter.fieldsLoad(selectedField.fieldLink.object.fields());
-            // ABFieldFormulaComponent.rowFilter.setValue({});
+            $$rowFilterContainer.show();
          } else {
-            // ABFieldFormulaComponent.rowFilter.applicationLoad(null);
             this.rowFilter.fieldsLoad([]);
-            // ABFieldFormulaComponent.rowFilter.setValue({});
+            // NOTE: Hide the webix.query because there is an error when field list is empty
+            $$rowFilterContainer.hide();
          }
       }
       /**
@@ -189,6 +197,8 @@ export default function (AB) {
          $$(ids.fieldList).clearAll();
          $$(ids.fieldList).parse(list);
          super.show();
+
+         this.refreshFilter();
       }
 
       values() {
