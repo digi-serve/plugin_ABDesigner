@@ -1,5 +1,5 @@
 /**
- * ABViewCSVImporterEditor
+ * ABViewCSVExporterEditor
  * The widget that displays the UI Editor Component on the screen
  * when designing the UI.
  */
@@ -16,12 +16,12 @@ export default function (AB) {
       // var L = UIClass.L();
       // var L = ABViewContainer.L();
 
-      myClass = class ABViewCSVImporterEditor extends UIClass {
+      myClass = class ABViewCSVExporterEditor extends UIClass {
          static get key() {
-            return "csvImporter";
+            return "csvExporter";
          }
 
-         constructor(view, base = "interface_editor_csvImporter") {
+         constructor(view, base = "interface_editor_csvExporter") {
             // base: {string} unique base id reference
 
             super(view, base);

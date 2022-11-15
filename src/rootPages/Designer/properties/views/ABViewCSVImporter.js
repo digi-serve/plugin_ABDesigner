@@ -121,12 +121,14 @@ export default function (AB) {
                   padding: 10,
                   rows: [
                      {
+                        id: ids.buttonLabel,
                         name: "buttonLabel",
                         view: "text",
                         label: L("Label"),
                         labelWidth: uiConfig.labelWidthXLarge,
                      },
                      {
+                        id: ids.width,
                         view: "counter",
                         name: "width",
                         label: L("Width:"),
@@ -313,12 +315,9 @@ export default function (AB) {
        */
       values() {
          const ids = this.ids;
-
-         const $component = $$(ids.component);
-
          const values = super.values();
 
-         values.settings = $component.getValues();
+         values.settings = values.settings ?? {};
          values.settings.dataviewID = $$(ids.datacollection).getValue();
          values.settings.recordRules = PopupRecordRule.toSettings();
          values.settings.buttonLabel = $$(ids.buttonLabel).getValue();
