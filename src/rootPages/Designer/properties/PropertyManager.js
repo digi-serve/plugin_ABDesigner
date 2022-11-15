@@ -68,6 +68,7 @@ export default function (AB) {
       require("./views/ABViewChartPie"),
       require("./views/ABViewComment"),
       require("./views/ABViewConditionalContainer"),
+      require("./views/ABViewCSVImporter"),
       require("./views/ABViewDataview"),
       require("./views/ABViewDetail"),
       require("./views/ABViewDocxBuilder"),

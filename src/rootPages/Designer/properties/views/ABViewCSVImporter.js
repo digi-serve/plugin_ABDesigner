@@ -4,222 +4,332 @@
  */
 
 import FViewClass from "./ABView";
+import ABRecordRule from "../rules/ABViewRuleListFormRecordRules";
+
+let PopupRecordRule = null;
 
 export default function (AB) {
+   const BASE_ID = "properties_abview_csvimporter";
+
    const ABViewClassProperty = FViewClass(AB);
-   // const L = ABViewClassProperty.L();
+   const uiConfig = AB.Config.uiSettings();
+   const L = ABViewClassProperty.L();
 
    class ABViewCSVImporterProperty extends ABViewClassProperty {
-      constructor() {
-         super("properties_abview", {
-            // Put our ids here
+      constructor(baseID) {
+         super(baseID ?? BASE_ID, {
+            datacollection: "",
+            fields: "",
+            buttonLabel: "",
+            width: "",
          });
+
+         this.AB = AB;
+      }
+
+      static get key() {
+         return "csvImporter";
       }
 
       ui() {
-         /*
-// TODO: this is still from ABField.js
+         const ids = this.ids;
+         PopupRecordRule = new ABRecordRule(this.AB, this.base);
+         // PopupRecordRule.component(`${this.base}_recordrule`);
 
-            var ids = this.ids;
-
-            var FC = this.FieldClass();
-
-            var _ui = {
-               view: "form",
-               id: ids.component,
-               autoheight: true,
-               borderless: true,
-               elements: [
-                  // {
-                  //    view: "label",
-                  //    label: "<span class='webix_icon fa fa-{0}'></span>{1}".replace('{0}', Field.icon).replace('{1}', Field.menuName)
-                  // },
-                  {
-                     view: "text",
-                     id: ids.label,
-                     name: "label",
-                     label: L("Label"),
-                     placeholder: L("Label"),
-                     labelWidth: uiConfig.labelWidthLarge,
-                     css: "ab-new-label-name",
-                     on: {
-                        onChange: function (newVal, oldVal = "") {
-                           // update columnName when appropriate
-                           if (
-                              newVal != oldVal &&
-                              oldVal == $$(ids.columnName).getValue() &&
-                              $$(ids.columnName).isEnabled()
-                           ) {
-                              $$(ids.columnName).setValue(newVal);
-                           }
-                        },
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
+         return super.ui([
+            {
+               view: "fieldset",
+               label: L("Data:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  id: ids.datacollection,
+                  name: "datacollection",
+                  view: "richselect",
+                  label: L("Data Source"),
+                  labelWidth: uiConfig.labelWidthLarge,
+                  skipAutoSave: true,
+                  on: {
+                     onChange: (newVal) => this.selectSource(newVal),
                   },
-                  {
-                     view: "text",
-                     id: ids.columnName,
-                     name: "columnName",
-                     disallowEdit: true,
-                     label: L("Field Name"),
-                     labelWidth: uiConfig.labelWidthLarge,
-                     placeholder: L("Database field name"),
-                     on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "label",
-                     id: ids.fieldDescription,
-                     label: L("Description"), // Field.description,
-                     align: "right",
-                     on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "checkbox",
-                     id: ids.showIcon,
-                     name: "showIcon",
-                     labelRight: L("show icon?"),
-                     labelWidth: uiConfig.labelWidthCheckbox,
-                     value: true,
-                     on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "checkbox",
-                     id: ids.required,
-                     name: "required",
-                     hidden: !FC.defaults().supportRequire,
-                     labelRight: L("Required"),
-                     // disallowEdit: true,
-                     labelWidth: uiConfig.labelWidthCheckbox,
-                     on: {
-                        onChange: (newVal, oldVal) => {
-                           this.requiredOnChange(newVal, oldVal, ids);
-
-                           // If check require on edit field, then show warning message
-                           this.getNumberOfNullValue(newVal);
-                        },
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  // warning message: number of null value rows
-                  {
-                     view: "label",
-                     id: ids.numberOfNull,
-                     css: { color: "#f00" },
-                     label: "",
-                     hidden: true,
-                     on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     view: "checkbox",
-                     id: ids.unique,
-                     name: "unique",
-                     hidden: !FC.defaults().supportUnique,
-                     labelRight: L("Unique"),
-                     disallowEdit: true,
-                     labelWidth: uiConfig.labelWidthCheckbox,
-                     on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  {
-                     id: ids.filterComplex,
-                     rows: [],
-                  },
-                  {
-                     id: ids.addValidation,
-                     view: "button",
-                     label: L("Add Field Validation"),
-                     css: "webix_primary",
-                     click: () => {
-                        this.addValidation();
-                     },
-                     on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-                  // have a hidden field to contain the validationRules
-                  // value we will parse out later
-                  {
-                     id: ids.validationRules,
-                     view: "text",
-                     hidden: true,
-                     name: "validationRules",
-                     on: {
-                        onAfterRender() {
-                           AB.ClassUI.CYPRESS_REF(this);
-                        },
-                     },
-                  },
-               ],
-
-               rules: {
-                  label: webix.rules.isNotEmpty,
-                  columnName: webix.rules.isNotEmpty,
                },
-            };
-
-            // Add our passed in elements:
-            elements.forEach((e) => {
-               // passed in elements might not have their .id
-               // set, but have a .name. Let's default id =
-               if (!e.id && e.name) {
-                  if (!this.ids[e.name]) {
-                     this.ids[e.name] = `${this.base}_${e.name}`;
-                  }
-                  e.id = this.ids[e.name];
-               }
-               _ui.elements.push(e);
-            });
-
-            return _ui;
-*/
-
-         return super.ui([]);
+            },
+            {
+               view: "fieldset",
+               label: L("Available Fields:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        id: ids.fields,
+                        name: "fields",
+                        view: "list",
+                        select: false,
+                        minHeight: 250,
+                        template: this.listTemplate.bind(this),
+                        type: {
+                           markCheckbox: function (item) {
+                              return `<span class='check webix_icon fa fa-${
+                                 item.selected ? "check-" : ""
+                              }square-o'></span>`;
+                           },
+                        },
+                        onClick: {
+                           check: this.check.bind(this),
+                        },
+                     },
+                  ],
+               },
+            },
+            {
+               view: "fieldset",
+               label: L("Rules:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Record Rules:"),
+                              width: uiConfig.labelWidthLarge,
+                           },
+                           {
+                              view: "button",
+                              name: "buttonRecordRules",
+                              css: "webix_primary",
+                              label: L("Settings"),
+                              icon: "fa fa-gear",
+                              type: "icon",
+                              badge: 0,
+                              click: this.recordRuleShow.bind(this),
+                           },
+                        ],
+                     },
+                  ],
+               },
+            },
+            {
+               view: "fieldset",
+               label: L("Customize Display:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  type: "clean",
+                  padding: 10,
+                  rows: [
+                     {
+                        name: "buttonLabel",
+                        view: "text",
+                        label: L("Label"),
+                        labelWidth: uiConfig.labelWidthXLarge,
+                     },
+                     {
+                        view: "counter",
+                        name: "width",
+                        label: L("Width:"),
+                        labelWidth: uiConfig.labelWidthXLarge,
+                     },
+                  ],
+               },
+            },
+         ]);
       }
 
       async init(AB) {
-         return super.init(AB);
+         this.AB = AB;
+
+         await super.init(AB);
+
+         PopupRecordRule.init(AB);
+         PopupRecordRule.on("save", () => {
+            this.onChange();
+            this.populateBadgeNumber();
+         });
+      }
+
+      selectSource(dcId) {
+         const view = this.CurrentView;
+         view.settings = view.settings ?? {};
+         view.settings.dataviewID = dcId;
+
+         this.updateRules();
+         this.populateAvailableFields({ selectAll: true });
+      }
+
+      updateRules() {
+         // Populate values to rules
+         const selectedDv = this.CurrentView.datacollection;
+         if (selectedDv?.datasource) {
+            PopupRecordRule.objectLoad(selectedDv.datasource);
+         }
+
+         PopupRecordRule.fromSettings(
+            this.CurrentView?.settings?.recordRules ?? []
+         );
+      }
+
+      populateAvailableFields(options = {}) {
+         const ids = this.ids;
+         const view = this.CurrentView;
+
+         const datacollection = this.AB.datacollectionByID(
+            view.settings.dataviewID
+         );
+         const object = datacollection?.datasource;
+
+         view.settings = view.settings ?? {};
+         const availableFields = view.settings.availableFieldIds ?? [];
+
+         // Pull field list
+         const fieldOptions = object?.fields()?.map((f) => {
+            f.selected = options.selectAll
+               ? true
+               : availableFields.filter((fieldId) => f.id == fieldId).length >
+                 0;
+
+            return f;
+         });
+
+         $$(ids.fields).clearAll();
+         $$(ids.fields).parse(fieldOptions);
+      }
+
+      populateBadgeNumber() {
+         const ids = this.ids;
+         const view = this.CurrentView;
+         if (!view) return;
+
+         $$(ids.buttonRecordRules).define(
+            "badge",
+            view.settings?.recordRules?.length ?? null
+         );
+         $$(ids.buttonRecordRules).refresh();
+      }
+
+      listTemplate(field, $common) {
+         const fieldComponent = field.formComponent();
+         if (fieldComponent == null)
+            return `<i class='fa fa-times'></i>  ${field.label} <div class='ab-component-form-fields-component-info'> Disable </div>`;
+
+         const componentKey = fieldComponent.common().key;
+         const formComponent = this.CurrentApplication.viewAll(
+            (v) => v.common().key == componentKey
+         )[0];
+
+         return `${$common.markCheckbox(field)} ${
+            field.label
+         } <div class='ab-component-form-fields-component-info'> <i class='fa fa-${
+            formComponent?.common()?.icon ?? "fw"
+         }'></i> ${
+            formComponent ? L(formComponent.common().labelKey ?? "Label") : ""
+         } </div>`;
+      }
+
+      check(e, fieldId) {
+         const ids = this.ids;
+
+         // update UI list
+         let item = $$(ids.fields).getItem(fieldId);
+         item.selected = item.selected ? 0 : 1;
+         $$(ids.fields).updateItem(fieldId, item);
+      }
+
+      recordRuleShow() {
+         this.updateRules();
+         if (PopupRecordRule.CurrentObject) PopupRecordRule.show();
+
+         // Workaround
+         PopupRecordRule.qbFixAfterShow();
+      }
+
+      populate(view) {
+         super.populate(view);
+
+         const ids = this.ids;
+
+         view.settings = view.settings ?? {};
+
+         this.populateDataCollections();
+         this.populateAvailableFields();
+
+         $$(ids.buttonLabel).setValue(view.settings.buttonLabel);
+         $$(ids.width).setValue(view.settings.width);
+
+         view.settings.availableFieldIds = [];
+         let fields = $$(ids.fields).find({ selected: true });
+         (fields || []).forEach((f) => {
+            view.settings.availableFieldIds.push(f.id);
+         });
+      }
+
+      populateDataCollections() {
+         const ids = this.ids;
+         const view = this.CurrentView;
+
+         const datacollections =
+            this.CurrentApplication.datacollectionsIncluded().map((dc) => {
+               return {
+                  id: dc.id,
+                  value: dc.label,
+                  icon:
+                     dc.sourceType === "query"
+                        ? "fa fa-filter"
+                        : "fa fa-database",
+               };
+            });
+
+         $$(ids.datacollection).define("options", datacollections);
+         $$(ids.datacollection).define("value", view.settings.dataviewID);
+         $$(ids.datacollection).refresh();
       }
 
       defaultValues() {
-         var values = {
+         const values = {
             dataviewID: null,
             buttonLabel: "Upload CSV",
             width: 0,
             recordRules: [],
+            availableFieldIds: [],
          };
 
-         var FieldClass = this.ViewClass();
+         const FieldClass = this.ViewClass();
          if (FieldClass) {
-            var fcValues = FieldClass.defaultValues();
+            const fcValues = FieldClass.defaultValues();
             Object.keys(fcValues).forEach((k) => {
                values[k] = fcValues[k];
             });
          }
+
+         return values;
+      }
+
+      /**
+       * @method values
+       * return the values for this form.
+       * @return {obj}
+       */
+      values() {
+         const ids = this.ids;
+
+         const $component = $$(ids.component);
+
+         const values = super.values();
+
+         values.settings = $component.getValues();
+         values.settings.dataviewID = $$(ids.datacollection).getValue();
+         values.settings.recordRules = PopupRecordRule.toSettings();
+         values.settings.buttonLabel = $$(ids.buttonLabel).getValue();
+         values.settings.width = $$(ids.width).getValue();
+
+         values.settings.availableFieldIds = [];
+         $$(ids.fields)
+            .find({ selected: true })
+            .forEach((f) => {
+               values.settings.availableFieldIds.push(f.id);
+            });
 
          return values;
       }
@@ -240,5 +350,5 @@ export default function (AB) {
       }
    }
 
-   return new ABViewCSVImporterProperty();
+   return ABViewCSVImporterProperty;
 }
