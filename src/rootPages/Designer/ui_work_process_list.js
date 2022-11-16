@@ -26,8 +26,8 @@ export default function (AB) {
                searchPlaceholder: "Process name",
             },
             // we can overrid the default template like this:
-            templateListItem:
-               "<div class='ab-object-list-item'>#label#{common.iconGear}</div>",
+            // templateListItem:
+            //    "<div class='ab-object-list-item'>#label#{common.iconGear}</div>",
             menu: {
                copy: false,
                exclude: true,
@@ -163,6 +163,25 @@ export default function (AB) {
 
       ready() {
          this.ListComponent.ready();
+      }
+
+      /**
+       * @method warningRefresh()
+       * Perform a reload of our list, so the list can refresh the warnings
+       * listed.
+       */
+      warningsRefresh() {
+         if (this.CurrentApplication) {
+            // NOTE: only include System Objects if the user has permission
+            var f = (obj) => !obj.isSystemObject;
+            if (this.AB.Account.isSystemDesigner()) {
+               f = () => true;
+            }
+
+            let selectedItem = this.ListComponent.selectedItem();
+            this.ListComponent.dataLoad(this.CurrentApplication?.processes(f));
+            this.ListComponent.selectItem(selectedItem.id);
+         }
       }
    }
    return new UI_Work_Process_List();

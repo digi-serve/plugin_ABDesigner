@@ -93,6 +93,9 @@ export default function (AB, ibase) {
        *        the webix.$view to hover the popup around.
        */
       show($view, options = null) {
+         // [fix] maximum call stack exceeded error!
+         if (this.$Component.isVisible()) return;
+
          if (options != null) {
             this.$Component?.show($view, options);
          } else {

@@ -380,9 +380,9 @@ export default function (AB) {
          obj.fromUsers = obj.fromUsers ?? {};
 
          // get process data user-fields
-         let userProcessFieldData = obj.process
-            .processDataFields(obj)
-            .filter((e) => e.field?.key == "user");
+         let userProcessFieldData = (
+            obj.process.processDataFields(obj) || []
+         ).filter((e) => e.field?.key == "user");
          obj.toUsers["userProcessFieldData"] = userProcessFieldData;
          obj.fromUsers["userProcessFieldData"] = userProcessFieldData;
 

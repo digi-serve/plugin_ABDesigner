@@ -5,6 +5,7 @@
  *
  */
 import UI_Class from "./ui_class";
+import UI_Warnings from "./ui_warnings";
 import BpmnModeler from "bpmn-js/lib/Modeler";
 
 import "bpmn-js/dist/assets/bpmn-js.css";
@@ -48,11 +49,24 @@ function series(list, cb) {
    }
 }
 
+/**
+ * @function isInSubProcess()
+ * a helper fn() to determine if a provided BPMN:Element is contained in a
+ * Sub Process.
+ * @param {BPMNElement} element
+ * @return {bool}
+ */
+function isInSubProcess(element) {
+   return element.parent?.type == "bpmn:SubProcess";
+}
+
 export default function (AB) {
    const ibase = "ui_work_process_workspace_model";
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
+
+   const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`);
 
    const CustomBPMN = FCustomBPMN(AB);
    const PropertyManager = FPropertyManager(AB);
@@ -195,6 +209,7 @@ export default function (AB) {
                //     maxHeight: App.config.xxxLargeSpacer,
                //     hidden: App.config.hideMobile
                // }
+               Warnings.ui(),
             ],
          };
       }
@@ -236,6 +251,52 @@ export default function (AB) {
       }
 
       /**
+       * @method checkKnownElement()
+       * Given an element on the BPMN diagram, check to see if it is
+       * known by the process or not.  If not, it is most likely a generic
+       * element that needs to be assigned one of our specific tasks.
+       * This method will assign warnings to the element that will be
+       * noted on the diagram.
+       * @param {BPMNShape} shape
+       * @param {BPMNElement} parent
+       */
+      checkKnownElement(shape, parent) {
+         // if this is one of our generic types, and it isn't currently
+         // tracked by our CurrentProcess, then it should show a warning.
+         if (genericElementTypes.indexOf(shape.type) > -1) {
+            const currElement = this.CurrentProcess.elementForDiagramID(
+               shape.id
+            );
+            if (!currElement) {
+               // skip elements that are Start and End markers in a SubProcess
+
+               // we might get {Shape}s or {BPMNElement} objects. Referencing
+               // the parent type is different for the two objects.
+               let parentType = parent?.type ?? "unknown";
+               parentType =
+                  shape.parent?.type ??
+                  shape.businessObject?.$parent?.$type ??
+                  parentType;
+
+               if (
+                  parentType != "bpmn:SubProcess" ||
+                  ["bpmn:StartEvent", "bpmn:EndEvent"].indexOf(shape.type) == -1
+               ) {
+                  shape.___abwarnings = ["generic task"];
+                  // NOTE: this warning will be removed once the property
+                  // panel for this element has been saved.
+
+                  // make sure the process knows about it
+                  this.CurrentProcess.unknownShape(shape);
+                  this.emit("warnings");
+               } else {
+                  delete shape.___abwarnings;
+               }
+            }
+         }
+      }
+
+      /**
        * @method clearWorkspace()
        * Clear the object workspace.
        */
@@ -265,6 +326,9 @@ export default function (AB) {
             _process.modelUpdate(xml);
             await _process.save();
             this.unsavedChanges = false;
+            // now we refresh our warnings.
+            this.warningsRefresh(this.CurrentProcess);
+            Warnings.show(this.CurrentProcess);
             $$(this.ids.button).hide();
          } catch (err) {
             this.AB.notify.developer(err, {
@@ -280,7 +344,9 @@ export default function (AB) {
        *        current ABProcess instance we are working with.
        */
       processLoad(process) {
-         super.processLoad(process);
+         // NOTE: do not do super.processLoad() here!  Wait until we have saved
+         // any unsaved data below.
+         // super.processLoad(process);
          var ids = this.ids;
 
          Object.keys(this.panelsByType).forEach((k) => {
@@ -321,6 +387,8 @@ export default function (AB) {
 
             // to find possible events:
             // do a file search on bpmn-js for ".fire(""
+            // or, put a breakpoint in diagram-js/lib/core/EventBus.js
+            //     in the .fire() method and look at: this._listeners
 
             this.viewer.on(["bpmnElement.added"], (event) => {
                // catch elements .added so we can initialize our
@@ -352,13 +420,19 @@ export default function (AB) {
             //     //
             // });
 
+            // When a Shape is added to the diagram, decide if it should
+            // show a warning.
+            this.viewer.on("shape.add", (event) => {
+               this.checkKnownElement(event.element, event.parent);
+            });
+
             this.viewer.on("shape.remove", (event) => {
                // console.log("shape.remove:", event.element);
                if (this.CurrentProcess) {
                   // let isSubTask = false;
                   let processTask = this.CurrentProcess;
                   var element = event.element;
-                  if (element.parent?.type == "bpmn:SubProcess") {
+                  if (isInSubProcess(element)) {
                      processTask =
                         this.CurrentProcess.elementForDiagramID(
                            element.parent.id
@@ -380,6 +454,8 @@ export default function (AB) {
                         currTask.destroy();
                      }
                   }
+
+                  this.CurrentProcess.unknownShapeRemove(element);
                }
             });
             this.viewer.on("element.changed", (event) => {
@@ -391,7 +467,7 @@ export default function (AB) {
                }
 
                let processTask = this.CurrentProcess;
-               if (element.parent?.type == "bpmn:SubProcess") {
+               if (isInSubProcess(element)) {
                   processTask =
                      this.CurrentProcess.elementForDiagramID(
                         element.parent.id
@@ -491,10 +567,7 @@ export default function (AB) {
                   var newObj = this.CurrentProcess.elementForDiagramID(
                      element.id
                   );
-                  if (
-                     element.parent?.type == "bpmn:SubProcess" &&
-                     newObj == null
-                  ) {
+                  if (isInSubProcess(element) && newObj == null) {
                      let subProcessTask =
                         this.CurrentProcess.elementForDiagramID(
                            element.parent.id
@@ -533,9 +606,6 @@ export default function (AB) {
 
                      if (!this.CurrentPropertiesObj._handlerSave) {
                         this.CurrentPropertiesObj._handlerSave = () => {
-                           console.warn(
-                              "TEST: save <== are we overloading this?"
-                           );
                            this.saveProcess(this.CurrentProcess);
 
                            this.CurrentPropertiesObj?.propertiesShow(
@@ -549,10 +619,19 @@ export default function (AB) {
                      }
                   } else {
                      this.CurrentPropertiesObj = null;
-                     console.warn(
-                        "Selected Element is unknown to this Process: " +
-                           event.newSelection[0].id
-                     );
+
+                     // don't show this warning if a SubProcess Start/End element.
+                     if (
+                        !isInSubProcess(element) ||
+                        ["bpmn:StartEvent", "bpmn:EndEvent"].indexOf(
+                           element.type
+                        ) == -1
+                     ) {
+                        console.warn(
+                           "Selected Element is unknown to this Process: " +
+                              event.newSelection[0].id
+                        );
+                     }
 
                      let genPanel = this.panelSelectElement;
                      switch (element.type) {
@@ -610,8 +689,8 @@ export default function (AB) {
             processSequence.push((done) => {
                webix.confirm({
                   title: L("Save?"),
-                  message: L("Save your changes to {0}?", [
-                     this.CurrentProcess.name,
+                  text: L("Save your changes to {0}?", [
+                     this.CurrentProcess.label,
                   ]),
                   callback: (isOK) => {
                      if (isOK) {
@@ -638,7 +717,7 @@ export default function (AB) {
             // process all the deletes triggered by the .clear()
             this.CurrentProcessID = null;
             this.viewer.clear();
-            this.CurrentProcessID = process.id;
+            super.processLoad(process);
 
             // new process, so let's clear our properties selection.
             this.CurrentPropertiesObj = null;
@@ -692,6 +771,9 @@ export default function (AB) {
 
             $$(ids.modelerBroken).hide();
             $$(ids.modelerWorking).show();
+
+            this.warningsRefresh(this.CurrentProcess);
+            Warnings.show(this.CurrentProcess);
          });
       }
 
@@ -710,7 +792,7 @@ export default function (AB) {
          webix.ui(newPanelUI, $$(this.ids.properties));
 
          // populate the panel with element data
-         newPanel.populate(element);
+         newPanel.populate?.(element);
          this.CurrentPanel = newPanel;
       }
 
@@ -731,6 +813,7 @@ export default function (AB) {
          });
          if (!thisObj.name) objVals.name = values.label;
          thisObj.fromValues(objVals);
+         thisObj.warningsEval(); // resets the warnings
 
          // thisObj.save();
 
@@ -740,12 +823,14 @@ export default function (AB) {
          // and we need to let that complete before trying to update the
          // diagram element properties.
          // an immediate timeout should let the other process complete.
-
          setTimeout(() => {
             var properties = thisObj.diagramProperties(this.viewer);
             properties.forEach((prop) => {
-               this.updateElementProperties(prop.id, prop.def);
+               this.updateElementProperties(prop.id, prop.def, prop.warn);
             });
+
+            this.warningsRefresh(this.CurrentProcess);
+            Warnings.show(this.CurrentProcess);
          }, 0);
       }
 
@@ -766,13 +851,34 @@ export default function (AB) {
        * @param {obj} properies
        *        a { 'name':'value' } of the updated properties
        */
-      updateElementProperties(diagramID, values) {
+      updateElementProperties(diagramID, values, warnings) {
          var elementRegistry = this.viewer.get("elementRegistry");
          var elementShape = elementRegistry.get(diagramID);
+
          if (elementShape) {
+            if (warnings) {
+               elementShape.___abwarnings = warnings;
+            } else {
+               delete elementShape.___abwarnings;
+            }
+
             var modeling = this.viewer.get("modeling");
             modeling.updateProperties(elementShape, values);
          }
+      }
+
+      /**
+       * @method warningsRefresh()
+       * reset the warnings on the provided ABObject and then start propogating
+       * the "warnings" display updates.
+       */
+      warningsRefresh(process) {
+         // #HACK: .warningsRefresh() can cause a Process to reset it's
+         // current ._elements to what is in our definitions. This can loose
+         // any current  unsaved changes. So, lets restore our working copy:
+         let currElements = process.elements();
+         super.warningsRefresh(process);
+         currElements.forEach((e) => process.elementAdd(e));
       }
    }
 
