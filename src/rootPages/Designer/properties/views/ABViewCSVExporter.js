@@ -48,6 +48,9 @@ export default function (AB) {
                         label: L("Data Source"),
                         labelWidth: uiConfig.labelWidthLarge,
                         skipAutoSave: true,
+                        on: {
+                           onChange: this.populateFilter.bind(this),
+                        },
                      },
                      {
                         id: ids.hasHeader,
@@ -165,12 +168,7 @@ export default function (AB) {
                ABViewCSVExporterPropertyComponentDefaults.width
          );
 
-         // Populate data to popups
-         // PropertyFilter.applicationLoad(view.application);
-         const dc = view.datacollection;
-         const obj = dc?.datasource;
-         this.propertyFilter.fieldsLoad(obj?.fields() ?? []);
-         this.propertyFilter.setValue(view.settings.where);
+         this.populateFilter();
 
          this.populateBadgeNumber();
       }
@@ -202,6 +200,17 @@ export default function (AB) {
             view?.settings?.where?.rules?.length ?? null
          );
          $$(ids.filterMenuButton).refresh();
+      }
+
+      populateFilter() {
+         const view = this.CurrentView;
+         const dc = view.datacollection;
+         const obj = dc?.datasource;
+
+         // Populate data to popups
+         // PropertyFilter.applicationLoad(view.application);
+         this.propertyFilter.fieldsLoad(obj?.fields() ?? []);
+         this.propertyFilter.setValue(view.settings.where);
       }
 
       showFilterPopup() {
