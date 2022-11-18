@@ -716,7 +716,7 @@ export default function (AB) {
                   formView.emit("properties.updated", currView);
 
                   // Update field options in property
-                  this.propertyUpdateRules(ids, currView, dcId);
+                  // this.propertyUpdateRules(ids, currView, dcId);
 
                   this.ready();
                   this.onChange();

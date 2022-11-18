@@ -99,7 +99,15 @@ export default function (AB) {
                // console.error("TODO: REMOVE THIS TESTING CODE:");
                // if (!child.componentOld) return;
 
-               var component = child.component();
+               let component;
+               try {
+                  component = child.component();
+               } catch (err) {
+                  // WORKAROUND: compatible old versions
+                  component = child.component(this.AB._App);
+                  let ui = component.ui;
+                  component.ui = (() => ui).bind(component);
+               }
 
                // store
                this.subComponents[child.id] = component;
