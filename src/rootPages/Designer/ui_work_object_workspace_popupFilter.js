@@ -60,7 +60,8 @@ export default function (AB, ibase) {
             view: "popup",
             id: ids.component,
             autoheight: true,
-            minHeight: 275,
+            minHeight: 350,
+            minWidth: 400,
             body: this.rowFilter.ui,
             on: {
                // onShow: () => {
@@ -92,10 +93,13 @@ export default function (AB, ibase) {
        *        the webix.$view to hover the popup around.
        */
       show($view, options = null) {
+         // [fix] maximum call stack exceeded error!
+         if (this.$Component.isVisible()) return;
+
          if (options != null) {
-            this.$Component.show($view, options);
+            this.$Component?.show($view, options);
          } else {
-            this.$Component.show($view);
+            this.$Component?.show($view);
          }
       }
 

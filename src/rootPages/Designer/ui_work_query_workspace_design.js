@@ -42,10 +42,12 @@ export default function (AB, init_settings) {
 
          // TODO: once FilterComplex is merged into our core repo
          // change this to:
-         // this.DataFilter = AB.filterComplexNew(this.ids.filter);
-         this.DataFilter = AB.rowfilterNew(null, this.ids.filter);
+         // this.DataFilter = AB.rowfilterNew(null, this.ids.filter);
+         this.DataFilter = AB.filterComplexNew(this.ids.filter, {
+            isSaveHidden: true,
+         });
          this.DataFilter.init({ showObjectName: true });
-         this.DataFilter.on("change", () => {
+         this.DataFilter.on("changed", () => {
             // don't bother saving if the filter condition is incomplete.
             if (this.DataFilter.isComplete()) {
                if (!this.__saveInProcess) {
@@ -227,7 +229,17 @@ export default function (AB, init_settings) {
                            css: "ab-query-label",
                            // height: 50
                         },
-                        this.DataFilter.ui,
+                        {
+                           view: "button",
+                           label: L("Filters"),
+                           icon: "fa fa-filter",
+                           type: "button",
+                           click: function () {
+                              _this.DataFilter.popUp(this.$view, {
+                                 pos: "bottom",
+                              });
+                           },
+                        },
                         {
                            id: ids.datatable,
                            view: "treetable",
@@ -257,6 +269,8 @@ export default function (AB, init_settings) {
          webix.extend($$(ids.tree), webix.ProgressBar);
          webix.extend($$(ids.tabObjects), webix.ProgressBar);
          webix.extend($$(ids.datatable), webix.ProgressBar);
+
+         this.DataFilter.init({ showObjectName: true });
 
          return Promise.resolve();
       }

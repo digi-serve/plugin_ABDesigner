@@ -66,6 +66,8 @@ export default function (AB) {
             app,
             "datacollectionsIncluded"
          );
+         let warnProcesses = this.scanTopic(app, "processes");
+
          // TODO
          // const warnInterfaces = this.scanTopic(app, "interfacesIncluded");
 
@@ -92,6 +94,7 @@ export default function (AB) {
                id: this.ids.tab_processview,
                value: L("Process"),
                icon: "fa fa-fw fa-code-fork",
+               issues: warnProcesses,
             },
             {
                id: this.ids.tab_interface,

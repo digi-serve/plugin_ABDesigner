@@ -136,8 +136,8 @@ export default function (AB) {
 
          /**
           * @method CurrentView()
-          * A helper to return the current ABObjectQuery we are working with.
-          * @return {ABObjectQuery}
+          * A helper to return the current ABView we are working with.
+          * @return {ABView}
           */
          get CurrentView() {
             return this.CurrentApplication?.views(
@@ -158,7 +158,7 @@ export default function (AB) {
          }
 
          /**
-          * @method refreshWarnings()
+          * @method warningsRefresh()
           * reset the warnings on the provided ABObject and then start propogating
           * the "warnings" display updates.
           */

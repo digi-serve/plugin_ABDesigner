@@ -1,5 +1,4 @@
 import UI_Class from "./ui_class";
-import UI_Warnings from "./ui_warnings";
 
 import UI_Work_Process_Workspace_MODEL from "./ui_work_process_workspace_model";
 import UI_Work_Process_Workspace_MONITOR from "./ui_work_process_workspace_monitor";
@@ -22,8 +21,6 @@ export default function (AB) {
    const ModelUI = UI_Work_Process_Workspace_MODEL(AB);
    const TestUI = mockUI;
    const MonitorUI = UI_Work_Process_Workspace_MONITOR(AB);
-
-   var Warnings = UI_Warnings(AB, `${ibase}_view_warnings`);
 
    class UI_Work_Process_Workspace extends UIClass {
       constructor() {
@@ -155,7 +152,6 @@ export default function (AB) {
                            MonitorUI.ui(),
                         ],
                      },
-                     Warnings.ui(),
                   ],
                },
             ],
@@ -165,10 +161,7 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
-         // this.warningsPropogate([ModelUI, TestUI, MonitorUI]);
-         this.on("warnings", () => {
-            Warnings.show(this.CurrentProcess);
-         });
+         this.warningsPropogate([ModelUI, /* TestUI, */ MonitorUI]);
 
          $$(this.ids.noSelection).show();
          var allInits = [ModelUI.init(AB), TestUI.init(AB), MonitorUI.init(AB)];
@@ -245,9 +238,9 @@ export default function (AB) {
 
          $$(this.ids.selectedItem).show();
 
-         ModelUI.processLoad(process);
-         TestUI.processLoad(process);
-         MonitorUI.processLoad(process);
+         ModelUI.processLoad(this.CurrentProcess);
+         TestUI.processLoad(this.CurrentProcess);
+         MonitorUI.processLoad(this.CurrentProcess);
       }
    }
 
