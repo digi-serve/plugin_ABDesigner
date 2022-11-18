@@ -126,6 +126,9 @@ export default function (AB) {
                         view: "text",
                         label: L("Label"),
                         labelWidth: uiConfig.labelWidthXLarge,
+                        on: {
+                           onChange: () => this.onChange(),
+                        },
                      },
                      {
                         id: ids.width,
@@ -133,6 +136,9 @@ export default function (AB) {
                         name: "width",
                         label: L("Width:"),
                         labelWidth: uiConfig.labelWidthXLarge,
+                        on: {
+                           onChange: () => this.onChange(),
+                        },
                      },
                   ],
                },
@@ -147,7 +153,6 @@ export default function (AB) {
 
          PopupRecordRule.init(AB);
          PopupRecordRule.on("save", () => {
-            this.onChange();
             this.populateBadgeNumber();
          });
       }

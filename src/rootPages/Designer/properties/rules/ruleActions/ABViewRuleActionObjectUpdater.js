@@ -321,6 +321,12 @@ export default function (AB) {
          };
       }
 
+      datacollections(filter = () => true) {
+         return (
+            this.Rule.CurrentApplication?.datacollectionsIncluded(filter) ?? []
+         );
+      }
+
       buttonsToggle() {
          const $cols = $$(this.ids.row).getChildViews()[0].getChildViews();
          $cols[4].hide();
@@ -456,9 +462,7 @@ export default function (AB) {
          $componentView.id = ids.value; // set our expected id
 
          // find all the DataSources
-         var datasources = this.Rule.CurrentApplication.datacollectionsIncluded(
-            (dc) => dc.datasource
-         );
+         var datasources = this.datacollections((dc) => dc.datasource);
 
          // create a droplist with those dataSources
          var optionsDataSources = [];
@@ -491,10 +495,9 @@ export default function (AB) {
                         placeholder: L("Choose a data source"),
                         on: {
                            onChange: (newv /*, oldv */) => {
-                              var selectedDC =
-                                 this.Rule.CurrentApplication.datacollectionsIncluded(
-                                    (dc) => dc.id == newv
-                                 )[0];
+                              var selectedDC = this.datacollections(
+                                 (dc) => dc.id == newv
+                              )[0];
                               if (
                                  selectedDC &&
                                  (selectedDC.sourceType == "query" ||
@@ -541,15 +544,15 @@ export default function (AB) {
                         if (newv == "select-one") {
                            $row.addView({}, 1);
                         } else {
-                           var options =
-                              this.Rule.CurrentView.datacollection.datasource
-                                 .fields()
-                                 .map(function (f) {
-                                    return {
-                                       id: f.id,
-                                       value: f.label,
-                                    };
-                                 });
+                           var options = (
+                              this.Rule.CurrentView?.datacollection?.datasource?.fields() ??
+                              []
+                           ).map(function (f) {
+                              return {
+                                 id: f.id,
+                                 value: f.label,
+                              };
+                           });
 
                            // TODO: Swtich to FilterComplex
                            this.FilterComponent = this.AB.filterComplexNew(
@@ -577,10 +580,9 @@ export default function (AB) {
                            }
 
                            var dcId = $$(ids.selectDc).getValue();
-                           var dataCollection =
-                              this.Rule.CurrentApplication.datacollectionsIncluded(
-                                 (dc) => dc.id == dcId
-                              )[0];
+                           var dataCollection = this.datacollections(
+                              (dc) => dc.id == dcId
+                           )[0];
                            if (dataCollection) {
                               this.populateFilters(dataCollection);
                            }
@@ -616,15 +618,14 @@ export default function (AB) {
                return dc.datasource.id == connectedObject.id;
             });
 
-            var dcQueries =
-               this.Rule.CurrentApplication.datacollectionsIncluded((dc) => {
-                  return (
-                     dc.sourceType == "query" &&
-                     dc.datasource &&
-                     dc.datasource.canFilterObject(connectedObject)
-                  );
-                  // return dc.datasource.id == connectedObject.id;
-               });
+            var dcQueries = this.datacollections((dc) => {
+               return (
+                  dc.sourceType == "query" &&
+                  dc.datasource &&
+                  dc.datasource.canFilterObject(connectedObject)
+               );
+               // return dc.datasource.id == connectedObject.id;
+            });
 
             datasources = datasources.concat(dcQueries);
 
@@ -760,9 +761,9 @@ export default function (AB) {
                if (selectBy != "select-one") {
                   var collectionId = data.value;
                   var dataCollection =
-                     this.currentForm.application.datacollectionsIncluded(
+                     (this.currentForm.application?.datacollectionsIncluded(
                         (dc) => dc.id == collectionId
-                     )[0];
+                     ) ?? [])[0];
                   if (dataCollection && data.filterConditions) {
                      this.populateFilters(
                         dataCollection,

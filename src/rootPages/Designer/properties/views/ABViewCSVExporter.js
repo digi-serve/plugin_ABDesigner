@@ -70,7 +70,7 @@ export default function (AB) {
                            {
                               id: ids.buttonFilter,
                               view: "button",
-                              name: "filterMenuButton",
+                              name: "buttonFilter",
                               css: "webix_primary",
                               label: L("Settings"),
                               icon: "fa fa-gear",
@@ -99,6 +99,11 @@ export default function (AB) {
                         view: "text",
                         label: L("Label"),
                         labelWidth: uiConfig.labelWidthLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                      {
                         id: ids.filename,
@@ -113,6 +118,11 @@ export default function (AB) {
                         name: "width",
                         label: L("Width:"),
                         labelWidth: uiConfig.labelWidthLarge,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
                      },
                   ],
                },
@@ -126,7 +136,7 @@ export default function (AB) {
          await super.init(AB);
 
          this.propertyFilter.init();
-         this.propertyFilter.on("change", (val) => {
+         this.propertyFilter.on("save", (val) => {
             this.onChange();
             this.populateBadgeNumber();
          });
@@ -195,11 +205,11 @@ export default function (AB) {
          const ids = this.ids;
          const view = this.CurrentView;
 
-         $$(ids.filterMenuButton).define(
+         $$(ids.buttonFilter).define(
             "badge",
             view?.settings?.where?.rules?.length ?? null
          );
-         $$(ids.filterMenuButton).refresh();
+         $$(ids.buttonFilter).refresh();
       }
 
       populateFilter() {
