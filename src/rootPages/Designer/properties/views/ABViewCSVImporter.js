@@ -33,7 +33,7 @@ export default function (AB) {
 
       ui() {
          const ids = this.ids;
-         PopupRecordRule = new ABRecordRule(this.AB, this.base);
+         PopupRecordRule = ABRecordRule(this.AB, this.base);
          // PopupRecordRule.component(`${this.base}_recordrule`);
 
          return super.ui([
