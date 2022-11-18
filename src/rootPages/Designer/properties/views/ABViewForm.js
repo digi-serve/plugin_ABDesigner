@@ -323,7 +323,7 @@ export default function (AB) {
 
          // update properties when a field component is deleted
          view.views().forEach((v) => {
-            if (v instanceof this.AB.Class.ABViewFormComponent)
+            if (v instanceof this.AB.Class.ABViewFormItem)
                v.once("destroyed", () => this.populate(view));
          });
 
@@ -589,10 +589,12 @@ export default function (AB) {
 
       refreshDefaultButton() {
          const ids = this.ids;
+         const ABViewFormButton =
+            this.AB.Class.ABViewManager.viewClass("button");
 
          // If default button is not exists, then skip this
          let defaultButton = this.views(
-            (v) => v instanceof this.ABViewFormButton && v.settings.isDefault
+            (v) => v instanceof ABViewFormButton && v.settings.isDefault
          )[0];
 
          // Add a default button
