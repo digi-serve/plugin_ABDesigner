@@ -175,7 +175,7 @@ export default function (AB) {
       }
 
       toSettings() {
-         return this.updateComponent.toSettings();
+         return this.updateComponent?.toSettings() ?? {};
       }
    }
 
