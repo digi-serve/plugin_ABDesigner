@@ -40,6 +40,11 @@ export default function (AB) {
       init(AB) {
          this.AB = AB;
 
+         this.warningsPropogate([this.ProcessList, this.ProcessWorkspace]);
+         this.on("warnings", () => {
+            this.ProcessList.warningsRefresh();
+         });
+
          // Our init() function for setting up our UI
          // the ProcessWorkspace can show an [add] button if there is
          // no Process selected. When that Add button is pressed,
