@@ -8,7 +8,7 @@ import FABViewRuleAction from "../ABViewRuleAction";
 
 // const RowFilter = require("../../platform/RowFilter");
 
-var ABViewRuleActionObjectUpdaterDefaults = {
+const ABViewRuleActionObjectUpdaterDefaults = {
    filterConditions: {
       // array of filters to apply to the data table
       glue: "and",
@@ -57,13 +57,13 @@ export default function (AB) {
 
       removeAddRow() {
          // get our Form
-         var UpdateForm = this.formGet();
+         const UpdateForm = this.formGet();
          if (!UpdateForm) return;
 
          // check row that's unselect a field
-         var rows = UpdateForm.getChildViews();
+         const rows = UpdateForm.getChildViews();
 
-         var addRow = rows.filter((r) => {
+         const addRow = rows.filter((r) => {
             return r.queryView(function (view) {
                return view.config.name == "field" && !view.getValue();
             });
@@ -81,11 +81,11 @@ export default function (AB) {
        */
       addRow(data) {
          // get our Form
-         var UpdateForm = this.formGet();
+         const UpdateForm = this.formGet();
          if (!UpdateForm) return;
 
          // check row that's unselect a field
-         var rows = UpdateForm.getChildViews();
+         const rows = UpdateForm.getChildViews();
          if (
             data == null &&
             rows.filter((r) => {
@@ -97,7 +97,7 @@ export default function (AB) {
             return;
 
          // get a new Row Component
-         var row = new ABViewValueDisplayRow(this.base, this.Rule);
+         const row = new ABViewValueDisplayRow(this.base, this.Rule);
 
          // add row to Form
          UpdateForm.addView(row.ui());
@@ -122,7 +122,7 @@ export default function (AB) {
          });
 
          // get our Form
-         var UpdateForm = this.formGet();
+         const UpdateForm = this.formGet();
          if (!UpdateForm) return;
 
          // remove UI
@@ -130,10 +130,10 @@ export default function (AB) {
       }
 
       formClear() {
-         var UpdateForm = this.formGet();
+         const UpdateForm = this.formGet();
          if (!UpdateForm) return;
 
-         var children = UpdateForm.getChildViews();
+         const children = UpdateForm.getChildViews();
 
          // NOTE: need to clone this array, because it is connected with the UpdatForm's
          // internal array of items.  Once we start .removeView() the element actually
@@ -141,7 +141,7 @@ export default function (AB) {
          // properly iterating through the structure.  It results in missed items from
          // being sent to the .forEach().
          // So Clone it and use that for .forEach()
-         var cloneChildren = [];
+         const cloneChildren = [];
          children.forEach((c) => {
             cloneChildren.push(c);
          });
@@ -154,7 +154,7 @@ export default function (AB) {
       }
 
       formGet() {
-         var UpdateForm = $$(this.ids.updateForm);
+         const UpdateForm = $$(this.ids.updateForm);
          if (!UpdateForm) {
             // this is a problem!
             let message =
@@ -181,7 +181,7 @@ export default function (AB) {
          valueRules.fieldOperations = valueRules.fieldOperations || [];
 
          // find the form
-         var UpdateForm = this.formGet();
+         const UpdateForm = this.formGet();
          if (!UpdateForm) return;
 
          // clear form:
@@ -206,7 +206,7 @@ export default function (AB) {
 
       fromSettings(settings) {
          // Note: we just want the { valueRules:[] } here:
-         var mySettings = settings.valueRules || settings;
+         const mySettings = settings.valueRules || settings;
 
          this.setValues(mySettings);
       }
@@ -217,13 +217,13 @@ export default function (AB) {
          //    { fieldID:xxx, value:yyyy, type:zzz, op:aaa }
          // ]
          // }
-         var settings = { fieldOperations: [] };
+         const settings = { fieldOperations: [] };
 
          // for each of our formRows, decode the propery {}
          this.Rule.formRows.forEach((fr) => {
-            var rowSettings = fr.toSettings();
+            const rowSettings = fr.toSettings();
             if (rowSettings) {
-               settings.fieldOperations.push(fr.toSettings());
+               settings.fieldOperations.push(rowSettings);
             }
          });
 
@@ -334,7 +334,7 @@ export default function (AB) {
       }
 
       getFieldList(shouldFilter) {
-         var options = [];
+         let options = [];
          if (this.Rule.CurrentObject) {
             options = (this.Rule.CurrentObject.fields() || []).map((f) => {
                return {
@@ -370,11 +370,13 @@ export default function (AB) {
             // Remove fields who are selected
             if (shouldFilter) {
                // store this row
-               var usedHash = {};
+               const usedHash = {};
                this.Rule.formRows.forEach((row) => {
-                  var rowView = $$(row.ids.row);
+                  const rowView = $$(row.ids.row);
                   if (rowView) {
-                     var field = rowView.getChildViews()[0].getChildViews()[1];
+                     const field = rowView
+                        .getChildViews()[0]
+                        .getChildViews()[1];
                      usedHash[field.getValue()] = true;
                   }
                });
@@ -388,13 +390,13 @@ export default function (AB) {
 
       isValid() {
          const ids = this.ids;
-         var validator = this.AB.Validation.validator();
-         var valueField = $$(ids.row).getChildViews()[0].getChildViews()[3];
-         var FormView = valueField.getParentView().getParentView();
+         const validator = this.AB.Validation.validator();
+         const valueField = $$(ids.row).getChildViews()[0].getChildViews()[3];
+         const FormView = valueField.getParentView().getParentView();
 
-         var field = this.Rule.getUpdateObjectField($$(ids.field).getValue());
+         const field = this.Rule.getUpdateObjectField($$(ids.field).getValue());
          if (field) {
-            var value = field.getValue(valueField, {});
+            const value = field.getValue(valueField, {});
 
             // // if a standard component that supports .getValue()
             // if (valueField.getValue) {
@@ -405,7 +407,7 @@ export default function (AB) {
             // }
 
             // our .isValidData() wants value in an object:
-            var obj = {};
+            const obj = {};
             obj[field.columnName] = value;
 
             field.isValidData(obj, validator);
@@ -431,7 +433,9 @@ export default function (AB) {
 
             //// TODO: display error for our field picker.  Note, it doesn't have a unique .name
             // field.
-            var fieldField = $$(ids.row).getChildViews()[0].getChildViews()[1];
+            const fieldField = $$(ids.row)
+               .getChildViews()[0]
+               .getChildViews()[1];
             fieldField.define("invalidMessage", L("A value is required"));
             fieldField.define("invalid", true);
             fieldField.refresh();
@@ -442,14 +446,14 @@ export default function (AB) {
 
       selectField(columnID) {
          const ids = this.ids;
-         var field = this.Rule.getUpdateObjectField(columnID);
+         const field = this.Rule.getUpdateObjectField(columnID);
          if (!field) return;
 
-         var fieldComponent = field.formComponent(),
+         const fieldComponent = field.formComponent(),
             abView = fieldComponent.newInstance(this.Rule.CurrentApplication),
-            formFieldComponent = abView.component(this.App),
-            $componentView,
-            $inputView;
+            formFieldComponent = abView.component(this.App);
+
+         let $componentView, $inputView;
 
          console.warn("TODO: remove this testing code:");
          if (typeof formFieldComponent.ui == "function") {
@@ -462,10 +466,10 @@ export default function (AB) {
          $componentView.id = ids.value; // set our expected id
 
          // find all the DataSources
-         var datasources = this.datacollections((dc) => dc.datasource);
+         let datasources = this.datacollections((dc) => dc.datasource);
 
          // create a droplist with those dataSources
-         var optionsDataSources = [];
+         let optionsDataSources = [];
          datasources.forEach((dc) => {
             optionsDataSources.push({
                id: dc.id,
@@ -475,7 +479,7 @@ export default function (AB) {
          });
 
          // create a droplist with select options
-         var optionsSelectBy = [
+         const optionsSelectBy = [
             { id: "select-one", value: L("Current selection") },
             {
                id: "filter-select-one",
@@ -483,7 +487,7 @@ export default function (AB) {
             },
          ];
 
-         var $optionUpdateExsits = {
+         const $optionUpdateExsits = {
             type: "clean",
             rows: [
                {
@@ -495,7 +499,7 @@ export default function (AB) {
                         placeholder: L("Choose a data source"),
                         on: {
                            onChange: (newv /*, oldv */) => {
-                              var selectedDC = this.datacollections(
+                              const selectedDC = this.datacollections(
                                  (dc) => dc.id == newv
                               )[0];
                               if (
@@ -503,7 +507,7 @@ export default function (AB) {
                                  (selectedDC.sourceType == "query" ||
                                     field.key != "connectObject")
                               ) {
-                                 var queryFieldOptions = [];
+                                 const queryFieldOptions = [];
                                  selectedDC.datasource.fields().forEach((f) => {
                                     queryFieldOptions.push({
                                        id: f.id,
@@ -539,12 +543,12 @@ export default function (AB) {
                   placeholder: L("Choose select option"),
                   on: {
                      onChange: (newv /*, oldv */) => {
-                        var $row = $$(ids.row);
+                        const $row = $$(ids.row);
                         $row.removeView($row.getChildViews()[1]);
                         if (newv == "select-one") {
                            $row.addView({}, 1);
                         } else {
-                           var options = (
+                           const options = (
                               this.Rule.CurrentView?.datacollection?.datasource?.fields() ??
                               []
                            ).map(function (f) {
@@ -579,8 +583,8 @@ export default function (AB) {
                               $row.addView(this.FilterComponent.ui, 1);
                            }
 
-                           var dcId = $$(ids.selectDc).getValue();
-                           var dataCollection = this.datacollections(
+                           const dcId = $$(ids.selectDc).getValue();
+                           const dataCollection = this.datacollections(
                               (dc) => dc.id == dcId
                            )[0];
                            if (dataCollection) {
@@ -611,14 +615,14 @@ export default function (AB) {
          if (field.isConnection) {
             // key == "connectObject") {
             // find the ABObject this field connects to
-            var connectedObject = field.datasourceLink;
+            const connectedObject = field.datasourceLink;
 
             // find all the DataSources that are based upon this ABObject
             datasources = datasources.filter((dc) => {
                return dc.datasource.id == connectedObject.id;
             });
 
-            var dcQueries = this.datacollections((dc) => {
+            const dcQueries = this.datacollections((dc) => {
                return (
                   dc.sourceType == "query" &&
                   dc.datasource &&
@@ -677,7 +681,7 @@ export default function (AB) {
                            label: L("<a>Or exists value</a>"),
                            on: {
                               onItemClick: function () {
-                                 var $container = this.getParentView(),
+                                 const $container = this.getParentView(),
                                     $multiview = $container.getParentView();
 
                                  $multiview.showBatch("exist");
@@ -696,7 +700,7 @@ export default function (AB) {
                            label: L("<a>Or custom value</a>"),
                            on: {
                               onItemClick: function () {
-                                 var $container = this.getParentView(),
+                                 const $container = this.getParentView(),
                                     $multiview = $container.getParentView();
 
                                  // clear filter view
@@ -713,7 +717,7 @@ export default function (AB) {
          }
 
          // Change component to display this field's form input
-         var $row = $$(ids.row).getChildViews()[0];
+         const $row = $$(ids.row).getChildViews()[0];
          $row.removeView($row.getChildViews()[3]);
          $row.addView($inputView, 3);
 
@@ -723,7 +727,7 @@ export default function (AB) {
          if (!field.isConnection && field.customDisplay) {
             // field.customDisplay(field, this.App, $row.getChildViews()[3].$view, {
 
-            var compNodeView = $$($componentView.id).$view;
+            const compNodeView = $$($componentView.id).$view;
 
             // wait until render UI complete
             setTimeout(() => {
@@ -737,7 +741,7 @@ export default function (AB) {
          }
 
          // Show the remove button
-         var $buttonRemove = $row.getChildViews()[4];
+         const $buttonRemove = $row.getChildViews()[4];
          $buttonRemove.show();
 
          // Add a new row
@@ -748,19 +752,19 @@ export default function (AB) {
          const ids = this.ids;
          $$(ids.field).setValue(data.fieldID);
          // note: this triggers our _logic.selectField() fn.
-         var field = this.Rule.getUpdateObjectField(data.fieldID);
+         const field = this.Rule.getUpdateObjectField(data.fieldID);
          if (field) {
-            var setValueFn = () => {
+            const setValueFn = () => {
                $$(ids.selectDc).setValue(data.value);
                if (data.queryField) {
                   $$(ids.queryField).setValue(data.queryField);
                }
-               var selectBy = data.selectBy || "select-one";
+               const selectBy = data.selectBy || "select-one";
                $$(ids.selectBy).setValue(selectBy);
 
                if (selectBy != "select-one") {
-                  var collectionId = data.value;
-                  var dataCollection =
+                  const collectionId = data.value;
+                  const dataCollection =
                      (this.currentForm.application?.datacollectionsIncluded(
                         (dc) => dc.id == collectionId
                      ) ?? [])[0];
@@ -787,7 +791,7 @@ export default function (AB) {
                   // wait until render UI complete
                   setTimeout(function () {
                      // set value to custom field
-                     var rowData = {};
+                     const rowData = {};
                      rowData[field.columnName] = data.value;
                      field.setValue($$(ids.value), rowData);
                   }, 50);
@@ -798,7 +802,7 @@ export default function (AB) {
 
       populateFilters(dataView, filterConditions) {
          filterConditions =
-            filterConditions ||
+            filterConditions ??
             ABViewRuleActionObjectUpdaterDefaults.filterConditions;
 
          // Populate data to popups
@@ -814,15 +818,15 @@ export default function (AB) {
 
          // if this isn't the last entry row
          // * a row with valid data has the [delete] button showing.
-         var buttonDelete = $$(ids.buttonDelete);
+         const buttonDelete = $$(ids.buttonDelete);
          if (buttonDelete && buttonDelete.isVisible()) {
-            var data = {};
+            const data = {};
             data.fieldID = $$(ids.field).getValue();
 
-            var $valueField = $$(ids.value);
-            var field = this.Rule.getUpdateObjectField(data.fieldID);
+            const $valueField = $$(ids.value);
+            const field = this.Rule.getUpdateObjectField(data.fieldID);
 
-            var getValueFn = () => {
+            const getValueFn = () => {
                data.value = $$(ids.selectDc).getValue();
                data.queryField = $$(ids.queryField).getValue();
                data.op = "set"; // possible to create other types of operations.
@@ -2173,7 +2177,7 @@ export default function (AB) {
          // make sure UI is updated:
          // set our updateObject
          if (settings.updateObjectID) {
-            var updateObject = this.AB.objectByID(settings.updateObjectID);
+            const updateObject = this.AB.objectByID(settings.updateObjectID);
             this.objectLoad(updateObject);
          }
 
@@ -2194,7 +2198,7 @@ export default function (AB) {
          // }
 
          // let our parent store our QB settings
-         var settings = super.toSettings();
+         const settings = super.toSettings();
 
          settings.valueRules = this._uiUpdater.toSettings();
          settings.updateObjectID = this.CurrentObject.id;
