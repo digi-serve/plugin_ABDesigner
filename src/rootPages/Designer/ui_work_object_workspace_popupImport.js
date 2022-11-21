@@ -12,6 +12,7 @@ export default function (AB, ibase) {
    const UIClass = UI_Class(AB);
    // var L = UIClass.L();
    const ViewProperties = FViewProperties(AB);
+   const viewProperties = new ViewProperties();
 
    class UI_Work_Object_Workspace_PopupImport extends UIClass {
       constructor(base) {
@@ -30,7 +31,7 @@ export default function (AB, ibase) {
       init(AB) {
          this.AB = AB;
 
-         var defaultSettings = ViewProperties.toSettings();
+         var defaultSettings = viewProperties.toSettings();
          var defaultView = this.AB.viewNewDetatched(defaultSettings);
 
          this.popup = defaultView.component();
