@@ -6,7 +6,7 @@
  * @return {ClassUI} The Class Definition for this UI widget.
  */
 import UI_Class from "../../ui_class";
-import FABProcessParticipant from "./ABProcessParticipant_selectManagersUI";
+import FABProcessParticipant from "./Participant_selectManagersUI";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);

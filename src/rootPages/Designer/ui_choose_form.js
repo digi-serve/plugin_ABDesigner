@@ -8,13 +8,13 @@ import UI_Class from "./ui_class";
 import UI_Warnings from "./ui_warnings";
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
-import ABProcessParticipant_selectManagersUI from "./properties/process/ABProcessParticipant_selectManagersUI.js";
+import Participant_selectManagersUI from "./properties/process/Participant_selectManagersUI";
 
 export default function (AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
-   const ClassSelectManagersUI = ABProcessParticipant_selectManagersUI(AB);
+   const ClassSelectManagersUI = Participant_selectManagersUI(AB);
 
    var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
 
@@ -38,7 +38,6 @@ export default function (AB, init_settings) {
             translationManager: "",
             translationManagerToolbar: "",
 
-            icon: "",
             issue_id: "",
             issue_list: "",
          });
@@ -71,13 +70,16 @@ export default function (AB, init_settings) {
                   },
                   {
                      view: "icon",
-                     id: this.ids.icon,
                      icon: "wxi-alert",
                      css: "alert",
-                     hidden: true,
                      on: {
                         onItemClick: () => {
-                           this.showWarningList();
+                           const $issueID = $$(this.ids.issue_id);
+                           const $issueList = $$(this.ids.issue_list);
+
+                           $issueList.define("data", this.warningData());
+                           $issueList.refresh();
+                           $issueID.show();
                         },
                      },
                   },
@@ -515,7 +517,7 @@ export default function (AB, init_settings) {
                   {
                      view: "list",
                      id: this.ids.issue_list,
-                     template: `${issue_icon} #message#`,
+                     template: issue_icon + " #issue#",
                      scrollX: true,
                      scrollY: true,
                      select: true,
@@ -540,34 +542,19 @@ export default function (AB, init_settings) {
          this.emit("view.list");
       }
 
-      warningPopulate() {
-         const $warningButton = $$(this.ids.icon);
-         const warnings = this.warningData();
-
-         warnings?.length ? $warningButton.show() : $warningButton.hide();
-      }
-
       warningData() {
-         const apps = this.AB.applications(
-            (app) => app.id == this.CurrentApplicationID
-         );
+         const apps = this.AB.applications();
          const warnings = [];
 
          apps.forEach((e) => {
             warnings.push(...e.warningsAll());
          });
 
-         return warnings;
-      }
-
-      showWarningList() {
-         const $issueID = $$(this.ids.issue_id);
-         const $issueList = $$(this.ids.issue_list);
-
-         $issueList?.clearAll();
-         $issueList?.define("data", this.warningData());
-         $issueList?.refresh();
-         $issueID?.show();
+         return warnings?.length
+            ? warnings.map((e, i) => {
+                 return { id: i, issue: L(e.message) };
+              })
+            : [{ id: 1, issue: L("No Issues Found") }];
       }
 
       /**
@@ -861,7 +848,6 @@ export default function (AB, init_settings) {
             );
          }
 
-         this.warningPopulate();
          this.permissionPopulate(application);
       }
 
