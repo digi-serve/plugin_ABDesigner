@@ -379,11 +379,13 @@ export default function (AB, options) {
 
          // clear our list and display our objects:
          var List = this.$list;
-         List.clearAll();
-         List.data.unsync();
-         List.data.sync(this.itemList);
-         List.refresh();
-         List.unselectAll();
+         if (List) {
+            List.clearAll();
+            List.data.unsync();
+            List.data.sync(this.itemList);
+            List.refresh();
+            List.unselectAll();
+         }
 
          // sort objects
          this.listSort(this._settings.objectlistSortDirection);
