@@ -572,31 +572,19 @@ export default function (AB) {
 
          const ids = this.ids;
 
-         this.CurrentDatacollection.settings =
-            this.CurrentDatacollection.settings || {};
-         this.CurrentDatacollection.settings.datasourceID = $$(
-            ids.dataSource
-         ).getValue();
-         this.CurrentDatacollection.settings.linkDatacollectionID = $$(
-            ids.linkDatacollection
-         ).getValue();
-         this.CurrentDatacollection.settings.linkFieldID = $$(
-            ids.linkField
-         ).getValue();
-         this.CurrentDatacollection.settings.objectWorkspace = {};
-         this.CurrentDatacollection.settings.objectWorkspace.filterConditions =
+         const settings = this.CurrentDatacollection.settings || {};
+         settings.datasourceID = $$(ids.dataSource).getValue();
+         settings.linkDatacollectionID = $$(ids.linkDatacollection).getValue();
+         settings.linkFieldID = $$(ids.linkField).getValue();
+         settings.objectWorkspace = {};
+         settings.objectWorkspace.filterConditions =
             this.FilterComponent.getValue();
-         this.CurrentDatacollection.settings.objectWorkspace.sortFields =
+         settings.objectWorkspace.sortFields =
             this.PopupSortFieldComponent.getSettings();
-         this.CurrentDatacollection.settings.loadAll = $$(
-            ids.loadAll
-         ).getValue();
-         this.CurrentDatacollection.settings.preventPopulate = $$(
-            ids.preventPopulate
-         ).getValue();
-         this.CurrentDatacollection.settings.fixSelect = $$(
-            ids.fixSelect
-         ).getValue();
+         settings.loadAll = $$(ids.loadAll).getValue();
+         settings.preventPopulate = $$(ids.preventPopulate).getValue();
+         settings.fixSelect = $$(ids.fixSelect).getValue();
+         this.CurrentDatacollection.settings = settings;
 
          const selectedDS = $$(ids.dataSource)
             .getPopup()
