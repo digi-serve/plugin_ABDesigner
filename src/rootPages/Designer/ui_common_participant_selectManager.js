@@ -1,32 +1,29 @@
 /*
- * Participant_selectManagersUI
+ * ui_common_participant_selectManager
  *
  * Display the form for entering how to select "managers".
  * this form allows you to choose Roles, or Users directly.
  *
  * @return {ClassUI} The Class Definition for this UI widget.
  */
-import UI_Class from "../../ui_class";
-import ui_choose_list from "../../ui_choose_list";
-import ABProcessTaskCore from "../../../../../../../ab_platform_web/AppBuilder/core/process/tasks/ABProcessElementCore";
-import ABProcessTaskUser from "./ABProcessTaskUser";
+import UI_Class from "./ui_class";
+import ui_choose_list from "./ui_choose_list";
+import ABProcessTaskCore from "../../../../../ab_platform_web/AppBuilder/core/process/tasks/ABProcessElementCore";
+import ABProcessTaskUser from "./properties/process/ABProcessTaskUser";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   class Participant_selectManagersUI extends UIClass {
-      constructor(id) {
-         super(id, {
+   class ui_common_participant_selectManager extends UIClass {
+      constructor(base) {
+         super(base, {
             form: "",
             name: "",
             role: "",
             useRole: "",
             useAccount: "",
-            useField: "", // bool on whether to use userFields from process
             account: "",
-            fields: "", // to\fromUsers.fields
-            userField: "",
          });
       }
 
@@ -37,17 +34,6 @@ export default function (AB) {
          var __Users = AB.Account.userList().map((u) => {
             return { id: u.uuid, value: u.username };
          });
-         var __UserFields = [];
-         if (obj.userProcessFieldData) {
-            __UserFields = obj.userProcessFieldData.map((u) => {
-               return {
-                  uuid: u.field.id,
-                  id: u.key,
-                  value: u.label,
-                  key: u.key,
-               };
-            });
-         }
 
          var ids = this.ids;
 
@@ -277,5 +263,5 @@ export default function (AB) {
       }
    }
 
-   return Participant_selectManagersUI;
+   return ui_common_participant_selectManager;
 }
