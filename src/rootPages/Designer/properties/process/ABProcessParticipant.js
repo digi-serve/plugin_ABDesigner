@@ -35,7 +35,7 @@ export default function (AB) {
       // This should match the ABProcessParticipant.defaults().key value.
 
       uiUser(obj) {
-         var usersUI = this.users.ui(obj ?? {});
+         const usersUI = this.users.ui(obj ?? {});
          return {
             id: this.ids.users,
             rows: [usersUI],
@@ -110,7 +110,7 @@ export default function (AB) {
          $$(ids.name).setValue(obj.name);
 
          if (obj.laneIDs && obj.laneIDs.length == 0) {
-            var usersUI = this.uiUser(obj ?? {});
+            const usersUI = this.uiUser(obj ?? {});
             webix.ui(usersUI, $$(ids.users));
          }
       }
@@ -121,8 +121,8 @@ export default function (AB) {
        * @return {json}
        */
       // values() {
-      //    var obj = {};
-      //    var ids = this.ids;
+      //    const obj = {};
+      //    const ids = this.ids;
 
       //    obj.label = $$(ids.name)?.getValue();
       //    obj.objectID = $$(ids.objList)?.getValue();
@@ -133,13 +133,13 @@ export default function (AB) {
       // }
 
       values() {
-         var obj = {};
-         var ids = this.ids;
+         const obj = {};
+         const ids = this.ids;
 
          obj.label = $$(ids.name).getValue();
 
          // if (obj.laneIDs.length == 0) {
-         var userDef = this.users.values();
+         const userDef = this.users.values();
          Object.keys(userDef).forEach((k) => {
             obj[k] = userDef[k];
          });

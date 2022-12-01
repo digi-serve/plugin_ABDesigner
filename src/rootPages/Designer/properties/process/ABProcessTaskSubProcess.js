@@ -103,8 +103,8 @@ export default function (AB) {
        * @return {json}
        */
       values() {
-         var obj = {};
-         var ids = this.ids;
+         const obj = {};
+         const ids = this.ids;
          obj.name = $$(ids.name)?.getValue();
          obj.label = obj.name;
          obj.isEnable = $$(ids.isEnable)?.getValue();

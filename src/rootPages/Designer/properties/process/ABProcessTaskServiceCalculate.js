@@ -47,7 +47,7 @@ export default function (AB) {
                data: "",
                on: {
                   onItemClick: function (id) {
-                     var component = this.getItem(id);
+                     const component = this.getItem(id);
 
                      insertFormula(`{${component.value}}`);
 
@@ -71,7 +71,7 @@ export default function (AB) {
             body: {
                view: "list",
                template: (item) => {
-                  var template = "";
+                  let template = "";
 
                   if (item.icon) {
                      template += `<i class="fa fa-${item.icon}" aria-hidden="true"></i> `;
@@ -110,8 +110,8 @@ export default function (AB) {
                   },
                ],
                on: {
-                  onItemClick: function (id, e, node) {
-                     var component = this.getItem(id);
+                  onItemClick: function (id) {
+                     const component = this.getItem(id);
 
                      insertFormula(component.symbol);
 

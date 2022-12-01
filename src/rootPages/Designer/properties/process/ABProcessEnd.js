@@ -71,8 +71,8 @@ export default function (AB) {
        * @return {json}
        */
       values() {
-         var obj = {};
-         var ids = this.ids;
+         const obj = {};
+         const ids = this.ids;
          obj.label = $$(ids.name)?.getValue();
          return obj;
       }

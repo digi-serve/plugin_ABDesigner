@@ -41,7 +41,7 @@ export default function (AB) {
       // This should match the ABProcessTaskServiceGetResetPasswordUrlCore.defaults().key value.
 
       uiUser(obj) {
-         var usersUI = this.users.ui(obj ?? {});
+         const usersUI = this.users.ui(obj ?? {});
          return {
             id: this.ids.users,
             rows: [usersUI],
