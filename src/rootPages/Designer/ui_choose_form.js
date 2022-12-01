@@ -238,12 +238,12 @@ export default function (AB, init_settings) {
                                        // onItemClick: (id, e, node) => {
                                        //    this.permissionClick(id, e, node);
                                        // },
-                                       onChange: function () {
-                                          webix.message({
-                                             text: L("Data was changed"),
-                                             type: "success",
-                                          });
-                                       },
+                                       // onChange: function () {
+                                       //    webix.message({
+                                       //       text: L("Data was changed"),
+                                       //       type: "success",
+                                       //    });
+                                       // },
                                     },
                                  },
                                  {
@@ -1093,6 +1093,7 @@ export default function (AB, init_settings) {
          // });
 
          PermForm.define("suggest", availableRoles);
+         PermForm.setValue(selectedIDs);
          PermForm.refresh();
       }
 
