@@ -10,7 +10,8 @@ import UI_Class from "../../ui_class";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    class UIProcessServiceCalculate extends UIClass {
       constructor() {
@@ -133,7 +134,7 @@ export default function (AB) {
                         id: ids.name,
                         view: "text",
                         label: L("Name"),
-                        labelWidth: 100,
+                        labelWidth: uiConfig.labelWidthLarge,
                         name: "name",
                         value: this.name,
                      },
