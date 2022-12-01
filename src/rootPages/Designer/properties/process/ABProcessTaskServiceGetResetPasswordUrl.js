@@ -40,6 +40,7 @@ export default function (AB) {
                   id: ids.name,
                   view: "text",
                   label: L("Name"),
+                  labelWidth: 100,
                   name: "name",
                   value: "",
                },
@@ -72,15 +73,14 @@ export default function (AB) {
       // }
 
       populate(element) {
-         const processData = (
-            element.process.processDataFields(element) ?? []
-         ).filter((item) => item.field?.key == "email").map((item) => {
-            return {
-               id: item.key,
-               value: item.label,
-            };
-         });
-
+         const processData = (element.process.processDataFields(element) ?? [])
+            .filter((item) => item.field?.key == "email")
+            .map((item) => {
+               return {
+                  id: item.key,
+                  value: item.label,
+               };
+            });
 
          const ids = this.ids;
 
@@ -91,7 +91,6 @@ export default function (AB) {
          $email.setValue(element.email);
          $email.define("options", processData);
          $email.refresh();
-
       }
 
       /**

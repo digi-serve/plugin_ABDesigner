@@ -39,6 +39,7 @@ export default function (AB) {
                {
                   view: "text",
                   label: L("Name"),
+                  labelWidth: 100,
                   name: "name",
                   value: "",
                },
@@ -78,8 +79,8 @@ export default function (AB) {
                   value: "",
                   highlight: (string) => {
                      return string.replace(/{%=[^%]*%}/g, (x) => {
-                        return `<span style="font-weight:500;background-color:#ebedf0;">${x}</span>`
-                     })
+                        return `<span style="font-weight:500;background-color:#ebedf0;">${x}</span>`;
+                     });
                   },
                },
             ],

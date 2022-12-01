@@ -70,6 +70,7 @@ export default function (AB) {
                         id: ids.name,
                         view: "text",
                         label: L("Name"),
+                        labelWidth: 100,
                         name: "name",
                         value: this.name,
                      },
