@@ -228,6 +228,9 @@ export default function (AB) {
             }
          } else {
             let newEditor = this._editorsByType[view.key];
+            if (newEditor == null) {
+               newEditor = this._editorsByType["_default"];
+            }
 
             editorComponent = new newEditor(view); // view.editorComponent(this.AB._App, "preview");
             editorComponent.viewLoad(view);
