@@ -383,8 +383,8 @@ export default function (AB) {
          values.settingsEditPage = this.editPageProperty.getSettings(view);
 
          // refresh settings of app page tool
-         values.addPageProperty.fromSettings(view.settingsAddPage);
-         values.editPageProperty.fromSettings(view.settingsEditPage);
+         this.addPageProperty.setSettings(view, values.settingsAddPage);
+         this.editPageProperty.setSettings(view, values.settingsEditPage);
 
          return values;
       }
