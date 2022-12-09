@@ -8,13 +8,13 @@ import UI_Class from "./ui_class";
 import UI_Warnings from "./ui_warnings";
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
-import ui_common_participant_selectManager from "../Designer/ui_common_participant_selectManager";
+import UI_Common_Participant_SelectManager from "../Designer/ui_common_participant_selectManager";
 
 export default function (AB, init_settings) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
-   const ClassSelectManagersUI = ui_common_participant_selectManager(AB);
+   const ClassSelectManagersUI = UI_Common_Participant_SelectManager(AB);
 
    var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
 

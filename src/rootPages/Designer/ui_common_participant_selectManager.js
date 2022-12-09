@@ -1,5 +1,5 @@
 /*
- * ui_common_participant_selectManager
+ * ab_common_participant_selectManager
  *
  * Display the form for entering how to select "managers".
  * this form allows you to choose Roles, or Users directly.
@@ -7,15 +7,15 @@
  * @return {ClassUI} The Class Definition for this UI widget.
  */
 import UI_Class from "./ui_class";
-import ui_choose_list from "./ui_choose_list";
-import ABProcessTaskCore from "../../../../../ab_platform_web/AppBuilder/core/process/tasks/ABProcessElementCore";
-import ABProcessTaskUser from "./properties/process/ABProcessTaskUser";
+// import ui_choose_list from "./ui_choose_list";
+// import ABProcessTaskCore from "../../../../../ab_platform_web/AppBuilder/core/process/tasks/ABProcessElementCore";
+// import ABProcessTaskUser from "./properties/process/ABProcessTaskUser";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   class ui_common_participant_selectManager extends UIClass {
+   class UI_Common_Participant_SelectManager extends UIClass {
       constructor(base) {
          super(base, {
             form: "",
@@ -263,5 +263,5 @@ export default function (AB) {
       }
    }
 
-   return ui_common_participant_selectManager;
+   return UI_Common_Participant_SelectManager;
 }

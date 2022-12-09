@@ -7,13 +7,13 @@
  * @return {ClassUI} The Class Definition for this UI widget.
  */
 import UI_Class from "../../ui_class";
-import ui_common_participant_selectManager from "../../ui_common_participant_selectManager";
+import UI_Common_Participant_SelectManager from "../../ui_common_participant_selectManager";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   class baseUI extends ui_common_participant_selectManager {
+   class UIProcessParticipant_selectManagersUI extends UI_Common_Participant_SelectManager {
       constructor(id) {
          super(id, {
             useField: "", // bool on whether to use userFields from process
@@ -166,5 +166,5 @@ export default function (AB) {
       }
    }
 
-   return baseUI;
+   return UIProcessParticipant_selectManagersUI;
 }
