@@ -38,6 +38,8 @@ export default function (AB) {
           * want to save the current one.
           */
          this._handler_onChange = (waitDuration = 3000, skipEmit = false) => {
+            this.busy();
+
             let values = this.currentPanel.values();
 
             // to update the label, add it before we ask for .toObj():
@@ -62,9 +64,18 @@ export default function (AB) {
             if (view.__timedSave) {
                clearTimeout(view.__timedSave);
             }
-            view.__timedSave = setTimeout(() => {
-               view.save();
-               delete view.__timedSave;
+            view.__timedSave = setTimeout(async () => {
+               try {
+                  await view.save();
+                  delete view.__timedSave;
+                  this.ready();
+               } catch (err) {
+                  this.AB.notify.developer(err, {
+                     message: "Error trying to save the View:",
+                     view: view.toObj(),
+                  });
+                  this.ready();
+               }
             }, waitDuration);
 
             if (!skipEmit) {
@@ -118,6 +129,12 @@ export default function (AB) {
          PropertyManager.views().forEach((V) => {
             this._editorsByType[V.key] = V;
          });
+
+         // Implement loading cursor
+         const $component = $$(this.ids.component);
+         if ($component) {
+            this.AB.Webix.extend($component, this.AB.Webix.ProgressBar);
+         }
       }
 
       infoAlert() {
@@ -173,6 +190,18 @@ export default function (AB) {
             this.currentPanel = newPanel;
             // newPanel.show();
          }
+      }
+
+      ready() {
+         const $component = $$(this.ids.component);
+         $component?.enable?.();
+         $component?.hideProgress?.();
+      }
+
+      busy() {
+         const $component = $$(this.ids.component);
+         $component?.showProgress?.({ type: "icon" });
+         $component?.disable?.();
       }
    }
 
