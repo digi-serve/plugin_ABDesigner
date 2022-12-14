@@ -8,7 +8,7 @@ import FABViewRuleList from "./ABViewRuleList";
 import FABViewRule from "./ABViewRule";
 
 import FRuleConfirmMessage from "./ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage";
-// const RuleExistPage = require("./ruleActions/ABViewRuleActionFormSubmitRuleExistPage");
+import FRuleExistPage from "./ruleActions/ABViewRuleActionFormSubmitRuleExistPage";
 // const RuleParentPage = require("./ruleActions/ABViewRuleActionFormSubmitRuleParentPage");
 // const RuleClosePopup = require("./ruleActions/ABViewRuleActionFormSubmitRuleClosePopup");
 // const RuleWebsite = require("./ruleActions/ABViewRuleActionFormSubmitRuleWebsite");
@@ -20,6 +20,7 @@ export default function (AB, iBase) {
    const L = ABViewRuleList.L();
 
    const RuleConfirmMessage = FRuleConfirmMessage(AB);
+   const RuleExistPage = FRuleExistPage(AB);
    const RuleEmail = FRuleEmail(AB);
 
    class ABViewRuleListFormSubmitRules extends ABViewRuleList {
@@ -38,7 +39,7 @@ export default function (AB, iBase) {
       getRule() {
          var listActions = [
             new RuleConfirmMessage(`${this.idBase}_ruleActionConfirmMessage`),
-            // new RuleExistPage(this.App, `${this.idBase}_ruleActionExistPage`),
+            new RuleExistPage(`${this.idBase}_ruleActionExistPage`),
             // new RuleParentPage(this.App, `${this.idBase}_ruleActionParentPage`),
             // new RuleClosePopup(this.App, `${this.idBase}_ruleActionClosePopup`),
             // new RuleWebsite(this.App, `${this.idBase}_ruleActionWebsite`),

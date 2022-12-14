@@ -38,6 +38,8 @@ export default function (AB) {
           * want to save the current one.
           */
          this._handler_onChange = (waitDuration = 3000, skipEmit = false) => {
+            if (!this.CurrentView) return;
+
             this.busy();
 
             let values = this.currentPanel.values();
