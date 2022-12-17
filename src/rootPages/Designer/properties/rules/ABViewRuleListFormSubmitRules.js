@@ -9,9 +9,9 @@ import FABViewRule from "./ABViewRule";
 
 import FRuleConfirmMessage from "./ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage";
 import FRuleExistPage from "./ruleActions/ABViewRuleActionFormSubmitRuleExistPage";
-// const RuleParentPage = require("./ruleActions/ABViewRuleActionFormSubmitRuleParentPage");
-// const RuleClosePopup = require("./ruleActions/ABViewRuleActionFormSubmitRuleClosePopup");
-// const RuleWebsite = require("./ruleActions/ABViewRuleActionFormSubmitRuleWebsite");
+import FRuleParentPage from "./ruleActions/ABViewRuleActionFormSubmitRuleParentPage";
+import FRuleClosePopup from "./ruleActions/ABViewRuleActionFormSubmitRuleClosePopup";
+import FRuleWebsite from "./ruleActions/ABViewRuleActionFormSubmitRuleWebsite";
 import FRuleEmail from "./ruleActions/ABViewRuleActionFormSubmitRuleEmail";
 
 export default function (AB, iBase) {
@@ -21,6 +21,9 @@ export default function (AB, iBase) {
 
    const RuleConfirmMessage = FRuleConfirmMessage(AB);
    const RuleExistPage = FRuleExistPage(AB);
+   const RuleParentPage = FRuleParentPage(AB);
+   const RuleClosePopup = FRuleClosePopup(AB);
+   const RuleWebsite = FRuleWebsite(AB);
    const RuleEmail = FRuleEmail(AB);
 
    class ABViewRuleListFormSubmitRules extends ABViewRuleList {
@@ -40,9 +43,9 @@ export default function (AB, iBase) {
          var listActions = [
             new RuleConfirmMessage(`${this.idBase}_ruleActionConfirmMessage`),
             new RuleExistPage(`${this.idBase}_ruleActionExistPage`),
-            // new RuleParentPage(this.App, `${this.idBase}_ruleActionParentPage`),
-            // new RuleClosePopup(this.App, `${this.idBase}_ruleActionClosePopup`),
-            // new RuleWebsite(this.App, `${this.idBase}_ruleActionWebsite`),
+            new RuleParentPage(`${this.idBase}_ruleActionParentPage`),
+            new RuleClosePopup(`${this.idBase}_ruleActionClosePopup`),
+            new RuleWebsite(`${this.idBase}_ruleActionWebsite`),
             new RuleEmail(`${this.idBase}_ruleActionEmail`),
          ];
 

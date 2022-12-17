@@ -30,7 +30,9 @@ export default function (AB) {
          });
          this.label = label;
 
-         this.FilterComplex = AB.filterComplexNew(`${this.ids.component}_fc`);
+         this.FilterComplex = AB.filterComplexNew(`${this.ids.component}_fc`, {
+            isSaveHidden: true,
+         });
       }
 
       /**
@@ -123,6 +125,7 @@ export default function (AB) {
                         autowidth: true,
                         click: () => {
                            $$(ids.queryBuilderContainer).show();
+                           $$(ids.queryBuilderContainer).resize();
                            $$(ids.showQBButton).hide();
                            // _logic.buttonCancel();
                            // Timing Wise, this needs to be called when the
@@ -139,7 +142,13 @@ export default function (AB) {
                {
                   hidden: true,
                   id: ids.queryBuilderContainer,
-                  cols: [this.FilterComplex.ui],
+                  cols: [
+                     {
+                        view: "layout",
+                        height: 200,
+                        rows: [this.FilterComplex.ui],
+                     },
+                  ],
                },
             ],
          };
