@@ -9,7 +9,8 @@ import UI_Class from "../../ui_class";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    class UIProcessGatewayExclusive extends UIClass {
       constructor() {
@@ -36,6 +37,7 @@ export default function (AB) {
                   id: ids.name,
                   view: "text",
                   label: L("Name"),
+                  labelWidth: uiConfig.labelWidthLarge,
                   name: "name",
                   // value: this.name,
                },
@@ -68,18 +70,20 @@ export default function (AB) {
             return f.field;
          });
 
-         var myOutgoingConnections = element.process.connectionsOutgoing(
+         const myOutgoingConnections = element.process.connectionsOutgoing(
             element.diagramID
          );
 
          this.__dfLookup = {};
          this.conditions = element.conditions || this.conditions || {};
          myOutgoingConnections.forEach((conn) => {
-            var condition = this.conditions[conn.id] || {};
+            const condition = this.conditions[conn.id] || {};
 
-            var connectedElement = element.process.elementForDiagramID(conn.to);
+            const connectedElement = element.process.elementForDiagramID(
+               conn.to
+            );
 
-            var DF;
+            let DF;
             if (!this.__dfLookup[conn.id]) {
                DF = this.AB.filterComplexNew(
                   `${ids.component}_${conn.id}_filter`
@@ -97,7 +101,7 @@ export default function (AB) {
                DF.init();
 
                DF.on("save", () => {
-                  var value = DF.getValue();
+                  const value = DF.getValue();
                   const $buttonFilter = $$(`${ids.buttonFilter}_${conn.id}`);
                   $buttonFilter.define("badge", value.rules?.length || null);
                   $buttonFilter.refresh();
@@ -107,7 +111,7 @@ export default function (AB) {
             }
             DF = this.__dfLookup[conn.id];
 
-            var connUI = {
+            const connUI = {
                view: "fieldset",
                label: L("to {0}", [
                   connectedElement
@@ -151,8 +155,8 @@ export default function (AB) {
 
          // update the filters after they have been .show()n
          myOutgoingConnections.forEach((conn) => {
-            var condition = this.conditions[conn.id] || {};
-            var DF = this.__dfLookup[conn.id];
+            const condition = this.conditions[conn.id] || {};
+            const DF = this.__dfLookup[conn.id];
 
             // NOTE: keep the DF.fieldsLoad() AFTER the ui is built.
             DF.fieldsLoad(abFields);
@@ -185,7 +189,7 @@ export default function (AB) {
                `${ids.component}_${conn.id}_label`
             ).getValue();
             if (this.__dfLookup && this.__dfLookup[conn.id]) {
-               var DF = this.__dfLookup[conn.id];
+               const DF = this.__dfLookup[conn.id];
                obj.conditions[conn.id].filterValue = DF.getValue();
             }
          });

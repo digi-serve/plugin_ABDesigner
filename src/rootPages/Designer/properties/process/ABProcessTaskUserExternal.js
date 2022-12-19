@@ -11,6 +11,7 @@ import FABProcessParticipant from "./ABProcessParticipant_selectManagersUI";
 export default function (AB) {
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    const ABProcessParticipantUsers = FABProcessParticipant(AB);
 
@@ -39,6 +40,7 @@ export default function (AB) {
                {
                   view: "text",
                   label: L("Name"),
+                  labelWidth: uiConfig.labelWidthLarge,
                   name: "name",
                   value: "",
                },

@@ -10,7 +10,8 @@ import FABProcessParticipant from "./ABProcessParticipant_selectManagersUI";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    const ABProcessParticipantUsers = FABProcessParticipant(AB);
 
@@ -40,7 +41,7 @@ export default function (AB) {
       // This should match the ABProcessTaskServiceGetResetPasswordUrlCore.defaults().key value.
 
       uiUser(obj) {
-         var usersUI = this.users.ui(obj ?? {});
+         const usersUI = this.users.ui(obj ?? {});
          return {
             id: this.ids.users,
             rows: [usersUI],
@@ -148,6 +149,7 @@ export default function (AB) {
                   id: ids.name,
                   view: "text",
                   label: L("Name"),
+                  labelWidth: uiConfig.labelWidthLarge,
                   name: "name",
                   value: "",
                },

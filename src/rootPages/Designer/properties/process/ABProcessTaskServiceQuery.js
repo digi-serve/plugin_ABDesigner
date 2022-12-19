@@ -11,6 +11,7 @@ import UI_Class from "../../ui_class";
 export default function (AB) {
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    class UIProcessServiceQuery extends UIClass {
       constructor() {
@@ -32,7 +33,6 @@ export default function (AB) {
          // defined already.
 
          const ids = this.ids;
-
          return {
             id: ids.component,
             view: "form",
@@ -41,6 +41,7 @@ export default function (AB) {
                   id: ids.name,
                   view: "text",
                   label: L("Name"),
+                  labelWidth: uiConfig.labelWidthLarge,
                   name: "name",
                   value: this.name,
                },

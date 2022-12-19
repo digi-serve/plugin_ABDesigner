@@ -10,7 +10,8 @@ import UI_Class from "../../ui_class";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    class UIProcessTriggerLifecycle extends UIClass {
       constructor() {
@@ -30,14 +31,15 @@ export default function (AB) {
       ui() {
          // we are creating these on the fly, and should have CurrentApplication
          // defined already.
+         const allObjects = this.CurrentApplication.objectsIncluded();
+         const listObj = [];
 
-         var allObjects = this.CurrentApplication.objectsIncluded();
-         var listObj = [];
          allObjects.forEach((obj) => {
             listObj.push({ id: obj.id, value: obj.label });
          });
 
-         let ids = this.ids;
+         const ids = this.ids;
+
          return {
             id: ids.component,
             rows: [
@@ -56,6 +58,7 @@ export default function (AB) {
                         id: ids.name,
                         view: "text",
                         label: L("Name"),
+                        labelWidth: uiConfig.labelWidthLarge,
                         name: "name",
                         value: "",
                      },
@@ -85,8 +88,6 @@ export default function (AB) {
 
       async init(AB) {
          this.AB = AB;
-
-         return Promise.resolve();
       }
 
       // applicationLoad(application) {
@@ -102,8 +103,9 @@ export default function (AB) {
       // }
 
       populate(element) {
-         let ids = this.ids;
-         $$(ids.name).setValue(element.name);
+         const ids = this.ids;
+
+         $$(ids.name).setValue(element.label);
          $$(ids.objList).setValue(element.objectID);
          $$(ids.lifecycleList).setValue(element.lifecycleKey);
       }
@@ -114,8 +116,8 @@ export default function (AB) {
        * @return {json}
        */
       values() {
-         var obj = {};
-         var ids = this.ids;
+         const obj = {};
+         const ids = this.ids;
 
          obj.label = $$(ids.name)?.getValue();
          obj.objectID = $$(ids.objList)?.getValue();

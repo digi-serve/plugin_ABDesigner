@@ -3,6 +3,7 @@ import UI_Class from "../../ui_class";
 export default function (AB) {
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    const ProcessTaskManager = AB.Class.ABProcessTaskManager;
 
@@ -34,6 +35,7 @@ export default function (AB) {
                   id: ids.name,
                   view: "text",
                   label: L("Name"),
+                  labelWidth: uiConfig.labelWidthLarge,
                   name: "name",
                   value: "",
                },

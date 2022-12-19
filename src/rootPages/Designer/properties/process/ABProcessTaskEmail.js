@@ -11,7 +11,8 @@ import FABProcessParticipant from "./ABProcessParticipant_selectManagersUI";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    const ABProcessParticipant = FABProcessParticipant(AB);
 
@@ -50,8 +51,8 @@ export default function (AB) {
          // we are creating these on the fly, and should have CurrentApplication
          // defined already.
 
-         var toUserUI = this.toUser.ui(obj?.toUsers ?? {});
-         var fromUserUI = this.fromUser.ui(obj?.fromUsers ?? {});
+         const toUserUI = this.toUser.ui(obj?.toUsers ?? {});
+         const fromUserUI = this.fromUser.ui(obj?.fromUsers ?? {});
 
          let ids = this.ids;
          return {
@@ -70,6 +71,7 @@ export default function (AB) {
                         id: ids.name,
                         view: "text",
                         label: L("Name"),
+                        labelWidth: uiConfig.labelWidthLarge,
                         name: "name",
                         value: this.name,
                      },
@@ -149,12 +151,13 @@ export default function (AB) {
                                           });
                                        },
                                        onItemClick: function (id) {
-                                          var $toCustomFields = $$(
+                                          const $toCustomFields = $$(
                                              ids.toCustomFields
                                           );
-                                          var currentItems =
+                                          const currentItems =
                                              $toCustomFields.getValue();
-                                          var indOf = currentItems.indexOf(id);
+                                          const indOf =
+                                             currentItems.indexOf(id);
                                           if (indOf == -1) {
                                              currentItems.push(id);
                                           } else {
@@ -263,12 +266,13 @@ export default function (AB) {
                                           });
                                        },
                                        onItemClick: function (id) {
-                                          var $fromCustomFields = $$(
+                                          const $fromCustomFields = $$(
                                              ids.fromCustomFields
                                           );
-                                          var currentItems =
+                                          const currentItems =
                                              $fromCustomFields.getValue();
-                                          var indOf = currentItems.indexOf(id);
+                                          const indOf =
+                                             currentItems.indexOf(id);
                                           if (indOf == -1) {
                                              currentItems.push(id);
                                           } else {
@@ -441,8 +445,8 @@ export default function (AB) {
        * @return {json}
        */
       // values() {
-      //    var obj = {};
-      //    var ids = this.ids;
+      //    const obj = {};
+      //    const ids = this.ids;
 
       //    obj.label = $$(ids.name)?.getValue();
       //    obj.objectID = $$(ids.objList)?.getValue();
@@ -453,8 +457,8 @@ export default function (AB) {
       // }
 
       values() {
-         var obj = {};
-         var ids = this.ids;
+         const obj = {};
+         const ids = this.ids;
 
          obj.label = $$(ids.name).getValue();
          obj.to = $$(ids.to).getValue();

@@ -10,7 +10,8 @@ import UI_Class from "../../ui_class";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
+   const L = UIClass.L();
+   const uiConfig = AB.Config.uiSettings();
 
    class UIProcessServiceGetResetPasswordUrl extends UIClass {
       constructor() {
@@ -40,6 +41,7 @@ export default function (AB) {
                   id: ids.name,
                   view: "text",
                   label: L("Name"),
+                  labelWidth: uiConfig.labelWidthLarge,
                   name: "name",
                   value: "",
                },
@@ -72,15 +74,14 @@ export default function (AB) {
       // }
 
       populate(element) {
-         const processData = (
-            element.process.processDataFields(element) ?? []
-         ).filter((item) => item.field?.key == "email").map((item) => {
-            return {
-               id: item.key,
-               value: item.label,
-            };
-         });
-
+         const processData = (element.process.processDataFields(element) ?? [])
+            .filter((item) => item.field?.key == "email")
+            .map((item) => {
+               return {
+                  id: item.key,
+                  value: item.label,
+               };
+            });
 
          const ids = this.ids;
 
@@ -91,7 +92,6 @@ export default function (AB) {
          $email.setValue(element.email);
          $email.define("options", processData);
          $email.refresh();
-
       }
 
       /**
