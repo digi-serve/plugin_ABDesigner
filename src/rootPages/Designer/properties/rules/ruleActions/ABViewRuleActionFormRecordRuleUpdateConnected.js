@@ -21,7 +21,7 @@ export default function (AB) {
    const ObjectQueryBuilder = FObjectQueryBuilder(AB);
 
    class ABViewValueDisplayChooser extends UIClass {
-      constructor(base, RuleAction) {
+      constructor(base, RuleAction, options) {
          super(base, {
             updateForm: "",
             selectConnectedField: "",
@@ -34,6 +34,8 @@ export default function (AB) {
          // {ABViewRuleActionFormRecordRuleUpdateConnected}
          // the parent RuleAction that created this display.
          // We need to reference it to display the QueryBuilder.
+
+         this.options = options ?? {};
 
          this.uniqueIDs();
 
@@ -121,7 +123,7 @@ export default function (AB) {
             this.addDisplay(this.updateComponent.ui());
             this.updateComponent.init(this.AB);
 
-            if (this.isUpdateValueDisabled) {
+            if (this.options?.isUpdateValueDisabled) {
                let $updateForm = this.updateComponent.formGet();
                if ($updateForm) {
                   $updateForm.disable();
@@ -281,7 +283,9 @@ export default function (AB) {
        */
       valueDisplayComponent(idBase) {
          if (this._uiChooser == null) {
-            this._uiChooser = new ABViewValueDisplayChooser(idBase, this); // this.valueDisplayChooser(idBase);
+            this._uiChooser = new ABViewValueDisplayChooser(idBase, this, {
+               isUpdateValueDisabled: this.isUpdateValueDisabled,
+            }); // this.valueDisplayChooser(idBase);
 
             // this._uiChooser.on("selected", (newVal) => {});
          }

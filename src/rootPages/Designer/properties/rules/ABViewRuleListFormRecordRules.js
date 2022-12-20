@@ -7,19 +7,18 @@
 import FABViewRuleList from "./ABViewRuleList";
 import FABViewRule from "./ABViewRule";
 
-// import FRuleConfirmMessage from "./ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage";
-// const RoleUpdateExisting = require("./ruleActions/ABViewRuleActionFormRecordRuleUpdate");
-// const RoleInsertConnected = require("./ruleActions/ABViewRuleActionFormRecordRuleInsertConnected");
+import FRuleInsertConnected from "./ruleActions/ABViewRuleActionFormRecordRuleInsertConnected";
 import FRuleUpdateConnected from "./ruleActions/ABViewRuleActionFormRecordRuleUpdateConnected";
-// const RoleUpdateConnected = require("./ruleActions/ABViewRuleActionFormRecordRuleUpdateConnected");
-// const RoleRemoveConnected = require("./ruleActions/ABViewRuleActionFormRecordRuleRemoveConnected");
+import FRuleRemoveConnected from "./ruleActions/ABViewRuleActionFormRecordRuleRemoveConnected";
 
 export default function (AB, iBase) {
    const ABViewRuleList = FABViewRuleList(AB);
    const ABViewRule = FABViewRule(AB);
    const L = ABViewRuleList.L();
 
+   const RuleInsertConnected = FRuleInsertConnected(AB);
    const RuleUpdateConnected = FRuleUpdateConnected(AB);
+   const RuleRemoveConnected = FRuleRemoveConnected(AB);
    // const RuleEmail = FRuleEmail(AB);
 
    class ABViewRuleListFormRecordRules extends ABViewRuleList {
@@ -37,7 +36,9 @@ export default function (AB, iBase) {
       // must return the actual Rule object.
       getRule() {
          var listActions = [
+            new RuleInsertConnected(`${this.base}_ruleActionInsertConnected`),
             new RuleUpdateConnected(`${this.base}_ruleActionUpdateConnected`),
+            new RuleRemoveConnected(`${this.base}_ruleActionRemoveConnected`),
             // new RuleExistPage(this.App, `${this.idBase}_ruleActionExistPage`),
             // new RuleParentPage(this.App, `${this.idBase}_ruleActionParentPage`),
             // new RuleClosePopup(this.App, `${this.idBase}_ruleActionClosePopup`),
