@@ -55,7 +55,7 @@ jobs:
               working-directory: ./ab
               project: ./test/e2e
               config: baseUrl=http://localhost:8080,responseTimeout=100000,defaultCommandTimeout=24000,retries=2
-              config-file: ./test/e2e/cypress.plugin.ab_designer.json
+              config-file: ./cypress.plugin.ab_designer.json
               wait-on: "http://localhost:8080"
               wait-on-timeout: 300
               env: stack=ab
