@@ -450,9 +450,8 @@ export default function (AB) {
          if (!field) return;
 
          const fieldComponent = field.formComponent(),
-            abView = fieldComponent.newInstance(this.Rule.CurrentApplication),
-            formFieldComponent = abView.component(this.App);
-
+            abView = fieldComponent.newInstance(this.Rule.CurrentApplication);
+         let formFieldComponent = abView.component(this.App);
          let $componentView, $inputView;
 
          console.warn("TODO: remove this testing code:");
@@ -923,11 +922,15 @@ export default function (AB) {
       }
 
       ui() {
-         if (!this._uiChooser) {
-            this.valueDisplayComponent(this.base);
+         if (!this._uiUpdater) {
+            this.valueDisplayComponent();
          }
 
-         return this._uiChooser.ui();
+         return this._uiUpdater.ui();
+      }
+
+      init() {
+         this._uiUpdater?.init(AB, this.valueRules);
       }
 
       // valueDisplayComponent
@@ -935,7 +938,10 @@ export default function (AB) {
       //
       valueDisplayComponent(idBase) {
          if (this._uiUpdater == null) {
-            this._uiUpdater = new ABViewValueDisplayList(idBase, this);
+            this._uiUpdater = new ABViewValueDisplayList(
+               idBase ?? this.ids.component,
+               this
+            );
          }
 
          return this._uiUpdater;
@@ -2158,7 +2164,7 @@ export default function (AB) {
          super.objectLoad(object);
 
          // with a new CurrentObject, then reset our UI
-         this._uiUpdater = null;
+         // this._uiUpdater = null;
 
          // reload any stashed rules, or set to {}
          if (object) {
@@ -2200,7 +2206,7 @@ export default function (AB) {
          // let our parent store our QB settings
          const settings = super.toSettings();
 
-         settings.valueRules = this._uiUpdater.toSettings();
+         settings.valueRules = this._uiUpdater?.toSettings();
          settings.updateObjectID = this.CurrentObject.id;
 
          return settings;

@@ -7,6 +7,7 @@
 import FABViewRuleList from "./ABViewRuleList";
 import FABViewRule from "./ABViewRule";
 
+import FRuleUpdate from "./ruleActions/ABViewRuleActionFormRecordRuleUpdate";
 import FRuleInsertConnected from "./ruleActions/ABViewRuleActionFormRecordRuleInsertConnected";
 import FRuleUpdateConnected from "./ruleActions/ABViewRuleActionFormRecordRuleUpdateConnected";
 import FRuleRemoveConnected from "./ruleActions/ABViewRuleActionFormRecordRuleRemoveConnected";
@@ -16,6 +17,7 @@ export default function (AB, iBase) {
    const ABViewRule = FABViewRule(AB);
    const L = ABViewRuleList.L();
 
+   const RuleUpdate = FRuleUpdate(AB);
    const RuleInsertConnected = FRuleInsertConnected(AB);
    const RuleUpdateConnected = FRuleUpdateConnected(AB);
    const RuleRemoveConnected = FRuleRemoveConnected(AB);
@@ -36,6 +38,7 @@ export default function (AB, iBase) {
       // must return the actual Rule object.
       getRule() {
          var listActions = [
+            new RuleUpdate(`${this.base}_ruleActionUpdate`),
             new RuleInsertConnected(`${this.base}_ruleActionInsertConnected`),
             new RuleUpdateConnected(`${this.base}_ruleActionUpdateConnected`),
             new RuleRemoveConnected(`${this.base}_ruleActionRemoveConnected`),
