@@ -781,11 +781,11 @@ export default function (AB) {
                setValueFn();
             } else {
                if (data.valueType == "exist") {
-                  $$(ids.multiview).showBatch("exist");
+                  $$(ids.multiview)?.showBatch("exist");
 
                   setValueFn();
                } else {
-                  $$(ids.multiview).showBatch("custom");
+                  $$(ids.multiview)?.showBatch("custom");
 
                   // wait until render UI complete
                   setTimeout(function () {
