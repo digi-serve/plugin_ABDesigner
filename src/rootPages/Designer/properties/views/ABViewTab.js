@@ -149,8 +149,10 @@ export default function (AB) {
             baseView.tabPopup = new TabPopup(baseView);
 
             await baseView.tabPopup.init(AB);
+         }
 
-            baseView.tabPopup.on("saved", () => {
+         if (!this.__tabPopupSave) {
+            this.__tabPopupSave = baseView.tabPopup.on("saved", () => {
                this.onChange();
             });
          }

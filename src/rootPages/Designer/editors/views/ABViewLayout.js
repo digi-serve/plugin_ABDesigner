@@ -28,7 +28,7 @@ export default function (AB) {
 
          get viewComponent() {
             const currView = this.CurrentView;
-            if (currView) {
+            if (currView && !this._component) {
                this._component = currView.component();
             }
 
@@ -78,16 +78,18 @@ export default function (AB) {
             return _ui;
          }
 
-         init(AB) {
+         init(AB, accessLevel) {
             this.AB = AB;
 
-            this.viewComponent.init();
+            this.viewComponent.init(AB, accessLevel);
+            this.viewComponent.onShow?.();
 
             // initial sub views
             const childViews = this.CurrentView.views();
             childViews.forEach((v) => {
                const vComponent = v.component();
-               vComponent.init();
+               vComponent.init(AB, accessLevel);
+               vComponent.onShow?.();
             });
          }
 
