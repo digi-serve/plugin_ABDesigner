@@ -559,7 +559,11 @@ export default function (AB) {
 
                            // TODO: Swtich to FilterComplex
                            this.FilterComponent = this.AB.filterComplexNew(
-                              this.base
+                              this.base,
+                              {
+                                 height: 200,
+                                 isSaveHidden: true,
+                              }
                            );
 
                            // this.FilterComponent.applicationLoad(
@@ -763,10 +767,9 @@ export default function (AB) {
 
                if (selectBy != "select-one") {
                   const collectionId = data.value;
-                  const dataCollection =
-                     (this.currentForm.application?.datacollectionsIncluded(
-                        (dc) => dc.id == collectionId
-                     ) ?? [])[0];
+                  const dataCollection = (this.AB.datacollections(
+                     (dc) => dc.id == collectionId
+                  ) ?? [])[0];
                   if (dataCollection && data.filterConditions) {
                      this.populateFilters(
                         dataCollection,
