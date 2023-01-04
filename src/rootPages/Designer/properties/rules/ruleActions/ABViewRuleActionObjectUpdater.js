@@ -451,7 +451,7 @@ export default function (AB) {
 
          const fieldComponent = field.formComponent(),
             abView = fieldComponent.newInstance(this.Rule.CurrentApplication);
-         let formFieldComponent = abView.component(this.App);
+         let formFieldComponent = abView.component(this.AB._App);
          let $componentView, $inputView;
 
          console.warn("TODO: remove this testing code:");
@@ -730,7 +730,7 @@ export default function (AB) {
 
             // wait until render UI complete
             setTimeout(() => {
-               field.customDisplay(field, this.App, compNodeView, {
+               field.customDisplay(field, this.AB._App, compNodeView, {
                   editable: true,
 
                   // tree
