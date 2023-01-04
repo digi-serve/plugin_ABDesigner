@@ -198,7 +198,7 @@ export default function (AB) {
             }
          );
 
-         $$(ids.name).setValue(element.name);
+         $$(ids.name).setValue(element.label);
          $$(ids.formulaText).setValue(element.formulaText);
          $$(ids.variableList).define("data", list);
          $$(ids.variableList).refresh();
@@ -208,7 +208,7 @@ export default function (AB) {
          const obj = {};
          const ids = this.ids;
 
-         obj.name = $$(ids.name)?.getValue();
+         obj.label = $$(ids.name)?.getValue();
          obj.formulaText = $$(ids.formulaText).getValue();
 
          return obj;
@@ -220,12 +220,12 @@ export default function (AB) {
        * @param {string} id
        *        the webix $$(id) of the properties panel area.
        */
-      propertiesStash(id) {
-         const ids = this.propertyIDs(id);
+      // propertiesStash(id) {
+      //    const ids = this.propertyIDs(id);
 
-         this.name = this.property(ids.name);
-         this.formulaText = this.property(ids.formulaText);
-      }
+      //    this.name = this.property(ids.name);
+      //    this.formulaText = this.property(ids.formulaText);
+      // }
    } //End
 
    return UIProcessServiceCalculate;
