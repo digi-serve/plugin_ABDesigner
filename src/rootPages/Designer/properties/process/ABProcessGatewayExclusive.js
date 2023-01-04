@@ -66,9 +66,11 @@ export default function (AB) {
          // fields are available to this task:
          //   returns an [{ key:'{uuid}', label:"" field:{ABDataField} }, {}, ...]
          const listDataFields = element.process.processDataFields(element);
-         const abFields = (listDataFields || []).map((f) => {
-            return f.field;
-         });
+         const abFields = (listDataFields || [])
+            .map((f) => {
+               return f.field;
+            })
+            .filter((f) => f);
 
          const myOutgoingConnections = element.process.connectionsOutgoing(
             element.diagramID
