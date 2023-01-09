@@ -107,7 +107,7 @@ export default function (AB) {
        * NOTE: Must be overwritten by the Child Class
        */
       ViewClass() {
-         return super._ViewClass("textboxbox");
+         return super._ViewClass("textbox");
       }
    }
 
