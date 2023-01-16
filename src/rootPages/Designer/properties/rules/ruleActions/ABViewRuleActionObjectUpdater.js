@@ -451,7 +451,8 @@ export default function (AB) {
 
          const fieldComponent = field.formComponent(),
             abView = fieldComponent.newInstance(this.Rule.CurrentApplication);
-         let formFieldComponent = abView.component(this.AB._App);
+         // let formFieldComponent = abView.component(this.AB._App);
+         let formFieldComponent = abView.component();
          let $componentView, $inputView;
 
          console.warn("TODO: remove this testing code:");
@@ -463,6 +464,36 @@ export default function (AB) {
          }
 
          $componentView.id = ids.value; // set our expected id
+
+         // WORKAROUND: add '[Current User]' option to the user data field
+         if (field.key == "user") {
+            $componentView.id = `update_container_${field.id}`;
+            formFieldComponent.ids.component = ids.value;
+            $componentView.rows[0].id = ids.value; // set new value id
+
+            const _originOnShow = $componentView.rows[0].suggest.on.onShow;
+            $componentView.rows[0].suggest.on.onShow = async () => {
+               await _originOnShow();
+
+               const $userOpts = $$(ids.value);
+               if (!$userOpts) return true;
+
+               const data = $userOpts.getList().find({}) ?? [];
+               data.unshift({
+                  id: "ab-current-user",
+                  value: `[${L("Current User")}]`,
+               });
+
+               $userOpts.blockEvent();
+               $userOpts.getList().clearAll();
+               $userOpts.getList().define("data", data);
+               $userOpts.unblockEvent();
+            };
+
+            field.on("option.data", () => {
+               $componentView.rows[0].suggest.on.onShow();
+            });
+         }
 
          // find all the DataSources
          let datasources = this.datacollections((dc) => dc.datasource);
@@ -559,11 +590,7 @@ export default function (AB) {
 
                            // TODO: Swtich to FilterComplex
                            this.FilterComponent = this.AB.filterComplexNew(
-                              this.base,
-                              {
-                                 height: 200,
-                                 isSaveHidden: true,
-                              }
+                              this.base
                            );
 
                            // this.FilterComponent.applicationLoad(
@@ -600,22 +627,13 @@ export default function (AB) {
             ],
          };
 
-         // WORKAROUND: add '[Current User]' option to the user data field
-         if (field.key == "user") {
-            $componentView.options = $componentView.options || [];
-            $componentView.options.unshift({
-               id: "ab-current-user",
-               value: L("Current User"),
-            });
-         }
-
          // UPDATE: ok, in practice we have not had any use cases where
          // we want individual values on connectedObject fields, but
          // instead we want to insert the current selected element from
          // a relevant data view.  So, replace the fieldComponet
          // from a connectedObject field with a list of data views that
          // are based upon the same object we are connected to:
-         if (field.isConnection) {
+         if (field.isConnection && field.key != "user") {
             // key == "connectObject") {
             // find the ABObject this field connects to
             const connectedObject = field.datasourceLink;
@@ -656,7 +674,10 @@ export default function (AB) {
 
             // update the dataSources option list to UI
             if ($$(ids.selectDc)) {
-               $$(ids.selectDc).parse(optionsDataSources);
+               if ($$(ids.selectDc).parse)
+                  $$(ids.selectDc).parse(optionsDataSources);
+               else $$(ids.selectDc).define("options", optionsDataSources);
+
                $$(ids.selectDc).refresh();
             } else {
                $inputView.rows[0].cols[0].options = optionsDataSources;
@@ -767,9 +788,10 @@ export default function (AB) {
 
                if (selectBy != "select-one") {
                   const collectionId = data.value;
-                  const dataCollection = (this.AB.datacollections(
-                     (dc) => dc.id == collectionId
-                  ) ?? [])[0];
+                  const dataCollection =
+                     (this.currentForm.application?.datacollectionsIncluded(
+                        (dc) => dc.id == collectionId
+                     ) ?? [])[0];
                   if (dataCollection && data.filterConditions) {
                      this.populateFilters(
                         dataCollection,
