@@ -35,11 +35,13 @@ export default function (AB) {
             this.base = base;
             this.AB = AB;
 
-            this.component = this.view.component();
+            this.component = this.view.component(this.AB._App);
          }
 
          ui() {
-            return this.component.ui();
+            return typeof this.component.ui == "function"
+               ? this.component.ui()
+               : this.component.ui;
          }
 
          init(AB) {
