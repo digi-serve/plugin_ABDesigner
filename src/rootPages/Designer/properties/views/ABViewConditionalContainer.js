@@ -121,9 +121,13 @@ export default function (AB) {
          const dcOptions = view.application
             .datacollectionsIncluded()
             .map((dc) => {
+               let icon = "fa-database";
+               if (dc.sourceType === "query") {
+                  icon = "fa-filter";
+               }
                return {
                   id: dc.id,
-                  value: dc.label,
+                  value: `<i class="fa ${icon}"></i> ${dc.label}`,
                };
             });
          SourceSelector.define("options", dcOptions);
