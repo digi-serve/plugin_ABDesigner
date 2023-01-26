@@ -71,7 +71,7 @@ export default function (AB) {
                type: {
                   height: 140,
                   templateDate: (obj) => {
-                     return this.AB.toDateFormat(obj.timestamp, {
+                     return this.AB.rules.toDateFormat(obj.timestamp, {
                         localeCode: "en",
                         format: "DD MMM, YYYY hh:mma",
                      });
