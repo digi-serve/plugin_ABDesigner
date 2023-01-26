@@ -168,20 +168,11 @@ export default function (AB) {
 
          FilterComponent.init();
          // when we make a change in the popups we want to make sure we save the new workspace to the properties to do so just fire an onChange event
-         //  FilterComponent.on("change", (val) => {
-         //     _logic.onFilterChange(val);
-         //  });
+         // FilterComponent.on("change", (val) => {
+         //    this.onChange();
+         // });
 
          SortComponent.init(AB);
-
-         if (this.filter_popup == null) {
-            this.filter_popup = this.AB.Webix.ui({
-               view: "popup",
-               width: 800,
-               hidden: true,
-               body: FilterComponent.ui,
-            });
-         }
       }
 
       populate(view) {
@@ -411,7 +402,7 @@ export default function (AB) {
       }
 
       showFilterPopup($view) {
-         this.filter_popup.show($view, null, { pos: "top" });
+         FilterComponent.popUp($view, null, { pos: "top" });
       }
 
       showSortPopup($button) {
