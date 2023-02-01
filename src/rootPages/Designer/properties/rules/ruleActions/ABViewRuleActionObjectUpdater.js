@@ -840,46 +840,49 @@ export default function (AB) {
       toSettings() {
          const ids = this.ids;
 
-         // if this isn't the last entry row
-         // * a row with valid data has the [delete] button showing.
-         const buttonDelete = $$(ids.buttonDelete);
-         if (buttonDelete && buttonDelete.isVisible()) {
-            const data = {};
-            data.fieldID = $$(ids.field).getValue();
+         // This needs to work while the form is hidden.
+         // (old) if this isn't the last entry row
+         // (old) * a row with valid data has the [delete] button showing.
+         // const buttonDelete = $$(ids.buttonDelete);
+         // if (buttonDelete && buttonDelete.isVisible()) {
 
-            const $valueField = $$(ids.value);
-            const field = this.Rule.getUpdateObjectField(data.fieldID);
+         const fieldID = $$(ids.field).getValue();
+         if (!fieldID) return null;
+         const data = { fieldID };
 
-            const getValueFn = () => {
-               data.value = $$(ids.selectDc).getValue();
-               data.queryField = $$(ids.queryField).getValue();
-               data.op = "set"; // possible to create other types of operations.
-               data.type = field.key;
-               data.selectBy = $$(ids.selectBy).getValue();
-               data.valueType = "exist";
-               if (this.FilterComponent) {
-                  data.filterConditions = this.FilterComponent.getValue();
-               }
-            };
+         const $valueField = $$(ids.value);
+         const field = this.Rule.getUpdateObjectField(data.fieldID);
 
-            // now handle our special connectedObject case:
-            if (field.key == "connectObject") {
+         const getValueFn = () => {
+            data.value = $$(ids.selectDc).getValue();
+            data.queryField = $$(ids.queryField).getValue();
+            data.op = "set"; // possible to create other types of operations.
+            data.type = field.key;
+            data.selectBy = $$(ids.selectBy).getValue();
+            data.valueType = "exist";
+            if (this.FilterComponent) {
+               data.filterConditions = this.FilterComponent.getValue();
+            }
+         };
+
+         // now handle our special connectedObject case:
+         if (field.key == "connectObject") {
+            getValueFn();
+         } else {
+            if ($$(ids.multiview).config.visibleBatch == "exist") {
                getValueFn();
             } else {
-               if ($$(ids.multiview).config.visibleBatch == "exist") {
-                  getValueFn();
-               } else {
-                  data.value = field.getValue($valueField, {});
-                  data.op = "set"; // possible to create other types of operations.
-                  data.type = field.key;
-                  data.valueType = "custom";
-               }
+               data.value = field.getValue($valueField, {});
+               data.op = "set"; // possible to create other types of operations.
+               data.type = field.key;
+               data.valueType = "custom";
             }
-
-            return data;
-         } else {
-            return null;
          }
+
+         return data;
+         // } else {
+         //    return null;
+         // }
       }
 
       init(AB, data) {

@@ -20,7 +20,7 @@ export default function (AB) {
 
    const base = "properties_abview_grid";
    const ABViewPropertyFilterData = FABViewPropertyFilterData(AB, base);
-   const PopupFilterMenu = new ABViewPropertyFilterData();
+   const PopupFilterMenu = new ABViewPropertyFilterData({ isGrid: true });
 
    const LinkPageHelper = new FABViewPropertyLinkPage(AB, base);
 
@@ -629,7 +629,8 @@ export default function (AB) {
          let selectedDv = this.datacollection;
          if (selectedDv) {
             PopupFilterMenu.objectLoad(selectedDv.datasource);
-            PopupFilterMenu.setSettings(view.settings.filter);
+            PopupFilterMenu.setSettings(view.settings.gridFilter);
+            // PopupFilterMenu.setSettings(view.settings.filter);
 
             this.PopupCountColumnsComponent.objectLoad(selectedDv.datasource);
             this.PopupCountColumnsComponent.setValue(

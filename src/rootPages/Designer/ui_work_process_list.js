@@ -180,7 +180,7 @@ export default function (AB) {
 
             let selectedItem = this.ListComponent.selectedItem();
             this.ListComponent.dataLoad(this.CurrentApplication?.processes(f));
-            this.ListComponent.selectItem(selectedItem.id);
+            this.ListComponent.selectItem(selectedItem?.id);
          }
       }
    }
