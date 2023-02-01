@@ -37,7 +37,10 @@ export default function (AB) {
 
          ui() {
             const childViews = this.CurrentView.views();
-            const _ui = this.viewComponent.ui();
+            const _ui = this.viewComponent
+               .ui()
+               .rows.find((v) => v.view === "layout");
+
             _ui.type = "form";
 
             if (childViews.length) {
@@ -106,7 +109,7 @@ export default function (AB) {
                </div></div>`;
          }
 
-         viewEdit(e, id, trg) {
+         viewEdit(e, id /*, trg*/) {
             const view = this.CurrentView.views((v) => v.id == id)[0];
             if (!view) return false;
 
@@ -126,7 +129,7 @@ export default function (AB) {
             return false;
          }
 
-         viewDelete(e, id, trg) {
+         viewDelete(e, id /*, trg*/) {
             const view = this.CurrentView.views((v) => v.id == id)[0];
             if (!view) return false;
 
