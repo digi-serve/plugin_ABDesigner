@@ -3,15 +3,15 @@
  * A Property manager for our ABViewFormTextbox definitions
  */
 
-import FABView from "./ABView";
+import FABViewFormItem from "./ABViewFormItem";
 
 export default function (AB) {
    const BASE_ID = "properties_abview_form_textbox";
 
-   const ABView = FABView(AB);
-   const L = ABView.L();
+   const ABViewFormItem = FABViewFormItem(AB);
+   const L = ABViewFormItem.L();
 
-   class ABViewFormTextboxProperty extends ABView {
+   class ABViewFormTextboxProperty extends ABViewFormItem {
       constructor() {
          super(BASE_ID, {
             // Put our ids here

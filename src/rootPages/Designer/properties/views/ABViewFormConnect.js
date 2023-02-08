@@ -3,7 +3,7 @@
  * A Property manager for our ABViewConnect definitions
  */
 
-import FABView from "./ABView";
+import FABViewFormItem from "./ABViewFormItem";
 import ABPopupSort from "../../ui_work_object_workspace_popupSortFields";
 import ABViewPropertyAddPage from "./viewProperties/ABViewPropertyAddPage";
 import ABViewPropertyEditPage from "./viewProperties/ABViewPropertyEditPage";
@@ -11,15 +11,15 @@ import ABViewPropertyEditPage from "./viewProperties/ABViewPropertyEditPage";
 export default function (AB) {
    const BASE_ID = "properties_abview_connect";
 
-   const ABView = FABView(AB);
+   const ABViewFormItem = FABViewFormItem(AB);
    const ABAddPage = ABViewPropertyAddPage(AB, BASE_ID);
    const ABEditPage = ABViewPropertyEditPage(AB, BASE_ID);
-   const L = ABView.L();
+   const L = ABViewFormItem.L();
 
    let FilterComponent = null;
    let SortComponent = null;
 
-   class ABViewConnectProperty extends ABView {
+   class ABViewConnectProperty extends ABViewFormItem {
       constructor() {
          super(BASE_ID, {
             // Put our ids here
