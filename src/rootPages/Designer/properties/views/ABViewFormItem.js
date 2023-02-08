@@ -8,6 +8,10 @@ import FABView from "./ABView";
 export default function (AB) {
    const ABView = FABView(AB);
    const L = ABView.L();
+   const DEFAULT_VALUES = {
+      required: 0,
+      disable: 0,
+   };
 
    class ABViewFormItemProperty extends ABView {
       constructor(BASE_ID, ids = {}) {
@@ -82,10 +86,15 @@ export default function (AB) {
       }
 
       defaultValues() {
-         return {
-            required: 0,
-            disable: 0,
-         };
+         const ViewClass = this.ViewClass();
+
+         let values = {};
+
+         if (ViewClass) {
+            values = ViewClass.defaultValues();
+         }
+
+         return Object.assign(DEFAULT_VALUES, values);
       }
 
       /**

@@ -72,18 +72,6 @@ export default function (AB) {
          );
       }
 
-      defaultValues() {
-         const ViewClass = this.ViewClass();
-
-         let values = null;
-
-         if (ViewClass) {
-            values = ViewClass.defaultValues();
-         }
-
-         return values;
-      }
-
       /**
        * @method values
        * return the values for this form.
