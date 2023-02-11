@@ -588,9 +588,12 @@ export default function (AB) {
                               };
                            });
 
-                           // TODO: Swtich to FilterComplex
                            this.FilterComponent = this.AB.filterComplexNew(
-                              this.base
+                              this.base,
+                              {
+                                 height: 200,
+                                 isSaveHidden: true,
+                              }
                            );
 
                            // this.FilterComponent.applicationLoad(
