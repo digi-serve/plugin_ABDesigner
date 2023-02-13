@@ -590,7 +590,10 @@ export default function (AB) {
 
                            this.FilterComponent = this.AB.filterComplexNew(
                               this.base,
-                              { height: 200, isSaveHidden: true }
+                              {
+                                 height: 200,
+                                 isSaveHidden: true,
+                              }
                            );
 
                            // this.FilterComponent.applicationLoad(
