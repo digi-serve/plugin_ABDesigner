@@ -404,10 +404,10 @@ export default function (AB) {
          $repeatColumn.define("options", repeatColumnList);
          $repeatColumn.refresh();
 
+         if (element.isRepeat) $repeatLayout.show();
+
          this.refreshFieldValues();
          this.setFieldValues();
-
-         if (element.isRepeat) $repeatLayout.show();
       }
 
       /**

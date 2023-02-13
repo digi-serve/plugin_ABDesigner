@@ -588,9 +588,12 @@ export default function (AB) {
                               };
                            });
 
-                           // TODO: Swtich to FilterComplex
                            this.FilterComponent = this.AB.filterComplexNew(
-                              this.base
+                              this.base,
+                              {
+                                 height: 200,
+                                 isSaveHidden: true,
+                              }
                            );
 
                            // this.FilterComponent.applicationLoad(
@@ -601,9 +604,9 @@ export default function (AB) {
                               fieldOptions: options,
                            });
 
-                           this.FilterComponent.on("changed", (...params) => {
-                              return this.onFilterChange(...params);
-                           });
+                           // this.FilterComponent.on("changed", (...params) => {
+                           //    return this.onFilterChange(...params);
+                           // });
 
                            // Transition v1 to v2:
                            console.warn("TODO: remove this transition Code:");
@@ -788,10 +791,9 @@ export default function (AB) {
 
                if (selectBy != "select-one") {
                   const collectionId = data.value;
-                  const dataCollection =
-                     (this.currentForm.application?.datacollectionsIncluded(
-                        (dc) => dc.id == collectionId
-                     ) ?? [])[0];
+                  const dataCollection = this.datacollections(
+                     (dc) => dc.id == collectionId
+                  )[0];
                   if (dataCollection && data.filterConditions) {
                      this.populateFilters(
                         dataCollection,
@@ -840,46 +842,49 @@ export default function (AB) {
       toSettings() {
          const ids = this.ids;
 
-         // if this isn't the last entry row
-         // * a row with valid data has the [delete] button showing.
-         const buttonDelete = $$(ids.buttonDelete);
-         if (buttonDelete && buttonDelete.isVisible()) {
-            const data = {};
-            data.fieldID = $$(ids.field).getValue();
+         // This needs to work while the form is hidden.
+         // (old) if this isn't the last entry row
+         // (old) * a row with valid data has the [delete] button showing.
+         // const buttonDelete = $$(ids.buttonDelete);
+         // if (buttonDelete && buttonDelete.isVisible()) {
 
-            const $valueField = $$(ids.value);
-            const field = this.Rule.getUpdateObjectField(data.fieldID);
+         const fieldID = $$(ids.field).getValue();
+         if (!fieldID) return null;
+         const data = { fieldID };
 
-            const getValueFn = () => {
-               data.value = $$(ids.selectDc).getValue();
-               data.queryField = $$(ids.queryField).getValue();
-               data.op = "set"; // possible to create other types of operations.
-               data.type = field.key;
-               data.selectBy = $$(ids.selectBy).getValue();
-               data.valueType = "exist";
-               if (this.FilterComponent) {
-                  data.filterConditions = this.FilterComponent.getValue();
-               }
-            };
+         const $valueField = $$(ids.value);
+         const field = this.Rule.getUpdateObjectField(data.fieldID);
 
-            // now handle our special connectedObject case:
-            if (field.key == "connectObject") {
+         const getValueFn = () => {
+            data.value = $$(ids.selectDc).getValue();
+            data.queryField = $$(ids.queryField).getValue();
+            data.op = "set"; // possible to create other types of operations.
+            data.type = field.key;
+            data.selectBy = $$(ids.selectBy).getValue();
+            data.valueType = "exist";
+            if (this.FilterComponent) {
+               data.filterConditions = this.FilterComponent.getValue();
+            }
+         };
+
+         // now handle our special connectedObject case:
+         if (field.key == "connectObject") {
+            getValueFn();
+         } else {
+            if ($$(ids.multiview).config.visibleBatch == "exist") {
                getValueFn();
             } else {
-               if ($$(ids.multiview).config.visibleBatch == "exist") {
-                  getValueFn();
-               } else {
-                  data.value = field.getValue($valueField, {});
-                  data.op = "set"; // possible to create other types of operations.
-                  data.type = field.key;
-                  data.valueType = "custom";
-               }
+               data.value = field.getValue($valueField, {});
+               data.op = "set"; // possible to create other types of operations.
+               data.type = field.key;
+               data.valueType = "custom";
             }
-
-            return data;
-         } else {
-            return null;
          }
+
+         return data;
+         // } else {
+         //    return null;
+         // }
       }
 
       init(AB, data) {
