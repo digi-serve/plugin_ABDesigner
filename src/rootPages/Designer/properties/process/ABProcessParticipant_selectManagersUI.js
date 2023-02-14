@@ -7,11 +7,14 @@
  * @return {ClassUI} The Class Definition for this UI widget.
  */
 import UI_Class from "../../ui_class";
-import UI_Common_Participant_SelectManager from "../../ui_common_participant_selectManager";
+import FUI_Common_Participant_SelectManager from "../../ui_common_participant_selectManager";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
+
+   const UI_Common_Participant_SelectManager =
+      FUI_Common_Participant_SelectManager(AB);
 
    class UIProcessParticipant_selectManagersUI extends UI_Common_Participant_SelectManager {
       constructor(id) {
@@ -129,7 +132,9 @@ export default function (AB) {
             },
          ];
 
-         return baseUI.elements.push(...userFieldElements);
+         baseUI.elements.push(...userFieldElements);
+
+         return baseUI;
       }
 
       async init(AB) {
