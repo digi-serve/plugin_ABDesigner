@@ -40,8 +40,6 @@ export default function (AB) {
          this._handler_onChange = (waitDuration = 3000, skipEmit = false) => {
             if (!this.CurrentView) return;
 
-            // this.busy();
-
             let values = this.currentPanel.values();
 
             // to update the label, add it before we ask for .toObj():
@@ -62,6 +60,14 @@ export default function (AB) {
 
             // Timed saves ... once every 3s of no changes
             let view = this.CurrentView;
+            this.pendingSave = true;
+
+            // Add a beforeunload event listener to save changes if the user leaves
+            if (!this.unloadListener) {
+               this.unloadListener = webix.event(window, "beforeunload", () => {
+                  this._handler_onChange(0, true);
+               });
+            }
 
             if (view.__timedSave) {
                clearTimeout(view.__timedSave);
@@ -71,13 +77,20 @@ export default function (AB) {
                try {
                   await view.save();
                   delete view.__timedSave;
-                  this.ready();
                } catch (err) {
                   this.AB.notify.developer(err, {
                      message: "Error trying to save the View:",
                      view: view.toObj(),
                   });
+                  view.AB.message({
+                     text: this.label("Error trying to save the View"),
+                     type: "error",
+                  });
+               } finally {
                   this.ready();
+                  this.pendingSave = false;
+                  webix.eventRemove(this.unloadListener);
+                  delete this.unloadListener;
                }
             }, waitDuration);
 
@@ -165,7 +178,7 @@ export default function (AB) {
       viewLoad(view) {
          if (this.currentPanel) {
             // Make sure the current Data is saved:
-            this._handler_onChange(10, true);
+            if (this.pendingSave) this._handler_onChange(10, true);
 
             // unload the current panel
             this.currentPanel.removeAllListeners("changed");
