@@ -246,7 +246,7 @@ export default function (AB) {
             } catch (err) {
                this.AB.notify.developer(err, {
                   message: "Error trying to save selected View:",
-                  view: this.toObj(),
+                  view: this.CurrentView.toObj(),
                });
                this.ready();
             }
