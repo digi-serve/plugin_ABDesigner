@@ -225,7 +225,7 @@ export default function (AB) {
             setOptions.push({
                id: 5,
                value: L("Set by the instance [{0}]", [
-                  this.fieldRepeat ? this.element.fieldRepeat.label : "",
+                  fieldRepeat?.label ?? "",
                ]),
             });
 
