@@ -40,7 +40,7 @@ export default function (AB) {
             const ids = this.ids;
             const baseView = this.view;
             const component = this.component;
-            const componentUI = this.component.ui();
+            const componentUI = this.component.ui()?.rows[0];
 
             if (componentUI.rows) {
                componentUI.rows[0].id = ids.component;
