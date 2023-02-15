@@ -64,9 +64,13 @@ export default function (AB) {
 
             // Add a beforeunload event listener to save changes if the user leaves
             if (!this.unloadListener) {
-               this.unloadListener = webix.event(window, "beforeunload", () => {
-                  this._handler_onChange(0, true);
-               });
+               this.unloadListener = this.AB.Webix.event(
+                  window,
+                  "beforeunload",
+                  () => {
+                     this._handler_onChange(0, true);
+                  }
+               );
             }
 
             if (view.__timedSave) {
@@ -89,7 +93,7 @@ export default function (AB) {
                } finally {
                   this.ready();
                   this.pendingSave = false;
-                  webix.eventRemove(this.unloadListener);
+                  this.AB.Webix.eventRemove(this.unloadListener);
                   delete this.unloadListener;
                }
             }, waitDuration);
