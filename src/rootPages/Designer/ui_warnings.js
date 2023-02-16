@@ -87,7 +87,8 @@ export default function (AB, iBase, iSettings) {
          if (warningsAll?.length) {
             let message = "<ul class='warningslist'>";
             warningsAll.forEach((issue) => {
-               message += `<li><i class="warningtext fa fa-warning"></i> ${issue.message}</li>`;
+               if (issue)
+                  message += `<li><i class="warningtext fa fa-warning"></i> ${issue.message}</li>`;
             });
             message += `</ul>`;
             $$(ids.warningsScroll).setHTML(message);
