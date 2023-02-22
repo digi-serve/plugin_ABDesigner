@@ -3,15 +3,15 @@
  * A Property manager for our ABViewFormSelectMultiple definitions
  */
 
-import FABView from "./ABView";
+import FABViewFormItem from "./ABViewFormItem";
 
 export default function (AB) {
    const BASE_ID = "properties_abview_form_select_multiple";
 
-   const ABView = FABView(AB);
-   const L = ABView.L();
+   const ABViewFormItem = FABViewFormItem(AB);
+   const L = ABViewFormItem.L();
 
-   class ABViewFormSelectMultipleProperty extends ABView {
+   class ABViewFormSelectMultipleProperty extends ABViewFormItem {
       constructor() {
          super(BASE_ID, {
             // Put our ids here
@@ -65,18 +65,6 @@ export default function (AB) {
             view.settings.type ||
                ABViewFormSelectMultiplePropertyComponentDefaults.type
          );
-      }
-
-      defaultValues() {
-         const ViewClass = this.ViewClass();
-
-         let values = null;
-
-         if (ViewClass) {
-            values = ViewClass.defaultValues();
-         }
-
-         return values;
       }
 
       /**
