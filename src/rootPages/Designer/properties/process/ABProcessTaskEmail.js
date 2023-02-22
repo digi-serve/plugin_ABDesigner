@@ -383,17 +383,19 @@ export default function (AB) {
          obj.toUsers = obj.toUsers ?? {};
          obj.fromUsers = obj.fromUsers ?? {};
 
+         const processDataFields = obj.process.processDataFields(obj) || [];
+
          // get process data user-fields
-         let userProcessFieldData = (
-            obj.process.processDataFields(obj) || []
-         ).filter((e) => e.field?.key == "user");
+         let userProcessFieldData = processDataFields.filter(
+            (e) => e.field?.key == "user"
+         );
          obj.toUsers["userProcessFieldData"] = userProcessFieldData;
          obj.fromUsers["userProcessFieldData"] = userProcessFieldData;
 
          // get process data email-fields
-         let emailProcessFieldData = obj.process
-            .processDataFields(obj)
-            .filter((e) => e.field?.key == "email");
+         let emailProcessFieldData = processDataFields.filter(
+            (e) => e.field?.key == "email"
+         );
          let __EmailFields = emailProcessFieldData.map((u) => {
             return {
                uuid: u.field.id,
