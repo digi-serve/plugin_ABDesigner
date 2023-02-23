@@ -82,6 +82,12 @@ export default function (AB, options) {
                "</div>",
             ].join("");
 
+         this.cacheTemplate = {};
+         // {json} hash { obj.id : template display }
+         // a temporary cache of an items template
+         // this is to prevent multiple template generations
+         // in rapid succession.
+
          this.CurrentApplication = null;
          this.itemList = null;
 
@@ -615,21 +621,33 @@ export default function (AB, options) {
        * @return {string}
        */
       templateListItem(obj, common) {
-         var warnings = obj.warningsAll();
+         if (!this.cacheTemplate[obj.id]) {
+            var warnings = obj.warningsAll();
 
-         if (typeof this._templateListItem == "string") {
-            var warnText = "";
-            if (warnings.length > 0) {
-               warnText = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>`;
+            if (typeof this._templateListItem == "string") {
+               var warnText = "";
+               if (warnings.length > 0) {
+                  warnText = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>`;
+               }
+
+               this.cacheTemplate[obj.id] = this._templateListItem
+                  .replace("#label#", obj.label || "??label??")
+                  .replace("{common.iconGear}", common.iconGear(obj))
+                  .replace("#warnings#", warnText);
+            } else {
+               // else they sent in a function()
+               this.cacheTemplate[obj.id] = this._templateListItem(
+                  obj,
+                  common,
+                  warnings
+               );
             }
 
-            return this._templateListItem
-               .replace("#label#", obj.label || "??label??")
-               .replace("{common.iconGear}", common.iconGear(obj))
-               .replace("#warnings#", warnText);
+            setTimeout(() => {
+               delete this.cacheTemplate[obj.id];
+            }, 400);
          }
-         // else they sent in a function()
-         return this._templateListItem(obj, common, warnings);
+         return this.cacheTemplate[obj.id];
       }
 
       /**

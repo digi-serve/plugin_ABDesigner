@@ -882,10 +882,6 @@ export default function (AB) {
          thisObj.fromValues(objVals);
          thisObj.warningsEval(); // resets the warnings
 
-         // thisObj.save();
-
-         // thisObj.propertiesStash(this.ids.properties);
-
          // NOTE: this can get called during a BPMN event phase,
          // and we need to let that complete before trying to update the
          // diagram element properties.
