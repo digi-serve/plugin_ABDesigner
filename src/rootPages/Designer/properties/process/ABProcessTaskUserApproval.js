@@ -225,8 +225,7 @@ export default function (AB) {
 
       async init(AB) {
          this.AB = AB;
-
-         return Promise.resolve();
+         return;
       }
 
       /**
