@@ -70,6 +70,7 @@ export default function (AB) {
       require("./views/ABViewConditionalContainer"),
       require("./views/ABViewCSVExporter"),
       require("./views/ABViewCSVImporter"),
+      require("./views/ABViewDataFilter"),
       require("./views/ABViewDataview"),
       require("./views/ABViewDetail"),
       require("./views/ABViewDocxBuilder"),
