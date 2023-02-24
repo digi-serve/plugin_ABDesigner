@@ -11,7 +11,6 @@ export default class ABCustomFormIOBuilder {
    }
 
    constructor(AB) {
-      // App 	{obj}	our application instance object.
       this.AB = AB;
       this.label = this.AB.Label();
       this.view = this.key;
