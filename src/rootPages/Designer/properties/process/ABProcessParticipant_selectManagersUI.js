@@ -11,10 +11,9 @@ import FUI_Common_Participant_SelectManager from "../../ui_common_participant_se
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   var L = UIClass.L();
-
    const UI_Common_Participant_SelectManager =
       FUI_Common_Participant_SelectManager(AB);
+   var L = UIClass.L();
 
    class UIProcessParticipant_selectManagersUI extends UI_Common_Participant_SelectManager {
       constructor(id) {
