@@ -27,6 +27,12 @@ export default function (AB) {
             exporter: "",
             list: "",
          });
+
+         this.cacheTemplate = {};
+         // {json} hash { obj.id : template display }
+         // a temporary cache of an items template
+         // this is to prevent multiple template generations
+         // in rapid succession.
       }
 
       ui() {
@@ -556,15 +562,16 @@ export default function (AB) {
          //    this object and any of it's sub objects.
          //
          //
-         var warnings = {
-            icon: "",
-            count: 0,
-         };
-         if (obj.warningsAll().length) {
-            warnings.icon = `<span class="webix_icon fa fa-warning pulseLight smalltext"></span>`;
-            warnings.count = obj.warningsAll().length;
-         }
-         return `<div class='ab-app-list-item'>
+         if (!this.cacheTemplate[obj.id]) {
+            var warnings = {
+               icon: "",
+               count: 0,
+            };
+            if (obj.warningsAll().length) {
+               warnings.icon = `<span class="webix_icon fa fa-warning pulseLight smalltext"></span>`;
+               warnings.count = obj.warningsAll().length;
+            }
+            this.cacheTemplate[obj.id] = `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>
       <div class='ab-app-list-name'><i class="lighten fa-fw fa ${
          obj.icon
@@ -576,6 +583,12 @@ export default function (AB) {
       ${common.iconGear(obj)}
    </div>
 </div>`;
+
+            setTimeout(() => {
+               delete this.cacheTemplate[obj.id];
+            }, 400);
+         }
+         return this.cacheTemplate[obj.id];
       }
 
       toolTipListItem(obj) {

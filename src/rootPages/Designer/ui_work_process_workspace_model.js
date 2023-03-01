@@ -261,12 +261,11 @@ export default function (AB) {
        * @param {BPMNElement} parent
        */
       checkKnownElement(shape, parent) {
+         const currElement = this.CurrentProcess.elementForDiagramID(shape.id);
+
          // if this is one of our generic types, and it isn't currently
          // tracked by our CurrentProcess, then it should show a warning.
          if (genericElementTypes.indexOf(shape.type) > -1) {
-            const currElement = this.CurrentProcess.elementForDiagramID(
-               shape.id
-            );
             if (!currElement) {
                // skip elements that are Start and End markers in a SubProcess
 
@@ -292,6 +291,15 @@ export default function (AB) {
                } else {
                   delete shape.___abwarnings;
                }
+            }
+         }
+
+         // Case 2: An element that already knows it has warnings should
+         // default display the warning symbol.
+         if (currElement) {
+            const warnings = currElement.warnings();
+            if (warnings.length > 0) {
+               shape.___abwarnings = warnings;
             }
          }
       }
@@ -453,6 +461,24 @@ export default function (AB) {
                      if (currTask) {
                         currTask.destroy();
                      }
+
+                     // NOTE: Gateways need to be re-evaluated if their next task
+                     // is removed:
+                     let connectionsIN =
+                        this.CurrentProcess.connectionsIncoming(element.id);
+                     connectionsIN.forEach((c) => {
+                        // remove this connection:
+                        this.CurrentProcess.connectionRemove(c);
+
+                        // tell the previous task to re-eval it's warnings:
+                        var prevTask = this.CurrentProcess.elementForDiagramID(
+                           c.from
+                        );
+                        if (prevTask) {
+                           prevTask.warningsEval();
+                           this.timedUpdate(prevTask);
+                        }
+                     });
                   }
 
                   this.CurrentProcess.unknownShapeRemove(element);
@@ -553,6 +579,47 @@ export default function (AB) {
                } else {
                   // this is a connection update:
                   processTask.connectionUpsert(element);
+
+                  // NOTE: if this is adding a new connection, we need the previous
+                  // element to have a chance to update it's warnings.
+                  let connection = this.CurrentProcess.connectionForDiagramID(
+                     element.id
+                  );
+                  if (connection) {
+                     let prevTask = this.CurrentProcess.elementForDiagramID(
+                        connection.from
+                     );
+                     if (prevTask) {
+                        // NOTE: timedUpdate() is necessary for the BPMN diagram to
+                        // display the new state of the warnings. BUT it also triggers
+                        // another "element.changed" event, so we need to not trigger
+                        // it again if the current call was a result of a previous
+                        // timedUpdate(). (otherwise you get an infinit loop)
+                        if (!prevTask.___pendingUpdate) {
+                           let properties = prevTask.diagramProperties(
+                              this.viewer
+                           );
+                           // NOTE: this section of the "element.changed" handler only
+                           // looks at connections, so we only need to skip the updates
+                           // that are for connections:
+                           properties = properties.filter(
+                              (p) => p.id.indexOf("Flow") > -1
+                           );
+
+                           if (properties.length > 0) {
+                              prevTask.___pendingUpdate = properties.length;
+                           }
+                           prevTask.warningsEval();
+                           this.timedUpdate(prevTask);
+                        } else {
+                           prevTask.___pendingUpdate--;
+                           if (prevTask.___pendingUpdate == 0) {
+                              delete prevTask.___pendingUpdate;
+                           }
+                           // event.cancelBubble = true;
+                        }
+                     }
+                  }
                }
             });
 
@@ -815,23 +882,11 @@ export default function (AB) {
          thisObj.fromValues(objVals);
          thisObj.warningsEval(); // resets the warnings
 
-         // thisObj.save();
-
-         // thisObj.propertiesStash(this.ids.properties);
-
          // NOTE: this can get called during a BPMN event phase,
          // and we need to let that complete before trying to update the
          // diagram element properties.
          // an immediate timeout should let the other process complete.
-         setTimeout(() => {
-            var properties = thisObj.diagramProperties(this.viewer);
-            properties.forEach((prop) => {
-               this.updateElementProperties(prop.id, prop.def, prop.warn);
-            });
-
-            this.warningsRefresh(this.CurrentProcess);
-            Warnings.show(this.CurrentProcess);
-         }, 0);
+         this.timedUpdate(thisObj);
       }
 
       /**
@@ -841,6 +896,18 @@ export default function (AB) {
        */
       show() {
          $$(this.ids.component).show();
+      }
+
+      timedUpdate(thisObj) {
+         setTimeout(() => {
+            var properties = thisObj.diagramProperties(this.viewer);
+            properties.forEach((prop) => {
+               this.updateElementProperties(prop.id, prop.def, prop.warn);
+            });
+
+            this.warningsRefresh(this.CurrentProcess);
+            Warnings.show(this.CurrentProcess);
+         }, 0);
       }
 
       /**

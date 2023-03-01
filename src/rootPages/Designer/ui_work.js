@@ -40,6 +40,11 @@ export default function (AB) {
 
          this.options = options;
 
+         this.cacheSidebarItems = {};
+         // {json} hash { app.id : sidebar display }
+         // a temporary cache of the generate sidebar display
+         // to prevent multiple calls in rapid succession.
+
          this.selectedItem = this.ids.tab_object;
          // {string} {this.ids.xxx}
          // Keep track of the currently selected Tab Item (Object, Query, etc)
@@ -60,52 +65,59 @@ export default function (AB) {
          return warnObjects;
       }
       sidebarItems(app) {
-         let warnObjects = this.scanTopic(app, "objectsIncluded");
-         let warnQueries = this.scanTopic(app, "queriesIncluded");
-         const warnDatacollections = this.scanTopic(
-            app,
-            "datacollectionsIncluded"
-         );
-         let warnProcesses = this.scanTopic(app, "processes");
+         let ID = app?.id ?? null;
+         if (!this.cacheSidebarItems[ID]) {
+            let warnObjects = this.scanTopic(app, "objectsIncluded");
+            let warnQueries = this.scanTopic(app, "queriesIncluded");
+            const warnDatacollections = this.scanTopic(
+               app,
+               "datacollectionsIncluded"
+            );
+            let warnProcesses = this.scanTopic(app, "processes");
 
-         // TODO
-         // const warnInterfaces = this.scanTopic(app, "interfacesIncluded");
+            // TODO
+            // const warnInterfaces = this.scanTopic(app, "interfacesIncluded");
 
-         var sidebarItems = [
-            {
-               id: this.ids.tab_object,
-               value: `${L("Objects")}`,
-               icon: "fa fa-fw fa-database",
-               issues: warnObjects,
-            },
-            {
-               id: this.ids.tab_query,
-               value: `${L("Queries")}`,
-               icon: "fa fa-fw fa-filter",
-               issues: warnQueries,
-            },
-            {
-               id: this.ids.tab_datacollection,
-               value: L("Data Collections"),
-               icon: "fa fa-fw fa-table",
-               issues: warnDatacollections,
-            },
-            {
-               id: this.ids.tab_processview,
-               value: L("Process"),
-               icon: "fa fa-fw fa-code-fork",
-               issues: warnProcesses,
-            },
-            {
-               id: this.ids.tab_interface,
-               value: L("Interface"),
-               icon: "fa fa-fw fa-id-card-o",
-               // TODO
-               // issues: warnInterfaces,
-            },
-         ];
+            this.cacheSidebarItems[ID] = [
+               {
+                  id: this.ids.tab_object,
+                  value: `${L("Objects")}`,
+                  icon: "fa fa-fw fa-database",
+                  issues: warnObjects,
+               },
+               {
+                  id: this.ids.tab_query,
+                  value: `${L("Queries")}`,
+                  icon: "fa fa-fw fa-filter",
+                  issues: warnQueries,
+               },
+               {
+                  id: this.ids.tab_datacollection,
+                  value: L("Data Collections"),
+                  icon: "fa fa-fw fa-table",
+                  issues: warnDatacollections,
+               },
+               {
+                  id: this.ids.tab_processview,
+                  value: L("Process"),
+                  icon: "fa fa-fw fa-code-fork",
+                  issues: warnProcesses,
+               },
+               {
+                  id: this.ids.tab_interface,
+                  value: L("Interface"),
+                  icon: "fa fa-fw fa-id-card-o",
+                  // TODO
+                  // issues: warnInterfaces,
+               },
+            ];
 
-         return sidebarItems;
+            setTimeout(() => {
+               this.cacheSidebarItems[ID] = null;
+            }, 500);
+         }
+
+         return this.cacheSidebarItems[ID];
       }
 
       /**

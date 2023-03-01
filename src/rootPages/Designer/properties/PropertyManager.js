@@ -41,16 +41,16 @@ export default function (AB) {
       require("./process/ABProcessGatewayExclusive.js"),
       require("./process/ABProcessParticipant.js"),
       require("./process/ABProcessTaskEmail.js"),
-      require("./process/ABProcessTriggerLifecycle.js"),
       require("./process/ABProcessTaskService.js"),
-      require("./process/ABProcessTaskServiceInsertRecord.js"),
       require("./process/ABProcessTaskServiceCalculate.js"),
       require("./process/ABProcessTaskServiceGetResetPasswordUrl.js"),
+      require("./process/ABProcessTaskServiceInsertRecord.js"),
       require("./process/ABProcessTaskServiceQuery.js"),
       require("./process/ABProcessTaskSubProcess.js"),
       require("./process/ABProcessTaskUser.js"),
       require("./process/ABProcessTaskUserApproval.js"),
       require("./process/ABProcessTaskUserExternal.js"),
+      require("./process/ABProcessTriggerLifecycle.js"),
       require("./process/ABProcessTriggerTimer.js"),
    ].forEach((P) => {
       let Klass = P.default(AB);

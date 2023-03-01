@@ -25,7 +25,8 @@ class CustomRenderer extends BaseRenderer {
    canRender(element) {
       // only render tasks and events (ignore labels)
       return (
-         isAny(element, ["bpmn:Task", "bpmn:Event"]) && !element.labelTarget
+         isAny(element, ["bpmn:Task", "bpmn:Event", "bpmn:ExclusiveGateway"]) &&
+         !element.labelTarget
       );
    }
 

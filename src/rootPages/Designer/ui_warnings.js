@@ -83,11 +83,13 @@ export default function (AB, iBase, iSettings) {
 
          var ids = this.ids;
 
-         let warningsAll = currentObject?.warningsAll();
+         let warningsAll = currentObject?.warningsAll().map((w) => w.message);
+         warningsAll = this.AB.uniq(warningsAll); // prevent duplicates
          if (warningsAll?.length) {
             let message = "<ul class='warningslist'>";
             warningsAll.forEach((issue) => {
-               message += `<li><i class="warningtext fa fa-warning"></i> ${issue.message}</li>`;
+               if (issue)
+                  message += `<li><i class="warningtext fa fa-warning"></i> ${issue}</li>`;
             });
             message += `</ul>`;
             $$(ids.warningsScroll).setHTML(message);
