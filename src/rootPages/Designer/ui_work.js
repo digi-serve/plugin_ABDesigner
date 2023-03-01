@@ -55,6 +55,7 @@ export default function (AB) {
          let warnObjects = {};
          if (app) {
             app[key]().forEach((o) => {
+               o.warningsEval?.();
                countObjects += (o.warningsAll() || []).length;
             });
          }
