@@ -61,7 +61,7 @@ export default class ABCustomFormIOBuilder {
                   },
                });
             } catch (err) {
-               console.error("Error initializing formio builder", err);
+               this.notify("Error initializing formio builder", err);
             }
          },
          // set up a function that can be called to request the form schema
@@ -71,6 +71,7 @@ export default class ABCustomFormIOBuilder {
          // Pass functions into the Webix component to be use in $init
          label: this.label,
          parseDataFields: this.parseDataFields,
+         notify: this.AB.notify.developer,
       };
    }
 
