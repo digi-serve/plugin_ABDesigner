@@ -51,6 +51,7 @@ export default function (AB) {
       require("./process/ABProcessTaskUserApproval.js"),
       require("./process/ABProcessTaskUserExternal.js"),
       require("./process/ABProcessTriggerLifecycle.js"),
+      require("./process/ABProcessTriggerTimer.js"),
    ].forEach((P) => {
       let Klass = P.default(AB);
       Processes.push(Klass);
