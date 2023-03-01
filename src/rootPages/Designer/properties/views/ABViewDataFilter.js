@@ -132,15 +132,15 @@ export default function (AB) {
          const $component = $$(ids.component);
 
          const defaultValues = this.defaultValues();
-         const values = $component.getValues();
+         let values = $component.getValues();
 
          // set default values
          for (const key in defaultValues)
-            values[key] = values[key] || defaultValues[key];
+            values[key] = defaultValues[key] || values[key];
 
          // set values saved on server
          for (const key in view.settings)
-            values[key] = values[key] || view.settings[key];
+            values[key] = view.settings[key] || values[key];
 
          let datacollectionId = values.dataviewID ? values.dataviewID : null;
          var SourceSelector = $$(ids.datacollection);
@@ -169,7 +169,7 @@ export default function (AB) {
          if (datacollectionId) {
             this.populateFields(datacollectionId);
          }
-         debugger;
+         // debugger;
          // $$(ids.labelPosition).setValue(
          //    view.settings.labelPosition ||
          //       ABViewFormPropertyComponentDefaults.labelPosition
