@@ -4,7 +4,6 @@
  */
 
 import FABView from "./ABView";
-import ABFieldConnect from "../dataFields/ABFieldConnect";
 
 export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
