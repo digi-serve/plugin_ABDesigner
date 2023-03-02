@@ -1,4 +1,5 @@
 import DesignerFactory from "./rootPages/Designer/ui.js";
+import initCustomWebix from "./webix_custom_components/customComponentManager.js";
 
 export default function (AB) {
    var Designer = DesignerFactory(AB);
@@ -28,5 +29,6 @@ export default function (AB) {
       },
    };
    Designer.application = application;
+   initCustomWebix(AB);
    return application;
 }
