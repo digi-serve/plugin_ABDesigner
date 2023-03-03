@@ -145,6 +145,24 @@ export default function (AB, init_settings) {
                                     },
                                  },
                                  {
+                                    name: "version",
+                                    view: "text",
+                                    label: L("Version"),
+                                    labelWidth: 100,
+                                    placeholder: L("1.0.0"),
+                                    invalidMessage: L(
+                                       "&nbsp; can only contain numbers or '.'s ."
+                                    ),
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_version_number"
+                                          );
+                                       },
+                                    },
+                                 },
+                                 {
                                     name: "icon",
                                     view: "richselect",
                                     id: "richselect1",
@@ -818,13 +836,16 @@ export default function (AB, init_settings) {
             [
                "label",
                "description",
+               "version",
                "icon",
                "isSystemObject",
                "isAccessManaged",
                "isTranslationManaged",
             ].forEach((f) => {
                if ($$(this.ids.form).elements[f]) {
-                  $$(this.ids.form).elements[f].setValue(application[f]);
+                  $$(this.ids.form).elements[f].setValue(
+                     application[f] || application.json[f]
+                  );
                }
             });
 
