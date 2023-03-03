@@ -45,6 +45,7 @@ export default function (AB) {
                view: "checkbox",
                labelWidth: uiSettings.labelWidthCheckbox,
                labelRight: L("Required"),
+               click: () => this.onChange(),
             },
             {
                id: ids.disable,
@@ -52,6 +53,7 @@ export default function (AB) {
                view: "checkbox",
                labelWidth: uiSettings.labelWidthCheckbox,
                labelRight: L("Disable"),
+               click: () => this.onChange(),
             },
          ].concat(elements);
 

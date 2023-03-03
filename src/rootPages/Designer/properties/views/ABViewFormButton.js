@@ -42,6 +42,7 @@ export default function (AB) {
                name: "includeSave",
                view: "checkbox",
                label: L("Save"),
+               click: () => this.onChange(),
             },
             {
                id: ids.saveLabel,
@@ -50,12 +51,16 @@ export default function (AB) {
                labelWidth: uiConfig.labelWidthLarge,
                label: L("Save Label"),
                placeholder: L("Save Placeholder"),
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
             {
                id: ids.includeCancel,
                name: "includeCancel",
                view: "checkbox",
                label: L("Cancel"),
+               click: () => this.onChange(),
             },
             {
                id: ids.cancelLabel,
@@ -64,12 +69,16 @@ export default function (AB) {
                labelWidth: uiConfig.labelWidthLarge,
                label: L("Cancel Label"),
                placeholder: L("Cancel Placeholder"),
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
             {
                id: ids.includeReset,
                name: "includeReset",
                view: "checkbox",
                label: L("Reset"),
+               click: () => this.onChange(),
             },
             {
                id: ids.resetLabel,
@@ -78,6 +87,9 @@ export default function (AB) {
                labelWidth: uiConfig.labelWidthLarge,
                label: L("Reset Label"),
                placeholder: L("Reset Placeholder"),
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
             {
                id: ids.afterCancel,
@@ -85,6 +97,9 @@ export default function (AB) {
                view: "richselect",
                labelWidth: uiConfig.labelWidthLarge,
                label: L("After Cancel"),
+               on: {
+                  onChange: () => this.onChange(),
+               },
                // options: []
             },
             {
@@ -107,6 +122,9 @@ export default function (AB) {
                      value: L("Right"),
                   },
                ],
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
          ]);
       }

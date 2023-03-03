@@ -49,6 +49,9 @@ export default function (AB) {
                      value: L("Rich editor"),
                   },
                ],
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
          ]);
       }

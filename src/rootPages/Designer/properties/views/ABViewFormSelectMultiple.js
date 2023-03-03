@@ -44,6 +44,9 @@ export default function (AB) {
                      value: L("Checkboxes"),
                   },
                ],
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
          ]);
       }
