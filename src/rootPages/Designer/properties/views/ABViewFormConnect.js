@@ -184,6 +184,14 @@ export default function (AB) {
          // });
 
          SortComponent.init(AB);
+
+         this.addPageProperty.on("change", () => {
+            this.onChange();
+         });
+
+         this.editPageProperty.on("change", () => {
+            this.onChange();
+         });
       }
 
       populate(view) {
@@ -278,8 +286,12 @@ export default function (AB) {
          });
 
          // Set the options of the possible edit forms
-         this.addPageProperty.setSettings(view, view.settingsAddPage);
-         this.editPageProperty.setSettings(view, view.settingsEditPage);
+         this.addPageProperty.setSettings(view, {
+            formView: view.settings.formView,
+         });
+         this.editPageProperty.setSettings(view, {
+            editForm: view.settings.editForm,
+         });
          $$(ids.filterConnectedValue).define("options", filterConnectedOptions);
          $$(ids.filterConnectedValue).setValue(
             view.settings.filterConnectedValue
@@ -369,12 +381,14 @@ export default function (AB) {
          values.settings.filterConditions = FilterComponent.getValue();
          values.settings.sortFields = SortComponent.getSettings();
 
-         values.settingsAddPage = this.addPageProperty.getSettings(view);
-         values.settingsEditPage = this.editPageProperty.getSettings(view);
+         const settingsAddPage = this.addPageProperty.getSettings(view) ?? {};
+         const settingsEditPage = this.editPageProperty.getSettings(view) ?? {};
+         values.settings.formView = settingsAddPage.formView;
+         values.settings.editForm = settingsEditPage.editForm;
 
          // refresh settings of app page tool
-         this.addPageProperty.setSettings(view, values.settingsAddPage);
-         this.editPageProperty.setSettings(view, values.settingsEditPage);
+         // this.addPageProperty.setSettings(view, values.settingsAddPage);
+         // this.editPageProperty.setSettings(view, values.settingsEditPage);
 
          return values;
       }
