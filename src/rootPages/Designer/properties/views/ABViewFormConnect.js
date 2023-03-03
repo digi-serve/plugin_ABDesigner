@@ -34,7 +34,9 @@ export default function (AB) {
 
          this.AB = AB;
          FilterComponent = this.AB.filterComplexNew(`${BASE_ID}_filter`);
+         FilterComponent.on("save", () => this.onChange());
          SortComponent = ABPopupSort(this.AB, `${BASE_ID}_sort`);
+         SortComponent.on("changed", () => this.onChange());
       }
 
       static get key() {
@@ -67,6 +69,9 @@ export default function (AB) {
                         label: L("Width:"),
                         labelWidth: uiConfig.labelWidthLarge,
                         validate: this.AB.Webix.rules.isNumber,
+                        on: {
+                           onChange: () => this.onChange(),
+                        },
                      },
                      {
                         id: ids.popupHeight,
@@ -76,6 +81,9 @@ export default function (AB) {
                         label: L("Height:"),
                         labelWidth: uiConfig.labelWidthLarge,
                         validate: this.AB.Webix.rules.isNumber,
+                        on: {
+                           onChange: () => this.onChange(),
+                        },
                      },
                   ],
                },
@@ -123,6 +131,9 @@ export default function (AB) {
                               view: "combo",
                               name: "filterConnectedValue",
                               options: [], // we will add these in propertyEditorPopulate
+                              on: {
+                                 onChange: () => this.onChange(),
+                              },
                            },
                         ],
                      },
