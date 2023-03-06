@@ -463,16 +463,19 @@ export default function (AB) {
             $componentView = formFieldComponent.ui;
          }
 
-         $componentView.id = ids.value; // set our expected id
+         // set our expected id
+         if ($componentView.rows[0]) $componentView.rows[0].id = ids.value;
+         else $componentView.id = ids.value;
 
          // WORKAROUND: add '[Current User]' option to the user data field
          if (field.key == "user") {
             $componentView.id = `update_container_${field.id}`;
             formFieldComponent.ids.component = ids.value;
-            $componentView.rows[0].id = ids.value; // set new value id
+            const $userList = $componentView.rows[0].rows[0];
+            $userList.id = ids.value; // set new value id
 
-            const _originOnShow = $componentView.rows[0].suggest.on.onShow;
-            $componentView.rows[0].suggest.on.onShow = async () => {
+            const _originOnShow = $userList.suggest.on.onShow;
+            $userList.suggest.on.onShow = async () => {
                await _originOnShow();
 
                const $userOpts = $$(ids.value);
@@ -491,7 +494,7 @@ export default function (AB) {
             };
 
             field.on("option.data", () => {
-               $componentView.rows[0].suggest.on.onShow();
+               $userList.suggest.on.onShow();
             });
          }
 

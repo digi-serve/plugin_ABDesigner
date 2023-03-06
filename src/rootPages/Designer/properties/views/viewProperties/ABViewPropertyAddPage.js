@@ -45,6 +45,7 @@ export default function (AB, idBase) {
                      if (newVal == L("No add new option")) {
                         $$(ids.formView).setValue("");
                      }
+                     this.emit("change");
                   },
                },
             };

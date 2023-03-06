@@ -44,6 +44,9 @@ export default function (AB) {
                      value: L("Radio"),
                   },
                ],
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
          ]);
       }

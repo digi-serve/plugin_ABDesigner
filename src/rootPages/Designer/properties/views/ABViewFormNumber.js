@@ -36,6 +36,9 @@ export default function (AB) {
                view: "checkbox",
                labelWidth: uiConfig.labelWidthCheckbox,
                labelRight: L("Plus/Minus Buttons"),
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
          ]);
       }
