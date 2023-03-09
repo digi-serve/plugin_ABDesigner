@@ -81,6 +81,7 @@ export default function (AB) {
       require("./views/ABViewFormConnect"),
       require("./views/ABViewFormCustom"),
       require("./views/ABViewFormDatepicker"),
+      require("./views/ABViewFormJson"),
       require("./views/ABViewFormNumber"),
       require("./views/ABViewFormSelectMultiple"),
       require("./views/ABViewFormSelectSingle"),
