@@ -622,6 +622,7 @@ export default function (AB, options) {
        */
       templateListItem(obj, common) {
          if (!this.cacheTemplate[obj.id]) {
+            obj.warningsEval?.();
             var warnings = obj.warningsAll();
 
             if (typeof this._templateListItem == "string") {
