@@ -19,6 +19,8 @@ export default function (AB, init_settings) {
    class UI_Work_Version_Workspace extends UIClass {
       constructor(base, settings = {}) {
          super(base, {
+            form: "",
+            versionOption: "",
             multiview: "",
             noSelection: "",
             workspace: "",
@@ -171,6 +173,7 @@ export default function (AB, init_settings) {
                      },
                      {
                         css: "webix_dark",
+                        id: this.ids.versionOption,
                         view: "toolbar",
                         cols: [
                            { view: "label", label: "App Version" },
@@ -185,7 +188,8 @@ export default function (AB, init_settings) {
                      {
                         // autoheight: false,
                         view: "form",
-                        id: "versionForm",
+                        // id: "versionForm",
+                        id: this.ids.form,
                         rows: [
                            {
                               label: "Version number options for Current Changes",
@@ -196,6 +200,7 @@ export default function (AB, init_settings) {
                               cols: [
                                  {
                                     options: getVersionOptions(),
+                                    id: this.ids.versionOption,
                                     view: "segmented",
                                     height: 40,
                                     value: getVersionOptionByNumber(
@@ -264,7 +269,9 @@ export default function (AB, init_settings) {
                               css: "webix_primary",
                               // icon: "fa fa-download",
                               disabled: false,
-                              // click: save_form,
+                              click: () => {
+                                 return this.save();
+                              },
                            },
                            {
                               id: "rollback_button",
@@ -319,6 +326,8 @@ export default function (AB, init_settings) {
          const ids = this.ids;
 
          this.AB = AB;
+         this.$form = $$(this.ids.form);
+         this.$versionOption = $$(this.ids.versionOption);
 
          // this.warningsPropogate([Property, Datatable]);
          this.on("warnings", () => {
@@ -341,13 +350,14 @@ export default function (AB, init_settings) {
          // await Datatable.init(AB);
          await Property.init(AB);
 
-         this.mockVersion = this.AB.versionNew({});
-         this.mockVersion.init();
+         // ! datacollection stuff???
+         // this.mockVersion = this.AB.versionNew({});
+         // this.mockVersion.init();
 
-         // Datatable.versionLoad(this.mockVersion);
-         Property.versionLoad(this.mockVersion);
+         // // Datatable.versionLoad(this.mockVersion);
+         // Property.versionLoad(this.mockVersion);
 
-         $$(ids.noSelection).show();
+         // $$(ids.noSelection).show();
       }
 
       applicationLoad(application) {
@@ -437,6 +447,125 @@ export default function (AB, init_settings) {
          this.loadData();
 
          this.warningsRefresh(version);
+      }
+      /**
+       * @method save
+       * take the data entered into the form and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @return {Promise}
+       */
+      async save() {
+         var Form = this.$form;
+         let formVals = Form.getValues();
+         console.dir(formVals);
+
+         // get version number option
+         formVals["version"] = this.getVersionNumber(
+            this.$versionOption.$getValue()
+         );
+
+         // is this error needed?
+         if (!this.CurrentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            return false;
+         }
+
+         try {
+            await this.applicationChangeLogAdd(
+               this.CurrentApplication,
+               formVals
+            );
+            this.toList();
+         } catch (e) {
+            /* error is handled in .applicationChangeLogAdd() */
+         }
+         // this.ready();
+      }
+
+      /**
+       * @function getVersionNumber
+       * Extracts the version number from a string.
+       * @param {string} string The input string to extract the version number from.
+       * @return {string|null} The version number if found in the input string, otherwise null.
+       */
+
+      getVersionNumber(string) {
+         const pattern = /^(\d+\.\d+\.\d+)/;
+         const match = pattern.exec(string);
+         if (match) {
+            return match[1];
+         } else {
+            const e = new Error(
+               "Failed to extract version number from input string."
+            );
+            this.AB.notify.developer(e, {
+               context: "ui_choose_form:applicationChangeLogAdd()",
+               application: this.Application.toObj(),
+               string,
+            });
+            return null;
+         }
+      }
+
+      /**
+       * @method applicationChangeLogAdd
+       * Step through the process of updating an ABApplication with the
+       * current state of the Form.
+       * @param {ABApplication} application
+       */
+      async applicationChangeLogAdd(Application, values) {
+         Application = this.CurrentApplication || Application;
+         var oldVersionNumber = Application.versionData.versionNumber;
+         // string
+         // the original version number to reset to incase of an error saving.
+
+         let newVersionNumber = values.version;
+
+         // Set Data
+         Application.versionData.changeLog[newVersionNumber] = values;
+         Application.versionData.versionNumber = newVersionNumber;
+         Application.versionNumber = newVersionNumber;
+
+         try {
+            await Application.save();
+            webix.message({
+               type: "success",
+               text: L(
+                  "{0} Successfully logged update of ",
+                  [Application.label],
+                  " to version: ",
+                  newVersionNumber
+               ),
+            });
+         } catch (e) {
+            webix.message({
+               type: "error",
+               text: L(
+                  "Error Updating {0}",
+                  [Application.label],
+                  " to version: ",
+                  newVersionNumber
+               ),
+            });
+            this.AB.notify.developer(e, {
+               context: "ui_choose_form:applicationChangeLogAdd()",
+               application: Application.toObj(),
+               values,
+            });
+
+            // reset the version number
+            Application.versionData.versionNumber = oldVersionNumber;
+            // Remove the unsaved object
+            // ? does reflect work here?
+            Reflect.deleteProperty(
+               Application.versionData.changeLog,
+               newVersionNumber
+            );
+         }
       }
    }
 

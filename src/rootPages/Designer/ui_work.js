@@ -83,6 +83,17 @@ export default function (AB) {
 
             this.cacheSidebarItems[ID] = [
                {
+                  id: this.ids.tab_version,
+                  value: L("Version"),
+                  icon: "fa fa-fw fa-code-fork",
+                  on: {
+                     onclick: () => {
+                        console.error("This isn't working");
+                        AppVersionWorkspace.show();
+                     },
+                  },
+               },
+               {
                   id: this.ids.tab_object,
                   value: `${L("Objects")}`,
                   icon: "fa fa-fw fa-database",
@@ -112,17 +123,6 @@ export default function (AB) {
                   icon: "fa fa-fw fa-id-card-o",
                   // TODO
                   // issues: warnInterfaces,
-               },
-               {
-                  id: this.ids.tab_version,
-                  value: L("Version"),
-                  icon: "fa fa-fw fa-code-fork",
-                  on: {
-                     onclick: () => {
-                        console.error("This isn't working");
-                        AppVersionWorkspace.show();
-                     },
-                  },
                },
             ];
 
@@ -443,7 +443,6 @@ export default function (AB) {
 
             // Version Workspace Tab
             case this.ids.tab_version:
-               console.error("This isn't activating at all");
                AppVersionWorkspace.show();
                // AppVersionLog.show();
                // this.$tabbar.select(this.ids.tab_version);

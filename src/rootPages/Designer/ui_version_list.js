@@ -5,11 +5,7 @@
  *
  */
 
-import UIListEditMenuFactory from "./ui_common_popupEditMenu";
-
 export default function (AB, options) {
-   var UIListEditMenu = UIListEditMenuFactory(AB);
-
    const uiConfig = AB.Config.uiSettings();
    var L = function (...params) {
       return AB.Multilingual.labelPlugin("ABDesigner", ...params);
@@ -22,9 +18,6 @@ export default function (AB, options) {
          super(base, {
             listSetting: "",
             list: "",
-            searchText: "",
-            sort: "",
-            group: "",
             buttonNew: "",
          });
 
@@ -33,18 +26,6 @@ export default function (AB, options) {
          this.labels = {
             addNew: "Add new item",
             confirmDeleteTitle: "Delete Item",
-            title: "Items",
-            searchPlaceholder: "Item name",
-            renameErrorMessage: "error renaming {0}",
-
-            // we can reuse some of the Object ones:
-            confirmDeleteMessage: "Do you want to delete <b>{0}</b>?",
-            listSearch: "Search",
-            listSetting: "Settings",
-            listSort: "Sort",
-            listAsc: "A -> Z",
-            listDesc: "Z -> A",
-            listGroup: "Group",
          };
          // copy in any passed in labels:
          if (attributes.labels) {
@@ -74,13 +55,7 @@ export default function (AB, options) {
           * The Process Row template definition.
           */
          this._templateListItem =
-            attributes.templateListItem ||
-            [
-               "<div class='ab-object-list-item'>",
-               "#label##warnings#",
-               "{common.iconGear}",
-               "</div>",
-            ].join("");
+            "#version# - #changelog.author# <div style='padding-left:18px'>#changelog.commitMessage#</div>";
 
          this.cacheTemplate = {};
          // {json} hash { obj.id : template display }
@@ -96,81 +71,48 @@ export default function (AB, options) {
       }
 
       ui() {
-         // the popup edit list for each entry in the list.
-         this.PopupEditComponent = new UIListEditMenu(this.ids.component);
-
-         //PopupListEditMenuComponent
-         // console.log("look here------------------>", App.custom.editunitlist.view);
-
          var ids = this.ids;
          // for our onAfterRender() handler
 
-         var filmset = [
-            { id: 1, title: "The Shawshank Redemption", year: 1994 },
-            { id: 2, title: "The Godfather", year: 1972 },
-            { id: 3, title: "The Godfather: Part II", year: 1974 },
-            { id: 4, title: "The Good, the Bad and the Ugly", year: 1966 },
-            { id: 5, title: "My Fair Lady", year: 1964 },
-            { id: 6, title: "12 Angry Men", year: 1957 },
-         ];
+         // function sortChangelogByVersion(changelogObj) {
+         //    const changeData = changelogObj;
+         //    // Get an array of the changelog object's keys (i.e. version numbers)
+         //    const versionNumbers = Object.keys(changelogObj);
 
-         var versionData = {
-            versionNumber: "1.0.1",
-            changelog: {
-               "1.0.0": {
-                  changeSize: 0, // the initial version has no changes, so the change size is 0
-                  commitMessage: "Created App", // the commit message for the initial version
-                  author: "Bob", // the name of the builder who created the initial version
-                  timestamp: "2023-03-02T14:30:00.000Z", // the timestamp for the initial version
-               },
-               "1.0.1": {
-                  changeSize: 1, // the size of the changes made in version 1.0.1
-                  commitMessage: "Added a home page", // the commit message for version 1.0.1
-                  author: "Ann", // the name of the builder who made the changes
-                  timestamp: "2023-03-03T10:15:00.000Z", // the timestamp for version 1.0.1
-               },
-            },
-         };
+         //    // Sort the version numbers based on semantic versioning rules, with newest versions first
+         //    const sortedVersionNumbers = versionNumbers.sort((a, b) => {
+         //       const [aMajor, aMinor, aPatch] = a
+         //          .split(".")
+         //          .map((num) => parseInt(num));
+         //       const [bMajor, bMinor, bPatch] = b
+         //          .split(".")
+         //          .map((num) => parseInt(num));
 
-         function sortChangelogByVersion(changelogObj) {
-            const changeData = changelogObj;
-            // Get an array of the changelog object's keys (i.e. version numbers)
-            const versionNumbers = Object.keys(changelogObj);
+         //       if (aMajor !== bMajor) {
+         //          return bMajor - aMajor;
+         //       } else if (aMinor !== bMinor) {
+         //          return bMinor - aMinor;
+         //       } else {
+         //          return bPatch - aPatch;
+         //       }
+         //    });
 
-            // Sort the version numbers based on semantic versioning rules, with newest versions first
-            const sortedVersionNumbers = versionNumbers.sort((a, b) => {
-               const [aMajor, aMinor, aPatch] = a
-                  .split(".")
-                  .map((num) => parseInt(num));
-               const [bMajor, bMinor, bPatch] = b
-                  .split(".")
-                  .map((num) => parseInt(num));
+         //    // Map the sorted versions to an array of objects that includes the version number and changelog info
+         //    const sortedChangelog = sortedVersionNumbers.map((version) => {
+         //       changelogObj[version]["versionNumber"] = version;
+         //       console.dir(changeData[version].commitMessage);
+         //       return {
+         //          version,
+         //          changelog: changelogObj[version],
+         //          commitMessage: changeData[version]["commitMessage"],
+         //          author: changeData[version]["author"],
+         //          timestamp: changeData[version]["timestamp"],
+         //          changeSize: changeData[version]["changeSize"],
+         //       };
+         //    });
 
-               if (aMajor !== bMajor) {
-                  return bMajor - aMajor;
-               } else if (aMinor !== bMinor) {
-                  return bMinor - aMinor;
-               } else {
-                  return bPatch - aPatch;
-               }
-            });
-
-            // Map the sorted versions to an array of objects that includes the version number and changelog info
-            const sortedChangelog = sortedVersionNumbers.map((version) => {
-               changelogObj[version]["versionNumber"] = version;
-               console.dir(changeData[version].commitMessage);
-               return {
-                  version,
-                  changelog: changelogObj[version],
-                  commitMessage: changeData[version]["commitMessage"],
-                  author: changeData[version]["author"],
-                  timestamp: changeData[version]["timestamp"],
-                  changeSize: changeData[version]["changeSize"],
-               };
-            });
-
-            return sortedChangelog;
-         }
+         //    return sortedChangelog;
+         // }
          // Helper functions
          //  The getVersionOptions() function generates an array of version options that start from the current version
          // and go up by one for each of the three segments (major, minor, and patch).
@@ -207,53 +149,68 @@ export default function (AB, options) {
             view: "layout",
             rows: [
                {
-                  cols: [
-                     {
-                        rows: [
-                           {
-                              view: "button",
-                              value: "Set current Changes",
-                              click: function () {
-                                 $$("versionList").unselectAll();
-                                 $$("save_button_1").show();
-                                 $$("save_button_2").show();
-                                 $$("versionForm").show();
-                                 $$("version").hide();
-                                 $$("timestamp").hide();
-                                 $$("rollback_button").hide();
-                                 $$("keepVersion").hide();
-                              },
-                           },
-                           {
-                              view: "list",
-                              id: "versionList",
-                              template:
-                                 "#version# - #changelog.author# <div style='padding-left:18px'>#changelog.commitMessage#</div>",
-                              type: {
-                                 height: 60,
-                              },
-                              select: true,
-                              autowidth: true,
-                              autoheight: true,
-                              data: sortChangelogByVersion(
-                                 versionData.changelog
-                              ),
-                              on: {
-                                 onItemClick: function (id) {
-                                    var item = this.getItem(id);
-                                    console.log(item);
-                                    $$("save_button_1").hide();
-                                    $$("save_button_2").hide();
-                                    $$("version").show();
-                                    $$("timestamp").show();
-                                    $$("rollback_button").show();
-                                    $$("keepVersion").show();
-                                 },
-                              },
-                           },
-                        ],
+                  view: "button",
+                  value: "Set current Changes",
+                  click: function () {
+                     $$("versionList").unselectAll();
+                     $$("save_button_1").show();
+                     $$("save_button_2").show();
+                     $$("versionForm").show();
+                     $$("version").hide();
+                     $$("timestamp").hide();
+                     $$("rollback_button").hide();
+                     $$("keepVersion").hide();
+                  },
+               },
+               {
+                  id: this.ids.list,
+                  width: uiConfig.columnWidthLarge,
+                  editaction: "custom",
+                  editable: true,
+                  editor: "text",
+                  editValue: "label",
+                  view: "list",
+                  template: (obj, common) => {
+                     return this.templateListItem(obj, common);
+                  },
+                  // template:
+                  //    "#version# - #changelog.author# <div style='padding-left:18px'>#changelog.commitMessage#</div>",
+                  type: {
+                     height: 60,
+                  },
+                  select: true,
+                  autowidth: true,
+                  autoheight: true,
+                  // data: data,
+                  on: {
+                     onAfterSelect: (id) => {
+                        this.onSelectItem(id);
                      },
-                  ],
+                     onBeforeEditStop: (state, editor) => {
+                        this.onBeforeEditStop(state, editor);
+                     },
+                     onAfterEditStop: (state, editor, ignoreUpdate) => {
+                        this.onAfterEditStop(state, editor, ignoreUpdate);
+                     },
+                     onAfterRender() {
+                        this.data.each((a) => {
+                           AB.ClassUI.CYPRESS_REF(
+                              this.getItemNode(a.id),
+                              `${ids.list}_${a.id}`
+                           );
+                        });
+                     },
+                     onItemClick: function (id) {
+                        var item = this.getItem(id);
+                        console.log(item);
+                        $$("save_button_1").hide();
+                        $$("save_button_2").hide();
+                        $$("version").show();
+                        $$("timestamp").show();
+                        $$("rollback_button").show();
+                        $$("keepVersion").show();
+                     },
+                  },
                },
             ],
          };
@@ -435,48 +392,13 @@ export default function (AB, options) {
       init(AB) {
          this.AB = AB;
 
-         // if ($$(this.ids.component)) $$(this.ids.component).adjust();
+         if ($$(this.ids.component)) $$(this.ids.component).adjust();
 
-         // this.$list = $$(this.ids.list);
-         // if (this.$list) {
-         //    webix.extend(this.$list, webix.ProgressBar);
-         //    this.$list.adjust();
-         // }
-
-         // this.PopupEditComponent.init(AB, {
-         //    // onClick: _logic.callbackProcessEditorMenu,
-         //    hideCopy: !this.attributes.menu.copy,
-         //    hideExclude: !this.attributes.menu.exclude,
-         // });
-
-         // this.PopupEditComponent.on("click", (command) => {
-         //    var selectedItem = this.$list.getSelectedItem(false);
-         //    switch (command) {
-         //       case "delete":
-         //          this.remove();
-         //          break;
-
-         //       case "rename":
-         //          this.rename();
-         //          break;
-
-         //       case "exclude":
-         //          this.emit("exclude", selectedItem);
-         //          break;
-
-         //       case "copy":
-         //          this.copy(selectedItem);
-         //          // this.emit("copy", selectedItem);
-         //          break;
-
-         //       default:
-         //          this.emit("menu", {
-         //             command: command,
-         //             id: selectedItem.id,
-         //          });
-         //          break;
-         //    }
-         // });
+         this.$list = $$(this.ids.list);
+         if (this.$list) {
+            webix.extend(this.$list, webix.ProgressBar);
+            this.$list.adjust();
+         }
 
          this._settings = this.AB.Storage.get(this.idBase) || {
             objectlistIsOpen: false,
@@ -506,102 +428,81 @@ export default function (AB, options) {
       dataLoad(data) {
          this.busy();
 
-         // // get a DataCollection of all our objects
-         // this.itemList = new webix.DataCollection({
-         //    data: data,
-         // });
+         var versionData = {
+            versionNumber: "1.0.1",
+            changelog: {
+               "1.0.0": {
+                  changeSize: 0, // the initial version has no changes, so the change size is 0
+                  commitMessage: "Created App", // the commit message for the initial version
+                  author: "Bob", // the name of the builder who created the initial version
+                  timestamp: "2023-03-02T14:30:00.000Z", // the timestamp for the initial version
+               },
+               "1.0.1": {
+                  changeSize: 1, // the size of the changes made in version 1.0.1
+                  commitMessage: "Added a home page", // the commit message for version 1.0.1
+                  author: "Ann", // the name of the builder who made the changes
+                  timestamp: "2023-03-03T10:15:00.000Z", // the timestamp for version 1.0.1
+               },
+            },
+         };
 
-         // // setup object list settings
-         // var $listSetting = $$(this.ids.listSetting);
-         // $listSetting.getParentView().blockEvent();
-         // $listSetting.define(
-         //    "collapsed",
-         //    this._settings.objectlistIsOpen != true
-         // );
-         // $listSetting.refresh();
-         // $listSetting.getParentView().unblockEvent();
+         function sortChangelogByVersion(changelogObj) {
+            const changeData = changelogObj;
+            // Get an array of the changelog object's keys (i.e. version numbers)
+            const versionNumbers = Object.keys(changelogObj);
 
-         // var $searchText = $$(this.ids.searchText);
-         // $searchText.blockEvent();
-         // $searchText.setValue(this._settings.objectlistSearchText);
-         // $searchText.unblockEvent();
+            // Sort the version numbers based on semantic versioning rules, with newest versions first
+            const sortedVersionNumbers = versionNumbers.sort((a, b) => {
+               const [aMajor, aMinor, aPatch] = a
+                  .split(".")
+                  .map((num) => parseInt(num));
+               const [bMajor, bMinor, bPatch] = b
+                  .split(".")
+                  .map((num) => parseInt(num));
 
-         // var $sort = $$(this.ids.sort);
-         // $sort.blockEvent();
-         // $sort.setValue(this._settings.objectlistSortDirection);
-         // $sort.unblockEvent();
+               if (aMajor !== bMajor) {
+                  return bMajor - aMajor;
+               } else if (aMinor !== bMinor) {
+                  return bMinor - aMinor;
+               } else {
+                  return bPatch - aPatch;
+               }
+            });
 
-         // var $group = $$(this.ids.group);
-         // $group.blockEvent();
-         // $group.setValue(this._settings.objectlistIsGroup);
-         // $group.unblockEvent();
+            // Map the sorted versions to an array of objects that includes the version number and changelog info
+            const sortedChangelog = sortedVersionNumbers.map((version) => {
+               changelogObj[version]["versionNumber"] = version;
+               console.dir(changeData[version].commitMessage);
+               return {
+                  version,
+                  changelog: changelogObj[version],
+                  commitMessage: changeData[version]["commitMessage"],
+                  author: changeData[version]["author"],
+                  timestamp: changeData[version]["timestamp"],
+                  changeSize: changeData[version]["changeSize"],
+               };
+            });
 
-         // // clear our list and display our objects:
-         // var List = this.$list;
-         // if (List) {
-         //    List.clearAll();
-         //    List.data.unsync();
-         //    List.data.sync(this.itemList);
-         //    List.refresh();
-         //    List.unselectAll();
-         // }
+            return sortedChangelog;
+         }
 
-         // // sort objects
-         // this.listSort(this._settings.objectlistSortDirection);
+         // get a sorted list of changes
+         this.itemList = sortChangelogByVersion(
+            data.changelog || versionData.changelog
+         );
 
-         // // filter object list
-         // // this.listSearch();
+         // clear our list and display our versions:
+         var List = this.$list || $$(this.ids.list);
+         if (List) {
+            List.clearAll();
+            List.data.unsync();
+            List.data.sync(this.itemList);
+            List.refresh();
+            List.unselectAll();
+         }
 
-         // // hide progress loading cursor
          this.ready();
       }
-
-      // clickEditMenu(e, id, trg) {
-      //    // Show menu
-      //    this.PopupEditComponent.show(trg);
-      //    return false;
-      // }
-
-      // /**
-      //  * @method copy
-      //  * make a copy of the current selected item.
-      //  *
-      //  * copies should have all the same .toObj() data,
-      //  * but will need unique names, and ids.
-      //  *
-      //  * we start the process by making a copy and then
-      //  * having the user enter a new label/name for it.
-      //  *
-      //  * our .afterEdit() routines will detect it is a copy
-      //  * then alert the parent UI component of the "copied" data
-      //  *
-      //  * @param {obj} selectedItem the currently selected item in
-      //  * 		our list.
-      //  */
-      // copy(selectedItem) {
-      //    var newItem = selectedItem.toObj();
-      //    newItem.id = "copy_" + (this.itemList ? this.itemList.count() : "01");
-      //    delete newItem.translations;
-      //    newItem.name = newItem.name + " copy";
-      //    newItem.label = newItem.name;
-
-      //    // find the current index of the item being copied:
-      //    var list = this.$list;
-      //    var selectedIndex = list.getIndexById(list.getSelectedId());
-
-      //    // insert copy in it's place and make it editable:
-      //    list.add(newItem, selectedIndex);
-      //    list.select(newItem.id);
-      //    list.edit(newItem.id);
-      // }
-
-      // listSettingCollapse() {
-      //    this._settings.objectlistIsOpen = false;
-      // }
-
-      // listSettingExpand() {
-      //    this._settings.objectlistIsOpen = true;
-      // }
 
       busy() {
          this.$list?.showProgress?.({ type: "icon" });
@@ -611,129 +512,19 @@ export default function (AB, options) {
          this.$list?.hideProgress?.();
       }
 
-      // listSearch() {
-      //    var searchText = $$(this.ids.searchText).getValue().toLowerCase();
+      /**
+       * @function onSelectItem()
+       *
+       * Perform these actions when an Process is selected in the List.
+       */
+      onSelectItem(id) {
+         var process = this.$list.getItem(id);
 
-      //    this.$list.filter(function (item) {
-      //       return (
-      //          !item.label || item.label.toLowerCase().indexOf(searchText) > -1
-      //       );
-      //    });
+         // _logic.callbacks.onChange(object);
+         this.emit("selected", process);
 
-      //    this._settings.objectlistSearchText = searchText;
-      // }
-
-      // listSort(sortType) {
-      //    if (this.itemList == null) return;
-      //    this.itemList.sort("label", sortType);
-      //    // this.listSearch();
-      //    this._settings.objectlistSortDirection = sortType;
-      // }
-
-      // listGroup(isGroup) {
-      //    if (isGroup == true) {
-      //       this.$list.define("uniteBy", (item) => {
-      //          return item.label.toUpperCase().substr(0, 1);
-      //       });
-      //    } else {
-      //       this.$list.define("uniteBy", (/* item */) => {
-      //          return L(this.labels.title);
-      //       });
-      //    }
-      //    this.$list.refresh();
-      //    this._settings.objectlistIsGroup = isGroup;
-      // }
-
-      // listCount() {
-      //    if (this.$list) return this.$list.count();
-      // }
-
-      // selectedItem() {
-      //    return this.$list.getSelectedItem(false);
-      // }
-
-      // onAfterEditStop(state, editor /*, ignoreUpdate */) {
-      //    this.showGear(editor.id);
-
-      //    if (state.value != state.old) {
-      //       this.busy();
-
-      //       var selectedItem = this.$list.getSelectedItem(false);
-      //       selectedItem.label = state.value;
-
-      //       // if this item supports .save()
-      //       if (selectedItem.save) {
-      //          // Call server to rename
-      //          selectedItem
-      //             .save()
-      //             .catch((err) => {
-      //                this.ready();
-
-      //                webix.alert({
-      //                   title: L("Alert"),
-      //                   text: L(this.labels.renameErrorMessage, state.old),
-      //                });
-      //                this.AB.notify.developer(err, {
-      //                   context:
-      //                      "ui_common_list:onAfterEditStop():Error saving item.",
-      //                   id: selectedItem.id,
-      //                   value: state.value,
-      //                });
-      //             })
-      //             .then(() => {
-      //                this.ready();
-      //             });
-      //       } else {
-      //          // maybe this is from a .copy() command:
-      //          if (selectedItem.id.indexOf("copy_") == 0) {
-      //             // if so, then our default name should be what
-      //             // the label is:
-      //             selectedItem.name = selectedItem.label;
-      //             var currID = selectedItem.id;
-
-      //             // remove our temp id
-      //             delete selectedItem.id;
-
-      //             // alert the parent UI of the copied data:
-      //             this.emit("copied", {
-      //                item: selectedItem,
-      //                currID: currID,
-      //             });
-      //          }
-      //       }
-      //    }
-      // }
-
-      // onBeforeEditStop(state /*, editor */) {
-      //    var selectedItem = this.$list.getSelectedItem(false);
-      //    selectedItem.label = state.value;
-
-      //    // if this item supports isValid()
-      //    if (selectedItem.isValid) {
-      //       var validator = selectedItem.isValid();
-      //       if (validator.fail()) {
-      //          selectedItem.label = state.old;
-
-      //          return false; // stop here.
-      //       }
-      //    }
-
-      //    return true;
-      // }
-
-      // /**
-      //  * @function onSelectItem()
-      //  *
-      //  * Perform these actions when an Process is selected in the List.
-      //  */
-      // onSelectItem(id) {
-      //    var process = this.$list.getItem(id);
-
-      //    // _logic.callbacks.onChange(object);
-      //    this.emit("selected", process);
-
-      //    this.showGear(id);
-      // }
+         this.showGear(id);
+      }
 
       /**
        * @function save()

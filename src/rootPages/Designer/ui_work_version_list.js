@@ -125,32 +125,12 @@ export default function (AB) {
        *										we are working with.
        */
       applicationLoad(application) {
-         var oldAppID = this.CurrentApplicationID;
-         var selectedItem = null;
-
          super.applicationLoad(application);
-
-         if (oldAppID == this.CurrentApplicationID) {
-            selectedItem = this.ListComponent.selectedItem();
-         }
-
-         // NOTE: only include System Objects if the user has permission
-         var f = (obj) => !obj.isSystemObject;
-         if (this.AB.Account.isSystemDesigner()) {
-            f = () => true;
-         }
 
          // clear our list and display our data collections:
          // TODO
          console.dir("Make the list from the definitions here...  ");
-         this.ListComponent.dataLoad(application.versionData.changeLog);
-
-         // if (selectedItem) {
-         //    this.ListComponent.selectItem(selectedItem.id);
-         // }
-
-         // prepare our Popup with the current Application
-         // AddForm.applicationLoad(application);
+         this.ListComponent.dataLoad(application.versionData);
       }
 
       warningsRefresh() {
@@ -168,23 +148,6 @@ export default function (AB) {
             this.ListComponent.selectItem(selectedItem.id);
          }
       }
-
-      // /**
-      //  * @function exclude
-      //  * the list component notified us of an exclude action and which
-      //  * item was chosen.
-      //  *
-      //  * perform the removal and update the UI.
-      //  */
-      // async exclude(item) {
-      //    this.ListComponent.busy();
-      //    var app = this.CurrentApplication;
-      //    await app?.versionRemove(item);
-      //    this.ListComponent.dataLoad(app?.versionsIncluded());
-
-      //    // this will clear the data collection workspace
-      //    this.emit("selected", null);
-      // }
 
       ready() {
          this.ListComponent.ready();
