@@ -103,7 +103,7 @@ export default function (AB) {
                );
                let formComponent = view.parent.viewComponents[element.id];
                filterFieldOptions.push({
-                  id: element.id,
+                  id: element.settings.fieldId,
                   value: formComponent.settings.fieldLabel,
                });
             }
