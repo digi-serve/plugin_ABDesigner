@@ -77,6 +77,10 @@ export default function (AB) {
             this.CurrentQueryID = query?.id;
          }
 
+         versionLoad(version) {
+            this.CurrentVersionID = version?.id;
+         }
+
          viewLoad(view) {
             this.CurrentViewID = view?.id;
 
