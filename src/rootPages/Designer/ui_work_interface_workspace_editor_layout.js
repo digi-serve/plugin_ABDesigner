@@ -271,6 +271,7 @@ export default function (AB) {
             // if the [delete] icon is clicked on this component:
             // tell our interface_workspace to reload our CurrentView
             this.emit("view.load", this.CurrentView);
+            this.emit("warnings"); // refresh our warnings
          });
 
          if (editorComponent.onShow) editorComponent.onShow();

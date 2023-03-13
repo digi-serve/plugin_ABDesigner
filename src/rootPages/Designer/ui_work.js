@@ -17,12 +17,12 @@ export default function (AB) {
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
 
-   var AppObjectWorkspace = UI_Work_Object(AB);
+   const AppObjectWorkspace = UI_Work_Object(AB);
    const AppQueryWorkspace = UI_Work_Query(AB);
    const AppDataCollectionWorkspace = UI_Work_Datacollection(AB);
    const AppProcessWorkspace = UI_Work_Process(AB);
-   var AppInterfaceWorkspace = UI_Work_Interface(AB);
-   var AppVersionWorkspace = UI_Work_VersionLog(AB);
+   const AppInterfaceWorkspace = UI_Work_Interface(AB);
+   const AppVersionWorkspace = UI_Work_VersionLog(AB);
 
    class UI_Work extends UIClass {
       constructor(options = {}) {
@@ -58,12 +58,12 @@ export default function (AB) {
          let warnObjects = {};
          if (app) {
             app[key]().forEach((o) => {
-               o.warningsEval?.();
+               o.warningsEval();
                countObjects += (o.warningsAll() || []).length;
             });
          }
          if (countObjects) {
-            warnObjects.icon = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseDark smalltext"></span>`;
+            warnObjects.icon = this.WARNING_ICON_DARK; // `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseDark smalltext"></span>`;
             warnObjects.count = countObjects;
          }
          return warnObjects;
@@ -71,16 +71,14 @@ export default function (AB) {
       sidebarItems(app) {
          let ID = app?.id ?? null;
          if (!this.cacheSidebarItems[ID]) {
-            let warnObjects = this.scanTopic(app, "objectsIncluded");
-            let warnQueries = this.scanTopic(app, "queriesIncluded");
+            const warnObjects = this.scanTopic(app, "objectsIncluded");
+            const warnQueries = this.scanTopic(app, "queriesIncluded");
             const warnDatacollections = this.scanTopic(
                app,
                "datacollectionsIncluded"
             );
-            let warnProcesses = this.scanTopic(app, "processes");
-
-            // TODO
-            // const warnInterfaces = this.scanTopic(app, "interfacesIncluded");
+            const warnProcesses = this.scanTopic(app, "processes");
+            const warnInterfaces = this.scanTopic(app, "pages");
 
             this.cacheSidebarItems[ID] = [
                {
@@ -111,8 +109,7 @@ export default function (AB) {
                   id: this.ids.tab_interface,
                   value: L("Interface"),
                   icon: "fa fa-fw fa-id-card-o",
-                  // TODO
-                  // issues: warnInterfaces,
+                  issues: warnInterfaces,
                },
                {
                   id: this.ids.tab_version,
@@ -308,8 +305,10 @@ export default function (AB) {
             AppQueryWorkspace,
             AppDataCollectionWorkspace,
             AppProcessWorkspace,
+            AppInterfaceWorkspace,
          ]);
          this.on("warnings", () => {
+            this.CurrentApplication.warningsEval();
             this.refreshSideBar(this.CurrentApplication);
          });
 

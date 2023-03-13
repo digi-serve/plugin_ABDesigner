@@ -568,7 +568,7 @@ export default function (AB) {
                count: 0,
             };
             if (obj.warningsAll().length) {
-               warnings.icon = `<span class="webix_icon fa fa-warning pulseLight smalltext"></span>`;
+               warnings.icon = this.WARNING_ICON;
                warnings.count = obj.warningsAll().length;
             }
             this.cacheTemplate[obj.id] = `<div class='ab-app-list-item'>

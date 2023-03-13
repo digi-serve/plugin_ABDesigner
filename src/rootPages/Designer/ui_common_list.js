@@ -628,7 +628,7 @@ export default function (AB, options) {
             if (typeof this._templateListItem == "string") {
                var warnText = "";
                if (warnings.length > 0) {
-                  warnText = `<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>`;
+                  warnText = this.WARNING_ICON;
                }
 
                this.cacheTemplate[obj.id] = this._templateListItem
