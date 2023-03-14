@@ -98,9 +98,6 @@ export default function (AB) {
                element.key == "json" &&
                element.settings.type == "systemObject"
             ) {
-               let formElementsDefs = view.AB.definitionByID(
-                  element.settings.fieldId
-               );
                let formComponent = view.parent.viewComponents[element.id];
                filterFieldOptions.push({
                   id: element.settings.fieldId,
