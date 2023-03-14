@@ -3,7 +3,7 @@ import UI_Warnings from "./ui_warnings";
 
 // import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 // import FWorkspaceDisplay from "./ui_work_object_workspace_view_grid";
-import FWorkspaceProperty from "./ui_work_version_workspace_properties";
+// import FWorkspaceProperty from "./ui_work_version_workspace_properties";
 
 export default function (AB, init_settings) {
    const ibase = "ui_work_version_workspace";
@@ -12,7 +12,7 @@ export default function (AB, init_settings) {
    const L = UIClass.L();
 
    // const Datatable = FWorkspaceDisplay(AB, `${ibase}_view_grid`, init_settings);
-   const Property = FWorkspaceProperty(AB);
+   // const Property = FWorkspaceProperty(AB);
 
    const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, init_settings);
 
@@ -20,12 +20,15 @@ export default function (AB, init_settings) {
       constructor(base, settings = {}) {
          super(base, {
             form: "",
+            versionForm: "",
             versionOption: "",
             multiview: "",
             noSelection: "",
             workspace: "",
          });
          this.AB = AB;
+
+         this.versionNumber = "1.0.0";
 
          this.settings = settings;
 
@@ -68,100 +71,11 @@ export default function (AB, init_settings) {
             }
          }
 
-         //
-         var versionData = {
-            versionNumber: "1.0.1",
-            changelog: {
-               "1.0.0": {
-                  changeSize: 0, // the initial version has no changes, so the change size is 0
-                  commitMessage: "Created App", // the commit message for the initial version
-                  author: "Bob", // the name of the builder who created the initial version
-                  timestamp: "2023-03-02T14:30:00.000Z", // the timestamp for the initial version
-               },
-               "1.0.1": {
-                  changeSize: 1, // the size of the changes made in version 1.0.1
-                  commitMessage: "Added a home page", // the commit message for version 1.0.1
-                  author: "Ann", // the name of the builder who made the changes
-                  timestamp: "2023-03-03T10:15:00.000Z", // the timestamp for version 1.0.1
-               },
-            },
-         };
-
-         function sortChangelogByVersion(changelogObj) {
-            const changeData = changelogObj;
-            // Get an array of the changelog object's keys (i.e. version numbers)
-            const versionNumbers = Object.keys(changelogObj);
-
-            // Sort the version numbers based on semantic versioning rules, with newest versions first
-            const sortedVersionNumbers = versionNumbers.sort((a, b) => {
-               const [aMajor, aMinor, aPatch] = a
-                  .split(".")
-                  .map((num) => parseInt(num));
-               const [bMajor, bMinor, bPatch] = b
-                  .split(".")
-                  .map((num) => parseInt(num));
-
-               if (aMajor !== bMajor) {
-                  return bMajor - aMajor;
-               } else if (aMinor !== bMinor) {
-                  return bMinor - aMinor;
-               } else {
-                  return bPatch - aPatch;
-               }
-            });
-
-            // Map the sorted versions to an array of objects that includes the version number and changelog info
-            const sortedChangelog = sortedVersionNumbers.map((version) => {
-               changelogObj[version]["versionNumber"] = version;
-               console.dir(changeData[version].commitMessage);
-               return {
-                  version,
-                  changelog: changelogObj[version],
-                  commitMessage: changeData[version]["commitMessage"],
-                  author: changeData[version]["author"],
-                  timestamp: changeData[version]["timestamp"],
-                  changeSize: changeData[version]["changeSize"],
-               };
-            });
-
-            return sortedChangelog;
-         }
-         // Helper functions
-         //  The getVersionOptions() function generates an array of version options that start from the current version
-         // and go up by one for each of the three segments (major, minor, and patch).
-         function getVersionOptions() {
-            const versionNumber = versionData.versionNumber;
-            const major = versionNumber.split(".")[0];
-            const minor = versionNumber.split(".")[1];
-            const patch = versionNumber.split(".")[2];
-            const options = [
-               `${parseInt(major) + 1}.0.0 <i>major</i>`,
-               `${major}.${parseInt(minor) + 1}.0 <i>minor</i>`,
-               `${major}.${minor}.${parseInt(patch) + 1} <i>patch</i>`,
-            ];
-            return options;
-         }
-         // The getVersionOptionByNumber(versionNumber) function takes a version number and returns the
-         // corresponding option from the array generated by getVersionOptions().
-         function getVersionOptionByNumber(versionNumber) {
-            const options = getVersionOptions();
-            const major = versionNumber.split(".")[0];
-            const minor = versionNumber.split(".")[1];
-            const patch = versionNumber.split(".")[2];
-            if (major > 1) {
-               return `${major}.0.0 <i>major</i>`;
-            } else if (minor > 91) {
-               return `${major}.${minor}.0 <i>minor</i>`;
-            } else {
-               return `${major}.${minor}.${patch} <i>patch</i>`;
-            }
-         }
-
          ///
 
          return {
-            view: "multiview",
-            id: ids.multiview,
+            // view: "multiview",
+            // id: ids.multiview,
             cells: [
                // No selection
                {
@@ -177,12 +91,12 @@ export default function (AB, init_settings) {
                         view: "toolbar",
                         cols: [
                            { view: "label", label: "App Version" },
-                           {
-                              icon: "wxi-close",
-                              view: "icon",
-                              height: 38,
-                              width: 38,
-                           },
+                           // {
+                           //    icon: "wxi-close",
+                           //    view: "icon",
+                           //    height: 38,
+                           //    width: 38,
+                           // },
                         ],
                      },
                      {
@@ -199,12 +113,14 @@ export default function (AB, init_settings) {
                            {
                               cols: [
                                  {
-                                    options: getVersionOptions(),
                                     id: this.ids.versionOption,
+                                    options: this.getVersionOptions(
+                                       this.versionNumber || "1.0.0"
+                                    ),
                                     view: "segmented",
                                     height: 40,
-                                    value: getVersionOptionByNumber(
-                                       versionData.versionNumber
+                                    value: this.getVersionOptionByNumber(
+                                       this.versionNumber
                                     ),
                                  },
                                  { width: 15 },
@@ -214,12 +130,14 @@ export default function (AB, init_settings) {
                               view: "text",
                               label: "Author",
                               name: "author",
+                              id: "author",
                               labelPosition: "top",
                            },
                            {
                               label: "Release Notes",
                               view: "textarea",
                               name: "commitMessage",
+                              id: "commitMessage",
                               labelPosition: "top",
                               placeholder:
                                  "Explain your changes. Users will see this.",
@@ -300,24 +218,24 @@ export default function (AB, init_settings) {
                      },
                   ],
                },
-               {
-                  id: ids.workspace,
-                  view: "layout",
-                  rows: [
-                     {
-                        cols: [
-                           // Workspace
-                           // Datatable.ui(),
+               // {
+               //    id: ids.workspace,
+               //    view: "layout",
+               //    rows: [
+               //       {
+               //          cols: [
+               //             // Workspace
+               //             // Datatable.ui(),
 
-                           { view: "resizer", css: "bg_gray", width: 11 },
+               //             { view: "resizer", css: "bg_gray", width: 11 },
 
-                           // Property
-                           Property.ui(),
-                        ],
-                     },
-                     Warnings.ui(),
-                  ],
-               },
+               //             // Property
+               //             Property.ui(),
+               //          ],
+               //       },
+               //       Warnings.ui(),
+               //    ],
+               // },
             ],
          };
       }
@@ -336,19 +254,19 @@ export default function (AB, init_settings) {
 
          // this.workspaceViews.init(AB);
 
-         Property.on("save", async (version) => {
-            this.versionLoad(version);
+         // Property.on("save", async (version) => {
+         //    this.versionLoad(version);
 
-            // refresh grid view
-            // if (this.hashViewsGrid) {
-            //    await this.hashViewsGrid.show(Datatable.defaultSettings());
-            // }
+         //    // refresh grid view
+         //    // if (this.hashViewsGrid) {
+         //    //    await this.hashViewsGrid.show(Datatable.defaultSettings());
+         //    // }
 
-            await this.populateWorkspace(version);
-         });
+         //    await this.populateWorkspace(version);
+         // });
 
-         // await Datatable.init(AB);
-         await Property.init(AB);
+         // // await Datatable.init(AB);
+         // await Property.init(AB);
 
          // ! datacollection stuff???
          // this.mockVersion = this.AB.versionNew({});
@@ -357,23 +275,70 @@ export default function (AB, init_settings) {
          // // Datatable.versionLoad(this.mockVersion);
          // Property.versionLoad(this.mockVersion);
 
-         // $$(ids.noSelection).show();
+         $$(ids.noSelection).show();
       }
 
       applicationLoad(application) {
          super.applicationLoad(application);
 
-         // Datatable.applicationLoad(application);
-         Property.applicationLoad(application);
+         // TODO fill the default version numbers
+         console.dir("Fill default version numbers");
+         this.versionNumber = application.versionData.versionNumber || "1.0.0";
+
+         var versionOptions = this.$versionOption;
+         if (versionOptions) {
+            versionOptions.data.options = this.getVersionOptions(
+               this.versionNumber
+            );
+            versionOptions.refresh();
+         }
       }
 
       versionLoad(version) {
          super.versionLoad(version);
 
-         Warnings.show(version);
+         // Warnings.show(version);
+         console.dir($$(this.ids.form));
 
-         // Datatable.versionLoad(version);
-         Property.versionLoad(version);
+         // this.$versionOption.hide();
+         this.$versionOption.disable();
+         $$("save_button_1").hide();
+         $$("save_button_2").hide();
+         $$("version").show();
+         $$("timestamp").show();
+
+         this.$form.setValues(version); //.refresh();
+
+         this.versionData = version;
+         // TODO load the selected version data into the form
+         console.dir("load the selected version data into the form");
+
+         // $$("commitMessage").();
+
+         // Property.versionLoad(version);
+
+         if (!version) {
+            this.clearWorkspace();
+         }
+      }
+      versionUnload(version) {
+         super.versionLoad(version);
+
+         // Warnings.show(version);
+         console.dir($$(this.ids.form));
+
+         $$("versionList").unselectAll();
+         this.$versionOption.show();
+         $$("save_button_1").show();
+         $$("save_button_2").show();
+         $$("versionForm").show();
+         $$("version").hide();
+         $$("timestamp").hide();
+
+         this.versionData = version;
+         // TODO UNload the selected version data into the form
+         console.dir("load the selected version data into the form");
+         // Property.versionLoad(version);
 
          if (!version) {
             this.clearWorkspace();
@@ -424,7 +389,7 @@ export default function (AB, init_settings) {
       async populateWorkspace(version) {
          const ids = this.ids;
 
-         $$(ids.workspace).show();
+         // $$(ids.workspace).show();
 
          this.mockVersion = version;
 
@@ -508,6 +473,37 @@ export default function (AB, init_settings) {
                string,
             });
             return null;
+         }
+      }
+
+      // Helper functions
+      //  The getVersionOptions() function generates an array of version options that start from the current version
+      // and go up by one for each of the three segments (major, minor, and patch).
+      getVersionOptions(versionNumber) {
+         // const versionNumber = versionData.;
+         const major = versionNumber.split(".")[0];
+         const minor = versionNumber.split(".")[1];
+         const patch = versionNumber.split(".")[2];
+         const options = [
+            `${parseInt(major) + 1}.0.0 <i>major</i>`,
+            `${major}.${parseInt(minor) + 1}.0 <i>minor</i>`,
+            `${major}.${minor}.${parseInt(patch) + 1} <i>patch</i>`,
+         ];
+         return options;
+      }
+      // The getVersionOptionByNumber(versionNumber) function takes a version number and returns the
+      // corresponding option from the array generated by getVersionOptions().
+      getVersionOptionByNumber(versionNumber) {
+         const options = this.getVersionOptions(versionNumber);
+         const major = versionNumber.split(".")[0];
+         const minor = versionNumber.split(".")[1];
+         const patch = versionNumber.split(".")[2];
+         if (major > 1) {
+            return `${major}.0.0 <i>major</i>`;
+         } else if (minor > 91) {
+            return `${major}.${minor}.0 <i>minor</i>`;
+         } else {
+            return `${major}.${minor}.${patch} <i>patch</i>`;
          }
       }
 
