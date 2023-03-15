@@ -16,15 +16,21 @@ export default function (AB) {
    var L = UIClass.L();
 
    class UI_Common_Participant_SelectManager extends UIClass {
-      constructor(base) {
-         super(base, {
-            form: "",
-            name: "",
-            role: "",
-            useRole: "",
-            useAccount: "",
-            account: "",
-         });
+      constructor(idBase, ids) {
+         super(
+            idBase,
+            Object.assign(
+               {
+                  form: "",
+                  name: "",
+                  role: "",
+                  useRole: "",
+                  useAccount: "",
+                  account: "",
+               },
+               ids
+            )
+         );
       }
 
       ui(obj = {}) {
