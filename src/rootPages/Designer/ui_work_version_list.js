@@ -16,6 +16,7 @@ export default function (AB) {
    class UI_Work_Version_List extends UIClass {
       constructor() {
          super("ui_work_version_list");
+         this.AB = {};
 
          // {ui_common_list} instance to display a list of our data collections.
          this.ListComponent = UI_VERSION_LIST(AB, {
@@ -66,22 +67,27 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
-         this.on("addNew", (selectNew) => {
-            // if we receive a signal to add a new Data Collection from another source
-            this.clickNewVersion(selectNew);
-         });
-
          //
          // List of Processes
          //
          await this.ListComponent.init(AB);
 
+         this.on("addNew", (AB, selectNew) => {
+            // if we receive a signal that there is new data
+            this.ListComponent.dataLoad(AB.versionData);
+            this.emit("selected", selectNew);
+         });
+
          this.ListComponent.on("selected", (item) => {
             this.emit("selected", item);
          });
 
+         this.ListComponent.on("clearForm", () => {
+            this.emit("clearForm");
+         });
+
          this.ListComponent.on("addNew", (selectNew) => {
-            this.clickNewVersion(selectNew);
+            // this.clickNewVersion(selectNew);
          });
 
          this.ListComponent.on("deleted", (item) => {
@@ -127,6 +133,7 @@ export default function (AB) {
       applicationLoad(application) {
          super.applicationLoad(application);
 
+         this.AB = application;
          // clear our list and display our data collections:
          // TODO
          console.dir("Make the list from the definitions here...  ");

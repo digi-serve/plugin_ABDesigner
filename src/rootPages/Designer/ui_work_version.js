@@ -49,8 +49,8 @@ export default function (AB) {
             this.select(dc);
          });
 
-         VersionWorkspace.on("addNew", (selectNew) => {
-            VersionList.emit("addNew", selectNew);
+         VersionWorkspace.on("addNew", (AB, selectNew) => {
+            VersionList.emit("addNew", AB, selectNew);
          });
 
          this.warningsPropogate([VersionList, VersionWorkspace]);
@@ -61,6 +61,16 @@ export default function (AB) {
 
          await VersionWorkspace.init(AB);
          await VersionList.init(AB);
+
+         this.on("versionDataUpdate", () => {
+            // if we receive a signal that a version has been updated
+            this.VersionList.refresh();
+         });
+
+         this.on("clearForm", () => {
+            // if we receive a signal that a version has been updated
+            this.VersionWorkspace.clearForm();
+         });
       }
 
       /**
@@ -73,8 +83,8 @@ export default function (AB) {
 
          super.applicationLoad(application);
 
-         if (oldAppID != this.CurrentApplicationID) {
-            VersionWorkspace.clearWorkspace();
+         if (oldAppID && oldAppID != this.CurrentApplicationID) {
+            VersionWorkspace.clearForm();
          }
 
          VersionList.applicationLoad(application);
@@ -100,9 +110,9 @@ export default function (AB) {
       }
 
       select(dc) {
-         if (dc == null) VersionWorkspace.clearWorkspace();
+         if (dc == null) VersionWorkspace.clearForm();
          VersionWorkspace.versionLoad(dc);
-         VersionWorkspace.populateWorkspace(dc);
+         // VersionWorkspace.populateWorkspace(dc);
       }
    }
 

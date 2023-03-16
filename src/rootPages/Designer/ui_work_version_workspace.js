@@ -168,19 +168,20 @@ export default function (AB, init_settings) {
                            },
 
                            {
-                              id: "save_button_1",
+                              id: "save_button",
                               label: "Save Log Message",
                               view: "button",
                               height: 38,
                               type: "icon",
                               css: "webix_primary",
-                              // icon: "fa fa-download",
                               disabled: false,
-                              // click: save_draft_form,
+                              click: () => {
+                                 return this.saveNew();
+                              },
                            },
                            {
-                              id: "save_button_2",
-                              label: "Save Change Log as Completed",
+                              id: "update_button",
+                              label: "Update Change Log",
                               view: "button",
                               height: 38,
                               type: "icon",
@@ -188,7 +189,7 @@ export default function (AB, init_settings) {
                               // icon: "fa fa-download",
                               disabled: false,
                               click: () => {
-                                 return this.save();
+                                 return this.saveUpdate();
                               },
                            },
                            {
@@ -284,6 +285,8 @@ export default function (AB, init_settings) {
          // TODO fill the default version numbers
          console.dir("Fill default version numbers");
          this.versionNumber = application.versionData.versionNumber || "1.0.0";
+         this.CurrentVersionID =
+            application.versionData.versionNumber || "1.0.0";
 
          var versionOptions = this.$versionOption;
          if (versionOptions) {
@@ -295,6 +298,9 @@ export default function (AB, init_settings) {
       }
 
       versionLoad(version) {
+         if (!version) {
+            return false;
+         }
          super.versionLoad(version);
 
          // Warnings.show(version);
@@ -302,12 +308,14 @@ export default function (AB, init_settings) {
 
          // this.$versionOption.hide();
          this.$versionOption.disable();
-         $$("save_button_1").hide();
-         $$("save_button_2").hide();
+         $$("save_button").hide();
+         $$("update_button").show();
          $$("version").show();
          $$("timestamp").show();
+         $$("export_button").hide();
 
          this.$form.setValues(version); //.refresh();
+         //https://github.com/digi-serve/plugin_ABDesigner/issues/153
 
          this.versionData = version;
          // TODO load the selected version data into the form
@@ -318,31 +326,25 @@ export default function (AB, init_settings) {
          // Property.versionLoad(version);
 
          if (!version) {
-            this.clearWorkspace();
+            this.clearForm();
          }
       }
-      versionUnload(version) {
-         super.versionLoad(version);
+      clearForm() {
+         // super.versionLoad(version);
 
          // Warnings.show(version);
          console.dir($$(this.ids.form));
 
-         $$("versionList").unselectAll();
-         this.$versionOption.show();
-         $$("save_button_1").show();
-         $$("save_button_2").show();
-         $$("versionForm").show();
+         this.$versionOption.enable();
+         $$("save_button").show();
+         $$("update_button").hide();
          $$("version").hide();
          $$("timestamp").hide();
+         $$("export_button").show();
 
-         this.versionData = version;
+         this.$form.setValues({});
+         // this.versionData = this.CurrentVersionID;
          // TODO UNload the selected version data into the form
-         console.dir("load the selected version data into the form");
-         // Property.versionLoad(version);
-
-         if (!version) {
-            this.clearWorkspace();
-         }
       }
 
       /**
@@ -354,9 +356,9 @@ export default function (AB, init_settings) {
          // Datatable.loadAll();
       }
 
-      loadData() {
+      loadData(data) {
          this.mockVersion.clearAll();
-         // WORKAROUND: load all data becuase kanban does not support pagination now
+
          try {
             this.mockVersion.loadData(0, 20);
          } catch (err) {
@@ -378,12 +380,6 @@ export default function (AB, init_settings) {
                version: this.mockVersion.toObj(),
             });
          }
-      }
-
-      clearWorkspace() {
-         const ids = this.ids;
-
-         $$(ids.noSelection).show(false, false);
       }
 
       async populateWorkspace(version) {
@@ -414,13 +410,13 @@ export default function (AB, init_settings) {
          this.warningsRefresh(version);
       }
       /**
-       * @method save
+       * @method saveNew
        * take the data entered into the form and
        * add it to our current application.
        * @param {obj} values  key=>value hash of model values.
        * @return {Promise}
        */
-      async save() {
+      async saveNew() {
          var Form = this.$form;
          let formVals = Form.getValues();
          console.dir(formVals);
@@ -444,9 +440,49 @@ export default function (AB, init_settings) {
                this.CurrentApplication,
                formVals
             );
+            this.emit("versionDataUpdate", true);
             this.toList();
          } catch (e) {
             /* error is handled in .applicationChangeLogAdd() */
+         }
+         // this.ready();
+      }
+      /**
+       * @method saveUpdate
+       * take the data entered into the form and
+       * add it to our current application.
+       * @param {obj} values  key=>value hash of model values.
+       * @return {Promise}
+       */
+      async saveUpdate() {
+         var Form = this.$form;
+         let formVals = Form.getValues();
+         console.dir(formVals);
+
+         let importantValues = {};
+         importantValues["version"] = formVals.version;
+         importantValues["author"] = formVals.author;
+         importantValues["date"] = formVals.date;
+         importantValues["commitMessage"] = formVals.commitMessage;
+
+         // is this error needed?
+         if (!this.CurrentApplication) {
+            webix.alert({
+               title: L("Shoot!"),
+               test: L("No Application Set!  Why?"),
+            });
+            return false;
+         }
+
+         try {
+            await this.applicationChangeLogUpdate(
+               this.CurrentApplication,
+               formVals
+            );
+            this.emit("versionDataUpdate", true);
+            this.toList();
+         } catch (e) {
+            /* error is handled in .applicationChangeLogUpdate() */
          }
          // this.ready();
       }
@@ -537,6 +573,7 @@ export default function (AB, init_settings) {
                   newVersionNumber
                ),
             });
+            this.emit("addNew", newVersionNumber);
          } catch (e) {
             webix.message({
                type: "error",
@@ -560,6 +597,71 @@ export default function (AB, init_settings) {
             Reflect.deleteProperty(
                Application.versionData.changeLog,
                newVersionNumber
+            );
+         }
+      }
+
+      /**
+       * @method applicationChangeLogUpdate
+       * Step through the process of updating one of the logs for an ABApplication with the
+       * current state of the Form.
+       * @param {ABApplication} application
+       */
+      async applicationChangeLogUpdate(Application, values) {
+         Application = this.CurrentApplication || Application;
+
+         let updateVersionNum = values.version;
+
+         var oldVersion = Application.versionData.changeLog[updateVersionNum];
+         // object
+         // the original version to reset to incase of an error saving.
+
+         if (!oldVersion) {
+            // There is no old record to update..
+            console.error("They are trying to change the version number...");
+            // return this.applicationChangeLogAdd(Application, values);
+         }
+
+         // Set Data
+         Application.versionData.changeLog[updateVersionNum] = values;
+         // Application.versionData.versionNumber = updateVersionNum;
+         // Application.versionNumber = updateVersionNum;
+
+         try {
+            await Application.save();
+            webix.message({
+               type: "success",
+               text: L(
+                  "{0} Successfully logged update of ",
+                  [Application.label],
+                  " to version: ",
+                  updateVersionNum
+               ),
+            });
+            this.emit("addNew", Application, updateVersionNum);
+         } catch (e) {
+            webix.message({
+               type: "error",
+               text: L(
+                  "Error Updating {0}",
+                  [Application.label],
+                  " to version: ",
+                  updateVersionNum
+               ),
+            });
+            this.AB.notify.developer(e, {
+               context: "ui_choose_form:applicationChangeLogUpdate()",
+               application: Application.toObj(),
+               values,
+            });
+
+            // reset the version number
+            Application.versionData.versionNumber = oldVersionNumber;
+            // Remove the unsaved object
+            // ? does reflect work here?
+            Reflect.deleteProperty(
+               Application.versionData.changeLog,
+               updateVersionNum
             );
          }
       }

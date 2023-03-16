@@ -127,10 +127,10 @@ export default function (AB, options) {
                   view: "button",
                   css: "webix_primary",
                   id: this.ids.buttonNew,
-                  value: "bob", // L(this.labels.addNew),
+                  value: "Clear", // L(this.labels.addNew),
                   type: "form",
                   click: () => {
-                     //this.clickAddNew(true); // pass true so it will select the new object after you created it
+                     this.clearForm(true); // pass true so it will select the new object after you created it
                   },
                   on: {
                      onAfterRender() {
@@ -214,8 +214,8 @@ export default function (AB, options) {
                   return {
                      id: index,
                      label: version,
-                     title: version,
-                     name: version,
+                     // title: version,
+                     // name: version,
                      version: version,
                      changelog: changelogObj[version],
                      commitMessage: changeData[version]["commitMessage"],
@@ -258,15 +258,24 @@ export default function (AB, options) {
       /**
        * @function onSelectItem()
        *
-       * Perform these actions when an Process is selected in the List.
+       * Perform these actions when an Version is selected in the List.
        */
       onSelectItem(id) {
-         var process = this.$list.getItem(id);
+         var version = this.$list.getItem(id);
 
          // _logic.callbacks.onChange(object);
-         this.emit("selected", process);
+         this.emit("selected", version);
 
          this.showGear(id);
+      }
+
+      /**
+       * @function clearForm()
+       *
+       * emit clear form, so workspace will clear.
+       */
+      clearForm() {
+         this.emit("selected");
       }
 
       /**
@@ -301,7 +310,7 @@ export default function (AB, options) {
       /**
        * @function templateListItem
        *
-       * Defines the template for each row of our ProcessList.
+       * Defines the template for each row of our VersionList.
        *
        * @param {obj} obj the current instance of ABxxxx for the row.
        * @param {?} common the webix.common icon data structure
@@ -382,14 +391,14 @@ export default function (AB, options) {
 
       // },
 
-      /**
-       * @function clickAddNew
-       *
-       * Manages initiating the transition to the new Process Popup window
-       */
-      clickAddNew(selectNew) {
-         this.emit("addNew", selectNew);
-      }
+      // /**
+      //  * @function clickAddNew
+      //  *
+      //  * Manages initiating the transition to the new Process Popup window
+      //  */
+      // clickAddNew(selectNew) {
+      //    this.emit("addNew", selectNew);
+      // }
 
       /**
        * @function exclude()
