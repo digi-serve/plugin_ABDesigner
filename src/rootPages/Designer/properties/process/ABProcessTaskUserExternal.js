@@ -90,8 +90,6 @@ export default function (AB) {
 
       async init(AB) {
          this.AB = AB;
-
-         return Promise.resolve();
       }
 
       populate(element) {
@@ -113,7 +111,7 @@ export default function (AB) {
             webix.ui(
                {
                   id: ids.toUsers,
-                  rows: [this.toUsers.ui(element.toUsers ?? {})],
+                  rows: [this.toUsers.ui(element ?? {})],
                   paddingY: 10,
                },
                $toUsers
