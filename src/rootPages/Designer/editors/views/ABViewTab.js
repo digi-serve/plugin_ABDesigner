@@ -150,7 +150,7 @@ export default function (AB) {
                   // Add 'edit' icon
                   componentUI.cols[tabIndex].data[i].value =
                      componentUI.cols[tabIndex].data[i].value +
-                     ' <i class="fa fa-pencil-square rename ab-tab-edit"></i>';
+                     ' <i class="fa fa-pencil rename ab-tab-edit"></i>';
                   // Add 'move up' icon
                   componentUI.cols[tabIndex].data[i].value +=
                      '<i class="fa fa-caret-up move-back ab-tab-up"></i>';

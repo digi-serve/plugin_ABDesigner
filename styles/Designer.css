@@ -85,7 +85,7 @@
    border-radius: 8px;
 }
 .app_form_window .webix_win_head {
-   background-color: #B8B8B8;
+   background-color: #b8b8b8;
 }
 .app_form_window div.webix_view.webix_control.webix_el_icon.alert {
    padding: 0px;
@@ -96,7 +96,7 @@
 }
 /* main font color */
 .app_form_window .alert .webix_icon {
-   color:#EED202;
+   color: #eed202;
 }
 /* circle background (hover) */
 .app_form_window .alert .webix_icon_button:hover:before {
@@ -104,11 +104,11 @@
 }
 /* hover: font color */
 .app_form_window .alert .webix_icon_button:hover .webix_icon {
-   color: #D6BD01;
+   color: #d6bd01;
 }
 .app_form_window .webix_template {
    font-size: 18px;
-   background-color: #B8B8B8;
+   background-color: #b8b8b8;
 }
 .app_form_window .webix_label_right {
    font-weight: 500;
@@ -140,9 +140,98 @@
    border-radius: 6px;
 }
 .app_form_window_2 .webix_win_head {
-   background-color: #B8B8B8;
+   background-color: #b8b8b8;
 }
 .app_form_window_2 .webix_template {
    font-size: 18px;
-   background-color: #B8B8B8;
+   background-color: #b8b8b8;
+}
+/* Tab editing */
+.ab-tab-back:hover,
+.ab-tab-next:hover,
+.ab-tab-up:hover,
+.ab-tab-down:hover {
+   cursor: e-resize;
+   opacity: 1;
+}
+.ab-tab-back:hover {
+   cursor: w-resize;
+}
+.ab-tab-up:hover {
+   cursor: n-resize;
+   opacity: 1;
+}
+.ab-tab-down:hover {
+   cursor: s-resize;
+}
+.ab-tab-back,
+.ab-tab-next,
+.ab-tab-up,
+.ab-tab-down {
+   float: left;
+   margin-left: 10px;
+   background: #1ca1c1;
+   opacity: 0.8;
+   width: 20px;
+   height: 20px;
+   border-radius: 10px;
+   line-height: 20px !important;
+   padding-right: 2px;
+   color: white;
+}
+.fa-pencil-square.ab-tab-edit {
+   opacity: 0.4;
+}
+.fa-pencil.ab-tab-edit {
+   opacity: 0;
+   position: absolute;
+   left: 12px;
+   top: 12px;
+   background: #1ca1c1;
+   width: 20px;
+   height: 20px;
+   text-align: center;
+   line-height: 20px !important;
+   border-radius: 100%;
+   font-size: 11px;
+}
+.ab-tab-edit:hover {
+   opacity: 1;
+   transform: scale(1.2);
+}
+.webix_tree_item:hover .fa-pencil.ab-tab-edit {
+   opacity: 1;
+}
+.ab-tab-next {
+   float: right;
+   margin-right: 10px;
+   padding-left: 6px;
+}
+.ab-tab-up,
+.ab-tab-down {
+   /*   float: right;*/
+   /*   margin: 12px -2px 12px 15px;*/
+   /*   padding-left: 6px;*/
+   opacity: 0.2;
+   border-radius: 0 !important;
+   position: absolute;
+   right: 1px;
+   top: 0;
+   line-height: 22px !important;
+   width: 22px;
+   height: 21px;
+   text-align: center;
+   margin: 0;
+}
+.ab-tab-down {
+   top: 22px;
+}
+.webix_tree_item {
+   position: relative;
+}
+.webix_all_tabs div:nth-child(1) .ab-tab-back {
+   display: none;
+}
+.webix_all_tabs div:nth-last-child(1) .ab-tab-next {
+   display: none;
 }
