@@ -1,18 +1,11 @@
 import UI_Class from "./ui_class";
 import UI_Warnings from "./ui_warnings";
 
-// import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
-// import FWorkspaceDisplay from "./ui_work_object_workspace_view_grid";
-// import FWorkspaceProperty from "./ui_work_version_workspace_properties";
-
 export default function (AB, init_settings) {
    const ibase = "ui_work_version_workspace";
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
-
-   // const Datatable = FWorkspaceDisplay(AB, `${ibase}_view_grid`, init_settings);
-   // const Property = FWorkspaceProperty(AB);
 
    const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, init_settings);
 
@@ -31,9 +24,6 @@ export default function (AB, init_settings) {
          this.versionNumber = "1.0.0";
 
          this.settings = settings;
-
-         // this.workspaceViews = FWorkspaceViews(AB, `${base}_views`, settings);
-         // this.hashViewsGrid = Datatable;
       }
 
       ui() {
@@ -74,8 +64,6 @@ export default function (AB, init_settings) {
          ///
 
          return {
-            // view: "multiview",
-            // id: ids.multiview,
             cells: [
                // No selection
                {
@@ -89,15 +77,7 @@ export default function (AB, init_settings) {
                         css: "webix_dark",
                         id: this.ids.versionOption,
                         view: "toolbar",
-                        cols: [
-                           { view: "label", label: "App Version" },
-                           // {
-                           //    icon: "wxi-close",
-                           //    view: "icon",
-                           //    height: 38,
-                           //    width: 38,
-                           // },
-                        ],
+                        cols: [{ view: "label", label: "App Version" }],
                      },
                      {
                         // autoheight: false,
@@ -186,7 +166,6 @@ export default function (AB, init_settings) {
                               height: 38,
                               type: "icon",
                               css: "webix_primary",
-                              // icon: "fa fa-download",
                               disabled: false,
                               click: () => {
                                  return this.saveUpdate();
@@ -219,24 +198,6 @@ export default function (AB, init_settings) {
                      },
                   ],
                },
-               // {
-               //    id: ids.workspace,
-               //    view: "layout",
-               //    rows: [
-               //       {
-               //          cols: [
-               //             // Workspace
-               //             // Datatable.ui(),
-
-               //             { view: "resizer", css: "bg_gray", width: 11 },
-
-               //             // Property
-               //             Property.ui(),
-               //          ],
-               //       },
-               //       Warnings.ui(),
-               //    ],
-               // },
             ],
          };
       }
@@ -253,37 +214,13 @@ export default function (AB, init_settings) {
             Warnings.show(this.mockVersion);
          });
 
-         // this.workspaceViews.init(AB);
-
-         // Property.on("save", async (version) => {
-         //    this.versionLoad(version);
-
-         //    // refresh grid view
-         //    // if (this.hashViewsGrid) {
-         //    //    await this.hashViewsGrid.show(Datatable.defaultSettings());
-         //    // }
-
-         //    await this.populateWorkspace(version);
-         // });
-
-         // // await Datatable.init(AB);
-         // await Property.init(AB);
-
-         // ! datacollection stuff???
-         // this.mockVersion = this.AB.versionNew({});
-         // this.mockVersion.init();
-
-         // // Datatable.versionLoad(this.mockVersion);
-         // Property.versionLoad(this.mockVersion);
-
          $$(ids.noSelection).show();
       }
 
       applicationLoad(application) {
          super.applicationLoad(application);
 
-         // TODO fill the default version numbers
-         console.dir("Fill default version numbers");
+         // fill the version numbers
          this.versionNumber = application.versionData.versionNumber || "1.0.0";
          this.CurrentVersionID =
             application.versionData.versionNumber || "1.0.0";
@@ -299,6 +236,7 @@ export default function (AB, init_settings) {
 
       versionLoad(version) {
          if (!version) {
+            this.clearForm();
             return false;
          }
          super.versionLoad(version);
@@ -306,7 +244,6 @@ export default function (AB, init_settings) {
          // Warnings.show(version);
          console.dir($$(this.ids.form));
 
-         // this.$versionOption.hide();
          this.$versionOption.disable();
          $$("save_button").hide();
          $$("update_button").show();
@@ -314,27 +251,12 @@ export default function (AB, init_settings) {
          $$("timestamp").show();
          $$("export_button").hide();
 
-         this.$form.setValues(version); //.refresh();
-         //https://github.com/digi-serve/plugin_ABDesigner/issues/153
+         // load the selected version data into the form
+         this.$form.setValues(version);
 
          this.versionData = version;
-         // TODO load the selected version data into the form
-         console.dir("load the selected version data into the form");
-
-         // $$("commitMessage").();
-
-         // Property.versionLoad(version);
-
-         if (!version) {
-            this.clearForm();
-         }
       }
       clearForm() {
-         // super.versionLoad(version);
-
-         // Warnings.show(version);
-         console.dir($$(this.ids.form));
-
          this.$versionOption.enable();
          $$("save_button").show();
          $$("update_button").hide();
@@ -342,18 +264,8 @@ export default function (AB, init_settings) {
          $$("timestamp").hide();
          $$("export_button").show();
 
+         // UNload the selected version data into the form
          this.$form.setValues({});
-         // this.versionData = this.CurrentVersionID;
-         // TODO UNload the selected version data into the form
-      }
-
-      /**
-       * @function loadAll
-       * Load all records
-       *
-       */
-      loadAll() {
-         // Datatable.loadAll();
       }
 
       loadData(data) {
@@ -385,29 +297,9 @@ export default function (AB, init_settings) {
       async populateWorkspace(version) {
          const ids = this.ids;
 
-         // $$(ids.workspace).show();
-
          this.mockVersion = version;
 
-         // get current view from object
-         // this.workspaceViews.objectLoad(this.mockVersion.datasource);
-         // const currentView = this.workspaceViews.getCurrentView();
-
-         // // {WorkspaceView}
-         // // The current workspace view that is being displayed in our work area
-         // // currentView.component {ABViewGrid}
-         // if (this.hashViewsGrid) {
-         //    this.workspaceViews.setCurrentView(currentView.id);
-
-         //    await this.hashViewsGrid.show(currentView);
-         // }
-
-         // save current view
-         // await this.workspaceViews.save();
-
          this.loadData();
-
-         this.warningsRefresh(version);
       }
       /**
        * @method saveNew

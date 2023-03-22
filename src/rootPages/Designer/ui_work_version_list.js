@@ -27,10 +27,7 @@ export default function (AB) {
                title: "Versions",
                searchPlaceholder: "Version",
             },
-            // menu: {
-            //    copy: false,
-            //    // exclude: true,
-            // },
+
             /**
              * @function templateListItem
              *
@@ -85,39 +82,6 @@ export default function (AB) {
          this.ListComponent.on("clearForm", () => {
             this.emit("clearForm");
          });
-
-         this.ListComponent.on("addNew", (selectNew) => {
-            // this.clickNewVersion(selectNew);
-         });
-
-         this.ListComponent.on("deleted", (item) => {
-            this.emit("deleted", item);
-         });
-
-         this.ListComponent.on("exclude", (item) => {
-            this.exclude(item);
-         });
-
-         //
-         // // Add Form
-         // //
-         // await AddForm.init(AB);
-
-         // AddForm.on("cancel", () => {
-         //    AddForm.hide();
-         // });
-
-         // AddForm.on("save", (q /* , select */) => {
-         //    // the AddForm already takes care of updating the
-         //    // CurrentApplication.
-
-         //    // we just need to update our list of data collections
-         //    this.applicationLoad(this.CurrentApplication);
-
-         //    // if (select) {
-         //    this.ListComponent.select(q.id);
-         //    // }
-         // });
       }
 
       /**
@@ -159,16 +123,6 @@ export default function (AB) {
       ready() {
          this.ListComponent.ready();
       }
-
-      // /**
-      //  * @function clickNewVersion
-      //  *
-      //  * Manages initiating the transition to the new Process Popup window
-      //  */
-      // clickNewVersion(/* selectNew */) {
-      //    // show the new popup
-      //    AddForm.show();
-      // }
    }
 
    return new UI_Work_Version_List();

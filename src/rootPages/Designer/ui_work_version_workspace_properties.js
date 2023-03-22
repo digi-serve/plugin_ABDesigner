@@ -377,10 +377,6 @@ export default function (AB) {
             this.onSortChange(sortSettings);
             this.save();
          });
-
-         // Interface.on("interface", (viewObj) => {
-         //    this.switchTab(viewObj)
-         // });
       }
 
       /**
@@ -431,11 +427,6 @@ export default function (AB) {
                },
             };
             this.viewList.add(branch, index, parentId);
-
-            // // add sub-pages
-            // if (page instanceof ABViewDetail) {
-            //    return;
-            // }
 
             const subPages = page.pages ? page.pages() : [];
             subPages.forEach((childPage, childIndex) => {
@@ -912,56 +903,56 @@ export default function (AB) {
          this.PopupSortFieldComponent.init(this.AB);
       }
 
-      selectSource(datasourceID, oldId) {
-         const ids = this.ids;
-         const selectedDatasource = $$(ids.dataSource)
-            .getList()
-            .getItem(datasourceID);
+      // selectSource(datasourceID, oldId) {
+      //    const ids = this.ids;
+      //    const selectedDatasource = $$(ids.dataSource)
+      //       .getList()
+      //       .getItem(datasourceID);
 
-         const $dataSource = $$(ids.dataSource);
+      //    const $dataSource = $$(ids.dataSource);
 
-         if (selectedDatasource?.disabled) {
-            // prevents re-calling onChange from itself
-            $dataSource.blockEvent();
-            $dataSource.setValue(oldId || "");
-            $dataSource.unblockEvent();
-         }
+      //    if (selectedDatasource?.disabled) {
+      //       // prevents re-calling onChange from itself
+      //       $dataSource.blockEvent();
+      //       $dataSource.setValue(oldId || "");
+      //       $dataSource.unblockEvent();
+      //    }
 
-         // Set settings.datasourceID
-         const dcSettings = this.CurrentDatacollection.toObj() || {};
-         dcSettings.settings = dcSettings.settings || {};
-         dcSettings.settings.datasourceID = datasourceID;
-         this.CurrentDatacollection.fromValues(dcSettings);
+      //    // Set settings.datasourceID
+      //    const dcSettings = this.CurrentDatacollection.toObj() || {};
+      //    dcSettings.settings = dcSettings.settings || {};
+      //    dcSettings.settings.datasourceID = datasourceID;
+      //    this.CurrentDatacollection.fromValues(dcSettings);
 
-         const $filterPanel = $$(ids.filterPanel);
-         const $sortPanel = $$(ids.sortPanel);
+      //    const $filterPanel = $$(ids.filterPanel);
+      //    const $sortPanel = $$(ids.sortPanel);
 
-         if (!selectedDatasource.isQuery) {
-            // populate link data collection options
-            this.initLinkDatacollectionOptions();
+      //    if (!selectedDatasource.isQuery) {
+      //       // populate link data collection options
+      //       this.initLinkDatacollectionOptions();
 
-            // populate link fields
-            this.initLinkFieldOptions(
-               this.CurrentDatacollection?.versionLink?.id || null
-            );
+      //       // populate link fields
+      //       this.initLinkFieldOptions(
+      //          this.CurrentDatacollection?.versionLink?.id || null
+      //       );
 
-            // re-create filter & sort popups
-            this.initPopupEditors();
+      //       // re-create filter & sort popups
+      //       this.initPopupEditors();
 
-            // populate filter & sort popups
-            this.populatePopupEditors();
+      //       // populate filter & sort popups
+      //       this.populatePopupEditors();
 
-            this.populateBadgeNumber();
+      //       this.populateBadgeNumber();
 
-            // show options
-            $filterPanel.show();
-            $sortPanel.show();
-         } else {
-            // hide options
-            $filterPanel.hide();
-            $sortPanel.hide();
-         }
-      }
+      //       // show options
+      //       $filterPanel.show();
+      //       $sortPanel.show();
+      //    } else {
+      //       // hide options
+      //       $filterPanel.hide();
+      //       $sortPanel.hide();
+      //    }
+      // }
 
       showFilterPopup($button) {
          this.FilterComponent.popUp($button, null, { pos: "top" });
