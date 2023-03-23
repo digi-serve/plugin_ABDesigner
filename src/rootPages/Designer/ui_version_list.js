@@ -71,7 +71,6 @@ export default function (AB, options) {
       }
 
       ui() {
-         var ids = this.ids;
          var data = data || {};
 
          // Our webix UI definition:
@@ -112,7 +111,7 @@ export default function (AB, options) {
                         this.data.each((a) => {
                            AB.ClassUI.CYPRESS_REF(
                               this.getItemNode(a.id),
-                              `${ids.list}_${a.id}`
+                              `${this.ids.list}_${a.id}`
                            );
                         });
                      },
