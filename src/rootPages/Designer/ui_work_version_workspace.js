@@ -182,6 +182,7 @@ export default function (AB, init_settings) {
 
       applicationLoad(application) {
          super.applicationLoad(application);
+         application = application.json || application;
 
          // fill the version numbers
          this.versionNumber = application.versionData.versionNumber || "1.0.0";
@@ -203,9 +204,6 @@ export default function (AB, init_settings) {
             return false;
          }
          super.versionLoad(version);
-
-         // Warnings.show(version);
-         console.dir($$(this.ids.form));
 
          this.$versionOption.disable();
          $$("save_button").hide();
@@ -269,12 +267,14 @@ export default function (AB, init_settings) {
       async saveNew() {
          var Form = this.$form;
          let formVals = Form.getValues();
-         console.dir(formVals);
 
          // get version number option
          formVals["version"] = this.getVersionNumber(
             this.$versionOption.$getValue()
          );
+
+         // set to current time
+         formVals["timestamp"] = new Date().toISOString();
 
          // is this error needed?
          if (!this.CurrentApplication) {
@@ -307,7 +307,6 @@ export default function (AB, init_settings) {
       async saveUpdate() {
          var Form = this.$form;
          let formVals = Form.getValues();
-         console.dir(formVals);
 
          let importantValues = {};
          importantValues["version"] = formVals.version;
@@ -384,53 +383,53 @@ export default function (AB, init_settings) {
        * current state of the Form.
        * @param {ABApplication} application
        */
-      async applicationChangeLogAdd(Application, values) {
-         Application = this.CurrentApplication || Application;
-         var oldVersionNumber = Application.versionData.versionNumber;
+      async applicationChangeLogAdd(AB, values) {
+         let abData = this.CurrentApplication.json || AB.json || AB;
+         var oldVersionNumber = abData.versionData.versionNumber;
          // string
          // the original version number to reset to incase of an error saving.
 
          let newVersionNumber = values.version;
 
          // Set Data
-         Application.versionData.changeLog[newVersionNumber] = values;
-         Application.versionData.versionNumber = newVersionNumber;
-         Application.versionNumber = newVersionNumber;
+         abData.versionData.changeLog[newVersionNumber] = values;
+         abData.versionData.versionNumber = newVersionNumber;
+         abData.versionNumber = newVersionNumber;
 
          try {
-            await Application.save();
+            await abData.save();
             webix.message({
                type: "success",
                text: L(
                   "{0} Successfully logged update of ",
-                  [Application.label],
+                  [abData.label],
                   " to version: ",
                   newVersionNumber
                ),
             });
-            this.emit("addNew", Application, newVersionNumber);
+            this.emit("addNew", AB, newVersionNumber);
          } catch (e) {
             webix.message({
                type: "error",
                text: L(
                   "Error Updating {0}",
-                  [Application.label],
+                  [abData.label],
                   " to version: ",
                   newVersionNumber
                ),
             });
             this.AB.notify.developer(e, {
                context: "ui_choose_form:applicationChangeLogAdd()",
-               application: Application.toObj(),
+               application: abData.toObj(),
                values,
             });
 
             // reset the version number
-            Application.versionData.versionNumber = oldVersionNumber;
+            abData.versionData.versionNumber = oldVersionNumber;
             // Remove the unsaved object
             // ? does reflect work here?
             Reflect.deleteProperty(
-               Application.versionData.changeLog,
+               abData.versionData.changeLog,
                newVersionNumber
             );
          }
@@ -442,12 +441,12 @@ export default function (AB, init_settings) {
        * current state of the Form.
        * @param {ABApplication} application
        */
-      async applicationChangeLogUpdate(Application, values) {
-         Application = this.CurrentApplication || Application;
+      async applicationChangeLogUpdate(AB, values) {
+         let appData = this.CurrentApplication.json || AB.json || AB;
 
          let updateVersionNum = values.version;
 
-         var oldVersion = Application.versionData.changeLog[updateVersionNum];
+         var oldVersion = appData.versionData.changeLog[updateVersionNum];
          // object
          // the original version to reset to incase of an error saving.
 
@@ -458,44 +457,42 @@ export default function (AB, init_settings) {
          }
 
          // Set Data
-         Application.versionData.changeLog[updateVersionNum] = values;
-         // Application.versionData.versionNumber = updateVersionNum;
-         // Application.versionNumber = updateVersionNum;
+         appData.versionData.changeLog[updateVersionNum] = values;
 
          try {
-            await Application.save();
+            await appData.save();
             webix.message({
                type: "success",
                text: L(
                   "{0} Successfully logged update of ",
-                  [Application.label],
+                  [appData.label],
                   " to version: ",
                   updateVersionNum
                ),
             });
-            this.emit("addNew", Application, updateVersionNum);
+            this.emit("addNew", appData, updateVersionNum);
          } catch (e) {
             webix.message({
                type: "error",
                text: L(
                   "Error Updating {0}",
-                  [Application.label],
+                  [appData.label],
                   " to version: ",
                   updateVersionNum
                ),
             });
             this.AB.notify.developer(e, {
                context: "ui_choose_form:applicationChangeLogUpdate()",
-               application: Application.toObj(),
+               application: appData.toObj(),
                values,
             });
 
             // reset the version number
-            Application.versionData.versionNumber = oldVersionNumber;
+            appData.versionData.versionNumber = oldVersionNumber;
             // Remove the unsaved object
             // ? does reflect work here?
             Reflect.deleteProperty(
-               Application.versionData.changeLog,
+               appData.versionData.changeLog,
                updateVersionNum
             );
          }

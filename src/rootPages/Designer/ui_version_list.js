@@ -71,6 +71,7 @@ export default function (AB, options) {
       }
 
       ui() {
+         var ids = this.ids;
          var data = data || {};
 
          // Our webix UI definition:
@@ -111,7 +112,7 @@ export default function (AB, options) {
                         this.data.each((a) => {
                            AB.ClassUI.CYPRESS_REF(
                               this.getItemNode(a.id),
-                              `${this.ids.list}_${a.id}`
+                              `${ids.list}_${a.id}`
                            );
                         });
                      },
@@ -264,8 +265,6 @@ export default function (AB, options) {
 
          // _logic.callbacks.onChange(object);
          this.emit("selected", version);
-
-         this.showGear(id);
       }
 
       /**
@@ -295,17 +294,6 @@ export default function (AB, options) {
          this.$list.unblockEvent();
       }
 
-      showGear(id) {
-         let $item = this.$list.getItemNode(id);
-         if ($item) {
-            let gearIcon = $item.querySelector(".ab-object-list-edit");
-            if (gearIcon) {
-               gearIcon.style.visibility = "visible";
-               gearIcon.style.display = "block";
-            }
-         }
-      }
-
       /**
        * @function templateListItem
        *
@@ -316,8 +304,6 @@ export default function (AB, options) {
        * @return {string}
        */
       templateListItem(obj, common) {
-         console.dir("This is never called");
-         //"#version# - #changelog.author# <div style='padding-left:18px'>#changelog.commitMessage#</div>"
          if (!this.cacheTemplate[obj.id]) {
             if (typeof this._templateListItem == "string") {
                this.cacheTemplate[obj.id] = this._templateListItem

@@ -101,7 +101,7 @@ export default function (AB) {
          // clear our list and display our data collections:
          // TODO
          console.dir("Make the list from the definitions here...  ");
-         this.ListComponent.dataLoad(application.versionData);
+         this.ListComponent.dataLoad(application.json.versionData);
       }
 
       warningsRefresh() {
