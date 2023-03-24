@@ -854,7 +854,7 @@ export default function (AB) {
          // insert Panel into the webix ui
          let newPanelUI = {
             id: this.ids.properties,
-            rows: [newPanel.ui(), {}],
+            rows: [newPanel.ui(element), {}],
          };
          webix.ui(newPanelUI, $$(this.ids.properties));
 
