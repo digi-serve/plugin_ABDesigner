@@ -10,6 +10,7 @@ import UI_Work_Query from "./ui_work_query";
 import UI_Work_Interface from "./ui_work_interface";
 import UI_Work_Datacollection from "./ui_work_datacollection";
 import UI_Work_Process from "./ui_work_process";
+import UI_Work_VersionLog from "./ui_work_version.js";
 // const AB_Work_Interface = require("./ab_work_interface");
 
 export default function (AB) {
@@ -21,6 +22,7 @@ export default function (AB) {
    const AppDataCollectionWorkspace = UI_Work_Datacollection(AB);
    const AppProcessWorkspace = UI_Work_Process(AB);
    var AppInterfaceWorkspace = UI_Work_Interface(AB);
+   var AppVersionWorkspace = UI_Work_VersionLog(AB);
 
    class UI_Work extends UIClass {
       constructor(options = {}) {
@@ -33,6 +35,7 @@ export default function (AB) {
             tab_datacollection: "",
             tab_processview: "",
             tab_interface: "",
+            tab_version: "",
             workspace: "",
             collapseMenu: "",
             expandMenu: "",
@@ -110,6 +113,16 @@ export default function (AB) {
                   icon: "fa fa-fw fa-id-card-o",
                   // TODO
                   // issues: warnInterfaces,
+               },
+               {
+                  id: this.ids.tab_version,
+                  value: L("Version"),
+                  icon: "fa fa-fw fa-code-fork",
+                  on: {
+                     onclick: () => {
+                        AppVersionWorkspace.show();
+                     },
+                  },
                },
             ];
 
@@ -272,6 +285,7 @@ export default function (AB) {
                            AppDataCollectionWorkspace.ui(),
                            AppProcessWorkspace.ui(),
                            AppInterfaceWorkspace.ui(),
+                           AppVersionWorkspace.ui(),
                         ],
                      },
                   ],
@@ -304,6 +318,7 @@ export default function (AB) {
          AppDataCollectionWorkspace.init(AB);
          AppProcessWorkspace.init(AB);
          AppInterfaceWorkspace.init(AB);
+         AppVersionWorkspace.init(AB);
 
          this.$tabbar = $$(this.ids.tabbar);
 
@@ -380,6 +395,7 @@ export default function (AB) {
          AppDataCollectionWorkspace.applicationLoad(application);
          AppProcessWorkspace.applicationLoad(application);
          AppInterfaceWorkspace.applicationLoad(application);
+         AppVersionWorkspace.applicationLoad(application);
 
          this.refreshSideBar(application);
 
@@ -423,6 +439,13 @@ export default function (AB) {
             case "interface":
                AppInterfaceWorkspace.show();
                this.$tabbar.select(this.ids.tab_interface);
+               break;
+
+            // Version Workspace Tab
+            case this.ids.tab_version:
+               AppVersionWorkspace.show();
+               // AppVersionLog.show();
+               // this.$tabbar.select(this.ids.tab_version);
                break;
          }
       }
