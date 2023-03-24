@@ -37,7 +37,8 @@ export default function (AB) {
       }
 
       ui(element = {}) {
-         const obj = element.toUsers || {};
+         // const obj = element.toUsers || {};
+         const obj = element ?? {};
          const baseUI = super.ui(obj);
          const filterConditions = obj.filterConditions || {
             glue: "and",
