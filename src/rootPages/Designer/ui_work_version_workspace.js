@@ -1,13 +1,10 @@
 import UI_Class from "./ui_class";
-import UI_Warnings from "./ui_warnings";
 
 export default function (AB, init_settings) {
    const ibase = "ui_work_version_workspace";
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
-
-   const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, init_settings);
 
    class UI_Work_Version_Workspace extends UIClass {
       constructor(base, settings = {}) {
@@ -130,6 +127,7 @@ export default function (AB, init_settings) {
                               type: "icon",
                               css: "webix_primary",
                               disabled: false,
+                              hidden: true,
                               click: () => {
                                  return this.saveUpdate();
                               },
@@ -172,28 +170,43 @@ export default function (AB, init_settings) {
          this.$form = $$(this.ids.form);
          this.$versionOption = $$(this.ids.versionOption);
 
-         // this.warningsPropogate([Property, Datatable]);
-         this.on("warnings", () => {
-            Warnings.show(this.mockVersion);
-         });
-
          $$(ids.noSelection).show();
       }
 
       applicationLoad(application) {
          super.applicationLoad(application);
-         application = application.json || application;
+         let versionData = this.getVersionData(application); //|| application.json.versionData;
 
          // fill the version numbers
-         this.versionNumber = application.versionData.versionNumber || "1.0.0";
-         this.CurrentVersionID =
-            application.versionData.versionNumber || "1.0.0";
+         this.versionNumber = versionData.versionNumber || "1.0.0";
+         this.CurrentVersionID = this.versionNumber; // SET Default selected version
 
-         var versionOptions = this.$versionOption;
+         this.setOptions(this.versionNumber);
+         // var versionOptions = this.$versionOption;
+         // if (versionOptions) {
+         //    versionOptions.data.options = this.getVersionOptions(
+         //       this.versionNumber
+         //    );
+         //    versionOptions.refresh();
+         // }
+      }
+
+      getVersionData(AB) {
+         AB = AB || this.CurrentApplication;
+         let versionData = AB.versionData || AB.json.versionData;
+         if (!versionData) {
+            this.AB.notify.developer("there is no versionData", {
+               context: "ui_work_version_workspace:getVersionData()",
+               application: AB.toObj(),
+            });
+         }
+         return versionData;
+      }
+
+      setOptions(vNumber) {
+         let versionOptions = this.$versionOption;
          if (versionOptions) {
-            versionOptions.data.options = this.getVersionOptions(
-               this.versionNumber
-            );
+            versionOptions.data.options = this.getVersionOptions(vNumber);
             versionOptions.refresh();
          }
       }
@@ -214,6 +227,7 @@ export default function (AB, init_settings) {
 
          // load the selected version data into the form
          this.$form.setValues(version);
+         this.setOptions(this.versionNumber);
          this.$versionOption.refresh();
 
          this.versionData = version;
@@ -228,33 +242,12 @@ export default function (AB, init_settings) {
 
          // UNload the selected version data into the form
          this.$form.setValues({});
+         this.setOptions(this.versionNumber);
          this.$versionOption.refresh();
       }
 
       loadData(data) {
-         this.mockVersion.clearAll();
-
-         try {
-            this.mockVersion.loadData(0, 20);
-         } catch (err) {
-            let message = err.toString();
-            if (typeof err == "string") {
-               try {
-                  const jErr = JSON.parse(err);
-                  if (jErr.data && jErr.data.sqlMessage) {
-                     message = jErr.data.sqlMessage;
-                  }
-               } catch (e) {
-                  // Do nothing
-               }
-            }
-
-            this.AB.notify.developer(err, {
-               context: "ui_work_version_workspace.loadData()",
-               message,
-               version: this.mockVersion.toObj(),
-            });
-         }
+         console.error("no function should be here", data);
       }
 
       /**
@@ -353,7 +346,7 @@ export default function (AB, init_settings) {
                "Failed to extract version number from input string."
             );
             this.AB.notify.developer(e, {
-               context: "ui_choose_form:applicationChangeLogAdd()",
+               context: "ui_work_version_workspace:getVersionNumber()",
                application: this.Application.toObj(),
                string,
             });
@@ -365,7 +358,6 @@ export default function (AB, init_settings) {
       //  The getVersionOptions() function generates an array of version options that start from the current version
       // and go up by one for each of the three segments (major, minor, and patch).
       getVersionOptions(versionNumber) {
-         // const versionNumber = versionData.;
          const major = versionNumber.split(".")[0];
          const minor = versionNumber.split(".")[1];
          const patch = versionNumber.split(".")[2];
@@ -381,57 +373,60 @@ export default function (AB, init_settings) {
        * @method applicationChangeLogAdd
        * Step through the process of updating an ABApplication with the
        * current state of the Form.
-       * @param {ABApplication} application
+       * @param {ABApplication, object} application, values to add
        */
       async applicationChangeLogAdd(AB, values) {
-         let abData = this.CurrentApplication.json || AB.json || AB;
-         var oldVersionNumber = abData.versionData.versionNumber;
+         let versionData = this.getVersionData(AB);
+         var oldVersionNumber = versionData.versionNumber;
          // string
          // the original version number to reset to incase of an error saving.
 
          let newVersionNumber = values.version;
 
-         // Set Data
-         abData.versionData.changeLog[newVersionNumber] = values;
-         abData.versionData.versionNumber = newVersionNumber;
-         abData.versionNumber = newVersionNumber;
+         // Set only new Data, we want to keep the old version data
+         versionData.changeLog[newVersionNumber] = values;
+         versionData.versionNumber = newVersionNumber;
+
+         AB.json["versionData"] = versionData;
 
          try {
-            await abData.save();
+            await AB.save();
             webix.message({
                type: "success",
                text: L(
                   "{0} Successfully logged update of ",
-                  [abData.label],
+                  [AB.label],
                   " to version: ",
                   newVersionNumber
                ),
             });
+
+            // update the UI
+            this.versionNumber = newVersionNumber;
+            this.clearForm();
+            // emit, update the list
             this.emit("addNew", AB, newVersionNumber);
          } catch (e) {
             webix.message({
                type: "error",
                text: L(
                   "Error Updating {0}",
-                  [abData.label],
+                  [AB.label],
                   " to version: ",
                   newVersionNumber
                ),
             });
             this.AB.notify.developer(e, {
-               context: "ui_choose_form:applicationChangeLogAdd()",
-               application: abData.toObj(),
+               context: "ui_work_version_workspace:applicationChangeLogAdd()",
+               application: AB.toObj(),
                values,
             });
 
             // reset the version number
-            abData.versionData.versionNumber = oldVersionNumber;
+            AB.versionData.versionNumber = oldVersionNumber;
             // Remove the unsaved object
             // ? does reflect work here?
-            Reflect.deleteProperty(
-               abData.versionData.changeLog,
-               newVersionNumber
-            );
+            Reflect.deleteProperty(AB.versionData.changeLog, newVersionNumber);
          }
       }
 
@@ -442,11 +437,12 @@ export default function (AB, init_settings) {
        * @param {ABApplication} application
        */
       async applicationChangeLogUpdate(AB, values) {
-         let appData = this.CurrentApplication.json || AB.json || AB;
+         AB = this.CurrentApplication || AB;
 
          let updateVersionNum = values.version;
 
-         var oldVersion = appData.versionData.changeLog[updateVersionNum];
+         let appData = this.getVersionData(AB);
+         var oldVersion = appData.changeLog[updateVersionNum];
          // object
          // the original version to reset to incase of an error saving.
 
@@ -457,42 +453,42 @@ export default function (AB, init_settings) {
          }
 
          // Set Data
-         appData.versionData.changeLog[updateVersionNum] = values;
+         AB.json.versionData.changeLog[updateVersionNum] = values;
 
          try {
-            await appData.save();
+            await AB.save();
             webix.message({
                type: "success",
                text: L(
                   "{0} Successfully logged update of ",
-                  [appData.label],
+                  [AB.label],
                   " to version: ",
                   updateVersionNum
                ),
             });
-            this.emit("addNew", appData, updateVersionNum);
+            this.emit("addNew", AB, values);
          } catch (e) {
             webix.message({
                type: "error",
                text: L(
                   "Error Updating {0}",
-                  [appData.label],
+                  [AB.label],
                   " to version: ",
                   updateVersionNum
                ),
             });
             this.AB.notify.developer(e, {
-               context: "ui_choose_form:applicationChangeLogUpdate()",
-               application: appData.toObj(),
+               context:
+                  "ui_work_version_workspace:applicationChangeLogUpdate()",
+               application: AB.toObj(),
                values,
             });
 
             // reset the version number
-            appData.versionData.versionNumber = oldVersionNumber;
+            AB.json.versionData.versionNumber = oldVersion.versionNumber;
             // Remove the unsaved object
-            // ? does reflect work here?
             Reflect.deleteProperty(
-               appData.versionData.changeLog,
+               AB.json.versionData.changeLog,
                updateVersionNum
             );
          }

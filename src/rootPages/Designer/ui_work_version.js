@@ -53,12 +53,6 @@ export default function (AB) {
             VersionList.emit("addNew", AB, selectNew);
          });
 
-         this.warningsPropogate([VersionList, VersionWorkspace]);
-         this.on("warnings", () => {
-            // make sure our list refreshes it's display
-            VersionList.warningsRefresh();
-         });
-
          await VersionWorkspace.init(AB);
          await VersionList.init(AB);
 
@@ -86,6 +80,9 @@ export default function (AB) {
          if (oldAppID && oldAppID != this.CurrentApplicationID) {
             VersionWorkspace.clearForm();
          }
+
+         // application.versionData =
+         //    application.json.versionData || application.versionData;
 
          VersionList.applicationLoad(application);
          VersionWorkspace.applicationLoad(application);

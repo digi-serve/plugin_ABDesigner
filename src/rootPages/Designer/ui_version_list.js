@@ -171,6 +171,15 @@ export default function (AB, options) {
 
       dataLoad(versionData) {
          this.busy();
+         if (!versionData) {
+            this.AB.notify.developer("No version Data", {
+               context: "ui_work_version_list:dataLoad()",
+               versionData,
+            });
+            this.clearForm();
+            this.ready();
+            return;
+         }
          var data = versionData.changeLog;
 
          function sortChangelogByVersion(changelogObj) {
@@ -331,36 +340,6 @@ export default function (AB, options) {
          }
          return this.cacheTemplate[obj.id];
       }
-
-      /**
-       * @function toolTipListItem
-       * Defines the tooltip text for an item in our list.
-       * @param {obj} obj the current instance of the Object being displayed
-       *              in each row.
-       * @return {string}
-       */
-      // toolTipListItem(obj) {
-      //    let issues = $$(this.ids.vList)
-      //       .data.getItem(obj.id)
-      //       .warningsAll().length;
-
-      //    return issues ? `${issues} issues` : "";
-      // }
-
-      /**
-       * @function callbackNewProcess
-       *
-       * Once a New Process was created in the Popup, follow up with it here.
-       */
-      // callbackNewProcess:function(err, object, selectNew, callback){
-
-      // 	if (err) {
-      // 		OP.Error.log('Error creating New Process', {error: err});
-      // 		return;
-      // 	}
-
-      // 	let objects = CurrentApplication.objects();
-      // 	itemList.parse(objects);
 
       // 	// if (processList.exists(object.id))
       // 	// 	processList.updateItem(object.id, object);

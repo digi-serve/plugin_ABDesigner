@@ -23,34 +23,8 @@ export default function (AB) {
             idBase: this.ids.component,
             labels: {
                addNew: "Add new Version",
-               // confirmDeleteTitle: "Delete Data Collection",
                title: "Versions",
                searchPlaceholder: "Version",
-            },
-
-            /**
-             * @function templateListItem
-             *
-             * Defines the template for each row of our Data view list.
-             *
-             * @param {ABVersion} obj the current instance of ABVersion for the row.
-             * @param {?} common the webix.common icon data structure
-             * @return {string}
-             */
-            templateListItem: function (version, common, warnings) {
-               let warnIcon = "";
-               if (warnings?.length > 0) {
-                  warnIcon =
-                     '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
-               }
-               return `<div class='ab-version-list-item'>
-                  <i class="fa ${
-                     version.settings.isQuery ? "fa-filter" : "fa-database"
-                  }"></i>
-                  ${version.label || "??label??"}
-                  ${warnIcon}
-                  ${common.iconGear(version)}
-               </div>`;
             },
          });
       }
@@ -71,7 +45,8 @@ export default function (AB) {
 
          this.on("addNew", (AB, selectNew) => {
             // if we receive a signal that there is new data
-            this.ListComponent.dataLoad(AB.versionData);
+            let data = AB.versionData || AB.json.versionData;
+            this.ListComponent.dataLoad(data);
             this.emit("selected", selectNew);
          });
 
@@ -99,25 +74,9 @@ export default function (AB) {
 
          this.AB = application;
          // clear our list and display our data collections:
-         // TODO
-         console.dir("Make the list from the definitions here...  ");
-         this.ListComponent.dataLoad(application.json.versionData);
-      }
-
-      warningsRefresh() {
-         if (this.CurrentApplication) {
-            // NOTE: only include System Objects if the user has permission
-            var f = (obj) => !obj.isSystemObject;
-            if (this.AB.Account.isSystemDesigner()) {
-               f = () => true;
-            }
-
-            let selectedItem = this.ListComponent.selectedItem();
-            this.ListComponent.dataLoad(
-               this.CurrentApplication?.versionsIncluded(f)
-            );
-            this.ListComponent.selectItem(selectedItem.id);
-         }
+         // Make the list from the definitions here...
+         let data = application.versionData || application.json.versionData;
+         this.ListComponent.dataLoad(data);
       }
 
       ready() {
