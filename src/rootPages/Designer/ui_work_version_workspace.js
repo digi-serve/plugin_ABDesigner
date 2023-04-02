@@ -378,7 +378,7 @@ export default function (AB, init_settings) {
        */
       async applicationChangeLogAdd(AB, values) {
          let versionData = this.getVersionData(AB);
-         var oldVersionNumber = versionData.versionNumber;
+         var oldVersionNumber = versionData?.versionNumber;
          // string
          // the original version number to reset to incase of an error saving.
 
