@@ -247,6 +247,7 @@ export default function (AB) {
             formComponents: this.formIOComponents,
             height: 500,
          });
+         console.log("sss")
       }
 
       populate(element) {
