@@ -202,7 +202,7 @@ export default function (AB) {
             this.defaultValues();
 
          // Default set of options for filter connected combo
-         const filterConnectedOptions = [{ id: "", value: "" }];
+         const filterConnectedOptions = [{ id: null, value: "" }];
 
          // get the definitions for the connected field
          const fieldDefs = this.AB.definitionByID(view.settings.fieldId);
@@ -275,9 +275,13 @@ export default function (AB) {
                         // get the component we are referencing so we can display its label
                         const formComponent =
                            view.parent.viewComponents[element.id]; // need to ensure that just looking at parent is okay in all cases
+
+                        const uiComp = formComponent.ui();
+                        const uiInput = uiComp.rows[0] ?? uiComp;
+
                         filterConnectedOptions.push({
-                           id: `${formComponent.ui.name}:${fieldToCheck}`, // store the columnName name because the ui id changes on each load
-                           value: formComponent.ui.label, // should be the translated field label
+                           id: `${uiInput.name}:${fieldToCheck}`, // store the columnName name because the ui id changes on each load
+                           value: uiInput.label, // should be the translated field label
                         });
                      }
                   }
