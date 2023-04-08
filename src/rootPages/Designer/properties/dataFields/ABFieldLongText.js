@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldLongText extends ABField {
-      constructor() {
-         super("properties_abfield_longtext", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_longtext`, {
             default: "",
             defaultCheckbox: "",
          });

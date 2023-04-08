@@ -200,6 +200,7 @@ export default function (AB, init_settings) {
                context: "ui_work_version_workspace:getVersionData()",
                application: AB.toObj(),
             });
+            versionData = {};
          }
          return versionData;
       }

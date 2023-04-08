@@ -16,6 +16,7 @@ export default function (AB) {
    class UI_Work_Datacollection_List extends UIClass {
       constructor() {
          super("ui_work_datacollection_list");
+         let _this = this;
 
          // {ui_common_list} instance to display a list of our data collections.
          this.ListComponent = UI_COMMON_LIST(AB, {
@@ -42,8 +43,7 @@ export default function (AB) {
             templateListItem: function (datacollection, common, warnings) {
                let warnIcon = "";
                if (warnings?.length > 0) {
-                  warnIcon =
-                     '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
+                  warnIcon = _this.WARNING_ICON;
                }
                return `<div class='ab-datacollection-list-item'>
                   <i class="fa ${

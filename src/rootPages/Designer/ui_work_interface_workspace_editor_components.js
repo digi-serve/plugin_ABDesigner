@@ -133,7 +133,7 @@ export default function (AB) {
        * @param component {ABView} - new component
        */
       addWidget(component) {
-         var newComp = component.newInstance(
+         const newComp = component.newInstance(
             this.CurrentView.application,
             this.CurrentView
          );

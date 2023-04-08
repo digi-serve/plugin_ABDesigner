@@ -212,7 +212,7 @@ export default function (AB) {
           */
          populate(view) {
             this.viewLoad(view);
-            $$(this.ids.label).setValue(view.label);
+            $$(this.ids.label)?.setValue(view.label);
          }
 
          requiredOnChange() {

@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldCombine extends ABField {
-      constructor() {
-         super("properties_abfield_combine", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_combine`, {
             combinedFields: "",
             delimiter: "",
          });

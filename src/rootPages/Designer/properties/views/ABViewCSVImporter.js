@@ -21,6 +21,7 @@ export default function (AB) {
             datacollection: "",
             fields: "",
             buttonLabel: "",
+            buttonRecordRules: "",
             width: "",
          });
 
@@ -98,6 +99,7 @@ export default function (AB) {
                               width: uiConfig.labelWidthLarge,
                            },
                            {
+                              id: ids.buttonRecordRules,
                               view: "button",
                               name: "buttonRecordRules",
                               css: "webix_primary",
@@ -164,6 +166,7 @@ export default function (AB) {
 
          this.updateRules();
          this.populateAvailableFields({ selectAll: true });
+         this.onChange();
       }
 
       updateRules() {
@@ -242,6 +245,7 @@ export default function (AB) {
          let item = $$(ids.fields).getItem(fieldId);
          item.selected = item.selected ? 0 : 1;
          $$(ids.fields).updateItem(fieldId, item);
+         this.onChange();
       }
 
       recordRuleShow() {
@@ -288,9 +292,10 @@ export default function (AB) {
                };
             });
 
-         $$(ids.datacollection).define("options", datacollections);
-         $$(ids.datacollection).define("value", view.settings.dataviewID);
-         $$(ids.datacollection).refresh();
+         const $d = $$(ids.datacollection);
+         $d.define("options", datacollections);
+         $d.define("value", view.settings.dataviewID);
+         $d.refresh();
       }
 
       defaultValues() {

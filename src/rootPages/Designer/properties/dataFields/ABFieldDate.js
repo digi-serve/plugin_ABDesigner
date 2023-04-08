@@ -10,8 +10,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldDate extends ABField {
-      constructor() {
-         super("properties_abfield_date", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_date`, {
             default: "",
             currentToDefault: "",
 

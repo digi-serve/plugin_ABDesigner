@@ -9,8 +9,8 @@ export default function (AB) {
    const ABField = FFieldClass(AB);
 
    class ABFieldTree extends ABField {
-      constructor() {
-         super("properties_abfield_tree", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_tree`, {
             options: "",
             popup: "",
             tree: "",

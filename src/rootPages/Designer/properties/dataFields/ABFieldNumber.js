@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldNumberProperty extends ABField {
-      constructor() {
-         super("properties_abfield_number", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_number`, {
             default: "",
             decimalOptions: "",
             typeDecimalPlaces: "",

@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldEmail extends ABField {
-      constructor() {
-         super("properties_abfield_email", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_email`, {
             default: "",
             defaultCheckbox: "",
          });

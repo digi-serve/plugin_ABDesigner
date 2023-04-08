@@ -9,8 +9,8 @@ export default function (AB) {
    const ABField = FFieldClass(AB);
 
    class ABFieldJson extends ABField {
-      constructor() {
-         super("properties_abfield_json", {});
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_json`, {});
       }
 
       ui() {

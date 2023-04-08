@@ -40,6 +40,8 @@ export default function (AB) {
          PropertiesList.on("view.changed", () => {
             this.emit("view.changed");
          });
+
+         this.warningsPropogate([PropertiesList]);
          return PropertiesList.init(AB);
       }
 

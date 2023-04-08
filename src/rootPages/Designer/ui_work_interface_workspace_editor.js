@@ -269,10 +269,12 @@ export default function (AB) {
          super.viewLoad(view);
 
          // try to make sure we don't continually add up listeners.
-         this.CurrentView.removeListener(
-            "properties.updated",
-            this._handlerViewUpdate
-         ).once("properties.updated", this._handlerViewUpdate);
+         if (this.CurrentView) {
+            this.CurrentView.removeListener(
+               "properties.updated",
+               this._handlerViewUpdate
+            ).once("properties.updated", this._handlerViewUpdate);
+         }
 
          // update the toolbar navigation map
          let $tbMap = $$(this.ids.toolbarMap);

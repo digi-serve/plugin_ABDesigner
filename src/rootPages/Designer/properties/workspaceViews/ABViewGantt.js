@@ -137,18 +137,6 @@ export default function (AB, ibase) {
          $$(ids.durationFieldID).define("options", numberFields);
 
          // Progress
-         // const decimalFields = object
-         //    .fields((f) => f instanceof ABFieldNumber)
-         //    .map(({ id, label }) => ({ id, value: label }));
-
-         // // sort by value
-         // decimalFields.sort((a, b) => (a.value > b.value ? 1 : -1));
-
-         // // Add default option
-         // decimalFields.unshift({
-         //    id: "",
-         //    value: L("Select a number field"),
-         // });
          $$(ids.progressFieldID).define("options", numberFields);
 
          // Title & Notes

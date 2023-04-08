@@ -21,8 +21,8 @@ export default function (AB) {
     * property values, etc.
     */
    class ABFieldListProperty extends ABField {
-      constructor() {
-         super("properties_abfield_list", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_list`, {
             isMultiple: "",
             hasColors: "",
             default: "",

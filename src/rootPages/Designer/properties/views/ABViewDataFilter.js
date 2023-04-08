@@ -139,30 +139,30 @@ export default function (AB) {
 
          // set values saved on server
          for (const key in view.settings)
-            values[key] = view.settings[key] || values[key];
+            values[key] =
+               typeof view.settings[key] != "undefined"
+                  ? view.settings[key]
+                  : values[key];
 
          let datacollectionId = values.dataviewID ? values.dataviewID : null;
-         var SourceSelector = $$(ids.datacollection);
+         var $d = $$(ids.datacollection);
 
          // Pull data collections to options
          var dcOptions = view.application
             .datacollectionsIncluded()
-            .filter((dc) => {
-               var obj = dc.datasource;
-               return dc.sourceType == "object" && obj && !obj.isImported;
-            })
-            .map((d) => {
-               let entry = { id: d.id, value: d.label };
-               if (d.sourceType == "query") {
-                  entry.icon = "fa fa-filter";
-               } else {
-                  entry.icon = "fa fa-database";
-               }
-               return entry;
+            .map((dc) => {
+               return {
+                  id: dc.id,
+                  value: dc.label,
+                  icon:
+                     dc.sourceType === "query"
+                        ? "fa fa-filter"
+                        : "fa fa-database",
+               };
             });
-         SourceSelector.define("options", dcOptions);
-         SourceSelector.define("value", view.datacollection);
-         SourceSelector.refresh();
+         $d.define("options", dcOptions);
+         $d.define("value", view.datacollection);
+         $d.refresh();
 
          // if there is a data collection we want to get all connected fields
          if (datacollectionId) {
