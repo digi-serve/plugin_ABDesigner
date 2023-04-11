@@ -26,7 +26,7 @@ export default function (AB) {
       }
 
       ui() {
-         const defaultValues = this.defaultValues();
+         // const defaultValues = this.defaultValues();
          const ids = this.ids;
 
          return super.ui([
