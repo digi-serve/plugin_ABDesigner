@@ -290,6 +290,10 @@ export default function (AB) {
                return {
                   id: dc.id,
                   value: dc.label,
+                  icon:
+                     dc.sourceType === "query"
+                        ? "fa fa-filter"
+                        : "fa fa-database",
                };
             });
 

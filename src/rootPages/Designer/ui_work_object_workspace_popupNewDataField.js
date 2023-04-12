@@ -269,7 +269,8 @@ export default function (AB, ibase) {
             rows: [],
          };
 
-         Fields.forEach((F) => {
+         Fields.forEach((Klass) => {
+            const F = new Klass(`${ibase}_properties`);
             const menuName = F.defaults().menuName;
             const key = F.defaults().key;
 
@@ -656,7 +657,7 @@ export default function (AB, ibase) {
        * @method modeAdd()
        * Opens the new data field widget for Adding a new field.
        * If an allowFieldKey is provided, then that is the default
-       * Field Editor we want to show. Otherwise shoe the generic
+       * Field Editor we want to show. Otherwise show the generic
        * field picker.
        * @param {string} fieldKey
        *        show the editor for this ABField.key
@@ -671,9 +672,9 @@ export default function (AB, ibase) {
          if (this.CurrentObject.isImported) fieldKey = "connectObject";
 
          if (fieldKey) {
-            const connectField = PropertyManager.fields().filter(
-               (f) => f.defaults().key == fieldKey
-            )[0];
+            const connectField = Object.keys(this._componentHash)
+               .map((k) => this._componentHash[k])
+               .filter((f) => f.defaults().key == fieldKey)[0];
             if (!connectField) return;
             const connectMenuName = connectField.defaults().menuName;
             // $$(ids.types).setValue(connectMenuName);
@@ -737,7 +738,6 @@ export default function (AB, ibase) {
        *
        * @param {string} name  the menuName() of the submenu that was selected.
        */
-
       onClick(name) {
          // show Field Type popup
          $$(this.ids.chooseFieldType).hide();

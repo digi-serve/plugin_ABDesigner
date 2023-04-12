@@ -56,6 +56,10 @@ export default function (AB) {
             this.AB = AB;
          }
 
+         static get key() {
+            return "viewcontainer";
+         }
+
          ui(elements = [], rules = {}) {
             let ids = this.ids;
 
@@ -270,37 +274,39 @@ export default function (AB) {
 
             // remove all the gravity counters:
             let $grav = $$(ids.gravity);
-            $grav
-               .getParentView()
-               .queryView({ css: "gravity_counter" }, "all")
-               .map((counter) => $grav.getParentView().removeView(counter));
+            if ($grav) {
+               $grav
+                  .getParentView()
+                  .queryView({ css: "gravity_counter" }, "all")
+                  .map((counter) => $grav.getParentView().removeView(counter));
 
-            let numCol = $col.getValue();
+               let numCol = $col.getValue();
 
-            if (numCol > 1) {
-               // now add gravity counters for the number of columns we have
-               for (var step = 1; step <= numCol; step++) {
-                  var pos = $grav.getParentView().index($grav);
-                  $grav.getParentView().addView(
-                     {
-                        view: "counter",
-                        min: 1,
-                        label: L("Column {0} Gravity", [step]),
-                        labelWidth: uiConfig.labelWidthXLarge,
-                        css: "gravity_counter",
-                        value:
-                           view.settings.gravity &&
-                           view.settings.gravity[step - 1]
-                              ? view.settings.gravity[step - 1]
-                              : ABViewContainerDefaults.gravity,
-                        on: {
-                           onChange: () => {
-                              this.onChange();
+               if (numCol > 1) {
+                  // now add gravity counters for the number of columns we have
+                  for (var step = 1; step <= numCol; step++) {
+                     var pos = $grav.getParentView().index($grav);
+                     $grav.getParentView().addView(
+                        {
+                           view: "counter",
+                           min: 1,
+                           label: L("Column {0} Gravity", [step]),
+                           labelWidth: uiConfig.labelWidthXLarge,
+                           css: "gravity_counter",
+                           value:
+                              view.settings.gravity &&
+                              view.settings.gravity[step - 1]
+                                 ? view.settings.gravity[step - 1]
+                                 : ABViewContainerDefaults.gravity,
+                           on: {
+                              onChange: () => {
+                                 this.onChange();
+                              },
                            },
                         },
-                     },
-                     pos
-                  );
+                        pos
+                     );
+                  }
                }
             }
          }
@@ -339,11 +345,9 @@ export default function (AB) {
           * A method to return the proper ABViewXXX Definition.
           * NOTE: Must be overwritten by the Child Class
           */
-         // ViewClass() {
-         //    console.error("!!! Child Class has not overwritten ViewClass()");
-         //    return null;
-         //    // return super._ViewClass("string");
-         // }
+         ViewClass() {
+            return super._ViewClass("viewcontainer");
+         }
 
          // _ViewClass(key) {
          //    var app = this.CurrentApplication;

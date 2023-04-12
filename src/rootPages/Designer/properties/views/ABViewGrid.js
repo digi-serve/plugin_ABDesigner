@@ -440,13 +440,14 @@ export default function (AB) {
          // Load in all the Available Datacollections:
          var listDC = this.CurrentApplication.datacollectionsIncluded().map(
             (d) => {
-               let entry = { id: d.id, value: d.label };
-               if (d.sourceType == "query") {
-                  entry.icon = "fa fa-filter";
-               } else {
-                  entry.icon = "fa fa-database";
-               }
-               return entry;
+               return {
+                  id: d.id,
+                  value: d.label,
+                  icon:
+                     d.sourceType == "query"
+                        ? "fa fa-filter"
+                        : "fa fa-database",
+               };
             }
          );
          $$(this.ids.datacollection).define("options", listDC);
@@ -607,15 +608,6 @@ export default function (AB) {
          $$(ids.hideHeader).setValue(view.settings.hideHeader);
          $$(ids.labelAsField).setValue(view.settings.labelAsField);
          $$(ids.hideButtons).setValue(view.settings.hideButtons);
-
-         /*
-
-   //    // initial populate of properties and popups
-   //    view.populateEditor(ids, view);
-   //    view.populatePopupEditors(view);
-   //    view.populateBadgeNumber(ids, view);
-
-*/
 
          // Grouping options
          this.refreshGroupBy();

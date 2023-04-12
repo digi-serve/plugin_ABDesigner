@@ -15,6 +15,7 @@ export default function (AB) {
    class ABViewTextProperty extends ABView {
       constructor() {
          super(BASE_ID, {
+            height: "",
             dataviewID: "",
             field: "",
          });
@@ -32,10 +33,16 @@ export default function (AB) {
 
          return super.ui([
             {
+               id: ids.height,
                view: "counter",
                name: "height",
                label: L("Height:"),
                labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.dataviewID,
@@ -46,6 +53,7 @@ export default function (AB) {
                on: {
                   onChange: (newValue) => {
                      self.selectSource(newValue);
+                     this.onChange();
                   },
                },
             },
@@ -82,7 +90,8 @@ export default function (AB) {
       selectField(field) {
          const format = `{${field.label}}`;
 
-         // insert text to tinymce
+         // insert text to tinymce (which is globally defined)
+         // eslint-disable-next-line no-undef
          tinymce.activeEditor.execCommand("mceInsertContent", false, format);
       }
 
@@ -124,57 +133,43 @@ export default function (AB) {
 
          const dataviewID = view.settings.dataviewID ?? "none";
 
-         const $dataviewID = $$(ids.dataviewID);
+         const $dc = $$(ids.dataviewID);
 
-         // Pull data collections to options
-         const applicationLoad = this.CurrentApplication;
+         //// Pull data collections to options
 
-         // / NOTE: only include System Objects if the user has permission
+         //// NOTE: only include System Objects if the user has permission
          const datacollectionFilter = this.AB.Account.isSystemDesigner()
-            ? (obj) => !obj.isSystemObject
-            : () => true;
+            ? () => true
+            : (obj) => !obj.isSystemObject;
 
          const datacollections =
-            applicationLoad.datacollectionsIncluded(datacollectionFilter);
+            this.CurrentApplication.datacollectionsIncluded(
+               datacollectionFilter
+            );
          const options = [
             {
                id: "none",
-               value: "None",
+               value: L("None"),
             },
             ...datacollections.map((e) => {
                return {
                   id: e.id,
                   value: e.label,
+                  icon:
+                     e.sourceType == "query"
+                        ? "fa fa-filter"
+                        : "fa fa-database",
                };
             }),
          ];
 
-         $dataviewID.define("options", options);
-         $dataviewID.define("value", dataviewID);
-         $dataviewID.refresh();
+         $dc.define("options", options);
+         $dc.define("value", dataviewID);
+         $dc.refresh();
 
          this.updateFieldOptions(view, dataviewID);
 
-         const $component = $$(ids.component);
-
-         const values = $component.getValues();
-
-         for (const key in view.settings)
-            values[key] = values[key] || view.settings[key];
-
-         $component.setValues(values);
-      }
-
-      defaultValues() {
-         const ViewClass = this.ViewClass();
-
-         let values = null;
-
-         if (ViewClass) {
-            values = ViewClass.defaultValues();
-         }
-
-         return values;
+         $$(ids.height).setValue(view.settings.height);
       }
 
       /**
@@ -183,13 +178,14 @@ export default function (AB) {
        * @return {obj}
        */
       values() {
-         const ids = this.ids;
-
-         const $component = $$(ids.component);
-
          const values = super.values();
 
+         const ids = this.ids;
+         const $component = $$(ids.component);
+
          values.settings = $component.getValues();
+         if (values.settings.dataviewID == "none")
+            values.settings.dataviewID = null;
 
          return values;
       }

@@ -10,8 +10,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldBoolean extends ABField {
-      constructor() {
-         super("properties_abfield_boolean", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_boolean`, {
             checkBoxLabel: "",
             default: "",
          });

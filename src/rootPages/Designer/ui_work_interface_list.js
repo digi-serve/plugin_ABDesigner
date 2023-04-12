@@ -157,7 +157,7 @@ export default function (AB) {
             },
          ]);
 
-         this.EditPopup.on("click", (command) =>{
+         this.EditPopup.on("click", (command) => {
             switch (command) {
                case "delete":
                   this.remove();
@@ -396,11 +396,20 @@ export default function (AB) {
          $$(this.ids.list).select(page.id);
       }
 
-      templateListItem(item, common, warnings) {
+      templateListItem(item, common, oldWarnings) {
+         if (oldWarnings) {
+            // TODO: remove this debugging statement.
+            console.error(
+               "templateListItem(): oldWarnings: How'd we get here?"
+            );
+         }
+
+         item.warningsEval();
+         const warnings = item.warningsAll();
+
          let warnIcon = "";
-         if (warnings?.length > 0) {
-            warnIcon =
-               '<span class="webix_sidebar_dir_icon webix_icon fa fa-warning pulseLight smalltext"></span>';
+         if (warnings.length > 0) {
+            warnIcon = this.WARNING_ICON;
          }
          var template = `<div class='ab-page-list-item'>
             ${common.icon(item)} <span class='webix_icon fa fa-${

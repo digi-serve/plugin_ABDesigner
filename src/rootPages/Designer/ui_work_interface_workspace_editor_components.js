@@ -133,7 +133,7 @@ export default function (AB) {
        * @param component {ABView} - new component
        */
       addWidget(component) {
-         var newComp = component.newInstance(
+         const newComp = component.newInstance(
             this.CurrentView.application,
             this.CurrentView
          );
@@ -146,6 +146,10 @@ export default function (AB) {
             // callback to parent
             // hide loading cursor
             this.emit("widget.add");
+
+            // signal that something has changed and our
+            // warnings should be re-evaluated
+            this.emit("warnings");
          });
 
          this.hidePopup();

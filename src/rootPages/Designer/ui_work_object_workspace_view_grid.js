@@ -114,6 +114,7 @@ export default function (AB, iBase, iSettings) {
          this.currentViewDef = view;
 
          this.currentView = this.AB.viewNewDetatched(view.component);
+         this.currentView.warningsSilent = true;
          var component = this.currentView.component();
 
          // OK, a ABViewGrid component wont display the grid unless there

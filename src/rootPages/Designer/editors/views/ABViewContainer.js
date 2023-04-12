@@ -300,14 +300,18 @@ export default function (AB) {
           * @param {obj} common  Webix provided object with common UI tools
           */
          template(child) {
+            let warnText = "";
+            if ((child.warningsAll() || []).length > 0) {
+               warnText = this.WARNING_ICON;
+            }
             return `<div>
                <i class="fa fa-${child.icon} webix_icon_btn"></i> ${child.label}
                <div class="ab-component-tools">
-               ${
-                  child.settings.removable == false
-                     ? ""
-                     : '<i class="fa fa-trash ab-component-remove"></i>'
-               }
+               ${warnText}${
+               child.settings.removable == false
+                  ? ""
+                  : '<i class="fa fa-trash ab-component-remove"></i>'
+            }
                <i class="fa fa-edit ab-component-edit"></i>
                </div></div>`;
          }

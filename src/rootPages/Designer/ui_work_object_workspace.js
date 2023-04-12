@@ -238,6 +238,7 @@ export default function (AB, ibase, init_settings) {
          );
          if (!this.settings.isReadOnly) {
             this.PopupViewSettingsComponent.on("new.field", (key) => {
+               this.PopupNewDataFieldComponent.objectLoad(this.CurrentObject);
                this.PopupNewDataFieldComponent.show(null, key, false);
             });
          }
@@ -292,10 +293,10 @@ export default function (AB, ibase, init_settings) {
                      return;
                   }
                   if (item.isView) {
-                     var view = this.workspaceViews.list((v) => v.id === id)[0];
+                     let view = this.workspaceViews.list((v) => v.id === id)[0];
                      this.switchWorkspaceView(view);
                   } else if (item.action === "edit") {
-                     var view = this.workspaceViews.list(
+                     let view = this.workspaceViews.list(
                         (v) => v.id === item.viewId
                      )[0];
                      this.PopupViewSettingsComponent.show(view);
@@ -883,7 +884,6 @@ export default function (AB, ibase, init_settings) {
       // }
 
       refreshView() {
-         var ids = this.ids;
          this.warningsRefresh(this.CurrentObject);
          var currentView = this.workspaceViews.getCurrentView();
          switch (currentView.type) {
@@ -915,10 +915,11 @@ export default function (AB, ibase, init_settings) {
        * call back for when an editor menu action has been selected.
        * @param {string} action [ 'hide', 'filter', 'sort', 'edit', 'delete' ]
        */
-      async callbackHeaderEditorMenu(action, field, node) {
+      async callbackHeaderEditorMenu(action, field /* , node */) {
+         var currentView = this.workspaceViews.getCurrentView();
+
          switch (action) {
             case "hide":
-               var currentView = this.workspaceViews.getCurrentView();
                var newFields = [];
                var isHidden =
                   currentView.hiddenFields.filter((fID) => {
@@ -953,7 +954,7 @@ export default function (AB, ibase, init_settings) {
                break;
 
             case "filter":
-               _logic.toolbarFilter($$(ids.buttonFilter).$view, field.id);
+               this.toolbarFilter($$(this.ids.buttonFilter).$view, field.id);
                break;
 
             case "sort":
@@ -961,7 +962,6 @@ export default function (AB, ibase, init_settings) {
                break;
 
             case "freeze":
-               var currentView = this.workspaceViews.getCurrentView();
                currentView.frozenColumnID = field.columnName;
                try {
                   await this.workspaceViews.save();
@@ -1024,7 +1024,7 @@ export default function (AB, ibase, init_settings) {
 
                               checkPages(
                                  this.CurrentApplication.pages(),
-                                 (err) => {}
+                                 (/* err */) => {}
                               );
                            })
                            .catch((err) => {
@@ -1060,7 +1060,7 @@ export default function (AB, ibase, init_settings) {
        */
       callbackMassUpdate() {
          // _logic.getBadgeSortFields();
-         _logic.loadData();
+         this.loadData();
       }
 
       /**
@@ -1264,7 +1264,7 @@ export default function (AB, ibase, init_settings) {
        * Show the popup to allow the user to create new fields for
        * this object.
        */
-      toolbarAddFields($view) {
+      toolbarAddFields(/* $view */) {
          this.PopupNewDataFieldComponent.show();
       }
 
@@ -1319,7 +1319,7 @@ export default function (AB, ibase, init_settings) {
          this.PopupFrozenColumnsComponent.show($view);
       }
 
-      toolbarPermission($view) {
+      toolbarPermission(/* $view */) {
          console.error("TODO: toolbarPermission()");
       }
 
@@ -1506,7 +1506,9 @@ export default function (AB, ibase, init_settings) {
                      if (jErr.data && jErr.data.sqlMessage) {
                         message = jErr.data.sqlMessage;
                      }
-                  } catch (e) {}
+                  } catch (e) {
+                     /* just ignore */
+                  }
                }
                if (err.message) {
                   message = err.message;

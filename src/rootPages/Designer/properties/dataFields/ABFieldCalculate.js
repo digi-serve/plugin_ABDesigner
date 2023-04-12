@@ -10,8 +10,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldCalculate extends ABField {
-      constructor() {
-         super("properties_abfield_calculate", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_calculate`, {
             formula: "",
 
             fieldPopup: "",

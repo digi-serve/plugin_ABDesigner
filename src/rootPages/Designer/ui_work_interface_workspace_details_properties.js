@@ -95,6 +95,9 @@ export default function (AB) {
                   this.pendingSave = false;
                   this.AB.Webix.eventRemove(this.unloadListener);
                   delete this.unloadListener;
+
+                  // warnings should be refreshed now:
+                  this.emit("warnings");
                }
             }, waitDuration);
 

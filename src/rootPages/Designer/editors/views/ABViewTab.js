@@ -86,17 +86,24 @@ export default function (AB) {
                   i < (componentUI.rows[0]?.cells ?? []).length;
                   i++
                ) {
+                  let _cell = componentUI.rows[0].cells[i];
                   // Add 'move back' icon
-                  componentUI.rows[0].cells[
-                     i
-                  ].header = `<i class="fa fa-caret-left move-back ab-tab-back"></i>${componentUI.rows[0]?.cells[i].header}`;
+                  _cell.header = `<i class="fa fa-caret-left move-back ab-tab-back"></i>${componentUI.rows[0]?.cells[i].header}`;
+
+                  let currView = baseView.views(
+                     (v) => v.id == _cell.body.id
+                  )[0];
+                  if (!currView || (currView.warningsAll() || []).length > 0) {
+                     // Add warnings icon
+                     _cell.header += this.WARNING_ICON;
+                  }
 
                   // Add 'edit' icon
-                  componentUI.rows[0].cells[i].header +=
+                  _cell.header +=
                      ' <i class="fa fa-pencil-square rename ab-tab-edit"></i>';
 
                   // Add 'move next' icon
-                  componentUI.rows[0].cells[i].header +=
+                  _cell.header +=
                      ' <i class="fa fa-caret-right move-next ab-tab-next"></i>';
                }
             } else if (componentUI.cols) {
@@ -174,51 +181,63 @@ export default function (AB) {
 
             const $component = $$(ids.component);
 
-            // Add actions buttons - Edit , Delete
-            if ($component.config.view === "tabview") {
-               webix.ui({
-                  container: $component.getMultiview().$view,
-                  view: "template",
-                  autoheight: false,
-                  height: 1,
-                  width: 0,
-                  template: [
-                     '<div class="ab-component-tools ab-layout-view ab-tab-tools">',
-                     '<i class="fa fa-trash ab-component-remove"></i>',
-                     '<i class="fa fa-edit ab-component-edit"></i>',
-                     "</div>",
-                  ].join(""),
-                  onClick: {
-                     "ab-component-edit": (e, id, trg) => {
-                        this.tabEdit(e, id, trg);
+            if ($component) {
+               const tabID = $component.getValue();
+               const tab = this.view.views((v) => v.id === tabID)[0];
+
+               let warnText = "";
+               if (!tab || (tab.warningsAll() || []).length > 0) {
+                  warnText = this.WARNING_ICON;
+               }
+
+               // Add actions buttons - Edit , Delete
+               if ($component.config.view === "tabview") {
+                  webix.ui({
+                     container: $component.getMultiview().$view,
+                     view: "template",
+                     autoheight: false,
+                     height: 1,
+                     width: 0,
+                     template: [
+                        '<div class="ab-component-tools ab-layout-view ab-tab-tools">',
+                        '<i class="fa fa-trash ab-component-remove"></i>',
+                        '<i class="fa fa-edit ab-component-edit"></i>',
+                        warnText,
+                        "</div>",
+                     ].join(""),
+                     onClick: {
+                        "ab-component-edit": (e, id, trg) => {
+                           this.tabEdit(e, id, trg);
+                        },
+                        "ab-component-remove": (e, id, trg) => {
+                           this.tabRemove(e, id, trg);
+                        },
                      },
-                     "ab-component-remove": (e, id, trg) => {
-                        this.tabRemove(e, id, trg);
+                  });
+               } else if ($component.config.view === "multiview") {
+                  webix.ui({
+                     container: $component.$view,
+                     view: "template",
+                     autoheight: false,
+                     height: 1,
+                     width: 0,
+                     template: [
+                        '<div class="ab-component-tools ab-layout-view ab-tab-tools">',
+                        warnText,
+                        '<i class="fa fa-trash ab-component-remove"></i>',
+                        '<i class="fa fa-edit ab-component-edit"></i>',
+                        "</div>",
+                     ].join(""),
+                     onClick: {
+                        "ab-component-edit": (e) => {
+                           this.tabEdit(e);
+                        },
+                        "ab-component-remove": (e) => {
+                           this.tabRemove(e);
+                        },
                      },
-                  },
-               });
-            } else if ($component.config.view === "multiview") {
-               webix.ui({
-                  container: $component.$view,
-                  view: "template",
-                  autoheight: false,
-                  height: 1,
-                  width: 0,
-                  template: [
-                     '<div class="ab-component-tools ab-layout-view ab-tab-tools">',
-                     '<i class="fa fa-trash ab-component-remove"></i>',
-                     '<i class="fa fa-edit ab-component-edit"></i>',
-                     "</div>",
-                  ].join(""),
-                  onClick: {
-                     "ab-component-edit": (e) => {
-                        this.tabEdit(e);
-                     },
-                     "ab-component-remove": (e) => {
-                        this.tabRemove(e);
-                     },
-                  },
-               });
+                  });
+               }
             }
 
             const baseView = this.view;

@@ -49,7 +49,12 @@ export default function (AB) {
                         labelWidth: uiConfig.labelWidthLarge,
                         skipAutoSave: true,
                         on: {
-                           onChange: this.populateFilter.bind(this),
+                           onChange: (newVal, oldVal) => {
+                              if (newVal != oldVal) {
+                                 this.populateFilter();
+                                 this.onChange();
+                              }
+                           },
                         },
                      },
                      {
@@ -185,20 +190,23 @@ export default function (AB) {
 
       populateDatacollections() {
          // Pull data views to options
-         const dcOptions = this.AB.datacollections().map((dc) => {
-            return {
-               id: dc.id,
-               value: dc.label,
-            };
-         });
+         const dcOptions = this.CurrentView.application
+            .datacollectionsIncluded()
+            .map((dc) => {
+               return {
+                  id: dc.id,
+                  value: dc.label,
+                  icon:
+                     dc.sourceType === "query"
+                        ? "fa fa-filter"
+                        : "fa fa-database",
+               };
+            });
 
-         const $DcSelector = $$(this.ids.datacollection);
-         $DcSelector.define("options", dcOptions);
-         $DcSelector.define(
-            "value",
-            this.CurrentView?.settings?.dataviewID ?? null
-         );
-         $DcSelector.refresh();
+         const $d = $$(this.ids.datacollection);
+         $d.define("options", dcOptions);
+         $d.define("value", this.CurrentView?.settings?.dataviewID ?? null);
+         $d.refresh();
       }
 
       populateBadgeNumber() {

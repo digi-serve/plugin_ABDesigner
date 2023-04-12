@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldTextFormula extends ABField {
-      constructor() {
-         super("properties_abfield_textformula", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_textformula`, {
             textFormula: "",
             formulaSuggest: "",
          });

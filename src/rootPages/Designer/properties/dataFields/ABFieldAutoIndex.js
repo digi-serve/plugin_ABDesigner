@@ -10,8 +10,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldAutoIndexProperty extends ABField {
-      constructor() {
-         super("properties_abfield_autoindex", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_autoindex`, {
             prefix: "",
             delimiter: "",
             displayLength: "",
