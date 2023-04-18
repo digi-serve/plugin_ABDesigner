@@ -19,6 +19,8 @@ export default function (AB) {
             dataSource: "",
             linkDatacollection: "",
             linkField: "",
+            followCursor: "",
+            loadAllPanel: "",
             loadAll: "",
             fixSelect: "",
 
@@ -138,6 +140,20 @@ export default function (AB) {
                                        },
                                     },
                                  },
+                                 {
+                                    id: ids.followCursor,
+                                    view: "select",
+                                    name: "followCursor",
+                                    label: L("Follow Cursor:"),
+                                    labelWidth: uiConfig.labelWidthLarge,
+                                    hidden: 1,
+                                    on: {
+                                       onChange: () => {
+                                          this.changeFollowCursor();
+                                          this.save();
+                                       },
+                                    },
+                                 },
                               ],
                            },
                         },
@@ -200,6 +216,7 @@ export default function (AB) {
                                     ],
                                  },
                                  {
+                                    id: ids.loadAllPanel,
                                     cols: [
                                        {
                                           view: "label",
@@ -491,6 +508,7 @@ export default function (AB) {
          const $dataSource = $$(ids.dataSource);
          const $linkDatacollection = $$(ids.linkDatacollection);
          const $linkField = $$(ids.linkField);
+         const $followCursor = $$(ids.followCursor);
          const $loadAll = $$(ids.loadAll);
          const $fixSelect = $$(ids.fixSelect);
          const $populate = $$(ids.populate);
@@ -532,6 +550,7 @@ export default function (AB) {
          $dataSource.define("value", settings.datasourceID);
          $linkDatacollection.define("value", settings.linkDatacollectionID);
          $linkField.define("value", settings.linkFieldID);
+         $followCursor.define("value", settings.followDatacollectionID);
          $loadAll.define("value", settings.loadAll);
          $fixSelect.define("value", settings.fixSelect);
          const populateChoice = Array.isArray(settings.populate)
@@ -552,10 +571,13 @@ export default function (AB) {
             $$(ids.populateOptions).hide();
          }
          this.initPopulateOptions();
+         this.initFollowCursorOptions();
+         this.changeFollowCursor();
 
          $dataSource.refresh();
          $linkDatacollection.refresh();
          $linkField.refresh();
+         $followCursor.refresh();
          $loadAll.refresh();
          $fixSelect.refresh();
          $populate.refresh();
@@ -636,6 +658,44 @@ export default function (AB) {
          $$(ids.dataSource).refresh();
       }
 
+      initFollowCursorOptions() {
+         const $followCursor = $$(this.ids.followCursor);
+         const followCursorOptions = [];
+         let sameDCs = [];
+
+         // pull data collections that have same data source
+         if (this.CurrentDatacollection?.datasource) {
+            sameDCs = this.CurrentApplication.datacollectionsIncluded().filter(
+               (dc) =>
+                  dc?.id != this.CurrentDatacollection.id &&
+                  dc?.settings?.datasourceID ==
+                     this.CurrentDatacollection.datasource.id
+            );
+         }
+
+         if (sameDCs?.length > 0) {
+            // set data collections to options
+            sameDCs.forEach((dc) => {
+               followCursorOptions.push({
+                  id: dc.id,
+                  value: dc.label,
+               });
+            });
+         }
+
+         followCursorOptions.unshift({
+            id: "",
+            value: L("Select a data collection"),
+         });
+
+         $followCursor.define("options", followCursorOptions);
+         $followCursor.define(
+            "value",
+            this.CurrentDatacollection?.settings?.followDatacollectionID ?? null
+         );
+         $followCursor.refresh();
+      }
+
       busy() {
          const ids = this.ids;
 
@@ -653,6 +713,38 @@ export default function (AB) {
          if ($propertyPanel?.hideProgress) $propertyPanel.hideProgress();
       }
 
+      changeFollowCursor() {
+         const ids = this.ids,
+            settings = this.CurrentDatacollection?.settings ?? {},
+            $followCursor = $$(ids.followCursor),
+            $linkDatacollection = $$(ids.linkDatacollection),
+            $linkField = $$(ids.linkField),
+            $filterPanel = $$(ids.filterPanel),
+            $sortPanel = $$(ids.sortPanel),
+            $loadAllPanel = $$(ids.loadAllPanel),
+            $fixSelect = $$(ids.fixSelect);
+
+         const followCursor = $followCursor.getValue();
+
+         if (followCursor) {
+            $linkDatacollection.hide();
+            $linkField.hide();
+            $filterPanel.hide();
+            $sortPanel.hide();
+            $loadAllPanel.hide();
+            $fixSelect.hide();
+         } else {
+            $linkDatacollection.show();
+            // $linkField.show();
+            if (!settings.isQuery) {
+               $filterPanel.show();
+               $sortPanel.show();
+            }
+            $loadAllPanel.show();
+            $fixSelect.show();
+         }
+      }
+
       save() {
          if (!this.CurrentDatacollection) return Promise.resolve(); // TODO: refactor in v2
 
@@ -664,6 +756,7 @@ export default function (AB) {
          settings.datasourceID = $$(ids.dataSource).getValue();
          settings.linkDatacollectionID = $$(ids.linkDatacollection).getValue();
          settings.linkFieldID = $$(ids.linkField).getValue();
+         settings.followDatacollectionID = $$(ids.followCursor).getValue();
          settings.objectWorkspace = {};
          settings.objectWorkspace.filterConditions =
             this.FilterComponent.getValue();
@@ -708,6 +801,7 @@ export default function (AB) {
 
          const $linkDatacollection = $$(ids.linkDatacollection);
          const $linkField = $$(ids.linkField);
+         const $followCursor = $$(ids.followCursor);
 
          if (objSource) {
             const linkFields = objSource.connectFields();
@@ -743,15 +837,19 @@ export default function (AB) {
                      ""
                );
                $linkDatacollection.refresh();
+
+               $followCursor.hide();
             } else {
                // hide options
                $linkDatacollection.hide();
                $linkField.hide();
+               $followCursor.show();
             }
          } else {
             // hide options
             $linkDatacollection.hide();
             $linkField.hide();
+            $followCursor.show();
          }
       }
 
@@ -797,6 +895,19 @@ export default function (AB) {
          $linkField.define("options", linkFieldOptions);
          $linkField.define("value", linkFieldId);
          $linkField.refresh();
+
+         // Follow Cursor
+         const $followCursor = $$(ids.followCursor);
+
+         linkFieldOptions.length < 1 || !linkFieldId
+            ? $followCursor.show()
+            : $followCursor.hide();
+
+         $followCursor.define(
+            "value",
+            this.CurrentDatacollection?.settings?.followCursor
+         );
+         $followCursor.refresh();
       }
 
       populatePopupEditors() {
