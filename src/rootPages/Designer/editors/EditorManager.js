@@ -31,6 +31,7 @@ export default function (AB) {
       require("./views/ABViewLayout"),
       require("./views/ABViewMenu"),
       require("./views/ABViewPage"),
+      require("./views/ABViewPivot"),
       require("./views/ABViewTab"),
       require("./views/ABViewText"),
    ].forEach((E) => {
