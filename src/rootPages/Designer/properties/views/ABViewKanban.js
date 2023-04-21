@@ -6,11 +6,13 @@
 import FABView from "./ABView";
 import FViewKanbanProperties from "../workspaceViews/ABViewKanban";
 import FPopupNewDataField from "../../ui_work_object_workspace_popupNewDataField";
+import ABViewPropertyLinkPage from "./viewProperties/ABViewPropertyLinkPage";
 
 export default function (AB) {
    const BASE_ID = "properties_abview_kanban";
 
    const ABView = FABView(AB);
+   const LinkPageProperty = ABViewPropertyLinkPage(AB, BASE_ID);
    const L = ABView.L();
    const uiConfig = AB.UISettings.config();
 
@@ -23,6 +25,8 @@ export default function (AB) {
    class ABViewKanbanProperty extends ABView {
       constructor() {
          super(BASE_ID, { datacollection: "" });
+
+         this.linkPageComponent = new LinkPageProperty(AB, BASE_ID);
       }
 
       static get key() {
@@ -62,6 +66,7 @@ export default function (AB) {
                },
             },
             ..._ui.rows,
+            this.linkPageComponent.ui(),
          ];
 
          return super.ui(rows);
@@ -93,6 +98,11 @@ export default function (AB) {
             ViewKanbanProperties.emit("field.added", params[0]);
          });
 
+         this.linkPageComponent.init();
+         this.linkPageComponent.on("change", () => {
+            this.onChange();
+         });
+
          await super.init(AB);
       }
 
@@ -117,6 +127,9 @@ export default function (AB) {
          $dc.unblockEvent();
          $dc.refresh();
          this.refreshFields(dcID);
+
+         this.linkPageComponent.viewLoad(view);
+         this.linkPageComponent.setSettings(view.settings);
       }
 
       refreshFields(dcID) {
@@ -148,6 +161,11 @@ export default function (AB) {
          // Object.keys(fields).forEach((f) => {
          //    values.settings[f] = fields[f];
          // });
+
+         const linkSettings = this.linkPageComponent.getSettings();
+         for (const key in linkSettings) {
+            values.settings[key] = linkSettings[key];
+         }
 
          return values;
       }
