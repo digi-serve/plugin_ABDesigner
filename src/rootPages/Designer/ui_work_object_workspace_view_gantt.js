@@ -98,6 +98,7 @@ export default function (AB, ibase) {
          this._currentComponent?.eventsClear();
 
          this.currentView = this.AB.viewNewDetatched(view.component);
+         this.currentView.warningsSilent = true;
          const component = this.currentView.component();
 
          const ui = component.ui();

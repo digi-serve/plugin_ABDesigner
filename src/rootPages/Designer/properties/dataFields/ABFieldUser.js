@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldUser extends ABField {
-      constructor() {
-         super("properties_abfield_user", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_user`, {
             editable: "",
             isMultiple: "",
             isCurrentUser: "",

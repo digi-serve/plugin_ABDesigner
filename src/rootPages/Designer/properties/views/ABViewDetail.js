@@ -242,9 +242,7 @@ export default function (AB) {
        */
       propertyUpdateFieldOptions(dcId, view) {
          const ids = this.ids;
-         const datacollection = this.AB.datacollections(
-            (dc) => dc.id == dcId
-         )[0];
+         const datacollection = this.AB.datacollectionByID(dcId);
          const object = datacollection?.datasource;
 
          // Pull field list
@@ -283,33 +281,31 @@ export default function (AB) {
          this.propertyUpdateFieldOptions(dcId);
 
          // add all fields to editor by default
-         if (currView._views.length < 1) {
-            let saveTasks = [];
-            let fields = $$(ids.fields).find({});
-            fields.reverse();
-            fields.forEach((f, index) => {
-               if (!f.selected) {
-                  const yPosition = fields.length - index - 1;
+         // if (currView._views.length < 1) {
+         let saveTasks = [];
+         let fields = $$(ids.fields).find({});
+         fields.reverse();
+         fields.forEach((f, index) => {
+            if (!f.selected) {
+               const yPosition = fields.length - index - 1;
 
-                  // Add new form field
-                  const newFieldView = currView.addFieldToDetail(f, yPosition);
-                  if (newFieldView) {
-                     newFieldView.once("destroyed", () =>
-                        this.populate(currView)
-                     );
+               // Add new form field
+               const newFieldView = currView.addFieldToDetail(f, yPosition);
+               if (newFieldView) {
+                  newFieldView.once("destroyed", () => this.populate(currView));
 
-                     // // Call save API
-                     saveTasks.push(newFieldView.save());
-                  }
-
-                  // update item to UI list
-                  f.selected = 1;
-                  $$(ids.fields).updateItem(f.id, f);
+                  // // Call save API
+                  saveTasks.push(newFieldView.save());
                }
-            });
 
-            await Promise.all(saveTasks);
-         }
+               // update item to UI list
+               f.selected = 1;
+               $$(ids.fields).updateItem(f.id, f);
+            }
+         });
+
+         await Promise.all(saveTasks);
+         // }
 
          // Saving
          await currView.save();
@@ -323,10 +319,7 @@ export default function (AB) {
       }
 
       listTemplate(field, common) {
-         return (
-            common.markCheckbox(field) +
-            " #label#".replace("#label#", field.label)
-         );
+         return `${common.markCheckbox(field)} ${field.label}`;
       }
 
       check(e, fieldId) {

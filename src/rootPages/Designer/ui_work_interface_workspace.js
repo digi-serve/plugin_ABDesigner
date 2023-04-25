@@ -6,7 +6,7 @@
  */
 
 import UI_Class from "./ui_class";
-// import UI_Warnings from "./ui_warnings";
+import UI_Warnings from "./ui_warnings";
 
 import ABWorkspaceEditor from "./ui_work_interface_workspace_editor";
 import ABWorkspaceDetails from "./ui_work_interface_workspace_details";
@@ -16,6 +16,8 @@ export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    const L = UIClass.L();
+
+   const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, {});
 
    class UI_Work_Interface_Workspace extends UIClass {
       constructor() {
@@ -38,7 +40,7 @@ export default function (AB) {
             view: "multiview",
             id: ids.component,
             scroll: true,
-            rows: [
+            cells: [
                {
                   id: ids.noSelection,
                   rows: [
@@ -81,10 +83,16 @@ export default function (AB) {
                },
                {
                   id: ids.selectedView,
-                  cols: [
-                     this.ColumnEditor.ui(),
-                     { view: "resizer", css: "bg_gray", width: 11 },
-                     this.ColumnDetails.ui(),
+                  view: "layout",
+                  rows: [
+                     {
+                        cols: [
+                           this.ColumnEditor.ui(),
+                           { view: "resizer", css: "bg_gray", width: 11 },
+                           this.ColumnDetails.ui(),
+                        ],
+                     },
+                     Warnings.ui(),
                   ],
                },
             ],
@@ -111,6 +119,13 @@ export default function (AB) {
             // a property of a view has changed, so reload
             // the current display of the View.
             this.ColumnEditor.viewLoad(this.CurrentView);
+         });
+
+         this.warningsPropogate([this.ColumnEditor, this.ColumnDetails]);
+         // NOTE: this is already handled down in the ColumnEditor:
+         this.on("warnings", () => {
+            // make sure our view refreshes it's display
+            this.viewLoad(this.CurrentView);
          });
 
          return Promise.all(allInits);
@@ -172,6 +187,8 @@ export default function (AB) {
          if (view instanceof this.classABViewPage) {
             this.emit("select.view", view);
          }
+
+         Warnings.show(view);
       }
    }
 

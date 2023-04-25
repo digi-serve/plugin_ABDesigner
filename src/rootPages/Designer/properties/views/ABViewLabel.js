@@ -13,7 +13,11 @@ export default function (AB) {
 
    class ABViewLabelProperty extends ABView {
       constructor() {
-         super(BASE_ID);
+         super(BASE_ID, {
+            text: "",
+            format: "",
+            alignment: "",
+         });
 
          this.AB = AB;
       }
@@ -25,9 +29,12 @@ export default function (AB) {
       ui() {
          const defaultValues = this.defaultValues();
 
+         const ids = this.ids;
+
          return super.ui([
             // .text :  The Text displayed for this label
             {
+               id: ids.text,
                view: "text",
                name: "text",
                label: L("Text"),
@@ -54,6 +61,7 @@ export default function (AB) {
                   padding: 10,
                   rows: [
                      {
+                        id: ids.format,
                         view: "radio",
                         name: "format",
                         vertical: true,
@@ -89,6 +97,7 @@ export default function (AB) {
                   padding: 10,
                   rows: [
                      {
+                        id: ids.alignment,
                         view: "radio",
                         name: "alignment",
                         vertical: true,
@@ -131,14 +140,9 @@ export default function (AB) {
 
          const ids = this.ids;
 
-         const $component = $$(ids.component);
-
-         const values = $component.getValues();
-
-         for (const key in view.settings)
-            values[key] = values[key] || view.settings[key];
-
-         $component.setValues(values);
+         $$(ids.text).setValue(view.text);
+         $$(ids.format).setValue(view.settings.format);
+         $$(ids.alignment).setValue(view.settings.alignment);
       }
 
       defaultValues() {

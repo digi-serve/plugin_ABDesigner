@@ -204,6 +204,8 @@ export default function (AB, init_settings) {
 
          this.mockDatacollection = datacollection;
 
+         this.workspaceViews.objectLoad(null);
+
          // get current view from object
          this.workspaceViews.objectLoad(this.mockDatacollection.datasource);
          const currentView = this.workspaceViews.getCurrentView();

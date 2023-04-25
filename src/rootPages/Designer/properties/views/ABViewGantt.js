@@ -7,7 +7,7 @@ import FABView from "./ABView";
 
 import FABViewGanttWorkspaceView from "../workspaceViews/ABViewGantt";
 
-// import FPopupNewDataField from "../../ui_work_object_workspace_popupNewDataField";
+import FPopupNewDataField from "../../ui_work_object_workspace_popupNewDataField";
 
 export default function (AB) {
    const BASE_ID = "properties_abview_gantt";
@@ -20,8 +20,6 @@ export default function (AB) {
       AB,
       `${BASE_ID}_workspaceView_gantt`
    );
-   // Adding field doesn't work. this gives me the error "RangeError: Maximum call stack size exceeded".
-   // const PopupNewDataField = FPopupNewDataField(AB, `${BASE_ID}_popupNewDataField`);
 
    class ABViewGanttProperty extends ABView {
       constructor() {
@@ -53,7 +51,7 @@ export default function (AB) {
                         id: ids.dataviewID,
                         view: "richselect",
                         name: "dataviewID",
-                        label: `${L("Object")}:`,
+                        label: `${L("Datacollection")}:`,
                         labelWidth: uiConfig.labelWidthLarge,
                         on: {
                            onChange: (newValue, oldValue) => {
@@ -95,10 +93,24 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
-         ABViewGanttWorkspaceView.on("dc.changed", (dcID, view) => {
-            const datacollection = this.AB.datacollectionByID(dcID);
+         this.PopupNewDataFieldComponent = FPopupNewDataField(
+            AB,
+            `${BASE_ID}_popupNewDataField`
+         );
+         await this.PopupNewDataFieldComponent.init(AB);
+         this.PopupNewDataFieldComponent.on("save", (...params) => {
+            ABViewGanttWorkspaceView.emit("field.added", params[0]);
+         });
 
-            ABViewGanttWorkspaceView.init(datacollection.datasource, view);
+         ABViewGanttWorkspaceView.on("dc.changed", (dcID, view) => {
+            const DC = this.AB.datacollectionByID(dcID);
+
+            ABViewGanttWorkspaceView.init(DC.datasource, view);
+            this.PopupNewDataFieldComponent.objectLoad(DC.datasource);
+         });
+
+         ABViewGanttWorkspaceView.on("new.field", (fieldKey) => {
+            this.PopupNewDataFieldComponent.show(null, fieldKey, false);
          });
 
          await super.init(AB);
@@ -124,6 +136,10 @@ export default function (AB) {
                return {
                   id: e.id,
                   value: e.label,
+                  icon:
+                     e.sourceType == "query"
+                        ? "fa fa-filter"
+                        : "fa fa-database",
                };
             })
          );
@@ -145,6 +161,12 @@ export default function (AB) {
          this.populateDataview();
 
          $component.setValues(values);
+
+         let DC = this.AB.datacollectionByID(values.dataviewID);
+         if (DC) {
+            ABViewGanttWorkspaceView.init(DC.datasource, this.CurrentView);
+            this.PopupNewDataFieldComponent.objectLoad(DC.datasource);
+         }
       }
 
       defaultValues() {

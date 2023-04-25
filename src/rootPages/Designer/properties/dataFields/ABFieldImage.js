@@ -10,8 +10,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldImage extends ABField {
-      constructor() {
-         super("properties_abfield_image", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_image`, {
             imageWidth: "",
             imageHeight: "",
             imageContainer: "",
@@ -200,7 +200,7 @@ export default function (AB) {
       }
 
       urlUpload(isWebix = true) {
-         return `/file/upload/${this.CurrentObjectID}/${this._CurrentField}/${
+         return `/file/upload/${this.CurrentObjectID}/${this.CurrentFieldID}/${
             isWebix ? "1" : "0"
          }`;
       }
@@ -228,7 +228,7 @@ export default function (AB) {
 
          if (value && isUseDefaultImage) {
             //Show default image
-            uploader.attachEvent("onAfterRender", function () {
+            uploader.attachEvent("onAfterRender", () => {
                const parentContainer = uploader.$view.querySelector(
                   ".default-image-holder"
                );
@@ -240,7 +240,7 @@ export default function (AB) {
                   ".image-data-field-image"
                );
                image.style.display = "";
-               image.style.backgroundImage = `url('/file/${value}')`;
+               image.style.backgroundImage = `url('${this.urlImage(value)}')`;
                image.setAttribute("image-uuid", value);
 
                parentContainer.querySelector(".delete-image").style.display =
@@ -276,7 +276,7 @@ export default function (AB) {
 
          const uploader = $$(ids.defaultImageUrl);
          uploader.config.upload = url;
-         uploader.attachEvent("onFileUpload", function (file, response) {
+         uploader.attachEvent("onFileUpload", (file, response) => {
             $$(ids.defaultImageUrl).setValue(response.data.uuid);
 
             const parentContainer = uploader.$view.querySelector(
@@ -299,7 +299,7 @@ export default function (AB) {
             parentContainer.querySelector(".delete-image").style.display =
                "table-cell";
          });
-         uploader.attachEvent("onAfterRender", function () {
+         uploader.attachEvent("onAfterRender", () => {
             const parentContainer = uploader.$view.querySelector(
                ".default-image-holder"
             );

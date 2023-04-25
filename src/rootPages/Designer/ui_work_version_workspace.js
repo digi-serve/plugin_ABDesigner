@@ -33,14 +33,13 @@ export default function (AB, init_settings) {
                   id: ids.noSelection,
                   rows: [
                      {
-                        maxHeight: uiConfig.xxxLargeSpacer,
-                        hidden: uiConfig.hideMobile,
-                     },
-                     {
                         css: "webix_dark",
                         id: this.ids.versionOption,
                         view: "toolbar",
-                        cols: [{ view: "label", label: "App Version" }],
+                        cols: [
+                           { width: 12 },
+                           { view: "label", label: "App Version" },
+                        ],
                      },
                      {
                         // autoheight: false,
@@ -178,7 +177,9 @@ export default function (AB, init_settings) {
          let versionData = this.getVersionData(application); //|| application.json.versionData;
 
          // fill the version numbers
-         this.versionNumber = versionData.versionNumber || "1.0.0";
+         this.versionNumber = versionData?.versionNumber
+            ? versionData.versionNumber
+            : "1.0.0";
          this.CurrentVersionID = this.versionNumber; // SET Default selected version
 
          this.setOptions(this.versionNumber);
@@ -199,6 +200,7 @@ export default function (AB, init_settings) {
                context: "ui_work_version_workspace:getVersionData()",
                application: AB.toObj(),
             });
+            versionData = {};
          }
          return versionData;
       }
@@ -377,7 +379,7 @@ export default function (AB, init_settings) {
        */
       async applicationChangeLogAdd(AB, values) {
          let versionData = this.getVersionData(AB);
-         var oldVersionNumber = versionData.versionNumber;
+         var oldVersionNumber = versionData?.versionNumber;
          // string
          // the original version number to reset to incase of an error saving.
 

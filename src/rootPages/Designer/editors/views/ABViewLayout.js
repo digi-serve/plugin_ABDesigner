@@ -58,6 +58,7 @@ export default function (AB) {
                            template: this.templateButton({
                               icon: v.icon,
                               label: v.label,
+                              warnings: v._warnings,
                            }),
                            onClick: {
                               "ab-component-edit": (e, id, trg) => {
@@ -101,9 +102,14 @@ export default function (AB) {
          }
 
          templateButton(obj) {
+            let warnText = "";
+            if ((obj.warnings || []).length > 0) {
+               warnText = this.WARNING_ICON;
+            }
             return `<div class="ab-widget-header ab-layout-header">
                <i class="fa fa-${obj.icon} webix_icon_btn"></i> ${obj.label}
                <div class="ab-component-tools">
+               ${warnText}
                <i class="fa fa-trash ab-component-remove"></i>
                <i class="fa fa-edit ab-component-edit"></i>
                </div></div>`;

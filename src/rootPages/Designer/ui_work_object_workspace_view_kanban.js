@@ -46,12 +46,12 @@ export default function (AB, ibase) {
       }
 
       defaultSettings(data) {
-         // Pull the ABViewGrid definitions
+         // Pull the ABViewKanban definitions
          var defaultSettings = ViewKanbanProperties.toSettings();
 
          // transfer our specific field settings
          Object.keys(defaultSettings.settings).forEach((d) => {
-            defaultSettings.settings[d] = data[d];
+            defaultSettings.settings[d] = data.settings[d];
          });
 
          // TODO: include a text label formatter in the editor for
@@ -132,6 +132,7 @@ export default function (AB, ibase) {
          this.currentViewDef = view;
 
          this.currentView = this.AB.viewNewDetatched(view.component);
+         this.currentView.warningsSilent = true;
          var component = this.currentView.component();
 
          // OK, a ABViewGrid component wont display the grid unless there

@@ -197,12 +197,14 @@ export default function (AB) {
       populate(view) {
          super.populate(view);
 
+         this.populateFilterByConnectedFieldValue(view);
+
          const ids = this.ids;
          const ABViewFormConnectPropertyComponentDefaults =
             this.defaultValues();
 
          // Default set of options for filter connected combo
-         const filterConnectedOptions = [{ id: "", value: "" }];
+         const filterConnectedOptions = [{ id: null, value: "" }];
 
          // get the definitions for the connected field
          const fieldDefs = this.AB.definitionByID(view.settings.fieldId);
@@ -275,9 +277,13 @@ export default function (AB) {
                         // get the component we are referencing so we can display its label
                         const formComponent =
                            view.parent.viewComponents[element.id]; // need to ensure that just looking at parent is okay in all cases
+
+                        const uiComp = formComponent.ui();
+                        const uiInput = uiComp.rows[0] ?? uiComp;
+
                         filterConnectedOptions.push({
-                           id: `${formComponent.ui.name}:${fieldToCheck}`, // store the columnName name because the ui id changes on each load
-                           value: formComponent.ui.label, // should be the translated field label
+                           id: `${uiInput.name}:${fieldToCheck}`, // store the columnName name because the ui id changes on each load
+                           value: uiInput.label, // should be the translated field label
                         });
                      }
                   }
@@ -357,6 +363,79 @@ export default function (AB) {
          } else {
             $buttonSort.define("badge", null);
             $buttonSort.refresh();
+         }
+      }
+
+      populateFilterByConnectedFieldValue(view) {
+         const fieldDef = this.AB.definitionByID(view.settings.fieldId);
+
+         // Support only 1:M and 1:1 relation type of the connect field
+         if (
+            // 1:M
+            (fieldDef.settings.linkType == "one" &&
+               fieldDef.settings.linkViaType == "many") ||
+            // 1:1 isSource = true
+            (fieldDef.settings.linkType == "one" &&
+               fieldDef.settings.linkViaType == "one" &&
+               fieldDef.settings.isSource)
+         ) {
+            // Pull link object
+            const linkObject = this.AB.objectByID(fieldDef.settings.linkObject);
+            if (!linkObject) return;
+
+            let connectFields = linkObject.fields(
+               (f) => f.key == "connectObject"
+            );
+            if (!connectFields || !connectFields.length) return;
+
+            connectFields.forEach((f) => {
+               let connectFieldOptions = view.parent
+                  .views((element) => {
+                     let linkFieldDef = this.AB.definitionByID(
+                        element.settings.fieldId
+                     );
+
+                     // Pull other connected field input elements
+                     return (
+                        element.key == "connect" &&
+                        element.id != view.id &&
+                        f.settings.linkObject ==
+                           linkFieldDef.settings.linkObject
+                     );
+                  })
+                  .map((element) => {
+                     const formComponent =
+                        view.parent.viewComponents[element.id];
+
+                     const uiComp = formComponent.ui();
+                     const uiInput = uiComp.rows[0] ?? uiComp;
+
+                     return {
+                        id: uiInput.name,
+                        value: uiInput.label,
+                     };
+                  });
+
+               if (connectFieldOptions && connectFieldOptions.length) {
+                  FilterComponent.addCustomOption(f.id, {
+                     conditions: [
+                        {
+                           id: "filterByConnectValue",
+                           value: L("Filter by Connected Field Value:"),
+                           batch: "FilterByConnectedFieldValue",
+                           handler: () => true,
+                        },
+                     ],
+                     values: [
+                        {
+                           batch: "FilterByConnectedFieldValue",
+                           view: "combo",
+                           options: connectFieldOptions,
+                        },
+                     ],
+                  });
+               }
+            });
          }
       }
 

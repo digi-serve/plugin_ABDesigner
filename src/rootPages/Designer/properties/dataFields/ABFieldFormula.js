@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldFormula extends ABField {
-      constructor() {
-         super("properties_abfield_formula", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_formula`, {
             field: "",
             fieldList: "",
             rowFilterContainer: "",

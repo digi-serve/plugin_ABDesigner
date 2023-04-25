@@ -26,8 +26,6 @@ export default function (AB) {
             stackTabs: "",
             darkTheme: "",
          });
-
-         this.AB = AB;
       }
 
       static get key() {
@@ -40,6 +38,7 @@ export default function (AB) {
          return super.ui([
             {
                id: ids.height,
+               name: "height",
                view: "counter",
                label: L("Height"),
                on: {
@@ -51,6 +50,7 @@ export default function (AB) {
             {
                id: ids.minWidth,
                view: "counter",
+               name: "minWidth",
                label: L("Minimum width"),
                on: {
                   onChange: () => {
@@ -61,6 +61,7 @@ export default function (AB) {
             {
                id: ids.stackTabs,
                view: "checkbox",
+               name: "stackTabs",
                labelRight: L("Stack Tabs Vertically"),
                labelWidth: uiConfig.labelWidthCheckbox,
                on: {
@@ -81,6 +82,7 @@ export default function (AB) {
             {
                id: ids.iconOnTop,
                view: "checkbox",
+               name: "iconOnTop",
                labelRight: L("Position icon above text"),
                labelWidth: uiConfig.labelWidthCheckbox,
                on: {
@@ -92,6 +94,7 @@ export default function (AB) {
             {
                id: ids.darkTheme,
                view: "checkbox",
+               name: "darkTheme",
                labelRight: L("Use Dark Theme"),
                labelWidth: uiConfig.labelWidthCheckbox,
                on: {
@@ -103,6 +106,7 @@ export default function (AB) {
             {
                id: ids.sidebarWidth,
                view: "counter",
+               name: "sidebarWidth",
                label: L("Width of Sidebar"),
                labelWidth: uiConfig.labelWidthXLarge,
                on: {
@@ -114,6 +118,7 @@ export default function (AB) {
             {
                id: ids.sidebarPos,
                view: "richselect",
+               name: "sidebarPos",
                label: L("Position of Sidebar"),
                labelWidth: uiConfig.labelWidthXLarge,
                options: [
@@ -132,9 +137,7 @@ export default function (AB) {
                css: "webix_primary",
                value: L("Add Tab"),
                click: () => {
-                  const baseView = this.CurrentView;
-
-                  baseView.tabPopup.show();
+                  this.CurrentView.tabPopup.show();
                },
             },
          ]);
@@ -182,35 +185,18 @@ export default function (AB) {
          }
       }
 
-      defaultValues() {
-         const ViewClass = this.ViewClass();
-
-         let values = null;
-
-         if (ViewClass) {
-            values = ViewClass.defaultValues();
-         }
-
-         return values;
-      }
-
       /**
        * @method values
        * return the values for this form.
        * @return {obj}
        */
       values() {
-         const ids = this.ids;
          const values = super.values();
 
-         values.settings = values.settings ?? {};
-         values.settings.height = $$(ids.height).getValue();
-         values.settings.minWidth = $$(ids.minWidth).getValue();
-         values.settings.stackTabs = $$(ids.stackTabs).getValue();
-         values.settings.darkTheme = $$(ids.darkTheme).getValue();
-         values.settings.sidebarWidth = $$(ids.sidebarWidth).getValue();
-         values.settings.sidebarPos = $$(ids.sidebarPos).getValue();
-         values.settings.iconOnTop = $$(ids.iconOnTop).getValue();
+         const ids = this.ids;
+         const $component = $$(ids.component);
+
+         values.settings = $component.getValues();
 
          return values;
       }

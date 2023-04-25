@@ -52,6 +52,7 @@ export default function (AB) {
       // webix UI definition:
       ui() {
          let ids = this.ids;
+         let _this = this;
 
          return {
             id: ids.component,
@@ -88,10 +89,15 @@ export default function (AB) {
                         padding: 0,
                         css: "ab_breadcrumb",
                         template: function (item) {
+                           let warnText = "";
+                           if ((item.warningsAll?.() || []).length > 0) {
+                              warnText = _this.WARNING_ICON;
+                           }
                            return (
                               '<span class="fa fa-chevron-right" aria-hidden="true"></span> ' +
                               // '<i class="fa fa-#icon#" aria-hidden="true"></i> '.replace('#icon#', item.icon) +
-                              item.label
+                              item.label +
+                              warnText
                            );
                         },
                         on: {
@@ -164,6 +170,8 @@ export default function (AB) {
             // the user wants to edit the provided view.
             this.emit("view.load", view);
          });
+
+         this.warningsPropogate([EditorLayout, ComponentMenu]);
 
          return Promise.all(allInits);
       }
@@ -261,10 +269,12 @@ export default function (AB) {
          super.viewLoad(view);
 
          // try to make sure we don't continually add up listeners.
-         this.CurrentView.removeListener(
-            "properties.updated",
-            this._handlerViewUpdate
-         ).once("properties.updated", this._handlerViewUpdate);
+         if (this.CurrentView) {
+            this.CurrentView.removeListener(
+               "properties.updated",
+               this._handlerViewUpdate
+            ).once("properties.updated", this._handlerViewUpdate);
+         }
 
          // update the toolbar navigation map
          let $tbMap = $$(this.ids.toolbarMap);

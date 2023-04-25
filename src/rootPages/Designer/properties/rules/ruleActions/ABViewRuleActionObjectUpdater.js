@@ -604,7 +604,7 @@ export default function (AB) {
                            // );
                            this.FilterComponent.init({
                               isRecordRule: true,
-                              fieldOptions: options,
+                              recordRuleFieldOptions: options,
                            });
 
                            // this.FilterComponent.on("changed", (...params) => {

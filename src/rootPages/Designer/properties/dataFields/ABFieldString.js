@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldStringProperty extends ABField {
-      constructor() {
-         super("properties_abfield_string", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_string`, {
             default: "",
             supportMultilingual: "",
 

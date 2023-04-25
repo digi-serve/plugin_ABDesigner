@@ -12,8 +12,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldConnectProperty extends ABField {
-      constructor() {
-         super("properties_abfield_connect", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_connect`, {
             linkObject: "",
             objectCreateNew: "",
 

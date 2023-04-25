@@ -10,8 +10,8 @@ export default function (AB) {
    const L = ABField.L();
 
    class ABFieldFile extends ABField {
-      constructor() {
-         super("properties_abfield_file", {
+      constructor(ibase = "properties_abfield") {
+         super(`${ibase}_file`, {
             fileSize: "",
             fileType: "",
          });

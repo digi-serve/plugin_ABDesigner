@@ -167,7 +167,7 @@ export default function (AB) {
           * the "warnings" display updates.
           */
          warningsRefresh(ABObject) {
-            ABObject.warningsEval();
+            ABObject?.warningsEval?.();
             this.emit("warnings");
          }
 
