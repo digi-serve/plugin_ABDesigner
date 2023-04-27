@@ -206,6 +206,12 @@ export default function (AB, init_settings) {
 
          this.workspaceViews.objectLoad(null);
 
+         // clear object caching in workspace
+         if (this.mockDatacollection?.datasource?.id)
+            this.workspaceViews.clearObjectCache(
+               this.mockDatacollection.datasource.id
+            );
+
          // get current view from object
          this.workspaceViews.objectLoad(this.mockDatacollection.datasource);
          const currentView = this.workspaceViews.getCurrentView();

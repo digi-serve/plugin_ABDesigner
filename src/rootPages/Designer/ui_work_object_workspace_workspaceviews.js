@@ -113,6 +113,10 @@ export default function (AB, ibase, isettings) {
          }
       }
 
+      clearObjectCache(objectID) {
+         delete this._settings?.[objectID];
+      }
+
       /**
        * @method toObj()
        *
