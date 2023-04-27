@@ -37,6 +37,8 @@ export default function (AB, init_settings) {
             accessManagerToolbar: "",
             translationManager: "",
             translationManagerToolbar: "",
+            tutorialManager: "",
+            tutorialManagerToolbar: "",
 
             icon: "",
             issue_id: "",
@@ -48,6 +50,9 @@ export default function (AB, init_settings) {
          this.accessManagerUI = new ClassSelectManagersUI("application_amp");
          this.translationManagerUI = new ClassSelectManagersUI(
             "application_translate"
+         );
+         this.tutorialManagerUI = new ClassSelectManagersUI(
+            "application_tutorial"
          );
 
          return {
@@ -420,7 +425,83 @@ export default function (AB, init_settings) {
                                        parseInt(this.translationManagement) == 1
                                           ? false
                                           : true,
+                                 }, //begin hint manager
+                                 {
+                                    name: "isTutorialManaged",
+                                    view: "checkbox",
+                                    labelRight: L("Enable Tutorial Tool"), // labels.component.enableTutorialManagement,
+                                    labelWidth: 0,
+                                    on: {
+                                       onAfterRender() {
+                                          AB.ClassUI.CYPRESS_REF(
+                                             this,
+                                             "abd_choose_form_isTutorialManaged"
+                                          );
+                                       },
+                                       onChange: (newv /*, oldv */) => {
+                                          if (newv) {
+                                             $$(
+                                                this.ids.tutorialManager
+                                             ).show();
+                                             $$(
+                                                this.ids.tutorialManagerToolbar
+                                             ).show();
+                                          } else {
+                                             $$(
+                                                this.ids.tutorialManager
+                                             ).hide();
+                                             $$(
+                                                this.ids.tutorialManagerToolbar
+                                             ).hide();
+                                          }
+                                       },
+                                       onItemClick: (id /*, e*/) => {
+                                          var enabled = $$(id).getValue();
+                                          if (enabled) {
+                                             $$(
+                                                this.ids.tutorialManager
+                                             ).show();
+                                             $$(
+                                                this.ids.tutorialManagerToolbar
+                                             ).show();
+                                          } else {
+                                             $$(
+                                                this.ids.tutorialManager
+                                             ).hide();
+                                             $$(
+                                                this.ids.tutorialManagerToolbar
+                                             ).hide();
+                                          }
+                                       },
+                                    },
                                  },
+                                 {
+                                    view: "toolbar",
+                                    id: this.ids.tutorialManagerToolbar,
+                                    cols: [
+                                       {
+                                          view: "label",
+                                          label: L(
+                                             "Who can create tutorials for this app?"
+                                          ),
+                                          css: "npr_smallLabels",
+                                       },
+                                    ],
+                                    borderless: true,
+                                    hidden:
+                                       parseInt(this.tutorialManagement) == 1
+                                          ? false
+                                          : true,
+                                 },
+                                 {
+                                    id: this.ids.tutorialManager,
+                                    rows: [this.tutorialManagerUI.ui()],
+                                    paddingY: 10,
+                                    hidden:
+                                       parseInt(this.tutorialManagement) == 1
+                                          ? false
+                                          : true,
+                                 }, // end hint manager
                                  {
                                     view: "spacer",
                                     height: 2,
@@ -582,7 +663,7 @@ export default function (AB, init_settings) {
        * Step through the process of creating an ABApplication with the
        * current state of the Form.
        *
-       * @param {obj} values 	current value hash of the form values.
+       * @param {obj} values  current value hash of the form values.
        */
       async applicationCreate(values) {
          // on a CREATE, make sure .name is set:
@@ -841,6 +922,7 @@ export default function (AB, init_settings) {
                "isSystemObject",
                "isAccessManaged",
                "isTranslationManaged",
+               "isTutorialManaged",
             ].forEach((f) => {
                if ($$(this.ids.form).elements[f]) {
                   $$(this.ids.form).elements[f].setValue(
@@ -866,6 +948,14 @@ export default function (AB, init_settings) {
                this.translationManagerUI.ui(
                   application.translationManagers || {}
                ),
+               0
+            );
+
+            // populate tutorial manager ui
+            var $tutorialManager = $$(this.ids.tutorialManager);
+            $tutorialManager.removeView($tutorialManager.getChildViews()[0]);
+            $tutorialManager.addView(
+               this.tutorialManagerUI.ui(application.tutorialManagers || {}),
                0
             );
          }
@@ -906,6 +996,7 @@ export default function (AB, init_settings) {
             this.translationManagerUI.ui(),
             0
          );
+         $$(this.ids.tutorialManager).addView(this.tutorialManagerUI.ui(), 0);
       }
 
       /**
@@ -991,6 +1082,7 @@ export default function (AB, init_settings) {
          // }
          values.accessManagers = this.accessManagerUI.values();
          values.translationManagers = this.translationManagerUI.values();
+         values.tutorialManagers = this.tutorialManagerUI.values();
          return values;
       }
 
@@ -1001,7 +1093,7 @@ export default function (AB, init_settings) {
        *
        * This not only adds it to our Permission List, but also selects it.
        *
-       * @param {string} appName	The Application.label of the current Application
+       * @param {string} appName The Application.label of the current Application
        */
       // permissionAddNew: function (appName) {
       //    // add new role entry
@@ -1061,8 +1153,8 @@ export default function (AB, init_settings) {
        *
        * returns a formatted name for a Permission Role based upon the provided Application.label
        *
-       * @param {string} appName	the current value of the Application.label
-       * @return {string} 	Permission Role Name.
+       * @param {string} appName the current value of the Application.label
+       * @return {string}  Permission Role Name.
        */
       // permissionName(appName) {
       //    return appName + " Application Role";
@@ -1071,7 +1163,7 @@ export default function (AB, init_settings) {
       /**
        * @method permissionPopulate
        * fill out the Permission list
-       * @param {ABApplication} application	the current ABApplication we are editing
+       * @param {ABApplication} application  the current ABApplication we are editing
        */
       permissionPopulate(application) {
          const PermForm = $$(this.ids.appFormPermissionList);
@@ -1157,8 +1249,8 @@ export default function (AB, init_settings) {
        * step through saving the current Permission Settings and associating
        * them with the current Application.
        *
-       * @param {ABApplication} App  	The current Application we are working with.
-       * @return {Promise}			.resolve( {Permission} ) if one is created for this App
+       * @param {ABApplication} App    The current Application we are working with.
+       * @return {Promise}       .resolve( {Permission} ) if one is created for this App
        */
       // permissionSave(app) {
       //    debugger;
@@ -1262,20 +1354,20 @@ export default function (AB, init_settings) {
 
       //    // // Final task
       //    // saveRoleTasks.push(function (cb) {
-      //    // 	// Update store app data
-      //    // 	var applicationData = self.data.filter(function (d) { return d.id == app.id; });
-      //    // 	applicationData.forEach(function (app) {
-      //    // 		app.attr('permissions', $.map(permItems, function (item) {
-      //    // 			return {
-      //    // 				application: app.id,
-      //    // 				permission: item.id,
-      //    // 				isApplicationRole: item.isApplicationRole
-      //    // 			}
-      //    // 		}));
-      //    // 	});
+      //    //    // Update store app data
+      //    //    var applicationData = self.data.filter(function (d) { return d.id == app.id; });
+      //    //    applicationData.forEach(function (app) {
+      //    //       app.attr('permissions', $.map(permItems, function (item) {
+      //    //          return {
+      //    //             application: app.id,
+      //    //             permission: item.id,
+      //    //             isApplicationRole: item.isApplicationRole
+      //    //          }
+      //    //       }));
+      //    //    });
 
-      //    // 	q.resolve(appRole);
-      //    // 	cb();
+      //    //    q.resolve(appRole);
+      //    //    cb();
       //    // })
       // }
 
