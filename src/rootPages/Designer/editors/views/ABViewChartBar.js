@@ -33,9 +33,7 @@ export default function (AB) {
          }
 
          ui() {
-            return {
-               id: this.ids.component,
-            };
+            return this.component.ui();
          }
 
          async init(AB) {
