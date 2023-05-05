@@ -402,6 +402,7 @@ export default function (AB) {
          $objectID.setValue(element.objectID);
          $repeatMode.setValue(element.repeatMode);
          $repeatColumn.define("options", repeatColumnList);
+         $repeatColumn.define("value", element.repeatColumn);
          $repeatColumn.refresh();
 
          if (element.isRepeat) $repeatLayout.show();
