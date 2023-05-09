@@ -438,16 +438,33 @@ export default function (AB) {
           */
          const addPage = (page, index, parentId) => {
             // add to tree collection
-            const branch = {
-               id: page.viewId || page.id,
-               label: page.label,
-               icon: page.icon ? page.icon : "",
-               viewIcon: page.viewIcon ? page.viewIcon() : "",
-               datacollection: {
-                  id: page.datacollection ? page.datacollection.id : "",
-               },
-            };
-            this.viewList.add(branch, index, parentId);
+            if (page.key == "docxBuilder" && page.datacollections) {
+               // check if we have one or more datacollections
+               let dc = page.datacollections;
+               dc.forEach((collection) => {
+                  const branch = {
+                     id: page.id + collection.id,
+                     label: page.label,
+                     icon: page.icon ? page.icon : "",
+                     viewIcon: page.viewIcon ? page.viewIcon() : "",
+                     datacollection: {
+                        id: collection.id,
+                     },
+                  };
+                  this.viewList.add(branch, index, parentId);
+               });
+            } else {
+               const branch = {
+                  id: page.viewId || page.id,
+                  label: page.label,
+                  icon: page.icon ? page.icon : "",
+                  viewIcon: page.viewIcon ? page.viewIcon() : "",
+                  datacollection: {
+                     id: page.datacollection ? page.datacollection.id : "",
+                  },
+               };
+               this.viewList.add(branch, index, parentId);
+            }
 
             // // add sub-pages
             // if (page instanceof ABViewDetail) {
