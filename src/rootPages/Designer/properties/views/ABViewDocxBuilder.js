@@ -67,8 +67,7 @@ export default function (AB) {
                      {
                         id: this.ids.datacollection,
                         name: "datacollection",
-                        view: "richselect",
-                        // view: "multicombo",
+                        view: "multiselect",
                         label: L("Data Source"),
                         labelWidth: uiConfig.labelWidthLarge,
                         on: {
