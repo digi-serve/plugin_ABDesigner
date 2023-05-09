@@ -438,10 +438,9 @@ export default function (AB) {
           */
          const addPage = (page, index, parentId) => {
             // add to tree collection
-            if (page.key == "docxBuilder" && page.datacollections) {
+            if (page.key == "docxBuilder" && page?.datacollections?.forEach) {
                // check if we have one or more datacollections
-               let dc = page.datacollections;
-               dc.forEach((collection) => {
+               page.datacollections.forEach((collection) => {
                   const branch = {
                      id: page.id + collection.id,
                      label: page.label,
