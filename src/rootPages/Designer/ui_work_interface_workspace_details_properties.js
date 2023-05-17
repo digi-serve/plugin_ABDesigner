@@ -200,10 +200,7 @@ export default function (AB) {
             let newPanel = new _editor();
             newPanel.applicationLoad(this.CurrentApplication);
 
-            let ui = {
-               id: this.ids.editors,
-               rows: [newPanel.ui()],
-            };
+            let ui = [newPanel.ui()];
 
             webix.ui(ui, $$(this.ids.editors));
             newPanel.init(this.AB);
