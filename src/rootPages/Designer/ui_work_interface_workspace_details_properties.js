@@ -183,7 +183,7 @@ export default function (AB) {
        * @param {ABView} view  current view instance.
        */
       viewLoad(view) {
-         if (this.currentPanel) {
+         if (this.currentPanel && view.id != this.CurrentViewID) {
             // Make sure the current Data is saved:
             if (this.pendingSave) this._handler_onChange(10, true);
 
@@ -192,26 +192,25 @@ export default function (AB) {
             this.currentPanel = null;
          }
 
-         super.viewLoad(view);
+         if (view.id != this.CurrentViewID) {
+            super.viewLoad(view);
 
-         let _editor = this._editorsByType[view.key];
+            let _editor = this._editorsByType[view.key];
 
-         if (_editor) {
-            let newPanel = new _editor();
-            newPanel.applicationLoad(this.CurrentApplication);
+            if (_editor) {
+               let newPanel = new _editor();
+               newPanel.applicationLoad(this.CurrentApplication);
 
-            let ui = {
-               id: this.ids.editors,
-               rows: [newPanel.ui()],
-            };
+               let ui = [newPanel.ui()];
 
-            webix.ui(ui, $$(this.ids.editors));
-            newPanel.init(this.AB);
-            newPanel.populate(view);
+               webix.ui(ui, $$(this.ids.editors));
+               newPanel.init(this.AB);
+               newPanel.populate(view);
 
-            newPanel.on("changed", this._handler_onChange);
-            this.currentPanel = newPanel;
-            // newPanel.show();
+               newPanel.on("changed", this._handler_onChange);
+               this.currentPanel = newPanel;
+               // newPanel.show();
+            }
          }
       }
 
