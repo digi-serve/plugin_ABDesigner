@@ -42,6 +42,7 @@ export default function (AB) {
                on: {
                   onChange: (newValue) => {
                      this.selectSource(newValue);
+                     this.onChange();
                   },
                },
             },
@@ -51,6 +52,11 @@ export default function (AB) {
                name: "columnUser",
                label: L("Select a user field"),
                labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.columnComment,
@@ -58,6 +64,11 @@ export default function (AB) {
                name: "columnComment",
                label: L("Select a comment field"),
                labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.columnDate,
@@ -65,6 +76,11 @@ export default function (AB) {
                name: "columnDate",
                label: L("Select a date field"),
                labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.height,
@@ -72,6 +88,11 @@ export default function (AB) {
                name: "height",
                label: L("Height:"),
                labelWidth: uiConfig.labelWidthLarge,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
          ]);
       }
