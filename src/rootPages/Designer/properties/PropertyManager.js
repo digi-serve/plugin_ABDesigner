@@ -107,6 +107,7 @@ export default function (AB) {
          require("./views/ABViewPage"),
          require("./views/ABViewPivot"),
          require("./views/ABViewReportsManager"),
+         require("./views/ABViewScheduler"),
          require("./views/ABViewTab"),
          require("./views/ABViewText"),
       ].forEach((V) => {
