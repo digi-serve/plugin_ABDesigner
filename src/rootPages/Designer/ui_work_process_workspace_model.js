@@ -869,7 +869,10 @@ export default function (AB) {
        * stashed
        */
       propertiesSave() {
-         if (!this.CurrentPanel) {
+         if (
+            !this.CurrentPanel ||
+            "function" !== typeof this.CurrentPanel.values
+         ) {
             return;
          }
          var thisObj = this.CurrentPropertiesObj;
