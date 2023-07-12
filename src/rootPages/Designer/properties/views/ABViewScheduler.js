@@ -212,6 +212,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "title",
                      label: L("Title"),
+                     placeholder: "Single line text",
                      labelWidth: uiConfig.labelWidthLarge,
                   },
                   {
@@ -219,6 +220,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "color",
                      label: L("Color"),
+                     placeholder: "Single line text",
                      labelWidth: uiConfig.labelWidthLarge,
                   },
                   {
@@ -226,6 +228,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "active",
                      label: L("Active"),
+                     placeholder: "Checkbox",
                      labelWidth: uiConfig.labelWidthLarge,
                   },
                ],
