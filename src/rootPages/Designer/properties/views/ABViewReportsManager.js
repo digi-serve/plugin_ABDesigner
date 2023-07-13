@@ -68,7 +68,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "name",
                      label: L("Name"),
-                     placeholder: "Single line text",
+                     placeholder: L("Single line text"),
                      labelWidth: uiConfig.labelWidthLarge,
                   },
                   {
@@ -76,7 +76,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "text",
                      label: L("Text"),
-                     placeholder: "Long text",
+                     placeholder: L("JSON"),
                      labelWidth: uiConfig.labelWidthLarge,
                   },
                   {
@@ -84,7 +84,7 @@ export default function (AB) {
                      view: "richselect",
                      name: "queries",
                      label: L("Queries"),
-                     placeholder: "JSON",
+                     placeholder: L("JSON"),
                      labelWidth: uiConfig.labelWidthLarge,
                   },
                ],
