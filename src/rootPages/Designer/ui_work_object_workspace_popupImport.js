@@ -34,7 +34,7 @@ export default function (AB, ibase) {
          var defaultSettings = viewProperties.toSettings();
          var defaultView = this.AB.viewNewDetatched(defaultSettings);
 
-         this.popup = defaultView.component();
+         this.popup = defaultView.component(ibase);
          this.popup.init(AB);
          this.popup.objectLoad(this.CurrentObject);
       }
