@@ -100,7 +100,7 @@ export default function (AB) {
             },
             {
                view: "label",
-               label: L("Limit Datacollections"),
+               label: L("Include Datacollections"),
             },
             {
                id: ids.datacollectionIDs,
@@ -262,7 +262,6 @@ export default function (AB) {
                case "dataviewFields":
                   {
                      const $dataviewFieldsLabel = $$(ids.dataviewFieldsLabel);
-                     const $key = $$(ids[key]);
 
                      if (!view.settings.dataviewID) {
                         $key.setValues(defaultValues[key]);
