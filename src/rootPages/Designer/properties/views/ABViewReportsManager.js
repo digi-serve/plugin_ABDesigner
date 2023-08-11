@@ -107,7 +107,9 @@ export default function (AB) {
                view: "multicombo",
                value: [],
                options: [],
-               placeholder: L("Click to add Datacollection"),
+               placeholder: L(
+                  "Click to add Datacollections (Include all if nothing selected)"
+               ),
                labelAlign: "left",
                stringResult: false /* returns data as an array of [id] */,
                on: {
