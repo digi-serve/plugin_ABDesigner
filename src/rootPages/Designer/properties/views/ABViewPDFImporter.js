@@ -4,6 +4,7 @@
  */
 
 import FABView from "./ABView";
+import FABViewRuleListFormSubmitRules from "../rules/ABViewRuleListFormSubmitRules";
 
 export default function (AB) {
    const BASE_ID = "properties_abview_pdfImporter";
@@ -12,11 +13,17 @@ export default function (AB) {
    const L = ABView.L();
    const uiConfig = AB.UISettings.config();
 
+   const PopupSubmitRule = FABViewRuleListFormSubmitRules(
+      AB,
+      `${BASE_ID}_popupSubmitRule`
+   );
+
    class ABViewPDFImporterProperty extends ABView {
       constructor() {
          super(BASE_ID, {
             datacollection: "",
             field: "",
+            buttonSubmitRules: "",
          });
 
          this.AB = AB;
@@ -47,7 +54,9 @@ export default function (AB) {
                         on: {
                            onChange: (dcId, oldDcId) => {
                               if (dcId == oldDcId) return;
+
                               this.onChange();
+                              this.populateFieldOptions();
                            },
                         },
                      },
@@ -64,6 +73,39 @@ export default function (AB) {
                            },
                         },
                      },
+                     {
+                        view: "fieldset",
+                        label: L("Rules:"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        body: {
+                           type: "clean",
+                           padding: 10,
+                           rows: [
+                              {
+                                 cols: [
+                                    {
+                                       view: "label",
+                                       label: L("Submit Rules:"),
+                                       width: uiConfig.labelWidthLarge,
+                                    },
+                                    {
+                                       id: ids.buttonSubmitRules,
+                                       view: "button",
+                                       css: "webix_primary",
+                                       name: "buttonSubmitRules",
+                                       label: L("Settings"),
+                                       icon: "fa fa-gear",
+                                       type: "icon",
+                                       badge: 0,
+                                       click: () => {
+                                          this.submitRuleShow();
+                                       },
+                                    },
+                                 ],
+                              },
+                           ],
+                        },
+                     },
                   ],
                },
             },
@@ -74,6 +116,12 @@ export default function (AB) {
          this.AB = AB;
 
          await super.init(AB);
+
+         PopupSubmitRule.init(AB);
+         PopupSubmitRule.on("save", (/* settings */) => {
+            this.onChange();
+            this.populateBadgeNumber();
+         });
       }
 
       populate(view) {
@@ -100,28 +148,47 @@ export default function (AB) {
          $dc.refresh();
 
          // Pull fields to options
-         const $field = $$(ids.field);
+         this.populateFieldOptions(view);
+
+         PopupSubmitRule.objectLoad(this.CurrentObject);
+         PopupSubmitRule.viewLoad(view);
+         PopupSubmitRule.fromSettings(view.settings.submitRules ?? []);
+      }
+
+      populateFieldOptions(view) {
+         view = view ?? this.CurrentView;
+         const $dc = $$(this.ids.datacollection);
+         const $field = $$(this.ids.field);
          const fieldID = view.settings.fieldID;
-         if (view.settings.dataviewID) {
-            const obj = this.AB.datacollectionByID(
-               view.settings.dataviewID
-            )?.datasource;
-
-            const fieldOptions =
-               obj
-                  ?.fields((f) => f.key == "image")
-                  ?.map((f) => {
-                     return {
-                        id: f.id,
-                        value: f.label,
-                        icon: "fa fa-file-image-o",
-                     };
-                  }) ?? [];
-
-            $field.define("options", fieldOptions);
-         }
+         const obj = this.AB.datacollections(
+            (dc) => dc.id == $dc.getValue()
+         )[0];
+         const fieldOptions =
+            obj?.datasource
+               ?.fields((f) => f.key == "image")
+               ?.map((f) => {
+                  return {
+                     id: f.id,
+                     value: f.label,
+                     icon: "fa fa-file-image-o",
+                  };
+               }) ?? [];
+         $field.define("options", fieldOptions);
          $field.define("value", fieldID);
          $field.refresh();
+      }
+
+      populateBadgeNumber() {
+         const ids = this.ids;
+
+         const view = this.CurrentView;
+         if (!view) return;
+
+         $$(ids.buttonSubmitRules).define(
+            "badge",
+            view?.settings?.submitRules?.length || null
+         );
+         $$(ids.buttonSubmitRules).refresh();
       }
 
       /**
@@ -135,8 +202,14 @@ export default function (AB) {
          const values = super.values();
 
          values.settings = $component.getValues();
+         values.settings.submitRules = PopupSubmitRule.toSettings();
 
          return values;
+      }
+
+      submitRuleShow() {
+         PopupSubmitRule.fromSettings(this.CurrentView.settings.submitRules);
+         PopupSubmitRule.show();
       }
 
       /**
