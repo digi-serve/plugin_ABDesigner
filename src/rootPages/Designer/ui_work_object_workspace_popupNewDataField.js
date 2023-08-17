@@ -415,6 +415,25 @@ export default function (AB, ibase) {
                   // get a new instance of a field:
                   field = this.CurrentObject.fieldNew(vals);
 
+                  if (
+                     vals.columnName !== field.columnName &&
+                     field.columnName === ""
+                  ) {
+                     this.AB.notify.developer(
+                        new Error("The column name does not allow letters."),
+                        {
+                           context:
+                              "UIWorkObjectWorkspacePopupNewDataField:buttonSave(): error saving new field",
+                           field: field.toObj(),
+                        }
+                     );
+
+                     $$(ids.buttonSave).enable();
+                     $$(ids.component).hideProgress();
+
+                     return;
+                  }
+
                   // Provide a default width based on the column label
                   let width = 20 + field.label.length * 10;
                   if (field.settings.showIcon) {
