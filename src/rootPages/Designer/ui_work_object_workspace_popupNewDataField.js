@@ -419,14 +419,10 @@ export default function (AB, ibase) {
                      vals.columnName !== field.columnName &&
                      field.columnName === ""
                   ) {
-                     this.AB.notify.developer(
-                        new Error("The column name does not allow letters."),
-                        {
-                           context:
-                              "UIWorkObjectWorkspacePopupNewDataField:buttonSave(): error saving new field",
-                           field: field.toObj(),
-                        }
-                     );
+                     this.AB.Webix.message({
+                        text: "The column name does not allow letters.",
+                        type: "error",
+                     });
 
                      $$(ids.buttonSave).enable();
                      $$(ids.component).hideProgress();
