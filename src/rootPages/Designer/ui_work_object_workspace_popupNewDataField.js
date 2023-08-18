@@ -415,6 +415,21 @@ export default function (AB, ibase) {
                   // get a new instance of a field:
                   field = this.CurrentObject.fieldNew(vals);
 
+                  if (
+                     vals.columnName !== field.columnName &&
+                     field.columnName === ""
+                  ) {
+                     this.AB.Webix.message({
+                        text: "The column name can't contain special characters.",
+                        type: "error",
+                     });
+
+                     $$(ids.buttonSave).enable();
+                     $$(ids.component).hideProgress();
+
+                     return;
+                  }
+
                   // Provide a default width based on the column label
                   let width = 20 + field.label.length * 10;
                   if (field.settings.showIcon) {
