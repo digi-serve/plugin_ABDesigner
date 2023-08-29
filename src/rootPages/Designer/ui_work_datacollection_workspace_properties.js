@@ -684,8 +684,13 @@ export default function (AB) {
             sameDCs = this.CurrentApplication.datacollectionsIncluded().filter(
                (dc) =>
                   dc?.id != this.CurrentDatacollection.id &&
-                  dc?.settings?.datasourceID ==
-                     this.CurrentDatacollection.datasource.id
+                  (dc?.settings?.datasourceID ==
+                     this.CurrentDatacollection.datasource.id ||
+                     // allow data collections based off of queries
+                     // to be used as a follow cursor option
+                     (dc?.settings?.isQuery == true &&
+                        dc?.datasource?.objectIDs[0] ==
+                           this.CurrentDatacollection.datasource.id))
             );
          }
 
