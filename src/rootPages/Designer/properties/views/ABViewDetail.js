@@ -155,7 +155,7 @@ export default function (AB) {
             .datacollectionsIncluded()
             .filter((dc) => {
                const obj = dc.datasource;
-               return dc.sourceType == "object" && obj && !obj.isImported;
+               return obj && !obj.isImported;
             })
             .map((d) => {
                let entry = { id: d.id, value: d.label };
