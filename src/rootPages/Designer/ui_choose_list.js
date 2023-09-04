@@ -7,6 +7,7 @@
  */
 import UI_Class from "./ui_class";
 import UI_Choose_List_Menu_Factory from "./ui_common_popupEditMenu";
+import UI_Choose_List_NewApp from "./ui_choose_list_newApp";
 
 export default function (AB) {
    // const AppList = AB_Choose_List_Factory(AB);
@@ -17,6 +18,8 @@ export default function (AB) {
    var L = UIClass.L();
 
    const UI_Choose_List_Menu = UI_Choose_List_Menu_Factory(AB);
+
+   const UINewApp = UI_Choose_List_NewApp(AB);
 
    class UIChooseList extends UIClass {
       constructor() {
@@ -106,7 +109,9 @@ export default function (AB) {
                               css: "webix_transparent",
                               click: () => {
                                  // Inform our Chooser we have a request to create an Application:
-                                 this.emit("view.form", null); // leave null for CREATE
+                                 // this.emit("view.form", null); // leave null for CREATE
+                                 this.NewApp.show();
+                                 this.NewApp.clear();
                               },
                               on: {
                                  onAfterRender() {
@@ -283,7 +288,9 @@ export default function (AB) {
 
             switch (action) {
                case "edit":
-                  this.emit("edit.form", selectedApp);
+                  // this.emit("edit.form", selectedApp);
+                  this.NewApp.show();
+                  this.NewApp.applicationLoad(selectedApp);
                   break;
 
                case "delete":
@@ -350,7 +357,7 @@ export default function (AB) {
                context?.resolve?.();
             }
          );
-
+         //
          this._handler_reload = (def) => {
             if (def?.type == "application") {
                this.loaded = false;
@@ -365,6 +372,10 @@ export default function (AB) {
          // {fn}
          // The handler that triggers a reload of our Application List
          // when we are alerted of changes to our applications.
+
+         // Prepare the Popup New App Modal
+         this.NewApp = UI_Choose_List_NewApp(AB);
+         await this.NewApp.init(AB);
 
          // return Promise.all([AppList.init(AB) /*, AppForm.init(AB)*/]);
          return this.loadAllApps().then(() => {
