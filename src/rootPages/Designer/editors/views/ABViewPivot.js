@@ -43,6 +43,12 @@ export default function (AB) {
             this.AB = AB;
 
             this.component?.init?.();
+
+            const pivotId = this.ui().id;
+            const $pivot = $$(pivotId);
+            $pivot.getState().$observe("structure", (structure) => {
+               this._saveStructure(structure);
+            });
          }
 
          detatch() {
@@ -51,24 +57,6 @@ export default function (AB) {
 
          onShow() {
             this.component?.onShow?.();
-            this._listenStructureSave();
-         }
-
-         _listenStructureSave() {
-            const pivotId = this.ui().id;
-            const $doneButton = $$(pivotId).queryView({ view: "button" });
-            if ($doneButton) {
-               if (this.__doneClickEvent)
-                  $doneButton.detachEvent(this.__doneClickEvent);
-
-               this.__doneClickEvent = $doneButton.attachEvent(
-                  "onItemClick",
-                  () => {
-                     const structure = $$(pivotId).getStructure();
-                     this._saveStructure(structure);
-                  }
-               );
-            }
          }
 
          _saveStructure(structure) {
