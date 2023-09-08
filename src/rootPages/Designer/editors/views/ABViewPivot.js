@@ -35,11 +35,6 @@ export default function (AB) {
             const pivot = pivotContainer.rows[0];
 
             pivot.readonly = false;
-            pivot.on = {
-               onBeforeApply: (structure) => {
-                  this._saveStructure(structure);
-               },
-            };
 
             return pivot;
          }
@@ -56,6 +51,24 @@ export default function (AB) {
 
          onShow() {
             this.component?.onShow?.();
+            this._listenStructureSave();
+         }
+
+         _listenStructureSave() {
+            const pivotId = this.ui().id;
+            const $doneButton = $$(pivotId).queryView({ view: "button" });
+            if ($doneButton) {
+               if (this.__doneClickEvent)
+                  $doneButton.detachEvent(this.__doneClickEvent);
+
+               this.__doneClickEvent = $doneButton.attachEvent(
+                  "onItemClick",
+                  () => {
+                     const structure = $$(pivotId).getStructure();
+                     this._saveStructure(structure);
+                  }
+               );
+            }
          }
 
          _saveStructure(structure) {
