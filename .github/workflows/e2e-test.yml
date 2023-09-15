@@ -5,6 +5,9 @@ on:
          ref:
             type: string
             default: ${{ github.ref }}
+      secrets:
+         TOKEN:
+            required: true
    
 jobs:
    e2etests:
@@ -31,7 +34,7 @@ jobs:
            with:
               path: web
               repository: digi-serve/ab_service_web
-              token: ${{ secrets.DS_REPO_PAT }}
+              token: ${{ secrets.TOKEN }}
               ref: ${{ matrix.branch }}
 
          - run: npm i

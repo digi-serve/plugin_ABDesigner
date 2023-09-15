@@ -17,6 +17,8 @@ jobs:
     # Only run if the PR closed by merging and we have a label
     if: ${{ needs.call-get-label.outputs.valid == 'true' }}
     uses: ./.github/workflows/e2e-test.yml
+    secrets:
+      TOKEN: ${{ secrets.PAT }}
   call-bump-version:
     name: Version
     # Only run if tests pass 
@@ -39,3 +41,5 @@ jobs:
       type: ${{ needs.call-get-label.outputs.label }}
       version: ${{ needs.call-bump-version.outputs.new_version }}
       repo: plugin_ABDesigner
+    secrets:
+      TOKEN: ${{ secrets.PAT }}
