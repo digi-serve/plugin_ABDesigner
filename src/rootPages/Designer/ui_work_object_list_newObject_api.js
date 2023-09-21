@@ -116,8 +116,26 @@ export default function (AB) {
 
          // "save.successful" is triggered by the ui_work_object_list_newObject
          // if the values we provided were successfully saved.
-         this.on("save.successful", async () => {
+         this.on("save.successful", async (obj) => {
             this.onSuccess();
+
+            try {
+               await obj.fetchData();
+
+               webix.message({
+                  type: "success",
+                  text: L("Successfully fetching data."),
+               });
+            } catch (err) {
+               webix.message({
+                  type: "error",
+                  text: L("Error fetching data."),
+               });
+               this.AB.notify.developer(err, {
+                  context: "ABObjectAPI.fetchData()",
+                  object: obj.toObj(),
+               });
+            }
          });
 
          // init() routines are always considered async so:
