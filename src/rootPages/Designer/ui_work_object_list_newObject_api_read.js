@@ -11,6 +11,7 @@ export default function (AB) {
 
             form: "",
             headers: "",
+            dataKey: "",
             fields: "",
             buttonSave: "",
             buttonCancel: "",
@@ -30,9 +31,10 @@ export default function (AB) {
                      id: this.ids.form,
                      view: "form",
                      autoheight: false,
-                     rows: [
+                     elements: [
                         {
-                           label: "Verb",
+                           label: L("Verb"),
+                           name: "verb",
                            options: ["GET"],
                            view: "select",
                            disabled: true,
@@ -90,16 +92,18 @@ export default function (AB) {
                      autoheight: false,
                      rows: [
                         {
+                           id: this.ids.dataKey,
                            view: "text",
-                           label: "Data Key",
-                           value: "data.accounts",
-                           bottomLabel:
-                              "* JSON key containing the relevant data from the resonse object. Can be left blank to use the root level data.",
+                           label: L("Data Key"),
+                           placeholder: "data.example",
+                           bottomLabel: L(
+                              "* JSON key containing the relevant data from the resonse object. Can be left blank to use the root level data."
+                           ),
                         },
                         {
                            cols: [
                               {
-                                 label: "Fields",
+                                 label: L("Fields"),
                                  view: "label",
                               },
                               {
@@ -135,7 +139,12 @@ export default function (AB) {
 
       getValues() {
          const $form = $$(this.ids.form);
-         const values = $form.getValues();
+         const values = {
+            request: $form.getValues(),
+            response: {
+               dataKey: $$(this.ids.dataKey).getValue(),
+            },
+         };
          values.request = values.request ?? {};
          values.response = values.response ?? {};
 

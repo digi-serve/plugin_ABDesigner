@@ -51,13 +51,15 @@ export default function (AB) {
                         {
                            view: "checkbox",
                            label: L("Read Only"),
-                           value: "1",
+                           name: "readonly",
+                           value: 1,
                            disabled: true,
                         },
                      ],
                   },
                   {
                      view: "tabview",
+                     name: "apiType",
                      tabbar: {
                         options: [
                            { value: "Create", disabled: true },
@@ -114,7 +116,7 @@ export default function (AB) {
 
          // "save.successful" is triggered by the ui_work_object_list_newObject
          // if the values we provided were successfully saved.
-         this.on("save.successful", () => {
+         this.on("save.successful", async () => {
             this.onSuccess();
          });
 
@@ -203,13 +205,15 @@ export default function (AB) {
          }
 
          let values = Form.getValues();
-         const apiRead = this.API_Read.getValues();
 
-         values = Object.assign(values, apiRead);
+         const apiValues = this.API_Read.getValues();
+
+         values = Object.assign(values, apiValues);
 
          // Add fields
          const addFieldTasks = [];
-         const object = AB.objectNew(values);
+         const object = AB.objectNew(Object.assign({ isAPI: true }, values));
+
          (values.response?.fields ?? []).forEach((f) => {
             const field = AB.fieldNew(
                {
