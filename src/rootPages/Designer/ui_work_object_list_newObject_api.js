@@ -51,13 +51,15 @@ export default function (AB) {
                         {
                            view: "checkbox",
                            label: L("Read Only"),
-                           value: "1",
+                           name: "readonly",
+                           value: 1,
                            disabled: true,
                         },
                      ],
                   },
                   {
                      view: "tabview",
+                     name: "apiType",
                      tabbar: {
                         options: [
                            { value: "Create", disabled: true },
@@ -114,8 +116,26 @@ export default function (AB) {
 
          // "save.successful" is triggered by the ui_work_object_list_newObject
          // if the values we provided were successfully saved.
-         this.on("save.successful", () => {
+         this.on("save.successful", async (obj) => {
             this.onSuccess();
+
+            try {
+               await obj.fetchData();
+
+               webix.message({
+                  type: "success",
+                  text: L("Successfully fetching data."),
+               });
+            } catch (err) {
+               webix.message({
+                  type: "error",
+                  text: L("Error fetching data."),
+               });
+               this.AB.notify.developer(err, {
+                  context: "ABObjectAPI.fetchData()",
+                  object: obj.toObj(),
+               });
+            }
          });
 
          // init() routines are always considered async so:
@@ -203,13 +223,15 @@ export default function (AB) {
          }
 
          let values = Form.getValues();
-         const apiRead = this.API_Read.getValues();
 
-         values = Object.assign(values, apiRead);
+         const apiValues = this.API_Read.getValues();
+
+         values = Object.assign(values, apiValues);
 
          // Add fields
          const addFieldTasks = [];
-         const object = AB.objectNew(values);
+         const object = AB.objectNew(Object.assign({ isAPI: true }, values));
+
          (values.response?.fields ?? []).forEach((f) => {
             const field = AB.fieldNew(
                {
