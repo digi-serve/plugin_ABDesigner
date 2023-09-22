@@ -124,6 +124,53 @@ export default function (AB) {
                         $$(ids.widgets).unselect();
                         this.loadWidgets(item);
                      },
+                     onBeforeDrop: (context, e) => {
+                        // context.from   :  the webix object the item came from
+                        // context.start  :  id of the item being dropped (the task .key)
+                        // context.target :  id of the item being dropped ON
+                        // context.to     :  the webix object of the item being dropped ON
+
+                        // IF this was our own Drag N Drop:
+                        if (context.from == $$(ids.menus)) {
+                           // if they are just making a normal move:
+                           if (!e.shiftKey) {
+                              // just do the default Webix thang
+                              return;
+                           }
+
+                           // else they want to drop and make current element
+                           // a child:
+
+                           var droppedPage = this.CurrentApplication.pages(
+                              (p) => context.start == p.id,
+                              true
+                           )[0];
+
+                           // this.CurrentApplication.pageByID(
+                           //    context.start
+                           // );
+
+                           var targetPage = this.CurrentApplication.pages(
+                              (p) => context.target == p.id,
+                              true
+                           )[0];
+
+                           // this.CurrentApplication.pageByID(
+                           //    context.target
+                           // );
+
+                           this.moveToChild(
+                              targetPage,
+                              droppedPage,
+                              context.to,
+                              "menu"
+                           );
+
+                           // end this here:
+                           // and return false to prevent the normal reordering
+                           return false;
+                        }
+                     },
                   },
                   data: [],
                },
@@ -178,6 +225,7 @@ export default function (AB) {
             $ListTabs.data.sync(this.viewListTabs);
             $ListTabs.adjust();
          }
+         webix.extend($ListTabs, webix.ProgressBar);
 
          let $ListMenus = $$(this.ids.menus);
          if ($ListMenus) {
@@ -186,6 +234,7 @@ export default function (AB) {
             $ListMenus.data.sync(this.viewListMenus);
             $ListMenus.adjust();
          }
+         webix.extend($ListMenus, webix.ProgressBar);
 
          this.PageNew.init(AB);
          this.PageNew.on("done", () => {
@@ -212,9 +261,37 @@ export default function (AB) {
          this.PageNew.applicationLoad(application);
 
          this.listBusy();
+
+         this.refreshTree(this.viewListTabs, "tab");
+         this.refreshTree(this.viewListMenus, "menu");
+
          // this so it looks right/indented in a tree view:
-         this.viewListTabs.clearAll();
-         this.viewListMenus.clearAll();
+         // this.viewListTabs.clearAll();
+         // this.viewListMenus.clearAll();
+
+         // var addPage = (list, page, index, parentId) => {
+         //    if (!page) return;
+
+         //    list.add(page, index, parentId);
+
+         //    page.pages().forEach((childPage, childIndex) => {
+         //       addPage(list, childPage, childIndex, page.id);
+         //    });
+         // };
+         // application
+         //    .pages((p) => p.menuType == "tab")
+         //    .forEach((p, index) => {
+         //       addPage(this.viewListTabs, p, index);
+         //    });
+         // application
+         //    .pages((p) => p.menuType == "menu")
+         //    .forEach((p, index) => {
+         //       addPage(this.viewListMenus, p, index);
+         //    });
+      }
+
+      refreshTree(tree, menuType) {
+         tree.clearAll();
 
          var addPage = (list, page, index, parentId) => {
             if (!page) return;
@@ -225,16 +302,134 @@ export default function (AB) {
                addPage(list, childPage, childIndex, page.id);
             });
          };
-         application
-            .pages((p) => p.menuType == "tab")
-            .forEach((p, index) => {
-               addPage(this.viewListTabs, p, index);
-            });
-         application
-            .pages((p) => p.menuType == "menu")
-            .forEach((p, index) => {
-               addPage(this.viewListMenus, p, index);
-            });
+
+         this.CurrentApplication.pages((p) => p.menuType == menuType).forEach(
+            (p, index) => {
+               addPage(tree, p, index);
+            }
+         );
+      }
+
+      /**
+       * @function addChild()
+       *
+       * Add a LBTask as a Child to the given dropTarget.
+       * @param {LBTask} dropTarget  The LBTask that an item was dropped ON
+       * @param {LBTask} newTask     The instance of a LBTask to add
+       */
+      async addChild(parent, child, TreeList) {
+         var parID = parent.id;
+
+         var oldParent = child.parent;
+         if (oldParent) {
+            await oldParent.pageRemove(child);
+         }
+         await parent.pageInsert(child);
+         child.parent = parent;
+         await child.save();
+
+         // try to find LAST child:
+         var childID = TreeList.getFirstChildId(parID);
+
+         // if this is the 1st child of this entry, just add it:
+         if (!childID) {
+            TreeList.add(child, 0, parID);
+         } else {
+            // try to find LAST child:
+            var nextChild = TreeList.getNextSiblingId(childID);
+            while (nextChild) {
+               childID = nextChild;
+               nextChild = TreeList.getNextSiblingId(childID);
+            }
+
+            // at this point, childID should be last one:
+            var pos = TreeList.getBranchIndex(childID, parID);
+            TreeList.add(child, pos + 1, parID);
+         }
+      }
+
+      async moveToChild(parent, child, TreeList, menuType) {
+         var listAdds = [];
+
+         TreeList?.showProgress?.({ type: "icon" });
+         // add the first droptTask:
+         listAdds.push({ parent: parent, child: child });
+
+         var processChildren = (current) => {
+            if (!current) return;
+
+            var childID = TreeList.getFirstChildId(current.id);
+            while (childID) {
+               var Child = this.CurrentApplication.pages(
+                  (p) => childID == p.id,
+                  true
+               )[0]; // this.CurrentApplication.pageByID(childID);
+
+               if (!Child) {
+                  const echildnotfound = new Error(
+                     `Child Page not found [${childID}]`
+                  );
+                  throw echildnotfound;
+               }
+
+               listAdds.push({ parent: current, child: Child });
+
+               processChildren(Child);
+
+               childID = TreeList.getNextSiblingId(childID);
+            }
+         };
+         //processChildren(child);
+
+         // first remove droppedTask from where it is:
+         TreeList.remove(child.id);
+
+         for (let a in listAdds) {
+            let pc = listAdds[a];
+
+            var Parent = pc.parent;
+            // var Parent = this.CurrentApplication.pages(
+            //    (p) => pc.parent == p.id,
+            //    true
+            // )[0]; // pc.parent);
+            var Child = pc.child;
+            // var Child = this.CurrentApplication.pages(
+            //    (p) => pc.child == p.id,
+            //    true
+            // )[0]; // pc.child);
+            if (!Parent || !Child) {
+               const error = new Error(
+                  `Unable to find Parent or Child: p[${pc.parent}] c[${pc.child}]`
+               );
+               throw error;
+               return;
+            }
+            await this.addChild(Parent, Child, TreeList);
+         }
+
+         // listAdds.forEach(async (pc) => {
+         //    var Parent = pc.parent;
+         //    // var Parent = this.CurrentApplication.pages(
+         //    //    (p) => pc.parent == p.id,
+         //    //    true
+         //    // )[0]; // pc.parent);
+         //    var Child = pc.child;
+         //    // var Child = this.CurrentApplication.pages(
+         //    //    (p) => pc.child == p.id,
+         //    //    true
+         //    // )[0]; // pc.child);
+         //    if (!Parent || !Child) {
+         //       const error = new Error(
+         //          `Unable to find Parent or Child: p[${pc.parent}] c[${pc.child}]`
+         //       );
+         //       throw error;
+         //       return;
+         //    }
+         //    await this.addChild(Parent, Child /*, TreeList */);
+         // });
+
+         this.refreshTree(TreeList, menuType);
+         TreeList?.hideProgress?.();
       }
 
       /**
@@ -454,6 +649,7 @@ export default function (AB) {
 
          return true;
       }
+
       onAfterEditStop(state, editor, ignoreUpdate) {
          this.showGear(editor.id);
 
@@ -491,6 +687,7 @@ export default function (AB) {
                });
          }
       }
+
       onAfterClose() {
          var selectedIds = $$(this.ids.list).getSelectedId(true);
 
