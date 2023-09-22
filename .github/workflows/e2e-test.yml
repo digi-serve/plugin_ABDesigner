@@ -1,13 +1,13 @@
 name: E2E Tests & Update Web Service
 on:
-   # Run on any commit to the #master branch
-   push:
-      branches: [master]
-   # Run on pull requests into the #master branch
-   pull_request:
-      branches: [master]
-   # Allows user to trigger the workflow from GitHub's web UI
-   workflow_dispatch:
+   workflow_call:
+      inputs:
+         ref:
+            type: string
+            default: ${{ github.ref }}
+      secrets:
+         TOKEN:
+            required: true
    
 jobs:
    e2etests:
@@ -28,11 +28,13 @@ jobs:
          - uses: actions/checkout@v3
            with:
               path: plugins/plugin_ABDesigner
+              ref: ${{ inputs.ref }}
+
          - uses: actions/checkout@v3
            with:
               path: web
               repository: digi-serve/ab_service_web
-              token: ${{ secrets.DS_REPO_PAT }}
+              token: ${{ secrets.TOKEN }}
               ref: ${{ matrix.branch }}
 
          - run: npm i
@@ -82,34 +84,3 @@ jobs:
            with:
               name: ABServices.log
               path: ./ab/logs/ABServices.log
-
-   # if its a push event and tests passed update ab_service_web           
-   update_ab_service_web:
-      name: Update ab_service_web
-      needs: e2etests
-      if: ${{ github.event_name == 'push' }} 
-      runs-on: ubuntu-latest
-      strategy:
-         matrix:
-            include:
-               - branch: develop
-                 webpack: dev
-               - branch: master
-                 webpack: update
-      steps:
-         - uses: actions/checkout@v3
-           with:
-              path: plugins/plugin_ABDesigner
-         - uses: actions/checkout@v3
-           with:
-              path: web
-              repository: digi-serve/ab_service_web
-              ref: ${{ matrix.branch }}
-              token: ${{ secrets.DS_REPO_PAT }}
-         - run: npm i
-           working-directory: plugins/plugin_ABDesigner
-         - run: npm run build:${{ matrix.webpack }}
-           working-directory: plugins/plugin_ABDesigner
-         - uses: EndBug/add-and-commit@v9
-           with:
-              cwd: ./web

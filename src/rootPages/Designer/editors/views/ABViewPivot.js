@@ -35,11 +35,6 @@ export default function (AB) {
             const pivot = pivotContainer.rows[0];
 
             pivot.readonly = false;
-            pivot.on = {
-               onBeforeApply: (structure) => {
-                  this._saveStructure(structure);
-               },
-            };
 
             return pivot;
          }
@@ -48,6 +43,12 @@ export default function (AB) {
             this.AB = AB;
 
             this.component?.init?.();
+
+            const pivotId = this.ui().id;
+            const $pivot = $$(pivotId);
+            $pivot.getState().$observe("structure", (structure) => {
+               this._saveStructure(structure);
+            });
          }
 
          detatch() {
