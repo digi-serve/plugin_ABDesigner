@@ -319,9 +319,19 @@ export default function (AB) {
          this.populateBadgeNumber(ids, view);
       }
 
+      _filterCondition(view) {
+         if (view?.options?.filters?.rules?.length) {
+            return view.options.filters;
+         } else if (view?.settings?.filterConditions?.rules?.length) {
+            return view.settings.filterConditions;
+         } else {
+            return null;
+         }
+      }
+
       populatePopupEditors(view) {
          const filterConditions =
-            view?.settings?.filterConditions ??
+            this._filterCondition(view) ??
             this.defaultValues().filterConditions;
 
          // Populate data to popups
@@ -342,11 +352,9 @@ export default function (AB) {
 
       populateBadgeNumber(ids, view) {
          const $buttonFilter = $$(ids.buttonFilter);
-         if (view?.settings?.filterConditions?.rules) {
-            $buttonFilter.define(
-               "badge",
-               view.settings.filterConditions.rules.length || null
-            );
+         const filterCondition = this._filterCondition(view);
+         if (filterCondition?.rules) {
+            $buttonFilter.define("badge", filterCondition.rules.length || null);
             $buttonFilter.refresh();
          } else {
             $buttonFilter.define("badge", null);
@@ -506,3 +514,4 @@ export default function (AB) {
 
    return ABViewConnectProperty;
 }
+
