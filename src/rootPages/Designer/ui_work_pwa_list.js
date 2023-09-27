@@ -82,6 +82,62 @@ export default function (AB) {
                         $$(ids.widgets).unselect();
                         this.loadWidgets(item);
                      },
+                     onBeforeDrop: (context, e) => {
+                        // context.from   :  the webix object the item came from
+                        // context.start  :  id of the item being dropped (the task .key)
+                        // context.target :  id of the item being dropped ON
+                        // context.to     :  the webix object of the item being dropped ON
+
+                        // Don't allow drops from widgets
+                        if (context.from !== $$(ids.widgets)) {
+                           // else they want to drop and make current element
+                           // a child:
+
+                           var droppedPage = this.CurrentApplication.pages(
+                              (p) => context.start == p.id,
+                              true
+                           )[0];
+
+                           // make sure the dropped page is now a "tab" type.
+                           if (droppedPage) {
+                              droppedPage.menuType = "tab";
+                           }
+
+                           var targetPage = this.CurrentApplication.pages(
+                              (p) => context.target == p.id,
+                              true
+                           )[0];
+
+                           // if they are just making a normal move:
+                           if (!e.shiftKey) {
+                              // just do the default Webix thang
+                              // The droppedPage should connect to the
+                              // targetPage.parent
+
+                              this.moveToChild(
+                                 targetPage.parent,
+                                 droppedPage,
+                                 context.to,
+                                 "tab"
+                              );
+
+                              return;
+                           }
+
+                           // Holding [Shift] makes the dropped page a child of the
+                           // Target Page.
+                           this.moveToChild(
+                              targetPage,
+                              droppedPage,
+                              context.to,
+                              "tab"
+                           );
+
+                           // end this here:
+                           // and return false to prevent the normal reordering
+                           return false;
+                        }
+                     },
                   },
                   data: [],
                },
@@ -130,14 +186,8 @@ export default function (AB) {
                         // context.target :  id of the item being dropped ON
                         // context.to     :  the webix object of the item being dropped ON
 
-                        // IF this was our own Drag N Drop:
-                        if (context.from == $$(ids.menus)) {
-                           // if they are just making a normal move:
-                           if (!e.shiftKey) {
-                              // just do the default Webix thang
-                              return;
-                           }
-
+                        // Don't allow drops from Widgets
+                        if (context.from !== $$(ids.widgets)) {
                            // else they want to drop and make current element
                            // a child:
 
@@ -146,19 +196,34 @@ export default function (AB) {
                               true
                            )[0];
 
-                           // this.CurrentApplication.pageByID(
-                           //    context.start
-                           // );
+                           // make sure the dropped page is now a "menu" type.
+                           if (droppedPage) {
+                              droppedPage.menuType = "menu";
+                           }
 
                            var targetPage = this.CurrentApplication.pages(
                               (p) => context.target == p.id,
                               true
                            )[0];
 
-                           // this.CurrentApplication.pageByID(
-                           //    context.target
-                           // );
+                           // if they are just making a normal move:
+                           if (!e.shiftKey) {
+                              // just do the default Webix thang
+                              // The droppedPage should connect to the
+                              // targetPage.parent
 
+                              this.moveToChild(
+                                 targetPage.parent,
+                                 droppedPage,
+                                 context.to,
+                                 "menu"
+                              );
+
+                              return;
+                           }
+
+                           // Holding [Shift] makes the dropped page a child of the
+                           // Target Page.
                            this.moveToChild(
                               targetPage,
                               droppedPage,
@@ -327,108 +392,16 @@ export default function (AB) {
          await parent.pageInsert(child);
          child.parent = parent;
          await child.save();
-
-         // try to find LAST child:
-         var childID = TreeList.getFirstChildId(parID);
-
-         // if this is the 1st child of this entry, just add it:
-         if (!childID) {
-            TreeList.add(child, 0, parID);
-         } else {
-            // try to find LAST child:
-            var nextChild = TreeList.getNextSiblingId(childID);
-            while (nextChild) {
-               childID = nextChild;
-               nextChild = TreeList.getNextSiblingId(childID);
-            }
-
-            // at this point, childID should be last one:
-            var pos = TreeList.getBranchIndex(childID, parID);
-            TreeList.add(child, pos + 1, parID);
-         }
       }
 
       async moveToChild(parent, child, TreeList, menuType) {
-         var listAdds = [];
-
          TreeList?.showProgress?.({ type: "icon" });
-         // add the first droptTask:
-         listAdds.push({ parent: parent, child: child });
 
-         var processChildren = (current) => {
-            if (!current) return;
+         await this.addChild(parent, child, TreeList);
 
-            var childID = TreeList.getFirstChildId(current.id);
-            while (childID) {
-               var Child = this.CurrentApplication.pages(
-                  (p) => childID == p.id,
-                  true
-               )[0]; // this.CurrentApplication.pageByID(childID);
-
-               if (!Child) {
-                  const echildnotfound = new Error(
-                     `Child Page not found [${childID}]`
-                  );
-                  throw echildnotfound;
-               }
-
-               listAdds.push({ parent: current, child: Child });
-
-               processChildren(Child);
-
-               childID = TreeList.getNextSiblingId(childID);
-            }
-         };
-         //processChildren(child);
-
-         // first remove droppedTask from where it is:
-         TreeList.remove(child.id);
-
-         for (let a in listAdds) {
-            let pc = listAdds[a];
-
-            var Parent = pc.parent;
-            // var Parent = this.CurrentApplication.pages(
-            //    (p) => pc.parent == p.id,
-            //    true
-            // )[0]; // pc.parent);
-            var Child = pc.child;
-            // var Child = this.CurrentApplication.pages(
-            //    (p) => pc.child == p.id,
-            //    true
-            // )[0]; // pc.child);
-            if (!Parent || !Child) {
-               const error = new Error(
-                  `Unable to find Parent or Child: p[${pc.parent}] c[${pc.child}]`
-               );
-               throw error;
-               return;
-            }
-            await this.addChild(Parent, Child, TreeList);
-         }
-
-         // listAdds.forEach(async (pc) => {
-         //    var Parent = pc.parent;
-         //    // var Parent = this.CurrentApplication.pages(
-         //    //    (p) => pc.parent == p.id,
-         //    //    true
-         //    // )[0]; // pc.parent);
-         //    var Child = pc.child;
-         //    // var Child = this.CurrentApplication.pages(
-         //    //    (p) => pc.child == p.id,
-         //    //    true
-         //    // )[0]; // pc.child);
-         //    if (!Parent || !Child) {
-         //       const error = new Error(
-         //          `Unable to find Parent or Child: p[${pc.parent}] c[${pc.child}]`
-         //       );
-         //       throw error;
-         //       return;
-         //    }
-         //    await this.addChild(Parent, Child /*, TreeList */);
-         // });
-
+         let currState = TreeList.getState();
          this.refreshTree(TreeList, menuType);
+         TreeList.setState(currState);
          TreeList?.hideProgress?.();
       }
 
