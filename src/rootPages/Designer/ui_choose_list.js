@@ -351,9 +351,20 @@ export default function (AB) {
             }
          );
 
+         this._handler_create = (def) => {
+            if (def?.type != "application") return;
+
+            if (this.AB.applications((app) => app.id == def.id).length < 1) {
+               // Add a new Application to AB._allApplications
+               this.AB.definitionSync("created", def.id, def);
+            }
+
+            this.loadData();
+         };
+
          this._handler_reload = (def) => {
             if (def?.type == "application") {
-               this.loaded = false;
+               // this.loaded = false;
                this.loadData();
             } else if (!def) {
                this.AB.notify.developer(new Error("No def passed"), {
@@ -367,14 +378,15 @@ export default function (AB) {
          // when we are alerted of changes to our applications.
 
          // return Promise.all([AppList.init(AB) /*, AppForm.init(AB)*/]);
-         return this.loadAllApps().then(() => {
-            // NOTE: .loadAllApps() will generate a TON of "definition.updated"
-            // events.  So add these handlers after that is all over.
+         // return this.loadAllApps().then(() => {
+         //    // NOTE: .loadAllApps() will generate a TON of "definition.updated"
+         //    // events.  So add these handlers after that is all over.
 
-            // Refresh our Application List each time we are notified of a change
-            // in our Application definitions:
-            this.AB.on("definition.created", this._handler_reload);
-         });
+         //    // Refresh our Application List each time we are notified of a change
+         //    // in our Application definitions:
+         //    this.AB.on("definition.created", this._handler_reload);
+         this.AB.on("definition.created", this._handler_create);
+         // });
       }
 
       //
@@ -392,40 +404,41 @@ export default function (AB) {
        * builder can work with them.
        * @return {Promise}
        */
-      async loadAllApps() {
-         // NOTE: we only actually perform this 1x.
-         // so track the _loadInProgress as our indicator of having done that.
-         if (!this._loadInProgress) {
-            this.busy();
-            this._loadInProgress = new Promise((resolve, reject) => {
-               var jobResponse = {
-                  key: "definitions.allapplications",
-                  context: { resolve, reject },
-               };
+      // async loadAllApps() {
+      //    // NOTE: we only actually perform this 1x.
+      //    // so track the _loadInProgress as our indicator of having done that.
+      //    if (!this._loadInProgress) {
+      //       this.busy();
+      //       this._loadInProgress = new Promise((resolve, reject) => {
+      //          var jobResponse = {
+      //             key: "definitions.allapplications",
+      //             context: { resolve, reject },
+      //          };
 
-               this.AB.Network.get(
-                  {
-                     url: `/definition/allapplications`,
-                  },
-                  jobResponse
-               );
-            });
-         }
+      //          this.AB.Network.get(
+      //             {
+      //                url: `/definition/allapplications`,
+      //             },
+      //             jobResponse
+      //          );
+      //       });
+      //    }
 
-         return this._loadInProgress;
-      }
+      //    return this._loadInProgress;
+      // }
 
       /**
        * @function loadData
        *
        * Load all the ABApplications and display them in our App List
        */
-      async loadData() {
-         await this.loadAllApps();
+      loadData() {
+         // NOTE: pull Applications from myapps REST request instead
+         // await this.loadAllApps();
 
-         if (this.loaded) return;
+         // if (this.loaded) return;
 
-         this.loaded = true;
+         // this.loaded = true;
 
          // Get applications data from the server
          this.busy();
