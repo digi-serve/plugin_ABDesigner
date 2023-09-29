@@ -359,13 +359,13 @@ export default function (AB) {
                this.AB.definitionSync("created", def.id, def);
             }
 
-            this.loadData();
+            this.refresh();
          };
 
          this._handler_reload = (def) => {
             if (def?.type == "application") {
                // this.loaded = false;
-               this.loadData();
+               this.refresh();
             } else if (!def) {
                this.AB.notify.developer(new Error("No def passed"), {
                   plugin: "ABDesigner",
@@ -428,11 +428,11 @@ export default function (AB) {
       // }
 
       /**
-       * @function loadData
+       * @function refresh
        *
        * Load all the ABApplications and display them in our App List
        */
-      loadData() {
+      refresh() {
          // NOTE: pull Applications from myapps REST request instead
          // await this.loadAllApps();
 
@@ -561,7 +561,7 @@ export default function (AB) {
          super.show();
 
          // start things off by loading the current list of Applications
-         this.loadData();
+         this.refresh();
       }
 
       templateListItem(obj, common) {
