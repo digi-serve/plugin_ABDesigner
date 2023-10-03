@@ -107,6 +107,9 @@ export default function (AB) {
          this.AB = AB;
 
          this.$form = $$(this.ids.form);
+         AB.Webix.extend(this.$form, webix.ProgressBar);
+
+         this.API_Read.init(AB);
 
          // "save.error" is triggered by the ui_work_object_list_newObject
          // if there was an error saving the values from our form.
@@ -119,23 +122,23 @@ export default function (AB) {
          this.on("save.successful", async (obj) => {
             this.onSuccess();
 
-            try {
-               await obj.fetchData();
+            // try {
+            //    await obj.fetchData();
 
-               webix.message({
-                  type: "success",
-                  text: L("Successfully fetching data."),
-               });
-            } catch (err) {
-               webix.message({
-                  type: "error",
-                  text: L("Error fetching data."),
-               });
-               this.AB.notify.developer(err, {
-                  context: "ABObjectAPI.fetchData()",
-                  object: obj.toObj(),
-               });
-            }
+            //    webix.message({
+            //       type: "success",
+            //       text: L("Successfully fetching data."),
+            //    });
+            // } catch (err) {
+            //    webix.message({
+            //       type: "error",
+            //       text: L("Error fetching data."),
+            //    });
+            //    this.AB.notify.developer(err, {
+            //       context: "ABObjectAPI.fetchData()",
+            //       object: obj.toObj(),
+            //    });
+            // }
          });
 
          // init() routines are always considered async so:
@@ -209,8 +212,7 @@ export default function (AB) {
        * added to the application.createModel() method.
        */
       async save() {
-         const $saveButton = $$(this.ids.buttonSave);
-         $saveButton.disable();
+         this.busy();
 
          const Form = this.$form;
 
@@ -218,40 +220,43 @@ export default function (AB) {
 
          // if it doesn't pass the basic form validation, return:
          if (!Form.validate() || !this.API_Read.validate()) {
-            $saveButton.enable();
+            this.ready();
             return false;
          }
 
          let values = Form.getValues();
 
+         // Create a new Object
          const apiValues = this.API_Read.getValues();
-
          values = Object.assign(values, apiValues);
-
-         // Add fields
-         const addFieldTasks = [];
          const object = AB.objectNew(Object.assign({ isAPI: true }, values));
 
-         (values.response?.fields ?? []).forEach((f) => {
-            const field = AB.fieldNew(
-               {
-                  name: f.columnName,
-                  label: f.columnName,
-                  columnName: f.columnName,
-                  key: f.type,
-               },
-               object
-            );
-            addFieldTasks.push(field.save());
-         });
+         try {
+            // Add fields
+            // const addFieldTasks = [];
+            values.fieldIDs = [];
+            for (const f of values.response?.fields ?? []) {
+               const field = AB.fieldNew(
+                  {
+                     name: f.columnName,
+                     label: f.columnName,
+                     columnName: f.columnName,
+                     key: f.type,
+                  },
+                  object
+               );
+               await field.save(true);
 
-         values.fieldIDs = [];
-         (await Promise.all(addFieldTasks)).forEach((f) => {
-            values.fieldIDs.push(f.id);
+               values.fieldIDs.push(field.id);
+            }
             values.id = object.id;
-         });
 
-         this.emit("save", object.toObj());
+            this.emit("save", object.toObj());
+
+            this.ready();
+         } catch (err) {
+            console.error(err);
+         }
       }
 
       /**
@@ -261,6 +266,22 @@ export default function (AB) {
        */
       show() {
          $$(this.ids.component)?.show();
+      }
+
+      busy() {
+         const $form = $$(this.ids.form);
+         const $saveButton = $$(this.ids.buttonSave);
+
+         $form.showProgress({ type: "icon" });
+         $saveButton.disable();
+      }
+
+      ready() {
+         const $form = $$(this.ids.form);
+         const $saveButton = $$(this.ids.buttonSave);
+
+         $form.hideProgress();
+         $saveButton.enable();
       }
    }
    return new UI_Work_Object_List_NewObject_API();

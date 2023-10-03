@@ -1,4 +1,5 @@
 import UI_Class from "./ui_class";
+import FieldTypeTool from "../../utils/FieldTypeTool";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
@@ -9,12 +10,13 @@ export default function (AB) {
          super("ui_work_object_list_newObject_api_read", {
             // component: base,
 
-            form: "",
+            requestPanel: "",
+            requestForm: "",
+            responsePanel: "",
+            responseForm: "",
             headers: "",
             dataKey: "",
             fields: "",
-            buttonSave: "",
-            buttonCancel: "",
          });
       }
 
@@ -24,11 +26,19 @@ export default function (AB) {
             view: "accordion",
             type: "clean",
             multi: false,
+            on: {
+               onAfterExpand: (viewId) => {
+                  if (this.ids.responsePanel == viewId) {
+                     this._refreshResponse();
+                  }
+               },
+            },
             rows: [
                {
+                  id: this.ids.requestPanel,
                   header: L("Request"),
                   body: {
-                     id: this.ids.form,
+                     id: this.ids.requestForm,
                      view: "form",
                      autoheight: false,
                      elements: [
@@ -46,6 +56,11 @@ export default function (AB) {
                            placeholder: "https://example.com",
                            type: "url",
                            required: true,
+                           on: {
+                              onChange: () => {
+                                 delete this._data;
+                              },
+                           },
                         },
                         {
                            padding: 0,
@@ -85,9 +100,11 @@ export default function (AB) {
                   },
                },
                {
+                  id: this.ids.responsePanel,
                   header: L("Response"),
                   collapsed: true,
                   body: {
+                     id: this.ids.responseForm,
                      view: "form",
                      autoheight: false,
                      rows: [
@@ -99,6 +116,12 @@ export default function (AB) {
                            bottomLabel: L(
                               "* JSON key containing the relevant data from the resonse object. Can be left blank to use the root level data."
                            ),
+                           suggest: [],
+                           on: {
+                              onChange: () => {
+                                 this._guessFields();
+                              },
+                           },
                         },
                         {
                            cols: [
@@ -137,10 +160,18 @@ export default function (AB) {
          };
       }
 
+      init(AB) {
+         const $requestForm = $$(this.ids.requestForm);
+         const $responseForm = $$(this.ids.responseForm);
+
+         AB.Webix.extend($requestForm, webix.ProgressBar);
+         AB.Webix.extend($responseForm, webix.ProgressBar);
+      }
+
       getValues() {
-         const $form = $$(this.ids.form);
+         const $requestForm = $$(this.ids.requestForm);
          const values = {
-            request: $form.getValues(),
+            request: $requestForm.getValues(),
             response: {
                dataKey: $$(this.ids.dataKey).getValue(),
             },
@@ -182,8 +213,25 @@ export default function (AB) {
       }
 
       validate() {
-         const $form = $$(this.ids.form);
-         return $form.validate();
+         const $requestForm = $$(this.ids.requestForm);
+         const $responseForm = $$(this.ids.responseForm);
+         return $requestForm.validate() && $responseForm.validate();
+      }
+
+      busy() {
+         const $requestForm = $$(this.ids.requestForm);
+         const $responseForm = $$(this.ids.responseForm);
+
+         $requestForm.showProgress({ type: "icon" });
+         $responseForm.showProgress({ type: "icon" });
+      }
+
+      ready() {
+         const $requestForm = $$(this.ids.requestForm);
+         const $responseForm = $$(this.ids.responseForm);
+
+         $requestForm.hideProgress();
+         $responseForm.hideProgress();
       }
 
       _headerItem(header, value) {
@@ -257,9 +305,101 @@ export default function (AB) {
          };
       }
 
-      _addFieldItem() {
-         const uiItem = this._fieldItem();
+      _addFieldItem(key, type) {
+         const uiItem = this._fieldItem(key, type);
          $$(this.ids.fields).addView(uiItem);
+      }
+
+      _clearFieldItems() {
+         const $fields = $$(this.ids.fields);
+         AB.Webix.ui([], $fields);
+      }
+
+      async _refreshResponse() {
+         const values = this.getValues();
+         if (!values.request.url || this._data) return;
+
+         // loading cursor
+         this.busy();
+
+         const mock_object = AB.objectNew({
+            isAPI: true,
+            request: values.request,
+         });
+         const model = mock_object.model();
+
+         const data = await model.findAll();
+
+         // save this
+         this._data = data?.data;
+
+         // Populate suggest data key list
+         this._populateDataKeys();
+
+         this._guessFields();
+
+         // hide loading cursor
+         this.ready();
+      }
+
+      _populateDataKeys() {
+         const $textDataKey = $$(this.ids.dataKey);
+         const $suggestDataKey = $$($textDataKey.config.suggest);
+         const $suggestList = $suggestDataKey.getList();
+         $suggestList.clearAll();
+
+         if (!this._data) {
+            return;
+         }
+
+         const dataKeys = [];
+         const findArrayValue = (obj, returnKey) => {
+            Object.keys(obj ?? {}).forEach((key) => {
+               const newReturnKey = returnKey.length
+                  ? `${returnKey}.${key}`
+                  : key;
+
+               // array
+               if (Array.isArray(obj[key])) {
+                  dataKeys.push(newReturnKey);
+               }
+               // object
+               else if (typeof obj[key] === "object") {
+                  findArrayValue(obj[key], newReturnKey);
+               }
+            });
+         };
+         findArrayValue(this._data, "");
+
+         $suggestList.parse(dataKeys);
+      }
+
+      _guessFields() {
+         // Clear UI
+         this._clearFieldItems();
+
+         if (!this._data) return;
+
+         // Create a new Mock Object
+         const values = this.getValues();
+         const mock_object = AB.objectNew(
+            Object.assign({ isAPI: true }, values)
+         );
+
+         // Pull data from key
+         let data = mock_object.dataFromKey(this._data);
+         if (data == null) return;
+
+         if (Array.isArray(data)) data = data[0];
+
+         // Add UI field item
+         Object.keys(data).forEach((key) => {
+            if (typeof data[key] == "object" || Array.isArray(data[key]))
+               return;
+
+            const fieldType = FieldTypeTool.getFieldType(data[key]);
+            this._addFieldItem(key, fieldType);
+         });
       }
    }
 
