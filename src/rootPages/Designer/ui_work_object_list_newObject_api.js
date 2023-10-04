@@ -32,7 +32,7 @@ export default function (AB) {
                view: "form",
                id: this.ids.form,
                width: 800,
-               height: 500,
+               height: 600,
                rules: {
                   // TODO:
                   // name: inputValidator.rules.validateObjectName

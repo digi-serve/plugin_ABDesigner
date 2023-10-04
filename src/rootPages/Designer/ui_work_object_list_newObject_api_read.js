@@ -12,6 +12,10 @@ export default function (AB) {
 
             requestPanel: "",
             requestForm: "",
+            pagingType: "",
+            pagingStart: "",
+            pagingLimit: "",
+            pagingTotal: "",
             responsePanel: "",
             responseForm: "",
             headers: "",
@@ -60,6 +64,52 @@ export default function (AB) {
                               onChange: () => {
                                  delete this._data;
                               },
+                           },
+                        },
+                        {
+                           view: "fieldset",
+                           label: L("Paging"),
+                           body: {
+                              view: "layout",
+                              rows: [
+                                 {
+                                    id: this.ids.pagingType,
+                                    view: "richselect",
+                                    label: "Type: ",
+                                    value: "QueryString",
+                                    options: [
+                                       {
+                                          id: "QueryString",
+                                          value: L("Query String"),
+                                       },
+                                       { id: "Header", value: L("Headers") },
+                                    ],
+                                 },
+                                 {
+                                    id: this.ids.pagingStart,
+                                    view: "text",
+                                    label: L("Start"),
+                                    placeholder: L(
+                                       "Property name of the API for start index"
+                                    ),
+                                 },
+                                 {
+                                    id: this.ids.pagingLimit,
+                                    view: "text",
+                                    label: L("Limit"),
+                                    placeholder: L(
+                                       "Property name of the API for limit return the item number"
+                                    ),
+                                 },
+                                 {
+                                    id: this.ids.pagingTotal,
+                                    view: "text",
+                                    label: L("Total"),
+                                    placeholder: L(
+                                       "Property name of the API that returns the total value"
+                                    ),
+                                 },
+                              ],
                            },
                         },
                         {
@@ -178,6 +228,13 @@ export default function (AB) {
          };
          values.request = values.request ?? {};
          values.response = values.response ?? {};
+
+         // Request's pagings
+         values.request.paging = values.request.paging ?? {};
+         values.request.paging.type = $$(this.ids.pagingType).getValue();
+         values.request.paging.start = $$(this.ids.pagingStart).getValue();
+         values.request.paging.limit = $$(this.ids.pagingLimit).getValue();
+         values.request.paging.total = $$(this.ids.pagingTotal).getValue();
 
          // Request's headers
          const $headers = $$(this.ids.headers);
