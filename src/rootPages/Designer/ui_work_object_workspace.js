@@ -107,7 +107,8 @@ export default function (AB, ibase, init_settings) {
          // settings.isEditable = settings.isEditable ?? true;
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
-         settings.isReadOnly = settings.isReadOnly ?? false;
+         settings.isReadOnly = true;
+         // settings.isReadOnly = settings.isReadOnly ?? false;
          settings.showWarnings = settings.showWarnings ?? true;
 
          // settings.isLabelEditable = settings.isLabelEditable ?? true;
