@@ -135,7 +135,9 @@ export default function (AB) {
          // Pull data collections to options
          const dcOptions = view.application
             .datacollectionsIncluded()
-            .filter((d) => d.sourceType == "object")
+            .filter(
+               (d) => d.sourceType == "object" && !d?.datasource?.isReadOnly
+            )
             .map((d) => {
                return {
                   id: d.id,

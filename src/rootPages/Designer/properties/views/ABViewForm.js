@@ -303,8 +303,12 @@ export default function (AB) {
          var dcOptions = view.application
             .datacollectionsIncluded()
             .filter((dc) => {
-               var obj = dc.datasource;
-               return dc.sourceType == "object" && obj && !obj.isImported;
+               const obj = dc.datasource;
+               return (
+                  dc.sourceType == "object" &&
+                  !obj?.isImported &&
+                  !obj?.isReadOnly
+               );
             })
             .map((d) => {
                let entry = { id: d.id, value: d.label };
