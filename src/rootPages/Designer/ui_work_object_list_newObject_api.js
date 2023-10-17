@@ -226,8 +226,11 @@ export default function (AB) {
 
          let values = Form.getValues();
 
-         // Create a new Object
          const apiValues = this.API_Read.getValues();
+         const secretValues = apiValues?.request?.secrets ?? [];
+         delete apiValues?.request?.secrets;
+
+         // Create a new Object
          values = Object.assign(values, apiValues);
          const object = AB.objectNew(Object.assign({ isAPI: true }, values));
 
@@ -252,6 +255,9 @@ export default function (AB) {
             values.id = object.id;
 
             this.emit("save", object.toObj());
+
+            // TODO: Save Secrets object.id
+            console.log("secretValues: ", secretValues);
 
             this.ready();
          } catch (err) {

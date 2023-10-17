@@ -13,12 +13,14 @@ export default function (AB) {
             tabBasic: "",
             tabHeaders: "",
             tabPaging: "",
+            tabSecret: "",
 
             pagingType: "",
             pagingStart: "",
             pagingLimit: "",
             pagingTotal: "",
             headers: "",
+            secrets: "",
          });
       }
 
@@ -50,11 +52,15 @@ export default function (AB) {
                               },
                               {
                                  id: ids.tabHeaders,
-                                 value: L("Headers"),
+                                 value: L("Header"),
                               },
                               {
                                  id: ids.tabPaging,
                                  value: L("Paging"),
+                              },
+                              {
+                                 id: ids.tabSecret,
+                                 value: L("Secret"),
                               },
                            ],
                            width: 120,
@@ -124,7 +130,9 @@ export default function (AB) {
                                              padding: 0,
                                              width: 38,
                                              click: () => {
-                                                this._addHeaderItem();
+                                                this._addHeaderItem(
+                                                   $$(this.ids.headers)
+                                                );
                                              },
                                           },
                                        ],
@@ -196,6 +204,49 @@ export default function (AB) {
                                     },
                                  ],
                               },
+                              {
+                                 id: ids.tabSecret,
+                                 view: "layout",
+                                 padding: 10,
+                                 rows: [
+                                    {
+                                       padding: 0,
+                                       cols: [
+                                          {
+                                             label: L("Secrets"),
+                                             view: "label",
+                                             padding: 0,
+                                             height: 0,
+                                          },
+                                          {
+                                             icon: "wxi-plus",
+                                             view: "icon",
+                                             padding: 0,
+                                             width: 38,
+                                             click: () => {
+                                                this._addHeaderItem(
+                                                   $$(this.ids.secrets)
+                                                );
+                                             },
+                                          },
+                                       ],
+                                    },
+                                    {
+                                       view: "scrollview",
+                                       scroll: "y",
+                                       borderless: true,
+                                       padding: 0,
+                                       margin: 0,
+                                       body: {
+                                          id: ids.secrets,
+                                          view: "layout",
+                                          padding: 0,
+                                          margin: 0,
+                                          rows: [],
+                                       },
+                                    },
+                                 ],
+                              },
                            ],
                         },
                      ],
@@ -230,17 +281,34 @@ export default function (AB) {
          // Request's headers
          const $headers = $$(ids.headers);
          values.headers = values.headers ?? [];
-         $headers?.getChildViews().forEach((headerItem) => {
-            const $name = headerItem.getChildViews()[0];
-            const $value = headerItem.getChildViews()[1];
-            values.headers.push({
-               key: $name.getValue(),
-               value: $value.getValue(),
-            });
+         $headers?.getChildViews().forEach((item) => {
+            const $key = item.getChildViews()[0];
+            const $value = item.getChildViews()[1];
+            const key = $key.getValue();
+            const value = $value.getValue();
+
+            if (key != null && value != null)
+               values.headers.push({
+                  key,
+                  value,
+               });
          });
-         values.headers = values.headers.filter(
-            (header) => header.key != null && header.value != null
-         );
+
+         // APIObject's secrets
+         const $secrets = $$(ids.secrets);
+         values.secrets = values.secrets ?? [];
+         $secrets?.getChildViews().forEach((item) => {
+            const $name = item.getChildViews()[0];
+            const $value = item.getChildViews()[1];
+            const name = $name.getValue();
+            const value = $value.getValue();
+
+            if (name != null && value != null)
+               values.secrets.push({
+                  name,
+                  value,
+               });
+         });
 
          return values;
       }
@@ -257,19 +325,18 @@ export default function (AB) {
          $$(this.ids.requestForm).hideProgress();
       }
 
-      _addHeaderItem() {
-         const uiItem = this._headerItem();
-         $$(this.ids.headers).addView(uiItem);
+      _addHeaderItem($container) {
+         const uiItem = this._headerItem($container);
+         $container.addView(uiItem);
       }
 
-      _headerItem(header, value) {
-         const self = this;
+      _headerItem($container, key, value) {
          return {
             cols: [
                {
                   placeholder: "key",
                   view: "text",
-                  value: header,
+                  value: key,
                },
 
                {
@@ -283,7 +350,7 @@ export default function (AB) {
                   width: 38,
                   click: function () {
                      const $item = this.getParentView();
-                     $$(self.ids.headers).removeView($item);
+                     $container.removeView($item);
                   },
                },
             ],
