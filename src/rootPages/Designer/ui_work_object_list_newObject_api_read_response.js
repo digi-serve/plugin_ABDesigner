@@ -191,6 +191,7 @@ export default function (AB) {
          this.busy();
 
          const mock_object = AB.objectNew({
+            id: AB.uuid(),
             isAPI: true,
             request: requestValues,
          });
