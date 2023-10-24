@@ -1,3 +1,5 @@
+const FieldTypeTool = require("./FieldTypeTool");
+
 module.exports = class CSVImporter {
    constructor(AB, fileReader = FileReader) {
       this._AB = AB;
@@ -135,25 +137,7 @@ module.exports = class CSVImporter {
          if (data != null && data.length > 0) break;
       }
 
-      if (data === null || data === undefined || data === "") {
-         return "string";
-      } else if (
-         data == 0 ||
-         data == 1 ||
-         data == true ||
-         data == false ||
-         data == "checked" ||
-         data == "unchecked"
-      ) {
-         return "boolean";
-      } else if (!isNaN(data)) {
-         return "number";
-      } else if (Date.parse(data)) {
-         return "date";
-      } else {
-         if (data.length > 100) return "LongText";
-         else return "string";
-      }
+      return FieldTypeTool.getFieldType(data);
    }
 
    /**
