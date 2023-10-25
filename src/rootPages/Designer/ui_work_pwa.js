@@ -43,8 +43,8 @@ export default function (AB) {
 
          // Our init() function for setting up our UI
 
-         PWAList.on("selected", (page) => {
-            this.select(page);
+         PWAList.on("selected", (item) => {
+            this.select(item);
          });
 
          // InterfaceWorkspace.on("view.new", () => {

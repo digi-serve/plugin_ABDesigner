@@ -228,10 +228,40 @@
 }
 .webix_tree_item {
    position: relative;
+   cursor: grab;
 }
 .webix_all_tabs div:nth-child(1) .ab-tab-back {
    display: none;
 }
 .webix_all_tabs div:nth-last-child(1) .ab-tab-next {
    display: none;
+}
+
+
+/* PWA Designer */
+
+.dragme {
+   display:inline-block;
+   color: #CCC;
+   padding: 5px 7px;
+   float: right;
+   cursor: grab;
+}
+.webix_drag_zone .fa {
+   display: none;
+}
+.circleme {
+   background: #AAA;
+   color: #FFF;
+   font-size:8px;
+   width: 15px;
+   height: 15px;
+   text-align: center;
+   line-height: 15px;
+   border-radius: 15px;
+   vertical-align: text-top;
+}
+
+.webix_tree_leaves {
+   display: block !important;
 }

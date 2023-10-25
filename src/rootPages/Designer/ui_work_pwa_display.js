@@ -34,16 +34,21 @@ export default function (AB) {
       }
 
       /**
-       * @function applicationLoad
-       *
-       * Initialize the Interface Workspace with the given ABApplication.
-       *
-       * @param {ABApplication} application
+       * @method clearWorkspace()
+       * remove the current editor from the workspace.
        */
-      // applicationLoad(application) {
-      //    super.applicationLoad(application);
-      // }
+      clearWorkspace() {
+         console.log("Display: clear workspace!");
+         return;
 
+         let ui = [this._ViewSelect];
+
+         webix.ui(ui, $$(this.ids.editors));
+      }
+
+      pageLoad(view) {
+         console.log("Display: page Load", view);
+      }
       /**
        * @function show()
        *

@@ -115,6 +115,13 @@ export default function (AB) {
          Views.push(V.default(AB));
       });
 
+      var MobileViews = [];
+      // {array}
+      // All the ABMobileViewXXX Property Interfaces Available.
+      [require("./mobile/ABMobileViewLabel")].forEach((V) => {
+         MobileViews.push(V.default(AB));
+      });
+
       PropertyMgr = {
          /*
           * @function fields
@@ -133,6 +140,10 @@ export default function (AB) {
 
          views: function (v = () => true) {
             return Views.filter(v);
+         },
+
+         mobileViews: function (v = () => true) {
+            return MobileViews.filter(v);
          },
       };
    }
