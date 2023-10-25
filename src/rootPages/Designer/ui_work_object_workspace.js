@@ -82,6 +82,7 @@ export default function (AB, ibase, init_settings) {
             buttonSort: "",
             buttonSortSpacer: "",
 
+            layoutIndex: "",
             listIndex: "",
             buttonIndex: "",
 
@@ -98,6 +99,10 @@ export default function (AB, ibase, init_settings) {
 
             noSelection: "",
             selectedObject: "",
+
+            spaceAddField: "",
+            spaceLabel: "",
+            spaceImport: "",
          });
 
          // default settings
@@ -107,15 +112,16 @@ export default function (AB, ibase, init_settings) {
          // settings.isEditable = settings.isEditable ?? true;
          // settings.massUpdate = settings.massUpdate ?? true;
          // settings.configureHeaders = settings.configureHeaders ?? true;
-         settings.isReadOnly = settings.isReadOnly ?? false;
          settings.showWarnings = settings.showWarnings ?? true;
+
+         this.isReadOnly = settings.isReadOnly ?? false;
 
          // settings.isLabelEditable = settings.isLabelEditable ?? true;
          // settings.isFieldAddable = settings.isFieldAddable ?? true;
          this.settings = settings;
 
          this.workspaceViews = FWorkspaceViews(AB, `${base}_views`, {
-            isReadOnly: this.settings.isReadOnly,
+            isReadOnly: this.isReadOnly,
          });
 
          this.hashViews = {};
@@ -171,7 +177,7 @@ export default function (AB, ibase, init_settings) {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
-         if (!this.settings.isReadOnly) {
+         if (!this.isReadOnly) {
             this.PopupDefineLabelComponent = new FPopupDefineLabel(
                AB,
                `${base}_defineLabel`
@@ -203,7 +209,7 @@ export default function (AB, ibase, init_settings) {
          });
 
          // var PopupMassUpdateComponent = new ABPopupMassUpdate(App, idBase);
-         if (!this.settings.isReadOnly) {
+         if (!this.isReadOnly) {
             this.PopupNewDataFieldComponent = FPopupNewDataField(
                AB,
                `${base}_popupNewDataField`
@@ -234,9 +240,9 @@ export default function (AB, ibase, init_settings) {
          this.PopupViewSettingsComponent = FPopupViewSettings(
             AB,
             `${base}_popupAddView`,
-            { isReadOnly: this.settings.isReadOnly }
+            { isReadOnly: this.isReadOnly }
          );
-         if (!this.settings.isReadOnly) {
+         if (!this.isReadOnly) {
             this.PopupViewSettingsComponent.on("new.field", (key) => {
                this.PopupNewDataFieldComponent.objectLoad(this.CurrentObject);
                this.PopupNewDataFieldComponent.show(null, key, false);
@@ -350,14 +356,18 @@ export default function (AB, ibase, init_settings) {
                         icon: "fa fa-plus",
                         css: "webix_transparent",
                         type: "icon",
-                        hidden: this.settings.isReadOnly,
+                        hidden: this.isReadOnly,
                         // minWidth: 115,
                         // autowidth: true,
                         click: function () {
                            _logic.toolbarAddFields(this.$view);
                         },
                      },
-                     { responsive: "hide", hidden: this.settings.isReadOnly },
+                     {
+                        id: ids.spaceAddField,
+                        responsive: "hide",
+                        hidden: this.isReadOnly,
+                     },
                      {
                         view: view,
                         id: ids.buttonFieldsVisible,
@@ -425,12 +435,16 @@ export default function (AB, ibase, init_settings) {
                         icon: "fa fa-crosshairs",
                         css: "webix_transparent",
                         type: "icon",
-                        hidden: this.settings.isReadOnly,
+                        hidden: this.isReadOnly,
                         click: function () {
                            _logic.toolbarDefineLabel(this.$view);
                         },
                      },
-                     { responsive: "hide", hidden: this.settings.isReadOnly },
+                     {
+                        id: ids.spaceLabel,
+                        responsive: "hide",
+                        hidden: this.isReadOnly,
+                     },
                      // {
                      //  view: view,
                      //  label: L("Permission"),
@@ -450,12 +464,16 @@ export default function (AB, ibase, init_settings) {
                         css: "webix_transparent",
                         type: "icon",
                         // minWidth: 80,
-                        hidden: this.settings.isReadOnly,
+                        hidden: this.isReadOnly,
                         click: function () {
                            _logic.toolbarButtonImport();
                         },
                      },
-                     { responsive: "hide", hidden: this.settings.isReadOnly },
+                     {
+                        id: ids.spaceImport,
+                        responsive: "hide",
+                        hidden: this.isReadOnly,
+                     },
                      {
                         view: view,
                         id: ids.buttonExport,
@@ -513,8 +531,9 @@ export default function (AB, ibase, init_settings) {
                   ],
                },
                {
+                  id: ids.layoutIndex,
                   css: { "background-color": "#747d84 !important" },
-                  hidden: this.settings.isReadOnly,
+                  hidden: this.isReadOnly,
                   cols: [
                      {
                         view: view,
@@ -638,7 +657,7 @@ export default function (AB, ibase, init_settings) {
                               id: ids.buttonRowNew,
                               css: "webix_primary",
                               value: L("Add new row"),
-                              hidden: this.settings.isReadOnly,
+                              hidden: this.isReadOnly,
                               click: () => {
                                  this.rowAdd();
                               },
@@ -686,7 +705,7 @@ export default function (AB, ibase, init_settings) {
 
          allInits.push(this.PopupHeaderEditMenu.init(AB));
 
-         if (!this.settings.isReadOnly) {
+         if (!this.isReadOnly) {
             allInits.push(this.PopupDefineLabelComponent.init(AB));
          }
 
@@ -708,7 +727,7 @@ export default function (AB, ibase, init_settings) {
          //       onSave: _logic.callbackAddFields, // be notified when a new Field is created & saved
          //    });
          // }
-         if (!this.settings.isReadOnly) {
+         if (!this.isReadOnly) {
             allInits.push(this.PopupNewDataFieldComponent.init(AB));
             this.PopupNewDataFieldComponent.on("save", (...params) => {
                this.callbackAddFields(...params);
@@ -748,7 +767,7 @@ export default function (AB, ibase, init_settings) {
        */
       applicationLoad(application) {
          super.applicationLoad(application);
-         if (!this.settings.isReadOnly) {
+         if (!this.isReadOnly) {
             this.PopupNewDataFieldComponent.applicationLoad(application);
          }
 
@@ -980,7 +999,7 @@ export default function (AB, ibase, init_settings) {
 
             case "edit":
                // pass control on to our Popup:
-               if (!this.settings.isReadOnly) {
+               if (!this.isReadOnly) {
                   this.PopupNewDataFieldComponent.show(field);
                }
                break;
@@ -1349,6 +1368,9 @@ export default function (AB, ibase, init_settings) {
          this.CurrentObjectID = objectID;
          var object = this.CurrentObject;
 
+         // Set isReadOnly flag
+         this.isReadOnly = object?.isReadOnly ?? false;
+
          // get current view from object
          this.workspaceViews.objectLoad(object);
          var currentView = this.workspaceViews.getCurrentView();
@@ -1362,7 +1384,7 @@ export default function (AB, ibase, init_settings) {
          Kanban.objectLoad(object);
          Gantt.objectLoad(object);
 
-         if (!this.settings.isReadOnly) {
+         if (!this.isReadOnly) {
             this.PopupNewDataFieldComponent.objectLoad(object);
             this.PopupDefineLabelComponent.objectLoad(object);
          }
@@ -1675,6 +1697,47 @@ export default function (AB, ibase, init_settings) {
                this.PopupCustomIndex.open(this.CurrentObject, index);
             },
          });
+      }
+
+      get isReadOnly() {
+         return this._isReadOnly ?? false;
+      }
+
+      set isReadOnly(val) {
+         this._isReadOnly = val;
+
+         if (this.PopupViewSettingsComponent)
+            this.PopupViewSettingsComponent.isReadOnly = val;
+
+         const ids = this.ids;
+         const $buttonAddField = $$(ids.buttonAddField),
+            $spaceAddField = $$(ids.spaceAddField),
+            $buttonLabel = $$(ids.buttonLabel),
+            $spaceLabel = $$(ids.spaceLabel),
+            $buttonImport = $$(ids.buttonImport),
+            $spaceImport = $$(ids.spaceImport),
+            $layoutIndex = $$(ids.layoutIndex),
+            $buttonRowNew = $$(ids.buttonRowNew);
+
+         if (this._isReadOnly) {
+            $buttonAddField?.hide();
+            $spaceAddField?.hide();
+            $buttonLabel?.hide();
+            $spaceLabel?.hide();
+            $buttonImport?.hide();
+            $spaceImport?.hide();
+            $layoutIndex?.hide();
+            $buttonRowNew?.hide();
+         } else {
+            $buttonAddField?.show();
+            $spaceAddField?.show();
+            $buttonLabel?.show();
+            $spaceLabel?.show();
+            $buttonImport?.show();
+            $spaceImport?.show();
+            $layoutIndex?.show();
+            $buttonRowNew?.show();
+         }
       }
    }
 

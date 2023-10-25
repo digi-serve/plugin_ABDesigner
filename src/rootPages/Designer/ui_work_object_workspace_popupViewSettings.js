@@ -29,6 +29,8 @@ export default function (AB, ibase, isettings) {
          settings.isReadOnly = settings.isReadOnly ?? false;
          this.settings = settings;
 
+         this.isReadOnly = settings.isReadOnly;
+
          this._view = null;
          // {Grid/kanban/Gantt} the current UI View type we are displaying
 
@@ -86,7 +88,7 @@ export default function (AB, ibase, isettings) {
                   label: L("Type"),
                   id: ids.typeInput,
                   name: "type",
-                  hidden: this.settings.isReadOnly,
+                  hidden: this.isReadOnly,
                   options: [
                      {
                         id: this.comGrid.type(),
@@ -308,6 +310,20 @@ export default function (AB, ibase, isettings) {
          }
 
          this.hide();
+      }
+
+      get isReadOnly() {
+         return this._isReadOnly ?? false;
+      }
+
+      set isReadOnly(val) {
+         this._isReadOnly = val;
+
+         if (this._isReadOnly) {
+            $$(this.ids.typeInput)?.hide();
+         } else {
+            $$(this.ids.typeInput)?.show();
+         }
       }
    }
    return new UI_Work_Object_Workspace_PopupAddView(ibase, isettings);

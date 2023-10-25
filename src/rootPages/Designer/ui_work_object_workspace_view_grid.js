@@ -129,7 +129,10 @@ export default function (AB, iBase, iSettings) {
          webix.ui(ui, $$(this.ids.component));
 
          let accessLevel = 2;
-         if (this.settings.isReadOnly) {
+         if (
+            this.settings.isReadOnly ||
+            this.datacollection?.datasource?.isReadOnly
+         ) {
             accessLevel = 1;
          }
          await component.init(this.AB, accessLevel);
