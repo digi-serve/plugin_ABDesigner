@@ -271,18 +271,21 @@ export default function (AB) {
 
          const dataKeys = [];
          const findArrayValue = (obj, returnKey) => {
-            Object.keys(obj ?? {}).forEach((key) => {
+            let item = obj;
+            if (Array.isArray(obj) && obj[0]) item = obj[0];
+
+            Object.keys(item ?? {}).forEach((key) => {
                const newReturnKey = returnKey.length
                   ? `${returnKey}.${key}`
                   : key;
 
                // array
-               if (Array.isArray(obj[key])) {
+               if (Array.isArray(item[key])) {
                   dataKeys.push(newReturnKey);
                }
                // object
-               else if (typeof obj[key] === "object") {
-                  findArrayValue(obj[key], newReturnKey);
+               else if (typeof item[key] === "object") {
+                  findArrayValue(item[key], newReturnKey);
                }
             });
          };
@@ -312,7 +315,9 @@ export default function (AB) {
          let data = mock_object.dataFromKey(this._data?.returnData);
          if (data == null) return;
 
-         if (Array.isArray(data)) data = data[0];
+         while (data && Array.isArray(data)) {
+            data = data[0];
+         }
 
          // Add UI field item
          Object.keys(data).forEach((key) => {
