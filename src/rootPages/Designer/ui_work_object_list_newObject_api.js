@@ -153,6 +153,8 @@ export default function (AB) {
       formClear() {
          this.$form.clearValidation();
          this.$form.clear();
+
+         this.API_Read.formClear();
       }
 
       /**

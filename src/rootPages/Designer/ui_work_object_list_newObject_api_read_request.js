@@ -295,20 +295,7 @@ export default function (AB) {
          });
 
          // APIObject's secrets
-         const $secrets = $$(ids.secrets);
-         values.secrets = values.secrets ?? [];
-         $secrets?.getChildViews().forEach((item) => {
-            const $name = item.getChildViews()[0];
-            const $value = item.getChildViews()[1];
-            const name = $name.getValue();
-            const value = $value.getValue();
-
-            if (name != null && value != null)
-               values.secrets.push({
-                  name,
-                  value,
-               });
-         });
+         values.secrets = this._getSecretValues();
 
          return values;
       }
@@ -317,12 +304,45 @@ export default function (AB) {
          return $$(this.ids.requestForm).validate();
       }
 
+      formClear() {
+         const ids = this.ids;
+         const $form = $$(ids.requestForm);
+         const $headers = $$(ids.headers);
+         const $secrets = $$(ids.secrets);
+
+         $form.clearValidation();
+         $form.clear();
+
+         this.AB.Webix.ui([], $headers);
+         this.AB.Webix.ui([], $secrets);
+      }
+
       busy() {
          $$(this.ids.requestForm).showProgress({ type: "icon" });
       }
 
       ready() {
          $$(this.ids.requestForm).hideProgress();
+      }
+
+      _getSecretValues() {
+         const result = [];
+
+         const $secrets = $$(this.ids.secrets);
+         $secrets?.getChildViews().forEach((item) => {
+            const $name = item.getChildViews()[0];
+            const $value = item.getChildViews()[1];
+            const name = $name.getValue();
+            const value = $value.getValue();
+
+            if (name != null && value != null)
+               result.push({
+                  name,
+                  value,
+               });
+         });
+
+         return result;
       }
 
       _addHeaderItem($container) {
@@ -338,10 +358,12 @@ export default function (AB) {
                   view: "text",
                   value: key,
                },
-
                {
                   placeholder: "value",
                   view: "text",
+                  suggest: this._getSecretValues().map(
+                     (secret) => `SECRET:${secret.name}`
+                  ),
                   value: value,
                },
                {
