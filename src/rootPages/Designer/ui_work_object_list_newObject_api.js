@@ -153,6 +153,8 @@ export default function (AB) {
       formClear() {
          this.$form.clearValidation();
          this.$form.clear();
+
+         this.API_Read.formClear();
       }
 
       /**
@@ -226,8 +228,13 @@ export default function (AB) {
 
          let values = Form.getValues();
 
-         // Create a new Object
          const apiValues = this.API_Read.getValues();
+
+         // Move .request.secrets
+         apiValues.secrets = apiValues?.request?.secrets ?? [];
+         delete apiValues?.request?.secrets;
+
+         // Create a new Object
          values = Object.assign(values, apiValues);
          const object = AB.objectNew(Object.assign({ isAPI: true }, values));
 

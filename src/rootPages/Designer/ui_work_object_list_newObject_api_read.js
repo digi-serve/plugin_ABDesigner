@@ -51,6 +51,11 @@ export default function (AB) {
          return UIRequest.validate() && UIResponse.validate();
       }
 
+      formClear() {
+         UIRequest.formClear();
+         UIResponse.formClear();
+      }
+
       busy() {
          UIRequest.busy();
          UIResponse.busy();
