@@ -747,7 +747,7 @@ export default function (AB) {
 
          const followCursor = $followCursor.getValue();
 
-         if (followCursor) {
+         if (settings.followDatacollectionID && followCursor) {
             $linkDatacollection.hide();
             $linkField.hide();
             $filterPanel.hide();
