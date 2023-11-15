@@ -40,17 +40,25 @@ export default function (AB) {
 
             let values = this.currentPanel.values();
 
+            let hasChanged = false;
+
             // to update the label, add it before we ask for .toObj():
             // this.CurrentView.label = values.label;
 
             // to update the label (and other properties like .menuTextLeft, menuTextCenter, and .menuTextRight of the Menu widget), add it before we ask for .toObj():
             Object.keys(values ?? {}).forEach((k) => {
                if (k == "settings") return;
+               if (this.CurrentView[k] != values[k]) {
+                  hasChanged = true;
+               }
                this.CurrentView[k] = values[k];
             });
 
             var objVals = this.CurrentView.toObj();
             Object.keys(values.settings ?? {}).forEach((k) => {
+               if (objVals.settings[k] != values.settings[k]) {
+                  hasChanged = true;
+               }
                objVals.settings[k] = values.settings[k];
             });
 
@@ -96,12 +104,11 @@ export default function (AB) {
 
                   // warnings should be refreshed now:
                   this.emit("warnings");
+                  if (hasChanged || !skipEmit) {
+                     this.emit("view.changed");
+                  }
                }
             }, waitDuration);
-
-            if (!skipEmit) {
-               this.emit("view.changed");
-            }
          };
 
          this._ViewSelect = {

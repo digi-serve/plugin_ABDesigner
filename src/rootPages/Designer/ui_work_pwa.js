@@ -47,6 +47,14 @@ export default function (AB) {
             this.select(item);
          });
 
+         PWAList.on("widget.updated", () => {
+            PWADisplay.refresh();
+         });
+
+         PWAProperties.on("view.changed", () => {
+            PWADisplay.refresh();
+         });
+
          // InterfaceWorkspace.on("view.new", () => {
          //    InterfaceList.clickNewView();
          // });

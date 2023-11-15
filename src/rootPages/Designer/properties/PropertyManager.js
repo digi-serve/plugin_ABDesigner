@@ -118,7 +118,10 @@ export default function (AB) {
       var MobileViews = [];
       // {array}
       // All the ABMobileViewXXX Property Interfaces Available.
-      [require("./mobile/ABMobileViewLabel")].forEach((V) => {
+      [
+         require("./mobile/ABMobilePage"),
+         require("./mobile/ABMobileViewLabel"),
+      ].forEach((V) => {
          MobileViews.push(V.default(AB));
       });
 

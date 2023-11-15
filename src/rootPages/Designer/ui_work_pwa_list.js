@@ -87,6 +87,10 @@ export default function (AB) {
                         $$(ids.menus).unselect();
                         $$(ids.widgets).unselect();
                         this.loadWidgets(item);
+
+                        let page = this.CurrentApplication.pageByID(item, true);
+                        if (!page) return;
+                        this.emit("selected", page);
                      },
                      onBeforeDrop: (context, e) => {
                         // context.from   :  the webix object the item came from
@@ -222,8 +226,12 @@ export default function (AB) {
                   on: {
                      onItemClick: (item) => {
                         $$(ids.tabs).unselect();
+
                         $$(ids.widgets).unselect();
                         this.loadWidgets(item);
+                        let page = this.CurrentApplication.pageByID(item, true);
+                        if (!page) return;
+                        this.emit("selected", page);
                      },
                      onBeforeDrop: (context, e) => {
                         // context.from   :  the webix object the item came from
@@ -236,20 +244,20 @@ export default function (AB) {
                            // else they want to drop and make current element
                            // a child:
 
-                           var droppedPage = this.CurrentApplication.pages(
-                              (p) => context.start == p.id,
+                           var droppedPage = this.CurrentApplication.pageByID(
+                              context.start,
                               true
-                           )[0];
+                           );
 
                            // make sure the dropped page is now a "menu" type.
                            if (droppedPage) {
                               droppedPage.menuType = "menu";
                            }
 
-                           var targetPage = this.CurrentApplication.pages(
-                              (p) => context.target == p.id,
+                           var targetPage = this.CurrentApplication.pageByID(
+                              context.target,
                               true
-                           )[0];
+                           );
 
                            // if they are just making a normal move:
                            if (!e.shiftKey) {
@@ -391,6 +399,7 @@ export default function (AB) {
                                  }
                                  this.loadWidgets(this.selectedPage.id);
                                  $$(ids.widgets).hideProgress();
+                                 this.emit("widget.updated");
                               }
                            },
                         });
@@ -459,6 +468,7 @@ export default function (AB) {
             // this.viewLoad(this.CurrentView);
             this.loadWidgets(this.selectedPage.id);
             $ListWidgets?.hideProgress?.();
+            this.emit("widget.updated");
          });
 
          $$(this.ids.widgets_add)?.disable();
@@ -523,6 +533,8 @@ export default function (AB) {
        *        the {ABMobilePage.id}
        */
       loadWidgets(id) {
+         // if (this.selectedPage?.id === id) return;
+
          let tree = $$(this.ids.widgets);
          tree.clearAll();
 
