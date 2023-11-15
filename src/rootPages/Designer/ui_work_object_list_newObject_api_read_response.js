@@ -176,6 +176,16 @@ export default function (AB) {
          return $$(this.ids.responseForm).validate();
       }
 
+      formClear() {
+         const ids = this.ids;
+         const $form = $$(ids.responseForm);
+
+         $form.clearValidation();
+         $form.clear();
+         this._clearDataKeys();
+         this._clearFieldItems();
+      }
+
       busy() {
          $$(this.ids.responseForm).showProgress({ type: "icon" });
       }
@@ -260,16 +270,17 @@ export default function (AB) {
       }
 
       _populateDataKeys() {
-         const $textDataKey = $$(this.ids.dataKey);
-         const $suggestDataKey = $$($textDataKey.config.suggest);
-         const $suggestList = $suggestDataKey.getList();
-         $suggestList.clearAll();
+         this._clearDataKeys();
 
          if (!this._data?.returnData) {
             return;
          }
 
+         const $textDataKey = $$(this.ids.dataKey);
+         const $suggestDataKey = $$($textDataKey.config.suggest);
+         const $suggestList = $suggestDataKey.getList();
          const dataKeys = [];
+
          const findArrayValue = (obj, returnKey) => {
             let item = obj;
             if (Array.isArray(obj) && obj[0]) item = obj[0];
@@ -292,6 +303,14 @@ export default function (AB) {
          findArrayValue(this._data?.returnData, "");
 
          $suggestList.parse(dataKeys);
+      }
+
+      _clearDataKeys() {
+         const $textDataKey = $$(this.ids.dataKey);
+         const $suggestDataKey = $$($textDataKey.config.suggest);
+         const $suggestList = $suggestDataKey.getList();
+         $textDataKey.setValue("");
+         $suggestList.clearAll();
       }
 
       _guessFields() {
