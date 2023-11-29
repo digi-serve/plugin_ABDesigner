@@ -59,7 +59,7 @@ export default function (AB) {
          this._ViewIFrame = {
             id: this.ids.iframe,
             view: "iframe",
-            height: 800,
+            height: 700,
             width: 360,
          };
       }

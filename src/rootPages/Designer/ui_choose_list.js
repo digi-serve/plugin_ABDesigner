@@ -591,9 +591,11 @@ export default function (AB) {
                icon: "",
                count: 0,
             };
-            if (obj.warningsAll().length) {
+            obj.warningsEval?.();
+            let warningsAll = obj.warningsAll();
+            if (warningsAll.length) {
                warnings.icon = this.WARNING_ICON;
-               warnings.count = obj.warningsAll().length;
+               warnings.count = warningsAll.length;
             }
             this.cacheTemplate[obj.id] = `<div class='ab-app-list-item'>
    <div class='ab-app-list-info'>

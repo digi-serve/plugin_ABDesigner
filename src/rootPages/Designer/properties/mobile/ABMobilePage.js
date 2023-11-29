@@ -23,6 +23,8 @@ export default function (AB) {
             fixedPageWidth: "",
             pageWidth: "",
             pageBackground: "",
+            hideTitle: "",
+            hideTabs: "",
             // pagePermissionPanel: "",
          });
       }
@@ -120,6 +122,26 @@ export default function (AB) {
                         },
                      },
                      {
+                        id: ids.hideTitle,
+                        view: "checkbox",
+                        name: "hideTitle",
+                        labelRight: L("Hide the Page Title"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: function (/*id, event */) {
+                           _this.onChange();
+                        },
+                     },
+                     {
+                        id: ids.hideTabs,
+                        view: "checkbox",
+                        name: "hideTabs",
+                        labelRight: L("Hide the Tabs on this page"),
+                        labelWidth: uiConfig.labelWidthCheckbox,
+                        click: function (/*id, event */) {
+                           _this.onChange();
+                        },
+                     },
+                     {
                         id: ids.fixedPageWidth,
                         view: "checkbox",
                         name: "fixedPageWidth",
@@ -186,23 +208,37 @@ export default function (AB) {
 
          let DefaultValues = this.defaultValues();
 
-         $$(ids.type).setValue(view.settings.type || DefaultValues.type);
-         $$(ids.popupWidth).setValue(
-            view.settings.popupWidth || DefaultValues.popupWidth
-         );
-         $$(ids.popupHeight).setValue(
-            view.settings.popupHeight || DefaultValues.popupHeight
-         );
-         $$(ids.pageWidth).setValue(
-            view.settings.pageWidth || DefaultValues.pageWidth
-         );
-         $$(ids.fixedPageWidth).setValue(
-            view.settings.fixedPageWidth || DefaultValues.fixedPageWidth
-         );
-         $$(ids.pageBackground).setValue(
-            view.settings.pageBackground || DefaultValues.pageBackground
-         );
+         Object.keys(DefaultValues).forEach((k) => {
+            if (k != "defaultPage")
+               $$(ids[k]).setValue(view.settings[k] || DefaultValues[k]);
+         });
 
+         // $$(ids.type).setValue(view.settings.type || DefaultValues.type);
+         // $$(ids.popupWidth).setValue(
+         //    view.settings.popupWidth || DefaultValues.popupWidth
+         // );
+         // $$(ids.popupHeight).setValue(
+         //    view.settings.popupHeight || DefaultValues.popupHeight
+         // );
+         // $$(ids.pageWidth).setValue(
+         //    view.settings.pageWidth || DefaultValues.pageWidth
+         // );
+         // $$(ids.fixedPageWidth).setValue(
+         //    view.settings.fixedPageWidth || DefaultValues.fixedPageWidth
+         // );
+         // $$(ids.pageBackground).setValue(
+         //    view.settings.pageBackground || DefaultValues.pageBackground
+         // );
+
+         // $$(ids.hideTitle).setValue(
+         //    view.settings.hideTitle || DefaultValues.hideTitle
+         // );
+
+         // $$(ids.hideTabs).setValue(
+         //    view.settings.hideTabs || DefaultValues.hideTabs
+         // );
+
+         // NOTE: .defaultPage doesn't reside on the .settings
          $$(ids.defaultPage).setValue(view.defaultPage || 0);
 
          // Disable select type of page when this page is root
@@ -245,6 +281,8 @@ export default function (AB) {
          let ids = this.ids;
          let vals = super.values();
 
+         vals.settings = $$(ids.component).getValues();
+         /*
          vals.settings = vals.settings || {};
          vals.settings.type = $$(ids.type).getValue();
          vals.settings.popupWidth = $$(ids.popupWidth).getValue();
@@ -252,8 +290,14 @@ export default function (AB) {
          vals.settings.pageWidth = $$(ids.pageWidth).getValue();
          vals.settings.fixedPageWidth = $$(ids.fixedPageWidth).getValue();
          vals.settings.pageBackground = $$(ids.pageBackground).getValue();
+         vals.settings.hideTitle = parseInt($$(ids.hideTitle).getValue() || 0);
+         vals.settings.hideTabs = parseInt($$(ids.hideTabs).getValue() || 0);
+         */
 
+         // these should be transferred to the root of the object, not the
+         // settings:
          vals.defaultPage = parseInt($$(ids.defaultPage).getValue() || 0);
+         delete vals.settings.defaultPage;
 
          return vals;
       }

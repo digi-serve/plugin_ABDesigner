@@ -10,30 +10,55 @@ import UI_Work_PWA_List from "./ui_work_pwa_list";
 import UI_Work_PWA_Display from "./ui_work_pwa_display";
 import UI_Work_PWA_Properties from "./ui_work_pwa_properties";
 
+import UI_Warnings from "./ui_warnings";
+
 export default function (AB) {
+   const ibase = "ab_work_pwa";
    const PWAList = UI_Work_PWA_List(AB);
    const PWADisplay = UI_Work_PWA_Display(AB);
    const PWAProperties = UI_Work_PWA_Properties(AB);
 
    const UIClass = UI_Class(AB);
 
+   const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, {});
+
    class UI_Work_PWA extends UIClass {
       constructor() {
-         super("ab_work_pwa");
+         super(ibase);
       }
 
       ui() {
          // Our webix UI definition:
+         // return {
+         //    id: this.ids.component,
+         //    type: "space",
+         //    margin: 10,
+         //    cols: [
+         //       PWAList.ui(),
+         //       { view: "resizer" },
+         //       PWADisplay.ui(),
+         //       { view: "resizer" },
+         //       PWAProperties.ui(),
+         //    ],
+         // };
+
          return {
             id: this.ids.component,
-            type: "space",
-            margin: 10,
-            cols: [
-               PWAList.ui(),
-               { view: "resizer" },
-               PWADisplay.ui(),
-               { view: "resizer" },
-               PWAProperties.ui(),
+            view: "layout",
+            rows: [
+               {
+                  // id: this.ids.component,
+                  type: "space",
+                  margin: 10,
+                  cols: [
+                     PWAList.ui(),
+                     { view: "resizer" },
+                     PWADisplay.ui(),
+                     { view: "resizer" },
+                     PWAProperties.ui(),
+                  ],
+               },
+               Warnings.ui(),
             ],
          };
       }
@@ -52,6 +77,7 @@ export default function (AB) {
          });
 
          PWAProperties.on("view.changed", () => {
+            PWAList.refresh();
             PWADisplay.refresh();
          });
 
@@ -88,6 +114,8 @@ export default function (AB) {
          PWAList.applicationLoad(application);
          PWADisplay.applicationLoad(application);
          PWAProperties.applicationLoad(application);
+
+         Warnings.show(application);
       }
 
       /**

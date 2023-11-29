@@ -79,8 +79,9 @@ export default function (AB) {
                   select: "row",
                   dragscroll: true,
                   type: {
-                     template:
-                        "{common.icon()} {common.folder()}<span>#label#</span><i class='fa fa-bars dragme'></i><i class='fa fa-trash dragme delme'></i>",
+                     template: (obj, common) => {
+                        return this.templatePage(obj, common);
+                     },
                   },
                   on: {
                      onItemClick: (item) => {
@@ -220,8 +221,9 @@ export default function (AB) {
                   select: "row",
                   dragscroll: true,
                   type: {
-                     template:
-                        "{common.icon()} {common.folder()}<span>#label# </span><i class='fa fa-bars dragme'></i><i class='fa fa-trash dragme delme'></i>",
+                     template: (obj, common) => {
+                        return this.templatePage(obj, common);
+                     },
                   },
                   on: {
                      onItemClick: (item) => {
@@ -363,13 +365,50 @@ export default function (AB) {
                   select: "row",
                   dragscroll: true,
                   type: {
-                     template:
-                        "{common.icon()} {common.folder()}<i class='fa fa-#icon# circleme'></i> <span>#label#</span><i class='fa fa-bars dragme'></i><i class='fa fa-trash dragme delme'></i>",
+                     template: (obj, common) => {
+                        return this.templateWidget(obj, common);
+                     },
                   },
                   on: {
                      onItemClick: (id) => {
                         let widget = this.selectedPage.viewByID(id);
                         this.emit("selected", widget);
+                     },
+
+                     onBeforeDrop: (context, e) => {
+                        // context.from   :  the webix object the item came from
+                        // context.start  :  id of the item being dropped (the task .key)
+                        // context.target :  id of the item being dropped ON
+                        // context.to     :  the webix object of the item being dropped ON
+
+                        var droppedWidget = this.selectedPage.viewByID(
+                           context.start,
+                           true
+                        );
+
+                        // if this is a FormItem, then it must remain under it's parent Form
+                        if (
+                           droppedWidget instanceof
+                           this.AB.Class.ABMobileViewFormItem
+                        ) {
+                           // it can't move to the root:
+                           if (context.parent == 0) return false;
+                           if (context.target == null) return false;
+
+                           // parent must be it's form.
+                           if (droppedWidget.parent.id !== context.parent)
+                              return false;
+                        } else {
+                           // other widgets must remain at the top level:
+                           if (context.parent || context.target) return false;
+                        }
+
+                        // if we get to here, then let's update the order of our
+                        // widgets
+                        // NOTE: setTimeout() allows time for the UI widget to reorder.
+                        setTimeout(() => {
+                           this.widgetOrder();
+                        }, 10);
                      },
                   },
                   onClick: {
@@ -387,7 +426,7 @@ export default function (AB) {
                            callback: async (isOK) => {
                               if (isOK) {
                                  $$(ids.widgets).showProgress();
-
+                                 debugger;
                                  try {
                                     await widget.destroy();
                                  } catch (e) {
@@ -449,11 +488,12 @@ export default function (AB) {
 
          this.PageNew.init(AB);
          this.PageNew.on("done", () => {
-            let menuState = $ListMenus.getState();
-            let tabsState = $ListTabs.getState();
-            this.applicationLoad(this.CurrentApplication);
-            $ListMenus.setState(menuState);
-            $ListTabs.setState(tabsState);
+            this.refresh();
+            // let menuState = $ListMenus.getState();
+            // let tabsState = $ListTabs.getState();
+            // this.applicationLoad(this.CurrentApplication);
+            // $ListMenus.setState(menuState);
+            // $ListTabs.setState(tabsState);
          });
 
          if ($$(this.ids.component)) $$(this.ids.component).adjust();
@@ -479,6 +519,28 @@ export default function (AB) {
 
       addNew() {
          this.clickNewView(true);
+      }
+
+      /**
+       * @method refreshDisplay()
+       * Called when we want to make sure any noticable changes are
+       * updated in our list.
+       */
+      refresh() {
+         let $ListTabs = $$(this.ids.tabs);
+         let $ListMenus = $$(this.ids.menus);
+         let menuState = $ListMenus.getState();
+         let tabsState = $ListTabs.getState();
+         this.applicationLoad(this.CurrentApplication);
+         $ListMenus.setState(menuState);
+         $ListTabs.setState(tabsState);
+
+         if (this.selectedPage) {
+            let $ListWidgets = $$(this.ids.widgets);
+            let widgetState = $ListWidgets.getState();
+            this.loadWidgets(this.selectedPage.id);
+            $ListWidgets.setState(widgetState);
+         }
       }
 
       /**
@@ -538,7 +600,7 @@ export default function (AB) {
          let tree = $$(this.ids.widgets);
          tree.clearAll();
 
-         let page = this.CurrentApplication.pages((p) => p.id == id, true)[0];
+         let page = this.CurrentApplication.pageByID(id);
          if (!page) return;
 
          ComponentMenu.viewLoad(page);
@@ -586,6 +648,45 @@ export default function (AB) {
                addPage(tree, p, index);
             }
          );
+      }
+
+      async widgetOrder() {
+         let tree = $$(this.ids.widgets);
+
+         let items = tree.find({});
+         // [ {ABMobileViewxxx}, ... ] current UNORDERED data
+
+         let hashByParent = {
+            /* parent.id : parent.id  */
+         };
+         items.forEach((i) => {
+            hashByParent[i.$parent] = i.$parent;
+         });
+
+         let allSaves = [];
+         Object.keys(hashByParent).forEach((k) => {
+            let parent = this.selectedPage.viewByID(k);
+            let entryID = tree.getFirstChildId(parent?.id);
+
+            // this is probably the top level (k == 0) so:
+            if (!parent) {
+               parent = this.selectedPage;
+               entryID = tree.getFirstId();
+            }
+
+            // reorder the views by the order in the Tree
+            parent._views = [];
+            while (entryID) {
+               parent._views.push(items.find((i) => i.id == entryID));
+               entryID = tree.getNextSiblingId(entryID);
+            }
+
+            allSaves.push(parent.save());
+         });
+
+         await Promise.all(allSaves);
+
+         this.emit("widget.updated");
       }
 
       /**
@@ -643,6 +744,55 @@ export default function (AB) {
        */
       show() {
          $$(this.ids.component).show();
+      }
+
+      /**
+       * @method templatePage()
+       * display the proper entry for a Page in our lists
+       * @param {ABMobilePage} obj
+       *        The instance of the ABMobilePage we are displaying
+       * @param {common} common
+       *        The webix {common} object for a tree view.
+       * @return {string}
+       */
+      templatePage(obj, common) {
+         obj.warningsEval();
+         const warnings = obj.warningsAll();
+
+         let warnIcon = "";
+         if (warnings.length > 0) {
+            warnIcon = this.WARNING_ICON;
+         }
+
+         let defaultPage = obj.defaultPage
+            ? "<i class='fa fa-asterisk dragme'></i>"
+            : "";
+         return `${common.icon(obj)}${common.folder(obj)}<span>${
+            obj.label
+         }</span><i class='fa fa-bars dragme'></i><i class='fa fa-trash dragme delme'></i>${defaultPage}${warnIcon}`;
+      }
+
+      /**
+       * @method templateWidget()
+       * display the proper entry for a Widget in our lists
+       * @param {ABMobileView} obj
+       *        The instance of the ABMobileView we are displaying
+       * @param {common} common
+       *        The webix {common} object for a tree view.
+       * @return {string}
+       */
+      templateWidget(obj, common) {
+         obj.warningsEval();
+         const warnings = obj.warningsAll();
+
+         let warnIcon = "";
+         if (warnings.length > 0) {
+            warnIcon = this.WARNING_ICON;
+         }
+
+         return `${common.icon(obj)}${common.folder(obj)}<span>${
+            obj.label
+         }</span><i class='fa fa-bars dragme'></i><i class='fa fa-trash dragme delme'></i>${warnIcon}`;
       }
 
       refreshTemplateItem(view) {
