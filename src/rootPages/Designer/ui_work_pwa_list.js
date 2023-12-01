@@ -387,10 +387,12 @@ export default function (AB) {
                         );
 
                         // if this is a FormItem, then it must remain under it's parent Form
-                        if (
-                           droppedWidget instanceof
-                           this.AB.Class.ABMobileViewFormItem
-                        ) {
+                        // @TODO: figure out why this stopped working ...
+                        // if (
+                        //    droppedWidget instanceof
+                        //    this.AB.Class.ABMobileViewFormItem
+                        // ) {
+                        if (droppedWidget.parent?.key == "mobile-form") {
                            // it can't move to the root:
                            if (context.parent == 0) return false;
                            if (context.target == null) return false;
@@ -426,7 +428,7 @@ export default function (AB) {
                            callback: async (isOK) => {
                               if (isOK) {
                                  $$(ids.widgets).showProgress();
-                                 debugger;
+
                                  try {
                                     await widget.destroy();
                                  } catch (e) {
@@ -529,15 +531,15 @@ export default function (AB) {
       refresh() {
          let $ListTabs = $$(this.ids.tabs);
          let $ListMenus = $$(this.ids.menus);
-         let menuState = $ListMenus.getState();
+         let $ListWidgets = $$(this.ids.widgets);
          let tabsState = $ListTabs.getState();
+         let menuState = $ListMenus.getState();
+         let widgetState = $ListWidgets.getState();
          this.applicationLoad(this.CurrentApplication);
          $ListMenus.setState(menuState);
          $ListTabs.setState(tabsState);
 
          if (this.selectedPage) {
-            let $ListWidgets = $$(this.ids.widgets);
-            let widgetState = $ListWidgets.getState();
             this.loadWidgets(this.selectedPage.id);
             $ListWidgets.setState(widgetState);
          }

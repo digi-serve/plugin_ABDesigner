@@ -41,6 +41,14 @@ export default function (AB) {
 
             this.base = base;
             this.AB = AB;
+
+            this.fieldsHide = {
+               /* id.tag : bool */
+            };
+            // {hash}
+            // indicates if a given field should be hidden.
+            // this allows sub classes to hide fields from parent classes:
+            // this.fieldsHide.required = true;  hides the required field.
          }
 
          ui(elements = [], rules = {}) {
@@ -57,6 +65,7 @@ export default function (AB) {
                      label: L("Name"),
                      name: "name",
                      value: "",
+                     hidden: this.fieldsHide.label ? true : false,
                   },
                ],
                rules: {

@@ -399,7 +399,6 @@ export default function (AB) {
 
          const $component = $$(ids.component);
 
-         debugger;
          vals.settings = vals.settings || {};
          vals.settings = $component.getValues();
 
@@ -683,7 +682,7 @@ export default function (AB) {
 
                   let saveTasks = [];
                   let fields = $$(ids.fields).find({});
-                  let tempFieldTypes = ["string"];
+                  let tempFieldTypes = ["string", "boolean", "calculate"];
                   fields.reverse();
                   fields.forEach((f, index) => {
                      // @TODO: for now, just add the fields we have widgets for:

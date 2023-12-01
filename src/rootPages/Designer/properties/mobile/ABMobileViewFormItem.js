@@ -38,6 +38,7 @@ export default function (AB) {
                view: "text",
                disabled: true,
                label: L("Field"),
+               hidden: this.fieldsHide.field ? true : false,
             },
             {
                id: ids.required,
@@ -46,6 +47,7 @@ export default function (AB) {
                labelWidth: uiSettings.labelWidthCheckbox,
                labelRight: L("Required"),
                click: () => this.onChange(),
+               hidden: this.fieldsHide.required ? true : false,
             },
             {
                id: ids.disable,
@@ -54,6 +56,7 @@ export default function (AB) {
                labelWidth: uiSettings.labelWidthCheckbox,
                labelRight: L("Disable"),
                click: () => this.onChange(),
+               hidden: this.fieldsHide.disable ? true : false,
             },
          ].concat(elements);
 
