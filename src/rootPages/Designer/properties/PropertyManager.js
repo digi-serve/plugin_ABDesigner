@@ -123,6 +123,7 @@ export default function (AB) {
          require("./mobile/ABMobileViewForm"),
          require("./mobile/ABMobileViewFormButton"),
          require("./mobile/ABMobileViewFormCheckbox"),
+         require("./mobile/ABMobileViewFormConnect"),
          require("./mobile/ABMobileViewFormReadonly"),
          require("./mobile/ABMobileViewFormTextbox"),
          require("./mobile/ABMobileViewLabel"),
