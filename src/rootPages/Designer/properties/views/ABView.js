@@ -248,12 +248,10 @@ export default function (AB) {
          /**
           * @method ViewClass()
           * A method to return the proper ABViewXXX Definition.
-          * NOTE: Must be overwritten by the Child Class
+          * NOTE: Can be overwritten by the Child Class
           */
          ViewClass() {
-            console.error("!!! Child Class has not overwritten ViewClass()");
-            return null;
-            // return super._ViewClass("string");
+            return this._ViewClass(this.constructor.key);
          }
 
          _ViewClass(key) {

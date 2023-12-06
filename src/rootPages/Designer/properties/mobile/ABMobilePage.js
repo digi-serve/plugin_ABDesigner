@@ -301,15 +301,6 @@ export default function (AB) {
 
          return vals;
       }
-
-      /**
-       * @method FieldClass()
-       * A method to return the proper ABViewXXX Definition.
-       * NOTE: Must be overwritten by the Child Class
-       */
-      ViewClass() {
-         return super._ViewClass("mobile-page");
-      }
    }
 
    return ABMobilePageProperty;

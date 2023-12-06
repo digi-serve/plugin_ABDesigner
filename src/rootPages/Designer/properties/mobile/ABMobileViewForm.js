@@ -417,15 +417,6 @@ export default function (AB) {
          return vals;
       }
 
-      /**
-       * @method FieldClass()
-       * A method to return the proper ABViewXXX Definition.
-       * NOTE: Must be overwritten by the Child Class
-       */
-      ViewClass() {
-         return super._ViewClass("mobile-form");
-      }
-
       //
       //
       //
@@ -571,8 +562,8 @@ export default function (AB) {
        */
       propertyUpdateFieldOptions(dcId) {
          const ids = this.ids;
-         var formComponent = this.CurrentView.parentFormComponent();
-         var existsFields = formComponent.fieldComponents();
+         var formComponent = this.CurrentView?.parentFormComponent();
+         var existsFields = formComponent?.fieldComponents() ?? [];
          var datacollection = this.AB.datacollectionByID(dcId);
          var object = datacollection ? datacollection.datasource : null;
 

@@ -323,15 +323,6 @@ export default function (AB) {
 
          return values;
       }
-
-      /**
-       * @method FieldClass()
-       * A method to return the proper ABViewXXX Definition.
-       * NOTE: Must be overwritten by the Child Class
-       */
-      ViewClass() {
-         return super._ViewClass("mobile-list");
-      }
    }
 
    return ABViewListProperty;

@@ -218,15 +218,6 @@ export default function (AB) {
          return values;
       }
 
-      /**
-       * @method FieldClass()
-       * A method to return the proper ABViewXXX Definition.
-       * NOTE: Must be overwritten by the Child Class
-       */
-      ViewClass() {
-         return super._ViewClass(ABMobileViewButtonProperty.key);
-      }
-
       addPagesToList(pagesList, parent, rootPageId) {
          if (!parent || !parent.pages || !pagesList) return;
 
