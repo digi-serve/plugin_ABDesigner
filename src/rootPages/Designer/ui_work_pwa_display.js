@@ -139,6 +139,7 @@ export default function (AB) {
       clearWorkspace() {
          let ui = [this._ViewSelect];
          webix.ui(ui, $$(this.ids.content));
+         this.currentPage = null;
       }
 
       /**
@@ -155,17 +156,18 @@ export default function (AB) {
       pageLoad(page, forced = false) {
          if (!page?.route) return;
 
-         if (!this.currentPage) {
+         let $iframe = $$(this.ids.iframe);
+
+         if (!$iframe) {
             let ui = [this._ViewIFrame];
             webix.ui(ui, $$(this.ids.content));
+            $iframe = $$(this.ids.iframe);
          }
 
          // skip if already loaded
          if (!forced && this.currentPage?.id == page.id) return;
 
          this.currentPage = page;
-
-         let $iframe = $$(this.ids.iframe);
 
          let origin = document.location.origin;
          let tenantID = this.AB.Tenant.id();

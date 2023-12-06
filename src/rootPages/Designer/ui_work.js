@@ -334,7 +334,7 @@ export default function (AB) {
             AppDataCollectionWorkspace,
             AppProcessWorkspace,
             AppInterfaceWorkspace,
-            // AppPWAWorkspace,
+            AppPWAWorkspace,
             // NOTE: both Interface and PWA scan the pages for warnings. So only
             // 1 of those need to be in the WarningsPropogate() array.
          ]);

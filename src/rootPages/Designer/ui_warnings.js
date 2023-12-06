@@ -6,7 +6,7 @@
  */
 import UI_Class from "./ui_class";
 
-export default function (AB, iBase, iSettings) {
+export default function (AB, iBase = "ui_warnings", iSettings = {}) {
    iBase = iBase || "ui_warnings";
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
@@ -78,12 +78,22 @@ export default function (AB, iBase, iSettings) {
          this.AB = AB;
       }
 
-      show(currentObject) {
+      show(objList) {
          super.show();
 
          var ids = this.ids;
 
-         let warningsAll = currentObject?.warningsAll().map((w) => w.message);
+         if (!Array.isArray(objList)) {
+            objList = [objList];
+         }
+
+         let warningsAll = [];
+         objList.forEach((currentObject) => {
+            warningsAll = warningsAll.concat(
+               currentObject?.warningsAll().map((w) => w.message)
+            );
+         });
+         warningsAll = warningsAll.filter((w) => w);
          warningsAll = this.AB.uniq(warningsAll); // prevent duplicates
          if (warningsAll?.length) {
             let message = "<ul class='warningslist'>";

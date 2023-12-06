@@ -181,6 +181,12 @@ export default function (AB) {
                                  this.refreshTree(Tree, "tabs");
                                  Tree.setState(currState);
                                  Tree.hideProgress();
+
+                                 if (page.id == this.selectedPage?.id) {
+                                    this.selectedPage = null;
+                                    this.loadWidgets(null); // clears widgets
+                                    this.emit("selected", null);
+                                 }
                               }
                            },
                         });
@@ -325,6 +331,12 @@ export default function (AB) {
                                  Tree.setState(currState);
                                  // this.loadWidgets(this.selectedPage.id);
                                  Tree.hideProgress();
+
+                                 if (page.id == this.selectedPage?.id) {
+                                    this.selectedPage = null;
+                                    this.loadWidgets(null); // clears widgets
+                                    this.emit("selected", null);
+                                 }
                               }
                            },
                         });
@@ -441,6 +453,7 @@ export default function (AB) {
                                  this.loadWidgets(this.selectedPage.id);
                                  $$(ids.widgets).hideProgress();
                                  this.emit("widget.updated");
+                                 this.emit("warnings"); // refresh the warning display
                               }
                            },
                         });
@@ -511,6 +524,7 @@ export default function (AB) {
             this.loadWidgets(this.selectedPage.id);
             $ListWidgets?.hideProgress?.();
             this.emit("widget.updated");
+            this.emit("warnings"); // refresh the warning display
          });
 
          $$(this.ids.widgets_add)?.disable();
@@ -553,6 +567,10 @@ export default function (AB) {
        *        [optional] The current ABApplication we are working with.
        */
       applicationLoad(application) {
+         let postSelect = false;
+         if (application?.id == this.CurrentApplicationID) {
+            postSelect = true;
+         }
          super.applicationLoad(application);
 
          this.PageNew.applicationLoad(application);
@@ -562,8 +580,24 @@ export default function (AB) {
          this.refreshTree(this.viewListTabs, "tab");
          this.refreshTree(this.viewListMenus, "menu");
 
-         let tree = $$(this.ids.widgets);
-         tree.clearAll();
+         if (!postSelect) {
+            let tree = $$(this.ids.widgets);
+            tree.clearAll();
+         }
+
+         // make sure the current selected Page is kept if we are reloading
+         // the same Application
+         if (postSelect) {
+            if (this.selectedPage) {
+               let $list = null;
+               if (this.selectedPage.menuType == "tab") {
+                  $list = $$(this.ids.tabs);
+               } else {
+                  $list = $$(this.ids.menus);
+               }
+               $list.select(this.selectedPage.id);
+            }
+         }
 
          // this so it looks right/indented in a tree view:
          // this.viewListTabs.clearAll();
@@ -758,8 +792,17 @@ export default function (AB) {
        * @return {string}
        */
       templatePage(obj, common) {
-         obj.warningsEval();
-         const warnings = obj.warningsAll();
+         let warnings = null;
+         if (obj.warningsEval) {
+            obj.warningsEval();
+            warnings = obj.warningsAll();
+         } else {
+            // this was a drop from another list ... so pull the actual
+            // page object and find warnings from that
+            let p = this.CurrentApplication.pageByID(obj.id);
+            p?.warningsEval();
+            warnings = p?.warningsAll() ?? [];
+         }
 
          let warnIcon = "";
          if (warnings.length > 0) {

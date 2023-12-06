@@ -92,6 +92,8 @@ export default function (AB) {
          this.on("warnings", () => {
             // make sure our list refreshes it's display
             PWAList.applicationLoad(this.CurrentApplication);
+            // only show warnings for our Pages:
+            Warnings.show(this.CurrentApplication.pages());
          });
 
          return Promise.all([
@@ -115,7 +117,8 @@ export default function (AB) {
          PWADisplay.applicationLoad(application);
          PWAProperties.applicationLoad(application);
 
-         Warnings.show(application);
+         // only show warnings for our Pages:
+         Warnings.show(application.pages());
       }
 
       /**
