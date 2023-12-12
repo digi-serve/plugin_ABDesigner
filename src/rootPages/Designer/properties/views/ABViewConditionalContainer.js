@@ -97,7 +97,7 @@ export default function (AB) {
                               badge: 0,
                               click: () => {
                                  const $button = $$(this.ids.buttonFilter);
-                                 this.showFilterPopup($button);
+                                 this.showFilterPopup($button?.$view);
                               },
                            },
                         ],
