@@ -733,8 +733,6 @@ export default function (AB) {
        * @param {LBTask} newTask     The instance of a LBTask to add
        */
       async addChild(parent, child, TreeList) {
-         var parID = parent.id;
-
          var oldParent = child.parent;
          if (oldParent) {
             await oldParent.pageRemove(child);

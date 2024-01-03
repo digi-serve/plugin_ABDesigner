@@ -19,8 +19,6 @@ export default function (AB) {
 
    const UI_Choose_List_Menu = UI_Choose_List_Menu_Factory(AB);
 
-   const UINewApp = UI_Choose_List_NewApp(AB);
-
    class UIChooseList extends UIClass {
       constructor() {
          super("abd_choose_list", {

@@ -5,18 +5,18 @@
  *
  */
 import UI_Class from "./ui_class";
-import UI_Warnings from "./ui_warnings";
+// import UI_Warnings from "./ui_warnings";
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
 import UI_Common_Participant_SelectManager from "../Designer/ui_common_participant_selectManager";
 
-export default function (AB, init_settings) {
+export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
    const ClassSelectManagersUI = UI_Common_Participant_SelectManager(AB);
 
-   var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
+   // var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
 
    var issue_icon =
       "<span class='webix_icon wxi-alert' style='font-size:18px; color:#EED202;'>&nbsp;</span>";
@@ -613,11 +613,7 @@ export default function (AB, init_settings) {
             this.AB.Webix.ProgressBar
          );
 
-         // Warnings.init(AB);
-
-         // $$(Warnings.ids.buttonWarning).show();
-
-         const $warningsWindow = this.AB.Webix.ui({
+         this.AB.Webix.ui({
             view: "window",
             id: this.ids.issue_id,
             css: "app_form_window_2",

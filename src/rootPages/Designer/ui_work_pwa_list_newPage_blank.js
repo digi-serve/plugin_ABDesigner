@@ -6,19 +6,11 @@
  */
 
 import UI_Class from "./ui_class";
-import UI_Warnings from "./ui_warnings";
 
-export default function (AB, init_settings) {
+export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
-
-   var Warnings = UI_Warnings(AB, `mobile_blank_warnings`, init_settings);
-
-   var issue_icon =
-      "<span class='webix_icon wxi-alert' style='font-size:18px; color:#EED202;'>&nbsp;</span>";
-
-   // var richselect_icon = AB.UISettings.icons.map((x) => `fa-${x}`);
 
    class UI_Work_PWA_List_NewPage_Blank extends UIClass {
       constructor() {
