@@ -211,8 +211,8 @@ export default function (AB) {
          this.populateFilterByConnectedFieldValue(view);
 
          const ids = this.ids;
-         const ABViewFormConnectPropertyComponentDefaults =
-            this.defaultValues();
+         // const ABViewFormConnectPropertyComponentDefaults =
+         //    this.defaultValues();
 
          // Default set of options for filter connected combo
          const filterConnectedOptions = [{ id: null, value: "" }];
@@ -465,28 +465,16 @@ export default function (AB) {
        */
       values() {
          const ids = this.ids;
-         const view = this.CurrentView;
 
          const $component = $$(ids.component);
 
          const values = super.values() ?? {};
          values.settings = $component.getValues() ?? {};
-         // values.settings.popupWidth = $$(ids.popupWidth).getValue();
-         // values.settings.popupHeight = $$(ids.popupHeight).getValue();
          values.settings.filterConnectedValue = $$(
             ids.filterConnectedValue
          ).getValue();
          values.settings.filterConditions = FilterComponent.getValue();
          values.settings.sortFields = SortComponent.getSettings();
-
-         // const settingsAddPage = this.addPageProperty.getSettings(view) ?? {};
-         // const settingsEditPage = this.editPageProperty.getSettings(view) ?? {};
-         // values.settings.formView = settingsAddPage.formView;
-         // values.settings.editForm = settingsEditPage.editForm;
-
-         // refresh settings of app page tool
-         // this.addPageProperty.setSettings(view, values.settingsAddPage);
-         // this.editPageProperty.setSettings(view, values.settingsEditPage);
 
          return values;
       }

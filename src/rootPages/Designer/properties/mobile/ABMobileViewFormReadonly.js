@@ -22,8 +22,6 @@ export default function (AB) {
       }
 
       ui() {
-         const ids = this.ids;
-
          // we want to NOT display the above parent fields:
          this.fieldsHide.required = 1;
          this.fieldsHide.disable = 1;

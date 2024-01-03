@@ -225,8 +225,6 @@ export default function (AB) {
          // valid options have .widgetKey  AND are tied to our
          // datacollection
 
-         return true; // <--- testing: remove this!
-
          let vDC = v.datacollection;
          return (
             v.key == widgetKey &&

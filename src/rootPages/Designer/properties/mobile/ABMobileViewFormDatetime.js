@@ -614,7 +614,8 @@ export default function (AB) {
          let formatString = "";
          switch (dateFormat) {
             //Ignore Date
-            case (1, 2):
+            case 1:
+            case 2:
                {
                   formatString = "%d/%m/%Y";
                }

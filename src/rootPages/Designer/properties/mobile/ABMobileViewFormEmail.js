@@ -57,7 +57,7 @@ export default function (AB) {
                      disabled: true,
                      labelWidth: uiConfig.labelWidthXLarge,
                      on: {
-                        onChange: (newv) => {
+                        onChange: (/* newv */) => {
                            this.isValid();
                            this.onChange();
                         },
@@ -96,18 +96,20 @@ export default function (AB) {
 
          $$(ids.component).clearValidation();
 
-         const isRequired = $$(ids.required).getValue();
-         const emailDefault = $$(ids.default).getValue();
+         if (isValid) {
+            const isRequired = $$(ids.required).getValue();
+            const emailDefault = $$(ids.default).getValue();
 
-         if (isRequired || emailDefault) {
-            if (!webix.rules.isEmail(emailDefault)) {
-               $$(ids.component).markInvalid(
-                  "default",
-                  L("This email is invalid")
-               );
-               isValid = false;
+            if (isRequired || emailDefault) {
+               if (!webix.rules.isEmail(emailDefault)) {
+                  $$(ids.component).markInvalid(
+                     "default",
+                     L("This email is invalid")
+                  );
+                  isValid = false;
+               } else isValid = true;
             } else isValid = true;
-         } else isValid = true;
+         }
 
          return isValid;
       }
