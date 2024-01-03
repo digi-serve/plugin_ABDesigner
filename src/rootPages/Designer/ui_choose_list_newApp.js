@@ -87,6 +87,9 @@ export default function (AB) {
                      onAfterTabClick: (id) => {
                         this.switchTab(id);
                      },
+                     onBeforeTabClick: (id) => {
+                        return $$(id)?.isEnabled();
+                     },
                      onAfterRender() {
                         this.config.options.forEach((o) => {
                            if (o.value == _self.AppMobile.tabLabel) {
@@ -169,11 +172,15 @@ export default function (AB) {
 
          if (!application.isMobile) {
             this.AppWeb.formPopulate(application);
+            this.AppWeb.tab().enable();
             this.AppMobile.formReset();
+            this.AppMobile.tab().disable();
             $$(this.ids.tab).setValue(this.AppWeb.tabValue);
          } else {
             this.AppWeb.formReset();
+            this.AppWeb.tab().disable();
             this.AppMobile.formPopulate(application);
+            this.AppMobile.tab().enable();
             $$(this.ids.tab).setValue(this.AppMobile.tabValue);
             // this.switchTab(this.AppMobile?.ids.form);
          }
@@ -254,6 +261,10 @@ export default function (AB) {
        * Show this component.
        */
       show(shouldSelectNew) {
+         // By default, we make sure both Tabs are enabled
+         this.AppWeb.tab().enable();
+         this.AppMobile.tab().enable();
+
          if (shouldSelectNew != null) {
             this.selectNew = shouldSelectNew;
          }

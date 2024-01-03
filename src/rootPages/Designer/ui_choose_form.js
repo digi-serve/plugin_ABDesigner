@@ -28,6 +28,7 @@ export default function (AB, init_settings) {
 
       constructor() {
          super("abd_choose_form", {
+            tab: "",
             form: "",
             appFormPermissionList: "",
             appFormCreateRoleButton: "",
@@ -113,6 +114,7 @@ export default function (AB, init_settings) {
             // },
             header: this.tabLabel,
             body: {
+               id: this.ids.tab,
                view: "scrollview",
                scroll: true,
                height: 670,
@@ -643,6 +645,10 @@ export default function (AB, init_settings) {
          // Make sure we listen for New/Updated Role information
 
          this.permissionPopulate();
+      }
+
+      tab() {
+         return $$(this.ids.tab);
       }
 
       toList() {

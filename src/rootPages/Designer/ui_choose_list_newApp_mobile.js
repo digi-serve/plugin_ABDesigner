@@ -28,6 +28,7 @@ export default function (AB) {
 
       constructor() {
          super("abd_choose_list_newApp_mobile", {
+            tab: "",
             form: "",
             appFormPermissionList: "",
             appFormCreateRoleButton: "",
@@ -113,6 +114,7 @@ export default function (AB) {
             // },
             header: this.tabLabel,
             body: {
+               id: this.ids.tab,
                view: "scrollview",
                value: "body_mobile",
                scroll: true,
@@ -673,6 +675,10 @@ export default function (AB) {
          // Make sure we listen for New/Updated Role information
 
          this.permissionPopulate();
+      }
+
+      tab() {
+         return $$(this.ids.tab);
       }
 
       toList() {
