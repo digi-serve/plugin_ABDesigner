@@ -673,17 +673,9 @@ export default function (AB) {
 
                   let saveTasks = [];
                   let fields = $$(ids.fields).find({});
-                  let tempFieldTypes = [
-                     "string",
-                     "boolean",
-                     "calculate",
-                     "connectObject",
-                  ];
-                  fields.reverse();
-                  fields.forEach((f, index) => {
-                     // @TODO: for now, just add the fields we have widgets for:
-                     if (tempFieldTypes.indexOf(f.key) == -1) return;
 
+                  // fields.reverse();
+                  fields.forEach((f, index) => {
                      if (!f.selected) {
                         let yPosition = fields.length - index - 1;
 
