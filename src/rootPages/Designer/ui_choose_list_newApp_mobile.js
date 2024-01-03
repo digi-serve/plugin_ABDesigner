@@ -29,6 +29,7 @@ export default function (AB) {
       constructor() {
          super("abd_choose_list_newApp_mobile", {
             tab: "",
+            configNetworking: "",
             form: "",
             appFormPermissionList: "",
             appFormCreateRoleButton: "",
@@ -524,6 +525,7 @@ export default function (AB) {
                                              view: "combo",
                                              label: "type",
                                              name: "networkType",
+                                             value: "rest",
                                              options: [
                                                 {
                                                    id: "rest",
@@ -1035,6 +1037,9 @@ export default function (AB) {
          $$(this.ids.form).clearValidation();
 
          this.permissionPopulate(); // leave empty to clear selections.
+
+         // set "rest" as default networking value
+         $$(this.ids.configNetworking)?.setValue?.("rest");
 
          // $$(this.ids.accessManager).removeView(
          //    $$(this.ids.accessManager).getChildViews()[0]
