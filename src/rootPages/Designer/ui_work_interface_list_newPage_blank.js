@@ -121,7 +121,8 @@ export default function (AB) {
          // if there was an error saving the values from our form.
          this.on("save.error", (err) => {
             this.AB.notify.developer(err, {
-               context: "ui_work_interface_list_newPage:init(): there was an error saving the values from our form."
+               context:
+                  "ui_work_interface_list_newPage:init(): there was an error saving the values from our form.",
             });
          });
 
@@ -151,16 +152,17 @@ export default function (AB) {
                id: page.urlPointer(),
                value: indent + page.label,
             });
-            page
-               .pages()
-               .forEach(function (p) {
-                  addPage(p, indent + "-");
-               });
+            page.pages().forEach(function (p) {
+               addPage(p, indent + "-");
+            });
          };
-         // this.CurrentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
-         application.pages().forEach(function (page) {
-            addPage(page, "");
-         });
+
+         if (application.isWebApp) {
+            // this.CurrentApplication.pages((p) => p instanceof AB.Class.ABViewPage).forEach(
+            application.pages().forEach(function (page) {
+               addPage(page, "");
+            });
+         }
 
          if ($$(this.ids?.parentList)?.define) {
             // $$(this.ids.parentList).define("options", options);
@@ -209,7 +211,8 @@ export default function (AB) {
 
             var values = this.$form.getValues();
             this.AB.notify.developer(err, {
-               context: "ui_work_interface_list_newPage: the entered data is invalid",
+               context:
+                  "ui_work_interface_list_newPage: the entered data is invalid",
                base: values,
             });
             webix.alert({

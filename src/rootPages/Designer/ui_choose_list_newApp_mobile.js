@@ -5,30 +5,31 @@
  *
  */
 import UI_Class from "./ui_class";
-import UI_Warnings from "./ui_warnings";
+// import UI_Warnings from "./ui_warnings";
 // const ABComponent = require("../classes/platform/ABComponent");
 // const ABApplication = require("../classes/platform/ABApplication");
 import UI_Common_Participant_SelectManager from "../Designer/ui_common_participant_selectManager";
 
-export default function (AB, init_settings) {
+export default function (AB) {
    const uiConfig = AB.Config.uiSettings();
    const UIClass = UI_Class(AB);
    var L = UIClass.L();
    const ClassSelectManagersUI = UI_Common_Participant_SelectManager(AB);
 
-   var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
+   // var Warnings = UI_Warnings(AB, `view_warnings`, init_settings);
 
    var issue_icon =
       "<span class='webix_icon wxi-alert' style='font-size:18px; color:#EED202;'>&nbsp;</span>";
 
    var richselect_icon = AB.UISettings.icons.map((x) => `fa-${x}`);
 
-   class ABChooseForm extends UIClass {
+   class ABChooseListNewAppMobile extends UIClass {
       // .extend(idBase, function(App) {
 
       constructor() {
-         super("abd_choose_form", {
+         super("abd_choose_list_newApp_mobile", {
             tab: "",
+            configNetworking: "",
             form: "",
             appFormPermissionList: "",
             appFormCreateRoleButton: "",
@@ -47,7 +48,7 @@ export default function (AB, init_settings) {
          });
 
          this.tabValue = null;
-         this.tabLabel = L("Web App");
+         this.tabLabel = L("Mobile App");
       }
 
       ui() {
@@ -62,11 +63,11 @@ export default function (AB, init_settings) {
          return {
             // view: "window",
             id: this.ids.component,
-            value: "web",
-            css: "app_form_window",
+            value: "mobile",
+            // css: "app_form_window",
             // height: 670,
             // width: 770,
-            position: "center",
+            // position: "center",
             // move: true,
             // scroll: true,
             // resize: true,
@@ -116,6 +117,7 @@ export default function (AB, init_settings) {
             body: {
                id: this.ids.tab,
                view: "scrollview",
+               value: "body_mobile",
                scroll: true,
                height: 670,
                width: 770,
@@ -153,7 +155,7 @@ export default function (AB, init_settings) {
                                        onAfterRender() {
                                           AB.ClassUI.CYPRESS_REF(
                                              this,
-                                             "abd_choose_form_label"
+                                             "abd_choose_list_newApp_mobile_label"
                                           );
                                        },
                                     },
@@ -171,7 +173,7 @@ export default function (AB, init_settings) {
                                        onAfterRender() {
                                           AB.ClassUI.CYPRESS_REF(
                                              this,
-                                             "abd_choose_form_version_number"
+                                             "abd_choose_list_newApp_mobile_version_number"
                                           );
                                        },
                                     },
@@ -195,7 +197,7 @@ export default function (AB, init_settings) {
                                        onAfterRender() {
                                           AB.ClassUI.CYPRESS_REF(
                                              this,
-                                             "abd_choose_form_icon"
+                                             "abd_choose_list_newApp_mobile_icon"
                                           );
                                        },
                                     },
@@ -212,7 +214,7 @@ export default function (AB, init_settings) {
                                        onAfterRender() {
                                           AB.ClassUI.CYPRESS_REF(
                                              this,
-                                             "abd_choose_form_description"
+                                             "abd_choose_list_newApp_mobile_description"
                                           );
                                        },
                                     },
@@ -221,20 +223,20 @@ export default function (AB, init_settings) {
                                     view: "spacer",
                                     height: 4,
                                  },
-                                 {
-                                    name: "isSystemObject",
-                                    view: "checkbox",
-                                    labelRight: L("Is this a System Object?"),
-                                    labelWidth: 0,
-                                    on: {
-                                       onAfterRender() {
-                                          AB.ClassUI.CYPRESS_REF(
-                                             this,
-                                             "abd_choose_form_isSystemObj"
-                                          );
-                                       },
-                                    },
-                                 },
+                                 // {
+                                 //    name: "isSystemObject",
+                                 //    view: "checkbox",
+                                 //    labelRight: L("Is this a System Object?"),
+                                 //    labelWidth: 0,
+                                 //    on: {
+                                 //       onAfterRender() {
+                                 //          AB.ClassUI.CYPRESS_REF(
+                                 //             this,
+                                 //             "abd_choose_list_newApp_mobile_isSystemObj"
+                                 //          );
+                                 //       },
+                                 //    },
+                                 // },
                                  {
                                     view: "label",
                                     label: L("Who can use this app?"),
@@ -266,7 +268,7 @@ export default function (AB, init_settings) {
                                           this.data.value.forEach((a) => {
                                              AB.ClassUI.CYPRESS_REF(
                                                 // this.getItemNode(a.id),
-                                                `perm_role_${a.id}`
+                                                `mobile_perm_role_${a.id}`
                                              );
                                           });
                                        },
@@ -281,160 +283,160 @@ export default function (AB, init_settings) {
                                        // },
                                     },
                                  },
-                                 {
-                                    name: "isAccessManaged",
-                                    view: "checkbox",
-                                    labelRight: L(
-                                       "Enable Page / Tab Access Management"
-                                    ),
-                                    labelWidth: 0,
-                                    on: {
-                                       onAfterRender() {
-                                          AB.ClassUI.CYPRESS_REF(
-                                             this,
-                                             "abd_choose_form_isAccessManaged"
-                                          );
-                                       },
-                                       onChange: (newv /* , oldv */) => {
-                                          if (newv) {
-                                             $$(this.ids.accessManager).show();
-                                             $$(
-                                                this.ids.accessManagerToolbar
-                                             ).show();
-                                          } else {
-                                             $$(this.ids.accessManager).hide();
-                                             $$(
-                                                this.ids.accessManagerToolbar
-                                             ).hide();
-                                          }
-                                       },
-                                       onItemClick: (id /*, e */) => {
-                                          var enabled = $$(id).getValue();
-                                          if (enabled) {
-                                             $$(this.ids.accessManager).show();
-                                             $$(
-                                                this.ids.accessManagerToolbar
-                                             ).show();
-                                          } else {
-                                             $$(this.ids.accessManager).hide();
-                                             $$(
-                                                this.ids.accessManagerToolbar
-                                             ).hide();
-                                          }
-                                       },
-                                    },
-                                 },
-                                 {
-                                    view: "toolbar",
-                                    id: this.ids.accessManagerToolbar,
-                                    cols: [
-                                       {
-                                          view: "label",
-                                          label: L(
-                                             "Who can manage page / tab access for this app?"
-                                          ), // labels.component.managerHeader,
-                                          css: "npr_smallLabels",
-                                       },
-                                    ],
-                                    borderless: true,
-                                    hidden:
-                                       parseInt(this.accessManagement) == 1
-                                          ? false
-                                          : true,
-                                 },
-                                 {
-                                    id: this.ids.accessManager,
-                                    rows: [this.accessManagerUI.ui()],
-                                    paddingY: 10,
-                                    hidden:
-                                       parseInt(this.accessManagement) == 1
-                                          ? false
-                                          : true,
-                                 },
-                                 {
-                                    view: "spacer",
-                                    height: 6,
-                                 },
-                                 {
-                                    name: "isTranslationManaged",
-                                    view: "checkbox",
-                                    labelRight: L("Enable Translation Tool"), // labels.component.enableTranslationManagement,
-                                    labelWidth: 0,
-                                    on: {
-                                       onAfterRender() {
-                                          AB.ClassUI.CYPRESS_REF(
-                                             this,
-                                             "abd_choose_form_isTranslationManaged"
-                                          );
-                                       },
-                                       onChange: (newv /*, oldv */) => {
-                                          if (newv) {
-                                             $$(
-                                                this.ids.translationManager
-                                             ).show();
-                                             $$(
-                                                this.ids
-                                                   .translationManagerToolbar
-                                             ).show();
-                                          } else {
-                                             $$(
-                                                this.ids.translationManager
-                                             ).hide();
-                                             $$(
-                                                this.ids
-                                                   .translationManagerToolbar
-                                             ).hide();
-                                          }
-                                       },
-                                       onItemClick: (id /*, e*/) => {
-                                          var enabled = $$(id).getValue();
-                                          if (enabled) {
-                                             $$(
-                                                this.ids.translationManager
-                                             ).show();
-                                             $$(
-                                                this.ids
-                                                   .translationManagerToolbar
-                                             ).show();
-                                          } else {
-                                             $$(
-                                                this.ids.translationManager
-                                             ).hide();
-                                             $$(
-                                                this.ids
-                                                   .translationManagerToolbar
-                                             ).hide();
-                                          }
-                                       },
-                                    },
-                                 },
-                                 {
-                                    view: "toolbar",
-                                    id: this.ids.translationManagerToolbar,
-                                    cols: [
-                                       {
-                                          view: "label",
-                                          label: L(
-                                             "Who can translate this app?"
-                                          ),
-                                          css: "npr_smallLabels",
-                                       },
-                                    ],
-                                    borderless: true,
-                                    hidden:
-                                       parseInt(this.translationManagement) == 1
-                                          ? false
-                                          : true,
-                                 },
-                                 {
-                                    id: this.ids.translationManager,
-                                    rows: [this.translationManagerUI.ui()],
-                                    paddingY: 10,
-                                    hidden:
-                                       parseInt(this.translationManagement) == 1
-                                          ? false
-                                          : true,
-                                 }, //begin hint manager
+                                 // {
+                                 //    name: "isAccessManaged",
+                                 //    view: "checkbox",
+                                 //    labelRight: L(
+                                 //       "Enable Page / Tab Access Management"
+                                 //    ),
+                                 //    labelWidth: 0,
+                                 //    on: {
+                                 //       onAfterRender() {
+                                 //          AB.ClassUI.CYPRESS_REF(
+                                 //             this,
+                                 //             "abd_choose_list_newApp_mobile_isAccessManaged"
+                                 //          );
+                                 //       },
+                                 //       onChange: (newv /* , oldv */) => {
+                                 //          if (newv) {
+                                 //             $$(this.ids.accessManager).show();
+                                 //             $$(
+                                 //                this.ids.accessManagerToolbar
+                                 //             ).show();
+                                 //          } else {
+                                 //             $$(this.ids.accessManager).hide();
+                                 //             $$(
+                                 //                this.ids.accessManagerToolbar
+                                 //             ).hide();
+                                 //          }
+                                 //       },
+                                 //       onItemClick: (id /*, e */) => {
+                                 //          var enabled = $$(id).getValue();
+                                 //          if (enabled) {
+                                 //             $$(this.ids.accessManager).show();
+                                 //             $$(
+                                 //                this.ids.accessManagerToolbar
+                                 //             ).show();
+                                 //          } else {
+                                 //             $$(this.ids.accessManager).hide();
+                                 //             $$(
+                                 //                this.ids.accessManagerToolbar
+                                 //             ).hide();
+                                 //          }
+                                 //       },
+                                 //    },
+                                 // },
+                                 // {
+                                 //    view: "toolbar",
+                                 //    id: this.ids.accessManagerToolbar,
+                                 //    cols: [
+                                 //       {
+                                 //          view: "label",
+                                 //          label: L(
+                                 //             "Who can manage page / tab access for this app?"
+                                 //          ), // labels.component.managerHeader,
+                                 //          css: "npr_smallLabels",
+                                 //       },
+                                 //    ],
+                                 //    borderless: true,
+                                 //    hidden:
+                                 //       parseInt(this.accessManagement) == 1
+                                 //          ? false
+                                 //          : true,
+                                 // },
+                                 // {
+                                 //    id: this.ids.accessManager,
+                                 //    rows: [this.accessManagerUI.ui()],
+                                 //    paddingY: 10,
+                                 //    hidden:
+                                 //       parseInt(this.accessManagement) == 1
+                                 //          ? false
+                                 //          : true,
+                                 // },
+                                 // {
+                                 //    view: "spacer",
+                                 //    height: 6,
+                                 // },
+                                 // {
+                                 //    name: "isTranslationManaged",
+                                 //    view: "checkbox",
+                                 //    labelRight: L("Enable Translation Tool"), // labels.component.enableTranslationManagement,
+                                 //    labelWidth: 0,
+                                 //    on: {
+                                 //       onAfterRender() {
+                                 //          AB.ClassUI.CYPRESS_REF(
+                                 //             this,
+                                 //             "abd_choose_list_newApp_mobile_isTranslationManaged"
+                                 //          );
+                                 //       },
+                                 //       onChange: (newv /*, oldv */) => {
+                                 //          if (newv) {
+                                 //             $$(
+                                 //                this.ids.translationManager
+                                 //             ).show();
+                                 //             $$(
+                                 //                this.ids
+                                 //                   .translationManagerToolbar
+                                 //             ).show();
+                                 //          } else {
+                                 //             $$(
+                                 //                this.ids.translationManager
+                                 //             ).hide();
+                                 //             $$(
+                                 //                this.ids
+                                 //                   .translationManagerToolbar
+                                 //             ).hide();
+                                 //          }
+                                 //       },
+                                 //       onItemClick: (id /*, e*/) => {
+                                 //          var enabled = $$(id).getValue();
+                                 //          if (enabled) {
+                                 //             $$(
+                                 //                this.ids.translationManager
+                                 //             ).show();
+                                 //             $$(
+                                 //                this.ids
+                                 //                   .translationManagerToolbar
+                                 //             ).show();
+                                 //          } else {
+                                 //             $$(
+                                 //                this.ids.translationManager
+                                 //             ).hide();
+                                 //             $$(
+                                 //                this.ids
+                                 //                   .translationManagerToolbar
+                                 //             ).hide();
+                                 //          }
+                                 //       },
+                                 //    },
+                                 // },
+                                 // {
+                                 //    view: "toolbar",
+                                 //    id: this.ids.translationManagerToolbar,
+                                 //    cols: [
+                                 //       {
+                                 //          view: "label",
+                                 //          label: L(
+                                 //             "Who can translate this app?"
+                                 //          ),
+                                 //          css: "npr_smallLabels",
+                                 //       },
+                                 //    ],
+                                 //    borderless: true,
+                                 //    hidden:
+                                 //       parseInt(this.translationManagement) == 1
+                                 //          ? false
+                                 //          : true,
+                                 // },
+                                 // {
+                                 //    id: this.ids.translationManager,
+                                 //    rows: [this.translationManagerUI.ui()],
+                                 //    paddingY: 10,
+                                 //    hidden:
+                                 //       parseInt(this.translationManagement) == 1
+                                 //          ? false
+                                 //          : true,
+                                 // }, //begin hint manager
                                  {
                                     name: "isTutorialManaged",
                                     view: "checkbox",
@@ -444,7 +446,7 @@ export default function (AB, init_settings) {
                                        onAfterRender() {
                                           AB.ClassUI.CYPRESS_REF(
                                              this,
-                                             "abd_choose_form_isTutorialManaged"
+                                             "abd_choose_list_newApp_mobile_isTutorialManaged"
                                           );
                                        },
                                        onChange: (newv /*, oldv */) => {
@@ -511,6 +513,40 @@ export default function (AB, init_settings) {
                                           ? false
                                           : true,
                                  }, // end hint manager
+
+                                 // Mobile Config Settings
+                                 {
+                                    view: "fieldset",
+                                    label: L("Networking"),
+                                    body: {
+                                       rows: [
+                                          {
+                                             id: this.ids.configNetworking,
+                                             view: "combo",
+                                             label: "type",
+                                             name: "networkType",
+                                             value: "rest",
+                                             options: [
+                                                {
+                                                   id: "rest",
+                                                   value: L("Rest"),
+                                                },
+                                                {
+                                                   id: "socket",
+                                                   value: L("Socket"),
+                                                },
+                                                {
+                                                   id: "relay",
+                                                   value: L("Relay"),
+                                                },
+                                             ],
+                                          },
+                                          { view: "" },
+                                          { view: "" },
+                                       ],
+                                    },
+                                 },
+                                 // end MObile Config Settings
                                  {
                                     view: "spacer",
                                     height: 2,
@@ -533,7 +569,7 @@ export default function (AB, init_settings) {
                                              onAfterRender() {
                                                 AB.ClassUI.CYPRESS_REF(
                                                    this,
-                                                   "abd_choose_form_cancel"
+                                                   "abd_choose_list_newApp_mobile_cancel"
                                                 );
                                              },
                                           },
@@ -581,11 +617,7 @@ export default function (AB, init_settings) {
             this.AB.Webix.ProgressBar
          );
 
-         // Warnings.init(AB);
-
-         // $$(Warnings.ids.buttonWarning).show();
-
-         const $warningsWindow = this.AB.Webix.ui({
+         this.AB.Webix.ui({
             view: "window",
             id: this.ids.issue_id,
             css: "app_form_window_2",
@@ -683,7 +715,7 @@ export default function (AB, init_settings) {
          values.name = values.label;
 
          // work with a new ABApplication
-         var app = this.AB.applicationNew(values);
+         var app = this.AB.applicationMobileNew(values);
          try {
             await app.save();
             webix.message({
@@ -925,6 +957,7 @@ export default function (AB, init_settings) {
       formPopulate(application) {
          super.applicationLoad(application);
 
+         let $form = $$(this.ids.form);
          // Populate data to form
          if (application) {
             [
@@ -936,9 +969,10 @@ export default function (AB, init_settings) {
                "isAccessManaged",
                "isTranslationManaged",
                "isTutorialManaged",
+               "networkType",
             ].forEach((f) => {
-               if ($$(this.ids.form).elements[f]) {
-                  $$(this.ids.form).elements[f].setValue(
+               if ($form.elements[f]) {
+                  $form.elements[f].setValue(
                      application[f] || application.json[f]
                   );
                }
@@ -946,31 +980,37 @@ export default function (AB, init_settings) {
 
             // populate access manager ui
             var $accessManager = $$(this.ids.accessManager);
-            $accessManager.removeView($accessManager.getChildViews()[0]);
-            $accessManager.addView(
-               this.accessManagerUI.ui(application.accessManagers || {}),
-               0
-            );
+            if ($accessManager) {
+               $accessManager.removeView($accessManager.getChildViews()[0]);
+               $accessManager.addView(
+                  this.accessManagerUI.ui(application.accessManagers || {}),
+                  0
+               );
+            }
 
             // populate translation manager ui
             var $translationManager = $$(this.ids.translationManager);
-            $translationManager.removeView(
-               $translationManager.getChildViews()[0]
-            );
-            $translationManager.addView(
-               this.translationManagerUI.ui(
-                  application.translationManagers || {}
-               ),
-               0
-            );
+            if ($translationManager) {
+               $translationManager.removeView(
+                  $translationManager.getChildViews()[0]
+               );
+               $translationManager.addView(
+                  this.translationManagerUI.ui(
+                     application.translationManagers || {}
+                  ),
+                  0
+               );
+            }
 
             // populate tutorial manager ui
             var $tutorialManager = $$(this.ids.tutorialManager);
-            $tutorialManager.removeView($tutorialManager.getChildViews()[0]);
-            $tutorialManager.addView(
-               this.tutorialManagerUI.ui(application.tutorialManagers || {}),
-               0
-            );
+            if ($tutorialManager) {
+               $tutorialManager.removeView($tutorialManager.getChildViews()[0]);
+               $tutorialManager.addView(
+                  this.tutorialManagerUI.ui(application.tutorialManagers || {}),
+                  0
+               );
+            }
          }
 
          this.permissionPopulate(application);
@@ -998,18 +1038,21 @@ export default function (AB, init_settings) {
 
          this.permissionPopulate(); // leave empty to clear selections.
 
-         $$(this.ids.accessManager).removeView(
-            $$(this.ids.accessManager).getChildViews()[0]
-         );
-         $$(this.ids.translationManager).removeView(
-            $$(this.ids.translationManager).getChildViews()[0]
-         );
-         $$(this.ids.accessManager).addView(this.accessManagerUI.ui(), 0);
-         $$(this.ids.translationManager).addView(
-            this.translationManagerUI.ui(),
-            0
-         );
-         $$(this.ids.tutorialManager).addView(this.tutorialManagerUI.ui(), 0);
+         // set "rest" as default networking value
+         $$(this.ids.configNetworking)?.setValue?.("rest");
+
+         // $$(this.ids.accessManager).removeView(
+         //    $$(this.ids.accessManager).getChildViews()[0]
+         // );
+         // $$(this.ids.translationManager).removeView(
+         //    $$(this.ids.translationManager).getChildViews()[0]
+         // );
+         // $$(this.ids.accessManager).addView(this.accessManagerUI.ui(), 0);
+         // $$(this.ids.translationManager).addView(
+         //    this.translationManagerUI.ui(),
+         //    0
+         // );
+         // $$(this.ids.tutorialManager).addView(this.tutorialManagerUI.ui(), 0);
       }
 
       /**
@@ -1040,7 +1083,7 @@ export default function (AB, init_settings) {
                // make sure no other Applications have the same name.
                var values = this.formValues();
                values.name = values.label;
-               var mockApp = this.AB.applicationNew(values);
+               var mockApp = this.AB.applicationMobileNew(values);
                var matchingApps = [];
                (this.AB.applications() || []).forEach((app) => {
                   // NOTE: .areaKey() uses .name in a formatted way, so
@@ -1419,5 +1462,5 @@ export default function (AB, init_settings) {
          */
    }
 
-   return new ABChooseForm();
+   return new ABChooseListNewAppMobile();
 }

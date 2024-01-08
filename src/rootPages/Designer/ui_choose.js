@@ -14,7 +14,7 @@ import AB_Choose_Form_Factory from "./ui_choose_form";
 
 export default function (AB) {
    const AppList = AB_Choose_List_Factory(AB);
-   const AppForm = AB_Choose_Form_Factory(AB);
+   // const AppForm = AB_Choose_Form_Factory(AB);
    const UIClass = UI_Class(AB);
 
    class UI_Choose extends UIClass {
@@ -34,7 +34,7 @@ export default function (AB) {
       async init(AB) {
          this.AB = AB;
 
-         this.warningsPropogate([AppList, AppForm]);
+         this.warningsPropogate([AppList /*, AppForm */]);
          this.on("warnings", () => {
             AppList.refreshList();
          });
@@ -43,20 +43,20 @@ export default function (AB) {
             this.emit("view.workplace", application);
          });
 
-         AppList.on("view.form", () => {
-            AppForm.formReset();
-            AppForm.show();
-         });
+         // AppList.on("view.form", () => {
+         //    AppForm.formReset();
+         //    AppForm.show();
+         // });
 
-         AppList.on("edit.form", (app) => {
-            AppForm.formPopulate(app);
-            AppForm.show();
-         });
+         // AppList.on("edit.form", (app) => {
+         //    AppForm.formPopulate(app);
+         //    AppForm.show();
+         // });
 
-         AppForm.on("view.list", () => {
-            AppList.show();
-         });
-         return Promise.all([AppList.init(AB), AppForm.init(AB)]);
+         // AppForm.on("view.list", () => {
+         //    AppList.show();
+         // });
+         return Promise.all([AppList.init(AB) /*, AppForm.init(AB) */]);
       }
 
       show() {

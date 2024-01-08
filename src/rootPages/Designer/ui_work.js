@@ -10,6 +10,7 @@ import UI_Work_Query from "./ui_work_query";
 import UI_Work_Interface from "./ui_work_interface";
 import UI_Work_Datacollection from "./ui_work_datacollection";
 import UI_Work_Process from "./ui_work_process";
+import UI_Work_PWA from "./ui_work_pwa";
 import UI_Work_VersionLog from "./ui_work_version.js";
 // const AB_Work_Interface = require("./ab_work_interface");
 
@@ -22,6 +23,7 @@ export default function (AB) {
    const AppDataCollectionWorkspace = UI_Work_Datacollection(AB);
    const AppProcessWorkspace = UI_Work_Process(AB);
    const AppInterfaceWorkspace = UI_Work_Interface(AB);
+   const AppPWAWorkspace = UI_Work_PWA(AB);
    const AppVersionWorkspace = UI_Work_VersionLog(AB);
 
    class UI_Work extends UIClass {
@@ -35,6 +37,7 @@ export default function (AB) {
             tab_datacollection: "",
             tab_processview: "",
             tab_interface: "",
+            tab_pwa: "",
             tab_version: "",
             workspace: "",
             collapseMenu: "",
@@ -51,6 +54,18 @@ export default function (AB) {
          this.selectedItem = this.ids.tab_object;
          // {string} {this.ids.xxx}
          // Keep track of the currently selected Tab Item (Object, Query, etc)
+
+         this.expandMenu = {
+            id: this.ids.expandMenu,
+            value: L("Expand Menu"),
+            icon: "fa fa-fw fa-chevron-circle-right",
+         };
+
+         this.collapseMenu = {
+            id: this.ids.collapseMenu,
+            value: L("Collapse Menu"),
+            icon: "fa fa-fw fa-chevron-circle-left",
+         };
       }
 
       scanTopic(app, key) {
@@ -78,7 +93,11 @@ export default function (AB) {
                "datacollectionsIncluded"
             );
             const warnProcesses = this.scanTopic(app, "processes");
+
+            // BOTH Interfaces & PWA will scan through the pages. But only one
+            // of those tabs will be shown depending on the type of App.
             const warnInterfaces = this.scanTopic(app, "pages");
+            const warnPWA = this.scanTopic(app, "pages");
 
             this.cacheSidebarItems[ID] = [
                {
@@ -112,6 +131,12 @@ export default function (AB) {
                   issues: warnInterfaces,
                },
                {
+                  id: this.ids.tab_pwa,
+                  value: L("PWA"),
+                  icon: "fa fa-fw fa-id-card-o",
+                  issues: warnPWA,
+               },
+               {
                   id: this.ids.tab_version,
                   value: L("Version"),
                   icon: "fa fa-fw fa-code-fork",
@@ -123,6 +148,15 @@ export default function (AB) {
                },
             ];
 
+            if (!this.state?.collapsed) {
+               this.cacheSidebarItems[ID] = this.cacheSidebarItems[ID].concat(
+                  this.collapseMenu
+               );
+            } else {
+               this.cacheSidebarItems[ID] = this.cacheSidebarItems[ID].concat(
+                  this.expandMenu
+               );
+            }
             setTimeout(() => {
                this.cacheSidebarItems[ID] = null;
             }, 500);
@@ -137,19 +171,12 @@ export default function (AB) {
        * @return {json}
        */
       ui() {
+         var expandMenu = this.expandMenu;
+
+         var collapseMenu = this.collapseMenu;
+
+         // NOTE: keep sidebarItems() AFTER this.expandMenu
          var sidebarItems = this.sidebarItems();
-
-         var expandMenu = (this.expandMenu = {
-            id: this.ids.expandMenu,
-            value: L("Expand Menu"),
-            icon: "fa fa-fw fa-chevron-circle-right",
-         });
-
-         var collapseMenu = {
-            id: this.ids.collapseMenu,
-            value: L("Collapse Menu"),
-            icon: "fa fa-fw fa-chevron-circle-left",
-         };
 
          return {
             id: this.ids.component,
@@ -228,7 +255,7 @@ export default function (AB) {
                         view: "sidebar",
                         animate: false,
                         width: 160,
-                        data: sidebarItems.concat(collapseMenu),
+                        data: sidebarItems,
                         on: {
                            onAfterSelect: (id) => {
                               if (id == this.ids.collapseMenu) {
@@ -282,6 +309,7 @@ export default function (AB) {
                            AppDataCollectionWorkspace.ui(),
                            AppProcessWorkspace.ui(),
                            AppInterfaceWorkspace.ui(),
+                           AppPWAWorkspace.ui(),
                            AppVersionWorkspace.ui(),
                         ],
                      },
@@ -306,6 +334,9 @@ export default function (AB) {
             AppDataCollectionWorkspace,
             AppProcessWorkspace,
             AppInterfaceWorkspace,
+            AppPWAWorkspace,
+            // NOTE: both Interface and PWA scan the pages for warnings. So only
+            // 1 of those need to be in the WarningsPropogate() array.
          ]);
          this.on("warnings", () => {
             this.CurrentApplication.warningsEval();
@@ -317,16 +348,17 @@ export default function (AB) {
          AppDataCollectionWorkspace.init(AB);
          AppProcessWorkspace.init(AB);
          AppInterfaceWorkspace.init(AB);
+         AppPWAWorkspace.init(AB);
          AppVersionWorkspace.init(AB);
 
          this.$tabbar = $$(this.ids.tabbar);
 
          // initialize the Object Workspace to show first.
-         var state = this.AB.Storage.get(this.ids.component);
-         if (state) {
-            this.$tabbar.setState(state);
+         this.state = this.AB.Storage.get(this.ids.component);
+         if (this.state) {
+            this.$tabbar.setState(this.state);
 
-            if (state.collapsed) {
+            if (this.state.collapsed) {
                setTimeout(() => {
                   this.$tabbar.remove(this.ids.collapseMenu);
                   this.$tabbar.add(this.expandMenu);
@@ -359,7 +391,8 @@ export default function (AB) {
        * Save the state of this tabbar to local storage.
        */
       saveState() {
-         this.AB.Storage.set(this.ids.component, this.$tabbar.getState());
+         this.state = this.$tabbar.getState();
+         this.AB.Storage.set(this.ids.component, this.state);
       }
 
       /**
@@ -375,8 +408,28 @@ export default function (AB) {
       refreshSideBar(application) {
          let $tabbar = $$(this.ids.tabbar);
          let sidebarItems = this.sidebarItems(application);
+
+         // Now we remove one of the entries based upon the type of
+         // Application:
+         let removeID = null;
+         let showID = null;
+         if (application?.isMobile) {
+            removeID = this.ids.tab_interface;
+            showID = this.ids.tab_pwa;
+         } else {
+            removeID = this.ids.tab_pwa;
+            showID = this.ids.tab_interface;
+         }
+
+         if (this.selectedItem == removeID) {
+            this.selectedItem = showID;
+         }
+
+         sidebarItems = sidebarItems.filter((i) => i.id != removeID);
+         $tabbar?.clearAll();
          $tabbar?.define("data", sidebarItems);
          $tabbar?.refresh();
+         this.$tabbar.select(this.selectedItem);
       }
 
       /**
@@ -394,6 +447,7 @@ export default function (AB) {
          AppDataCollectionWorkspace.applicationLoad(application);
          AppProcessWorkspace.applicationLoad(application);
          AppInterfaceWorkspace.applicationLoad(application);
+         AppPWAWorkspace.applicationLoad(application);
          AppVersionWorkspace.applicationLoad(application);
 
          this.refreshSideBar(application);
@@ -435,7 +489,13 @@ export default function (AB) {
                break;
 
             // Interface Workspace Tab
+            case this.ids.tab_pwa:
+               AppPWAWorkspace.show();
+               break;
+
+            // Interface Workspace Tab
             case "interface":
+               console.error("HEY!  Who is calling this with 'interface'?");
                AppInterfaceWorkspace.show();
                this.$tabbar.select(this.ids.tab_interface);
                break;

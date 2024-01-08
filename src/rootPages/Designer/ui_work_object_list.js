@@ -6,13 +6,13 @@
  */
 import UI_Class from "./ui_class";
 import UI_COMMON_LIST from "./ui_common_list";
-import UIListNewProcess from "./ui_work_object_list_newObject";
+import UIListNewObject from "./ui_work_object_list_newObject";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
    // var L = UIClass.L();
 
-   var AddForm = new UIListNewProcess(AB);
+   var AddForm = new UIListNewObject(AB);
    // the popup form for adding a new process
 
    class UI_Work_Object_List extends UIClass {

@@ -41,6 +41,14 @@ export default function (AB) {
 
             this.base = base;
             this.AB = AB;
+
+            this.fieldsHide = {
+               /* id.tag : bool */
+            };
+            // {hash}
+            // indicates if a given field should be hidden.
+            // this allows sub classes to hide fields from parent classes:
+            // this.fieldsHide.required = true;  hides the required field.
          }
 
          ui(elements = [], rules = {}) {
@@ -57,6 +65,7 @@ export default function (AB) {
                      label: L("Name"),
                      name: "name",
                      value: "",
+                     hidden: this.fieldsHide.label ? true : false,
                   },
                ],
                rules: {
@@ -239,12 +248,10 @@ export default function (AB) {
          /**
           * @method ViewClass()
           * A method to return the proper ABViewXXX Definition.
-          * NOTE: Must be overwritten by the Child Class
+          * NOTE: Can be overwritten by the Child Class
           */
          ViewClass() {
-            console.error("!!! Child Class has not overwritten ViewClass()");
-            return null;
-            // return super._ViewClass("string");
+            return this._ViewClass(this.constructor.key);
          }
 
          _ViewClass(key) {

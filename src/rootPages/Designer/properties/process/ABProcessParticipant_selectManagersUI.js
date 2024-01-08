@@ -45,7 +45,7 @@ export default function (AB) {
             rules: [],
          };
          const fields =
-            element.process?.processDataFields(element).map((e) => e.field) ||
+            element.process?.processDataFields(element)?.map((e) => e.field) ||
             [];
 
          this.filterComponent.fieldsLoad(fields);

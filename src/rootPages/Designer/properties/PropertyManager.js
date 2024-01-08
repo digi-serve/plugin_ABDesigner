@@ -115,6 +115,32 @@ export default function (AB) {
          Views.push(V.default(AB));
       });
 
+      var MobileViews = [];
+      // {array}
+      // All the ABMobileViewXXX Property Interfaces Available.
+      [
+         require("./mobile/ABMobilePage"),
+         require("./mobile/ABMobileViewForm"),
+         require("./mobile/ABMobileViewFormButton"),
+         require("./mobile/ABMobileViewFormCheckbox"),
+         require("./mobile/ABMobileViewFormConnect"),
+         require("./mobile/ABMobileViewFormDate"),
+         require("./mobile/ABMobileViewFormDatetime"),
+         require("./mobile/ABMobileViewFormEmail"),
+         require("./mobile/ABMobileViewFormFile"),
+         require("./mobile/ABMobileViewFormFormula"),
+         require("./mobile/ABMobileViewFormImage"),
+         require("./mobile/ABMobileViewFormNumber"),
+         require("./mobile/ABMobileViewFormReadonly"),
+         require("./mobile/ABMobileViewFormSelectMultiple"),
+         require("./mobile/ABMobileViewFormSelectSingle"),
+         require("./mobile/ABMobileViewFormTextbox"),
+         require("./mobile/ABMobileViewLabel"),
+         require("./mobile/ABMobileViewList"),
+      ].forEach((V) => {
+         MobileViews.push(V.default(AB));
+      });
+
       PropertyMgr = {
          /*
           * @function fields
@@ -133,6 +159,10 @@ export default function (AB) {
 
          views: function (v = () => true) {
             return Views.filter(v);
+         },
+
+         mobileViews: function (v = () => true) {
+            return MobileViews.filter(v);
          },
       };
    }
