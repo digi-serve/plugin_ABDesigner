@@ -357,6 +357,7 @@ export default function (AB) {
          // super.processLoad(process);
          var ids = this.ids;
 
+         this.initFormIO();
          Object.keys(this.panelsByType).forEach((k) => {
             // if (this.panelsByType[k].processLoad) {
             this.panelsByType[k]?.processLoad?.(process);
@@ -949,6 +950,15 @@ export default function (AB) {
          let currElements = process.elements();
          super.warningsRefresh(process);
          currElements.forEach((e) => process.elementAdd(e));
+      }
+
+      /**
+       * Ensure the formio custom webix components are loaded and ready to
+       * use.
+       */
+      initFormIO() {
+         this.AB.custom.formiobuilder.init();
+         this.AB.custom.formiopreview.init();
       }
    }
 
