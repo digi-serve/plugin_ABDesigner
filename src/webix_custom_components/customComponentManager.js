@@ -4,7 +4,9 @@
  */
 
 // Import our Custom Components here:
-const componentList = [require("./formioBuilder").default];
+const componentList = [
+   // require("./formioBuilder").default
+];
 
 export default function initCustomWebix(AB) {
    componentList.forEach((Component) => {

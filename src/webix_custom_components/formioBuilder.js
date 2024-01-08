@@ -3,6 +3,9 @@
  *
  * Create a custom webix component.
  *
+ * Note: Moved to Platform Web, see note in
+ * webix_custom_components/formioBuilder
+ *
  */
 
 export default class ABCustomFormIOBuilder {
