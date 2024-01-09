@@ -357,7 +357,7 @@ export default function (AB) {
          // super.processLoad(process);
          var ids = this.ids;
 
-         this.initFormIO();
+         this.initDependencies();
          Object.keys(this.panelsByType).forEach((k) => {
             // if (this.panelsByType[k].processLoad) {
             this.panelsByType[k]?.processLoad?.(process);
@@ -953,12 +953,13 @@ export default function (AB) {
       }
 
       /**
-       * Ensure the formio custom webix components are loaded and ready to
+       * Ensure the formio/tinymce custom webix components are loaded and ready to
        * use.
        */
-      initFormIO() {
+      initDependencies() {
          this.AB.custom.formiobuilder.init();
          this.AB.custom.formiopreview.init();
+         this.AB.custom["tinymce-editor"].init();
       }
    }
 

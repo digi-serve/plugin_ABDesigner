@@ -253,10 +253,13 @@ export default function (AB) {
          }
 
          onShow() {
+            let hasTextComponent = false;
             this.CurrentView.views().forEach((v) => {
+               if (v.key === "text") hasTextComponent = true;
                var component = this.subComponents[v.id];
                component?.onShow?.();
             });
+            if (hasTextComponent) this.initTinyMCE();
 
             let dc = this.CurrentView.datacollection;
             if (dc && dc.dataStatus == dc.dataStatusFlag.notInitial) {
@@ -425,6 +428,12 @@ export default function (AB) {
             e.preventDefault();
 
             return false;
+         }
+         /**
+          * Ensure TinyMCE has been loaded and initialized.
+          */
+         async initTinyMCE() {
+            await this.AB.custom["tinymce-editor"].init();
          }
       };
    }
