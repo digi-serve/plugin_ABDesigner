@@ -1037,7 +1037,7 @@ export default function (AB, init_settings) {
          var columns = CurrentQuery.columnHeaders(false, false);
          DataTable.refreshColumns(columns);
 
-         let qCurrentView = CurrentQuery.workspaceViews.getCurrentView();
+         // let qCurrentView = CurrentQuery.workspaceViews.getCurrentView();
 
          this.mockDatacollection.clearAll();
          this.mockDatacollection.datasource = CurrentQuery;
@@ -1052,7 +1052,8 @@ export default function (AB, init_settings) {
                   //// query definition, so we don't want to pass it again
                   //// as part of the workspace filter conditions.
                   // filterConditions: null,  // qCurrentView.filterConditions,
-                  sortFields: qCurrentView.sortFields,
+                  // sortFields: qCurrentView.sortFields,
+                  sortFields: CurrentQuery.objectWorkspace?.sortFields ?? [],
                },
             },
          });
