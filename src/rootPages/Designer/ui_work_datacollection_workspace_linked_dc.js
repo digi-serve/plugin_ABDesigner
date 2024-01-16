@@ -17,10 +17,44 @@ export default function (AB) {
          // {ABFactory}
       }
 
+      _getLinkedDC() {
+         const currentDC = this.CurrentDatacollection;
+         return currentDC?.datacollectionLink ?? currentDC?.datacollectionFollow;
+      }
+
+      _populateOptions() {
+         let $selectList = $$(this.ids.selectList);
+
+         const dcLink = this._getLinkedDC();
+
+         // Populate linked DC options
+         const _ui = this.ui(dcLink.getData(), dcLink.getCursor()?.id);
+         $selectList = this.AB.Webix.ui(_ui, $selectList);
+
+         // Refresh columns
+         const columns = [];
+         dcLink.datasource.fields().forEach((f) => {
+            if (f.key == "connectObject" || f.key == "image" || f.key == "file")
+               return;
+
+            columns.push({
+               id: f.columnName,
+               header: f.label,
+               minWidth: 150,
+               fillspace: true,
+            });
+         });
+         const $table = $selectList.getPopup().getBody();
+         $table.refreshColumns(columns);
+         $table.refresh();
+
+         $selectList.show();
+      }
+
       ui(options = [], value) {
          const ids = this.ids;
          const currentDC = this.CurrentDatacollection;
-         const linkedDC = currentDC?.datacollectionLink;
+         const linkedDC = this._getLinkedDC();
 
          return {
             id: ids.selectList,
@@ -31,7 +65,7 @@ export default function (AB) {
             options: {
                view: "gridsuggest",
                data: options ?? [],
-               template: function(item) {
+               template: function (item) {
                   return linkedDC?.datasource?.displayData(item) ?? item.id;
                },
             },
@@ -55,37 +89,24 @@ export default function (AB) {
          }
       }
 
-      datacollectionLoad(dc) {
+      async datacollectionLoad(dc) {
          const ids = this.ids;
          super.datacollectionLoad(dc);
 
-         const dcLink = dc.datacollectionLink;
-         let $selectList = $$(ids.selectList);
+         const dcLink = this._getLinkedDC();
          if (dcLink) {
-            // Populate linked DC options
-            const _ui = this.ui(dcLink.getData(), dcLink.getCursor()?.id);
-            $selectList = this.AB.Webix.ui(_ui, $selectList);
-
-            // Refresh columns
-            const columns = [];
-            dcLink.datasource.fields().forEach((f) => {
-               if (f.key == "connectObject") return;
-
-               columns.push({
-                  id: f.columnName,
-                  header: f.label,
-                  minWidth: 150,
-                  fillspace: true,
+            if (dcLink.dataStatus == dcLink.dataStatusFlag.initialized) {
+               this._populateOptions();
+            }
+            else {
+               dcLink.once("initializedData", () => {
+                  this._populateOptions();
+                  dc.reloadData(0, 20);
                });
-            });
-            const $table = $selectList.getPopup().getBody();
-            $table.refreshColumns(columns);
-            $table.refresh();
-
-            $selectList.show();
+            }
          }
          else {
-            $selectList.hide();
+            $$(ids.selectList).hide();
          }
       }
 
