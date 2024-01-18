@@ -4,6 +4,7 @@ import UI_Warnings from "./ui_warnings";
 import FWorkspaceViews from "./ui_work_object_workspace_workspaceviews";
 import FWorkspaceDisplay from "./ui_work_object_workspace_view_grid";
 import FWorkspaceProperty from "./ui_work_datacollection_workspace_properties";
+import FWorkspaceLinkedDC from "./ui_work_datacollection_workspace_linked_dc";
 
 export default function (AB, init_settings) {
    const ibase = "ui_work_datacollection_workspace";
@@ -13,6 +14,7 @@ export default function (AB, init_settings) {
 
    const Datatable = FWorkspaceDisplay(AB, `${ibase}_view_grid`, init_settings);
    const Property = FWorkspaceProperty(AB);
+   const LinkedDC = FWorkspaceLinkedDC(AB);
 
    const Warnings = UI_Warnings(AB, `${ibase}_view_warnings`, init_settings);
 
@@ -86,7 +88,13 @@ export default function (AB, init_settings) {
                      {
                         cols: [
                            // Workspace
-                           Datatable.ui(),
+                           {
+                              view: "layout",
+                              rows: [
+                                 LinkedDC.ui(),
+                                 Datatable.ui(),
+                              ]
+                           },
 
                            { view: "resizer", css: "bg_gray", width: 11 },
 
@@ -126,12 +134,14 @@ export default function (AB, init_settings) {
 
          await Datatable.init(AB);
          await Property.init(AB);
+         await LinkedDC.init(AB);
 
          this.mockDatacollection = this.AB.datacollectionNew({});
          this.mockDatacollection.init();
 
          Datatable.datacollectionLoad(this.mockDatacollection);
          Property.datacollectionLoad(this.mockDatacollection);
+         LinkedDC.datacollectionLoad(this.mockDatacollection);
 
          $$(ids.noSelection).show();
       }
@@ -141,6 +151,7 @@ export default function (AB, init_settings) {
 
          Datatable.applicationLoad(application);
          Property.applicationLoad(application);
+         LinkedDC.applicationLoad(application);
       }
 
       datacollectionLoad(datacollection) {
@@ -150,6 +161,7 @@ export default function (AB, init_settings) {
 
          Datatable.datacollectionLoad(datacollection);
          Property.datacollectionLoad(datacollection);
+         LinkedDC.datacollectionLoad(datacollection);
 
          if (!datacollection) {
             this.clearWorkspace();
