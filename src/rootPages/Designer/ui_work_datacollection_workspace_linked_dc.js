@@ -3,8 +3,6 @@ import UI_Class from "./ui_class";
 export default function (AB) {
    const ibase = "ui_work_datacollection_workspace_linked_dc";
    const UIClass = UI_Class(AB);
-   const uiConfig = AB.Config.uiSettings();
-   const uiCustom = AB.custom;
    const L = UIClass.L();
 
    class UI_Work_Datacollection_Workspace_Linked_DC extends UIClass {
