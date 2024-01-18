@@ -329,92 +329,84 @@ export default function (AB) {
 
       getDateFields() {
          if (this.CurrentObject) {
-            const options = [];
-
-            options.push({
-               label: L("Convert minutes to hours (Format: hours.minutes)"),
-               function: "MINUTE_TO_HOUR()",
-            });
-
-            /** CURRENT DATE */
-            options.push({
-               label: L("Year of [{0}]", ["Current"]),
-               function: "YEAR(CURRENT)",
-            });
-
-            options.push({
-               label: L("Month of [{0}]", ["Current"]),
-               function: "MONTH(CURRENT)",
-            });
-
-            options.push({
-               label: L("Day of [{0}]", ["Current"]),
-               function: "DAY(CURRENT)",
-            });
-
-            options.push({
-               label: L("Get days of [{0}] (since January 1, 1970)", [
-                  "Current",
-               ]),
-               function: "DATE(CURRENT)",
-            });
-
-            options.push({
-               label: L("Get hours of [{0}] (since January 1, 1970)", [
-                  "Current",
-               ]),
-               function: "HOUR(CURRENT)",
-            });
-
-            options.push({
-               label: L("Get minutes of [{0}] (since January 1, 1970)", [
-                  "Current",
-               ]),
-               function: "MINUTE(CURRENT)",
-            });
+            const options = [
+               {
+                  label: L("Convert minutes to hours (Format: hours.minutes)"),
+                  function: "MINUTE_TO_HOUR()",
+               },
+               /** CURRENT DATE */
+               {
+                  label: L("Year of [{0}]", ["Current"]),
+                  function: "YEAR(CURRENT)",
+               },
+               {
+                  label: L("Month of [{0}]", ["Current"]),
+                  function: "MONTH(CURRENT)",
+               },
+               {
+                  label: L("Day of [{0}]", ["Current"]),
+                  function: "DAY(CURRENT)",
+               },
+               {
+                  label: L("Get days of [{0}] (since January 1, 1970)", [
+                     "Current",
+                  ]),
+                  function: "DATE(CURRENT)",
+               },
+               {
+                  label: L("Get hours of [{0}] (since January 1, 1970)", [
+                     "Current",
+                  ]),
+                  function: "HOUR(CURRENT)",
+               },
+               {
+                  label: L("Get minutes of [{0}] (since January 1, 1970)", [
+                     "Current",
+                  ]),
+                  function: "MINUTE(CURRENT)",
+               },
+            ];
 
             /** DATE FIELDS */
-            this.CurrentObject.fields((f) => f.key == "date").forEach((f) => {
-               options.push({
-                  label: L("Calculate age from [{0}]", [f.label]),
-                  function: `AGE({${f.columnName}})`,
-               });
-
-               options.push({
-                  label: L("Year of [{0}]", [f.label]),
-                  function: `YEAR({${f.columnName}})`,
-               });
-
-               options.push({
-                  label: L("Month of [{0}]", [f.label]),
-                  function: `MONTH({${f.columnName}})`,
-               });
-
-               options.push({
-                  label: L("Day of [{0}]", [f.label]),
-                  function: `DAY({${f.columnName}})`,
-               });
-
-               options.push({
-                  label: L("Get days of [${0}] (since January 1, 1970)", [
-                     f.label,
-                  ]),
-                  function: `DATE({${f.columnName}})`,
-               });
-
-               options.push({
-                  label: L("Get hours of [${0}] (since January 1, 1970)", [
-                     f.label,
-                  ]),
-                  function: `HOUR({${f.columnName}})`,
-               });
-
-               options.push({
-                  label: L("Get minutes of [${0}] (since January 1, 1970)", [
-                     f.label,
-                  ]),
-                  function: `MINUTE({${f.columnName}})`,
-               });
+            this.CurrentObject.fields(
+               (f) => f.key == "date" || f.key == "datetime"
+            ).forEach((f) => {
+               options.push(
+                  {
+                     label: L("Calculate age from [{0}]", [f.label]),
+                     function: `AGE({${f.columnName}})`,
+                  },
+                  {
+                     label: L("Year of [{0}]", [f.label]),
+                     function: `YEAR({${f.columnName}})`,
+                  },
+                  {
+                     label: L("Month of [{0}]", [f.label]),
+                     function: `MONTH({${f.columnName}})`,
+                  },
+                  {
+                     label: L("Day of [{0}]", [f.label]),
+                     function: `DAY({${f.columnName}})`,
+                  },
+                  {
+                     label: L("Get days of [{0}] (since January 1, 1970)", [
+                        f.label,
+                     ]),
+                     function: `DATE({${f.columnName}})`,
+                  },
+                  {
+                     label: L("Get hours of [{0}] (since January 1, 1970)", [
+                        f.label,
+                     ]),
+                     function: `HOUR({${f.columnName}})`,
+                  },
+                  {
+                     label: L("Get minutes of [{0}] (since January 1, 1970)", [
+                        f.label,
+                     ]),
+                     function: `MINUTE({${f.columnName}})`,
+                  }
+               );
             });
 
             return options;
@@ -469,7 +461,7 @@ export default function (AB) {
                // correct
                isValid = true;
             } catch (err) {
-               $$(ids.component).markInvalid("formula", "");
+               $$(ids.component).markInvalid("formula", err.message ?? "");
 
                // incorrect
                isValid = false;
