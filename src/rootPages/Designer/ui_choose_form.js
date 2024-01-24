@@ -725,12 +725,15 @@ export default function (AB, init_settings) {
          // {hash} /key : value
          // a set of the original values to reset to incase of an error saving.
 
-         Object.keys(values).forEach((k) => {
-            oldVals[k] = Application[k];
-            Application[k] = values[k];
-         });
-
          try {
+            Object.keys(values).forEach((k) => {
+               oldVals[k] = Application[k];
+
+               // NOTE: version attribute is getter(read only) property
+               if (k != "version")
+                  Application[k] = values[k];
+            });
+
             await Application.save();
             webix.message({
                type: "success",
