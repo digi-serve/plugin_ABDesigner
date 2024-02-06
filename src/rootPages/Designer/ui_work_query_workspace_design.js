@@ -1071,6 +1071,15 @@ export default function (AB, init_settings) {
             .then(() => {
                this.mockDatacollection.bind(DataTable);
                // DataTable.hideProgress(); <-- happens on the .bind()
+            })
+            .catch((err) => {
+               // This should have already been reported to devs by AB.Network
+               // so just show a message for users
+               this.AB.alert({
+                  title: L("Error getting Query"),
+                  type: "alert-error",
+                  text: `<span style="font-family:monospace">${err.message}</span>`,
+               });
             });
       }
 
