@@ -1709,7 +1709,7 @@ export default function (AB, ibase, init_settings) {
 
          const $systemPopup = this.AB.Webix.ui({
             view: "window",
-            height: 250,
+            height: 300,
             width: 450,
             position: "center",
             modal: true,
@@ -1734,16 +1734,17 @@ export default function (AB, ibase, init_settings) {
                view: "property",
                id: this.ids.propertyFieldInfo,
                editable: false,
-               nameWidth: 90,
+               nameWidth: 120,
                elements: [
                   { label: "Database Information", type: "label" },
+                  { label: "Definition ID", type: "text", id: "DefinitionId" },
                   { label: "Name", type: "text", id: "Field" },
                   { label: "Type", type: "text", id: "Type" },
                   { label: "Is Nullable", type: "text", id: "Null" },
                   { label: "Key type", type: "text", id: "Key" },
                   { label: "Default value", type: "text", id: "Default" },
                   { label: "Extra", type: "text", id: "Extra" },
-               ]
+               ],
             },
          });
 
@@ -1755,9 +1756,10 @@ export default function (AB, ibase, init_settings) {
 
          try {
             const fieldInfo = await fnFieldInfo;
+            fieldInfo.DefinitionId = field.id;
+
             $propertyFieldInfo.setValues(fieldInfo);
-         }
-         catch(err) {
+         } catch (err) {
             this.AB.notify.developer(err, {
                context: "Error trying to get the field information",
                fields: field.toObj(),
