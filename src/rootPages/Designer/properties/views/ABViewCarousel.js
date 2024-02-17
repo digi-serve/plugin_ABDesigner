@@ -50,6 +50,9 @@ export default function (AB) {
          // if the user clicks [cancel] or [close];
 
          this.linkPageComponent = new LinkPageHelper();
+         this.linkPageComponent.on("changed", () => {
+            this.onChange();
+         });
       }
 
       static get key() {

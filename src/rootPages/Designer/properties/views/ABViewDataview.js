@@ -60,7 +60,7 @@ export default function (AB) {
          super.init(this.AB);
 
          this.linkPageComponent.init();
-         this.linkPageComponent.on("change", () => {
+         this.linkPageComponent.on("changed", () => {
             this.onChange();
          });
       }

@@ -62,7 +62,7 @@ export default function (AB, idBase) {
                         labelWidth: uiConfig.labelWidthLarge,
                         options: [],
                         on: {
-                           onChange: () => this.emit("change"),
+                           onChange: () => this.emit("changed"),
                         },
                      },
                      {
@@ -75,7 +75,7 @@ export default function (AB, idBase) {
                         labelWidth: uiConfig.labelWidthLarge,
                         options: [],
                         on: {
-                           onChange: () => this.emit("change"),
+                           onChange: () => this.emit("changed"),
                         },
                      },
                   ],
