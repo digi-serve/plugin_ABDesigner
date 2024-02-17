@@ -198,6 +198,7 @@ export default function (AB, idBase) {
             } else {
                $$(this.ids.detailsPage).setValue(null);
             }
+            $$(this.ids.detailsPage).refresh();
 
             if (settings.editPage) {
                var edit = settings.editPage;
@@ -208,6 +209,7 @@ export default function (AB, idBase) {
             } else {
                $$(this.ids.editPage).setValue(null);
             }
+            $$(this.ids.editPage).refresh();
          }
 
          getSettings() {
