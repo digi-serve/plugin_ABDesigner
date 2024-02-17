@@ -93,17 +93,29 @@ export default function (AB, idBase) {
             $$(this.ids.editPage).setValue("");
          }
 
-         viewLoad(view) {
+         /**
+          * @method viewLoad()
+          * Populate the LinkPage drop lists with appropriate values
+          * given the passed in {ABView}.  In cases where the dataviewID
+          * is being updated but isn't reflected in the {ABView} you can
+          * pass in the new dataviewID to match against.
+          * @param {ABView} view
+          *        The current Widget/View we are displaying for
+          * @param {uuid} dViewID
+          *        Any dataviewID override, or {false} otherwise.
+          */
+         viewLoad(view, dViewID = false) {
             this.view = view;
             const ids = this.ids;
+            dViewID = dViewID || view.settings.dataviewID;
 
             let filter = (v, widgetKey) => {
                return (
                   v.key == widgetKey &&
-                  (v.settings.dataviewID == view.settings.dataviewID ||
+                  (v.settings.dataviewID == dViewID ||
                      (this.AB ?? view.AB)?.datacollectionByID(
                         v.settings.dataviewID
-                     )?.datacollectionFollow?.id == view.settings.dataviewID)
+                     )?.datacollectionFollow?.id == dViewID)
                );
             };
 

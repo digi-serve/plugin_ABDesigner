@@ -190,6 +190,13 @@ export default function (AB) {
                            onChange: (newv, oldv) => {
                               if (newv != oldv) {
                                  this.linkPageComponent.clear();
+                                 // the linkPageComponent needs to refresh
+                                 // itself with the possible Link Pages
+                                 // that are related to this new DC:
+                                 this.linkPageComponent.viewLoad(
+                                    this.CurrentView,
+                                    newv
+                                 );
 
                                  let currDC =
                                     this.CurrentView?.AB.datacollectionByID(
@@ -590,8 +597,10 @@ export default function (AB) {
          if (!view) return;
 
          // this.viewEditing = view;
-
-         $$(ids.datacollection).setValue(view.settings.dataviewID);
+         let $dataCollection = $$(ids.datacollection);
+         $dataCollection.blockEvent();
+         $dataCollection.setValue(view.settings.dataviewID);
+         $dataCollection.unblockEvent();
          $$(ids.isEditable).setValue(view.settings.isEditable);
          $$(ids.massUpdate).setValue(view.settings.massUpdate);
          $$(ids.allowDelete).setValue(view.settings.allowDelete);
