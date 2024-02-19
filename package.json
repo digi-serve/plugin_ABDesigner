@@ -1,6 +1,6 @@
 {
   "name": "abdesigner",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "(AppBuilder) A UI for designing AB resources.",
   "main": "index.js",
   "scripts": {
@@ -37,6 +37,6 @@
   "dependencies": {
     "bpmn-js": "^9.0.3",
     "path": "^0.12.7",
-    "semver": "^7.5.4"
+    "semver": "^7.6.0"
   }
 }
