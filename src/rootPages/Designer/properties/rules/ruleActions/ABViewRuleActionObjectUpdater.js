@@ -238,6 +238,7 @@ export default function (AB) {
             updateForm: "",
             field: "",
             value: "",
+            currentDate: "",
             selectDc: "",
             selectBy: "",
             queryField: "",
@@ -468,6 +469,7 @@ export default function (AB) {
          else $componentView.id = ids.value;
 
          // WORKAROUND: add '[Current User]' option to the user data field
+         let $additionalView = {};
          if (field.key == "user") {
             $componentView.id = `update_container_${field.id}`;
             formFieldComponent.ids.component = ids.value;
@@ -496,6 +498,23 @@ export default function (AB) {
             field.on("option.data", () => {
                $userList.suggest.on.onShow();
             });
+         }
+         // '[Current Date]' option to the date/datetime field
+         else if (field.key == "date" || field.key == "datetime") {
+            $additionalView = {
+               id: ids.currentDate,
+               view: "checkbox",
+               labelRight: L("Current Date/Time"),
+               labelWidth: 0,
+               on: {
+                  onChange: (val) => {
+                     const $compView = $$($componentView.id);
+                     if ($compView) {
+                        val ? $compView.disable() : $compView.enable();
+                     }
+                  },
+               },
+            };
          }
 
          // find all the DataSources
@@ -706,6 +725,7 @@ export default function (AB) {
                      batch: "custom",
                      rows: [
                         $componentView,
+                        $additionalView,
                         {
                            view: "label",
                            label: L("<a>Or exists value</a>"),
@@ -819,6 +839,20 @@ export default function (AB) {
 
                   // wait until render UI complete
                   setTimeout(function () {
+                     // set current date option:
+                     if (field.key == "date" || field.key == "datetime") {
+                        if (data.value == "ab-current-date") {
+                           const $currentDate = $$(ids.currentDate);
+                           $currentDate.setValue(true);
+                           return;
+                        } else if (
+                           data.value &&
+                           !(data.value instanceof Date)
+                        ) {
+                           data.value = new Date(data.value);
+                        }
+                     }
+
                      // set value to custom field
                      const rowData = {};
                      rowData[field.columnName] = data.value;
@@ -877,7 +911,16 @@ export default function (AB) {
             if ($$(ids.multiview).config.visibleBatch == "exist") {
                getValueFn();
             } else {
-               data.value = field.getValue($valueField, {});
+               // check if set current date to Date/DateTime fields:
+               if (field.key == "date" || field.key == "datetime") {
+                  const $currentDate = $$(ids.currentDate);
+                  data.value = $currentDate.getValue()
+                     ? "ab-current-date"
+                     : field.getValue($valueField, {});
+               } else {
+                  data.value = field.getValue($valueField, {});
+               }
+
                data.op = "set"; // possible to create other types of operations.
                data.type = field.key;
                data.valueType = "custom";
