@@ -76,7 +76,7 @@ export default function (AB, ibase) {
          this.field = field;
 
          const $list = $$(this.ids.list);
-         if ($list.exists(this.ids.list_info_item));
+         if ($list.exists(this.ids.list_info_item))
             $list.remove(this.ids.list_info_item);
 
          if (this.AB.Account.isSystemDesigner()) {

@@ -17,7 +17,11 @@ export default function (AB) {
 
    class UI_Work_Object_List extends UIClass {
       constructor() {
-         super("ui_work_object_list");
+         super("ui_work_object_list", {
+            propertyObjectInfo: "",
+            propertyFieldsPopup: "",
+            propertyFieldsList: "",
+         });
 
          this.ListComponent = UI_COMMON_LIST(AB, {
             idBase: this.ids.component,
@@ -72,6 +76,10 @@ export default function (AB) {
 
          this.ListComponent.on("exclude", (item) => {
             this.exclude(item);
+         });
+
+         this.ListComponent.on("information", (item) => {
+            this.information(item);
          });
 
          // this.ListComponent.on("copied", (data) => {
@@ -211,6 +219,102 @@ export default function (AB) {
 
          // this will clear the object workspace
          this.emit("selected", null);
+      }
+
+      async information(object) {
+         const fnGetDbInfo = object.getDbInfo();
+
+         const $propertyFieldsPopup = $$(this.ids.propertyFieldsPopup);
+         if (!$propertyFieldsPopup) {
+            this.AB.Webix.ui({
+               id: this.ids.propertyFieldsPopup,
+               view: "popup",
+               height: 300,
+               width: 500,
+               body: {
+                  id: this.ids.propertyFieldsList,
+                  view: "datatable",
+                  columns: [
+                     { id: "Field", header: "Name", width: 150 },
+                     { id: "Type", header: "Type", width: 150 },
+                     { id: "Default", header: "Default", width: 150 },
+                     { id: "Extra", header: "Extra" },
+                     { id: "Key", header: "Index Type" },
+                     { id: "Null", header: "Nullable" },
+                  ],
+               },
+            });
+         }
+
+         const $systemPopup = this.AB.Webix.ui({
+            view: "window",
+            height: 300,
+            width: 450,
+            position: "center",
+            modal: true,
+            resize: true,
+            head: {
+               view: "toolbar",
+               cols: [
+                  {},
+                  {
+                     view: "button",
+                     width: 35,
+                     css: "webix_transparent",
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        $systemPopup.close();
+                     },
+                  },
+               ],
+            },
+            body: {
+               view: "property",
+               id: this.ids.propertyObjectInfo,
+               nameWidth: 120,
+               // editable: false,
+               elements: [
+                  { label: "Database Information", type: "label" },
+                  {
+                     label: "Definition ID",
+                     type: "text",
+                     id: "definitionId",
+                  },
+                  {
+                     label: "Table Name",
+                     type: "text",
+                     id: "tableName",
+                  },
+                  {
+                     id: "fieldsPopup",
+                     label: "Fields",
+                     type: "popup",
+                     popup: this.ids.propertyFieldsPopup,
+                  },
+               ],
+            },
+         });
+
+         $systemPopup.show();
+
+         const $propertyObjectInfo = $$(this.ids.propertyObjectInfo);
+         this.AB.Webix.extend($propertyObjectInfo, this.AB.Webix.ProgressBar);
+         $propertyObjectInfo.showProgress({ type: "icon" });
+
+         try {
+            const objectInfo = await fnGetDbInfo;
+
+            $propertyObjectInfo.setValues(objectInfo);
+            $$(this.ids.propertyFieldsList).define("data", objectInfo.fields);
+         } catch (err) {
+            this.AB.notify.developer(err, {
+               context: "Error trying to get information of object",
+               object: object.toObj(),
+            });
+         }
+
+         $propertyObjectInfo.hideProgress();
       }
 
       ready() {

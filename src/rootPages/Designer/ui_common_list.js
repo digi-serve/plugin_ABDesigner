@@ -316,6 +316,10 @@ export default function (AB, options) {
                   // this.emit("copy", selectedItem);
                   break;
 
+               case "information":
+                  this.emit("information", selectedItem);
+                  break;
+
                default:
                   this.emit("menu", {
                      command: command,
