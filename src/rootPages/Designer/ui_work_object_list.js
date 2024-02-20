@@ -10,7 +10,7 @@ import UIListNewObject from "./ui_work_object_list_newObject";
 
 export default function (AB) {
    const UIClass = UI_Class(AB);
-   // var L = UIClass.L();
+   const L = UIClass.L();
 
    var AddForm = new UIListNewObject(AB);
    // the popup form for adding a new process
@@ -18,6 +18,7 @@ export default function (AB) {
    class UI_Work_Object_List extends UIClass {
       constructor() {
          super("ui_work_object_list", {
+            informationMenuItem: "",
             propertyObjectInfo: "",
             propertyFieldsPopup: "",
             propertyFieldsList: "",
@@ -61,6 +62,22 @@ export default function (AB) {
          // List of Objects
          //
          await this.ListComponent.init(AB);
+
+         this.ListComponent.on("show", () => {
+            const idList = this.ListComponent.PopupEditComponent.ids.list;
+            const $list = $$(idList);
+            if ($list.exists(this.ids.informationMenuItem))
+               $list.remove(this.ids.informationMenuItem);
+
+            if (this.AB.Account.isSystemDesigner()) {
+               $list.add({
+                  id: this.ids.informationMenuItem,
+                  label: L("Information"),
+                  icon: "fa fa-info-circle",
+                  command: "information",
+               });
+            }
+         });
 
          this.ListComponent.on("selected", (item) => {
             this.emit("selected", item?.id);
