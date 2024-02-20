@@ -34,7 +34,6 @@ export default function (AB) {
             // make each instance have unique ids => so add contextID to them:
             this.ids.menu = `${idBase}_menu_${contextID}`;
             this.ids.list = `${idBase}_list_${contextID}`;
-            this.ids.info = `${idBase}_info_${contextID}`;
 
             this.Popup = null;
             this._menuOptions = [
@@ -143,18 +142,6 @@ export default function (AB) {
 
          show(itemNode) {
             this.Popup?.show(itemNode);
-
-            if (this.$list.exists(this.ids.info))
-               this.$list.remove(this.ids.info);
-
-            if (this.AB.Account.isSystemDesigner()) {
-               this.$list.add({
-                  id: this.ids.info,
-                  label: L("Information"),
-                  icon: "fa fa-info-circle",
-                  command: "information",
-               });
-            }
          }
 
          /**

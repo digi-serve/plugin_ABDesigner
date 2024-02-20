@@ -410,6 +410,7 @@ export default function (AB, options) {
       clickEditMenu(e, id, trg) {
          // Show menu
          this.PopupEditComponent.show(trg);
+         this.emit("show");
          return false;
       }
 
