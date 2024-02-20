@@ -17,6 +17,8 @@ export default function (AB, ibase) {
       constructor(base) {
          super(base);
 
+         this.ids.list_info_item = `${base}_list_info_item`;
+
          // overwrite the default common menu with our column Header
          // options.
          this._menuOptions = [
@@ -72,6 +74,20 @@ export default function (AB, ibase) {
       show(node, field) {
          this.$node = node;
          this.field = field;
+
+         const $list = $$(this.ids.list);
+         if ($list.exists(this.ids.list_info_item))
+            $list.remove(this.ids.list_info_item);
+
+         if (this.AB.Account.isSystemDesigner()) {
+            $list.add({
+               id: this.ids.list_info_item,
+               label: L("Information"),
+               icon: "fa fa-info-circle",
+               command: "system_info",
+            });
+         }
+
          super.show(node);
       }
 

@@ -94,6 +94,8 @@ export default function (AB, ibase, init_settings) {
             viewMenuButton: "",
             viewMenuNewView: "",
 
+            propertyFieldInfo: "",
+
             // Toolbar:
             toolbar: "",
 
@@ -1065,6 +1067,9 @@ export default function (AB, ibase, init_settings) {
                   },
                });
                break;
+            case "system_info":
+               this.showSystemInfo(field);
+               break;
          }
       }
 
@@ -1697,6 +1702,71 @@ export default function (AB, ibase, init_settings) {
                this.PopupCustomIndex.open(this.CurrentObject, index);
             },
          });
+      }
+
+      async showSystemInfo(field) {
+         const fnFieldInfo = field.getDbInfo();
+
+         const $systemPopup = this.AB.Webix.ui({
+            view: "window",
+            height: 300,
+            width: 450,
+            position: "center",
+            modal: true,
+            resize: true,
+            head: {
+               view: "toolbar",
+               cols: [
+                  {},
+                  {
+                     view: "button",
+                     width: 35,
+                     css: "webix_transparent",
+                     type: "icon",
+                     icon: "nomargin fa fa-times",
+                     click: () => {
+                        $systemPopup.close();
+                     },
+                  },
+               ],
+            },
+            body: {
+               view: "property",
+               id: this.ids.propertyFieldInfo,
+               editable: false,
+               nameWidth: 120,
+               elements: [
+                  { label: "Database Information", type: "label" },
+                  { label: "Definition ID", type: "text", id: "DefinitionId" },
+                  { label: "Name", type: "text", id: "Field" },
+                  { label: "Type", type: "text", id: "Type" },
+                  { label: "Is Nullable", type: "text", id: "Null" },
+                  { label: "Key type", type: "text", id: "Key" },
+                  { label: "Default value", type: "text", id: "Default" },
+                  { label: "Extra", type: "text", id: "Extra" },
+               ],
+            },
+         });
+
+         $systemPopup.show();
+
+         const $propertyFieldInfo = $$(this.ids.propertyFieldInfo);
+         this.AB.Webix.extend($propertyFieldInfo, this.AB.Webix.ProgressBar);
+         $propertyFieldInfo.showProgress({ type: "icon" });
+
+         try {
+            const fieldInfo = await fnFieldInfo;
+            fieldInfo.DefinitionId = field.id;
+
+            $propertyFieldInfo.setValues(fieldInfo);
+         } catch (err) {
+            this.AB.notify.developer(err, {
+               context: "Error trying to get the field information",
+               fields: field.toObj(),
+            });
+         }
+
+         $propertyFieldInfo.hideProgress();
       }
 
       get isReadOnly() {
