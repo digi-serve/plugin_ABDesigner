@@ -227,7 +227,10 @@ export default function (AB, idBase) {
          getSettings() {
             let settings = {};
 
-            var detailsPage = $$(this.ids.detailsPage).getValue();
+            const $detailsPage = $$(this.ids.detailsPage);
+            let detailsPage = $detailsPage.getValue();
+            // Check if selected option will be exist
+            if (!$detailsPage.getList().exists(detailsPage)) detailsPage = "";
             var detailsTab = "";
             if (detailsPage.split(":").length > 1) {
                var detailsVals = detailsPage.split(":");
@@ -237,7 +240,10 @@ export default function (AB, idBase) {
             settings.detailsPage = detailsPage;
             settings.detailsTab = detailsTab;
 
-            var editPage = $$(this.ids.editPage).getValue();
+            const $editPage = $$(this.ids.editPage);
+            let editPage = $$(this.ids.editPage).getValue();
+            // Check if selected option will be exist
+            if (!$editPage.getList().exists(editPage)) editPage = "";
             var editTab = "";
             if (editPage.split(":").length > 1) {
                var editVals = editPage.split(":");
