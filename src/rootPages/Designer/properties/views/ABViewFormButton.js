@@ -21,6 +21,8 @@ export default function (AB) {
             cancelLabel: "",
             includeReset: "",
             resetLabel: "",
+            includeDelete: "",
+            deleteLabel: "",
             afterCancel: "",
             alignment: "",
          });
@@ -87,6 +89,24 @@ export default function (AB) {
                labelWidth: uiConfig.labelWidthLarge,
                label: L("Reset Label"),
                placeholder: L("Reset Placeholder"),
+               on: {
+                  onChange: () => this.onChange(),
+               },
+            },
+            {
+               id: ids.includeDelete,
+               name: "includeDelete",
+               view: "checkbox",
+               label: L("Delete"),
+               click: () => this.onChange(),
+            },
+            {
+               id: ids.deleteLabel,
+               name: "deleteLabel",
+               view: "text",
+               labelWidth: uiConfig.labelWidthLarge,
+               label: L("Delete Label"),
+               placeholder: L("Delete Placeholder"),
                on: {
                   onChange: () => this.onChange(),
                },
@@ -167,10 +187,16 @@ export default function (AB) {
                ? view.settings.includeReset
                : ABViewFormButtonPropertyComponentDefaults.includeReset
          );
+         $$(ids.includeDelete).setValue(
+            view.settings.includeDelete != null
+               ? view.settings.includeDelete
+               : ABViewFormButtonPropertyComponentDefaults.includeDelete
+         );
 
          $$(ids.saveLabel).setValue(view.settings.saveLabel ?? "");
          $$(ids.cancelLabel).setValue(view.settings.cancelLabel ?? "");
          $$(ids.resetLabel).setValue(view.settings.resetLabel ?? "");
+         $$(ids.deleteLabel).setValue(view.settings.deleteLabel ?? "");
 
          $$(ids.afterCancel).setValue(
             view.settings.afterCancel ??
@@ -212,6 +238,8 @@ export default function (AB) {
          values.settings.cancelLabel = $$(ids.cancelLabel).getValue();
          values.settings.includeReset = $$(ids.includeReset).getValue();
          values.settings.resetLabel = $$(ids.resetLabel).getValue();
+         values.settings.includeDelete = $$(ids.includeDelete).getValue();
+         values.settings.deleteLabel = $$(ids.deleteLabel).getValue();
          values.settings.afterCancel = $$(ids.afterCancel).getValue();
          values.settings.alignment = $$(ids.alignment).getValue();
 
