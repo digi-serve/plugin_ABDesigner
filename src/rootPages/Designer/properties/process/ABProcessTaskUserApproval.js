@@ -292,7 +292,7 @@ export default function (AB) {
          obj.label = $name?.getValue() ?? "";
          obj.name = $name?.getValue() ?? "";
          obj.who = $who?.getValue() ?? "";
-         obj.formBuilder = this.formBuilder;
+         obj.formBuilder = this.formIOComponents;
          obj.toUsers = this.toUser.values();
 
          return obj;
