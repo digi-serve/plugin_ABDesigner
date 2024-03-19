@@ -144,6 +144,7 @@ export default function (AB) {
          this.propertyFilter.on("save", (val) => {
             this.onChange();
             this.populateBadgeNumber();
+            this.filter_popup.hide();
          });
 
          this.filter_popup = webix.ui({
