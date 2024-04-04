@@ -45,6 +45,7 @@ export default function (AB) {
          require("./process/ABProcessParticipant.js"),
          require("./process/ABProcessTaskEmail.js"),
          require("./process/ABProcessTaskService.js"),
+         require("./process/ABProcessTaskServiceAccountingBatchProcessing.js"),
          require("./process/ABProcessTaskServiceCalculate.js"),
          require("./process/ABProcessTaskServiceGetResetPasswordUrl.js"),
          require("./process/ABProcessTaskServiceInsertRecord.js"),
