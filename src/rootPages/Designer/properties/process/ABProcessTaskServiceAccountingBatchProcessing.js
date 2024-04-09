@@ -6,14 +6,14 @@
  *
  * @return {ClassUI} The Class Definition for this UI widget.
  */
-import UI_Class from "../../ui_class";
+import ABProcessTaskServiceAccounting from "./_ABProcessTaskServiceAccounting";
 
 export default function (AB) {
-   const UIClass = UI_Class(AB);
-   const L = UIClass.L();
+   const ProcessAccounting = ABProcessTaskServiceAccounting(AB);
+   const L = ProcessAccounting.L();
    const uiConfig = AB.Config.uiSettings();
 
-   class UIProcessTaskServiceAccountingBatchProcessing extends UIClass {
+   class UIProcessTaskServiceAccountingBatchProcessing extends ProcessAccounting {
       constructor() {
          super("properties_process_service_accounting_batch_processing", {
             form: "",
@@ -76,7 +76,7 @@ export default function (AB) {
                         if (newVal == oldVal) return;
 
                         // gather new set of batchFields
-                        const batchFields = this._defaultFields(newVal);
+                        const batchFields = this._getFieldOptions(newVal);
                         // rebuild the associated list of Fields to pick
                         this._updateFieldOptions(
                            this._optionsBatch,
@@ -112,7 +112,7 @@ export default function (AB) {
                         if (newVal == oldVal) return;
 
                         // gather new set of jeFields
-                        const jeFields = this._defaultFields(newVal);
+                        const jeFields = this._getFieldOptions(newVal);
                         // rebuild the associated list of Fields to pick
                         this._updateFieldOptions(this._optionsJE, jeFields);
                      },
@@ -168,7 +168,7 @@ export default function (AB) {
                         if (newVal == oldVal) return;
 
                         // gather new set of jeFields
-                        const brFields = this._defaultFields(newVal);
+                        const brFields = this._getFieldOptions(newVal);
                         // rebuild the associated list of Fields to pick
                         this._updateFieldOptions(this._optionsBR, brFields);
                      },
@@ -245,12 +245,12 @@ export default function (AB) {
          // if there are already default values for our Objects,
          // unhide the field selectors:
          if (element.objectBatch && element.objectBatch != 0) {
-            const batchFields = this._defaultFields(element.objectBatch);
+            const batchFields = this._getFieldOptions(element.objectBatch);
             this._updateFieldOptions(this._optionsBatch, batchFields);
          }
 
          if (element.objectJE && element.objectJE != 0) {
-            const jeFields = this._defaultFields(element.objectJE);
+            const jeFields = this._getFieldOptions(element.objectJE);
             this._updateFieldOptions(this._optionsJE, jeFields);
          }
 
@@ -259,7 +259,7 @@ export default function (AB) {
          }
 
          if (element.objectBR && element.objectBR != 0) {
-            const brFields = this._defaultFields(element.objectBR);
+            const brFields = this._getFieldOptions(element.objectBR);
             this._updateFieldOptions(this._optionsBR, brFields);
          }
 
@@ -274,45 +274,6 @@ export default function (AB) {
       values() {
          const ids = this.ids;
          return $$(ids.form).getValues();
-      }
-
-      _defaultFields(objID) {
-         // create a new options array of Field Choices for the given obj.id
-
-         const fields = [
-            {
-               value: L("Select a Field"),
-            },
-         ];
-         if (objID) {
-            const obj = this.CurrentApplication.objectsIncluded().find(
-               (o) => o.id == objID
-            );
-            obj?.fields().forEach((f) => {
-               fields.push({ id: f.id, value: f.label, field: f });
-            });
-         }
-         return fields;
-      }
-
-      _updateFieldOptions(optionIds, items) {
-         // update the list of field select choices with the new field choices
-         optionIds.forEach((optId) => {
-            const $selector = $$(optId);
-            if ($selector) {
-               $selector.define("options", items);
-               $selector.refresh();
-               $selector.show();
-            }
-         });
-      }
-
-      _getStatusOptions(statusField) {
-         const values = [{ value: L("Select the Complete Value") }];
-         (statusField?.options?.() ?? []).forEach((o) => {
-            values.push({ id: o.id, value: o.text });
-         });
-         return values;
       }
 
       _updateStatusOptions(options) {
@@ -335,7 +296,9 @@ export default function (AB) {
          const statusField = jeEntry?.object?.fieldByID(newVal);
          if (statusField?.options) {
             // get the options as an []
-            const jeFieldStatusValues = this._getStatusOptions(statusField);
+            const jeFieldStatusValues = this._getListFieldOptions({
+               field: statusField,
+            });
 
             this._updateStatusOptions(jeFieldStatusValues);
          }
