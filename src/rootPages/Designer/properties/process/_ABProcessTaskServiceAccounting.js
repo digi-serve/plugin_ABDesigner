@@ -9,7 +9,7 @@ export default function (AB) {
          super(...params);
       }
 
-      _getFieldOptions(objID) {
+      _getFieldOptions(objID, fieldKey = null) {
          // create a new options array of Field Choices for the given obj.id
 
          const fields = [
@@ -21,9 +21,11 @@ export default function (AB) {
             const obj = this.CurrentApplication.objectsIncluded().find(
                (o) => o.id == objID
             );
-            obj?.fields().forEach((f) => {
-               fields.push({ id: f.id, value: f.label, field: f });
-            });
+            obj?.fields((f) => fieldKey == null || f.key == fieldKey).forEach(
+               (f) => {
+                  fields.push({ id: f.id, value: f.label, field: f });
+               }
+            );
          }
          return fields;
       }
