@@ -48,6 +48,7 @@ export default function (AB) {
          require("./process/ABProcessTaskServiceAccountingBatchProcessing.js"),
          require("./process/ABProcessTaskServiceAccountingFPClose.js"),
          require("./process/ABProcessTaskServiceAccountingFPYearClose.js"),
+         require("./process/ABProcessTaskServiceAccountingJEArchive.js"),
          require("./process/ABProcessTaskServiceCalculate.js"),
          require("./process/ABProcessTaskServiceGetResetPasswordUrl.js"),
          require("./process/ABProcessTaskServiceInsertRecord.js"),
