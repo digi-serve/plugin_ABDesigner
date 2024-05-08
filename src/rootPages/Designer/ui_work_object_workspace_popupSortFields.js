@@ -92,22 +92,7 @@ export default function (AB, ibase) {
                         },
                      },
                   },
-                  {
-                     view: "segmented",
-                     width: 200,
-                     options: [
-                        {
-                           id: "",
-                           value: L("Please select field"),
-                        },
-                     ],
-                     on: {
-                        onChange: (/* newv, oldv */) => {
-                           // 'asc' or 'desc' values
-                           this.triggerOnChange();
-                        },
-                     },
-                  },
+                  this._valueElement(),
                   {
                      view: "button",
                      css: "webix_danger",
@@ -135,10 +120,18 @@ export default function (AB, ibase) {
             fieldsCombo.setValue(fieldId);
          }
          if (dir) {
-            var segmentButton = sort_form
+            var dirElem = sort_form
                .getChildViews()
                [viewIndex].getChildViews()[1];
-            segmentButton.setValue(dir);
+            dirElem.setValue?.(dir);
+
+            // [ABFieldList] Sorting following order
+            dirElem.sort?.((a, b) => {
+               return (dir ?? "").indexOf(a.id ?? a) >
+                  (dir ?? "").indexOf(b.id ?? b)
+                  ? 1
+                  : -1;
+            });
          }
          // if (isMulti) {
          // 	var isMultilingualField = sort_form.getChildViews()[viewIndex].getChildViews()[2];
@@ -239,7 +232,11 @@ export default function (AB, ibase) {
                if (childViews.length - 1 <= index) return false;
 
                var fieldId = cView.getChildViews()[0].getValue();
-               var dir = cView.getChildViews()[1].getValue();
+               const dirElem = cView.getChildViews()[1];
+               var dir =
+                  dirElem?.getValue?.() ??
+                  dirElem?.data?.getRange?.()?.map((opt) => opt.id) ?? // Select list field type
+                  "";
                sortFields.push({
                   // "by":by,
                   key: fieldId,
@@ -290,8 +287,14 @@ export default function (AB, ibase) {
                break;
          }
 
-         sortDir.define("options", options);
-         sortDir.refresh();
+         if (columnConfig.key == "list") {
+            AB.Webix.ui(this._valueListElement(columnConfig), sortDir);
+         } else {
+            const valElem = this._valueElement();
+            valElem.options = options;
+            AB.Webix.ui(valElem, sortDir);
+         }
+         // sortDir.refresh?.();
 
          // if (columnConfig.settings.supportMultilingual)
          // 	isMulti = columnConfig.settings.supportMultilingual;
@@ -464,7 +467,11 @@ export default function (AB, ibase) {
                if (childViews.length - 1 <= index || result != 0) return;
 
                var fieldId = cView.getChildViews()[0].getValue();
-               var dir = cView.getChildViews()[1].getValue();
+               const dirElem = cView.getChildViews()[1];
+               var dir =
+                  dirElem?.getValue?.() ??
+                  dirElem?.data?.getRange?.()?.map((opt) => opt.id) ?? // Select list field type
+                  "";
 
                var field = this.CurrentObject.fieldByID(fieldId);
                if (!field) return;
@@ -501,6 +508,47 @@ export default function (AB, ibase) {
          }
 
          return result;
+      }
+
+      _valueElement() {
+         return {
+            view: "segmented",
+            width: 200,
+            options: [
+               {
+                  id: "",
+                  value: L("Please select field"),
+               },
+            ],
+            on: {
+               onChange: (/* newv, oldv */) => {
+                  // 'asc' or 'desc' values
+                  this.triggerOnChange();
+               },
+            },
+         };
+      }
+
+      _valueListElement(field) {
+         return {
+            view: "list",
+            template: "<div class='webix_drag_handle'></div> #text#",
+            type: {
+               height: 35,
+            },
+            height: 150,
+            select: true,
+            drag: "order",
+            data: field.options(),
+            on: {
+               onChange: () => {
+                  this.triggerOnChange();
+               },
+               onAfterDrop: () => {
+                  this.triggerOnChange();
+               },
+            },
+         };
       }
    }
 
