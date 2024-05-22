@@ -1,6 +1,6 @@
 {
   "name": "abdesigner",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "description": "(AppBuilder) A UI for designing AB resources.",
   "main": "index.js",
   "scripts": {
