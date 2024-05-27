@@ -108,6 +108,7 @@ export default function (AB) {
          require("./views/ABViewLayout"),
          require("./views/ABViewList"),
          require("./views/ABViewMenu"),
+         require("./views/ABViewOrgChart"),
          require("./views/ABViewPage"),
          require("./views/ABViewPDFImporter"),
          require("./views/ABViewPivot"),
