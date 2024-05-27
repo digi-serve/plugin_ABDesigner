@@ -43,10 +43,10 @@ export default function (AB) {
                on: {
                   onChange: () => {
                      this.onChange();
-                     this.populateFieldOptions();
+                     // this.populateFieldOptions();
 
-                     if ($$(ids.multipleSeries).getValue())
-                        this.populateFieldOptions2();
+                     // if ($$(ids.multipleSeries).getValue())
+                     //    this.populateFieldOptions2();
                   },
                },
             },
@@ -85,13 +85,13 @@ export default function (AB) {
                value: 0,
                on: {
                   onChange: (newValue) => {
-                     const $columnValue2 = $$(ids.columnValue2);
+                     // const $columnValue2 = $$(ids.columnValue2);
 
-                     if (newValue) this.populateFieldOptions2();
-                     else {
-                        $columnValue2.setValue("");
-                        $columnValue2.disable();
-                     }
+                     // if (newValue) this.populateFieldOptions2();
+                     // else {
+                     //    $columnValue2.setValue("");
+                     //    $columnValue2.disable();
+                     // }
 
                      this.onChange();
                   },
@@ -311,10 +311,10 @@ export default function (AB) {
             Object.assign(defaultValues, view.settings)
          );
 
-         this.populateDataview();
-         this.populateFieldOptions();
+         // this.populateDataview();
+         // this.populateFieldOptions();
 
-         if (values.multipleSeries) this.populateFieldOptions2();
+         // if (values.multipleSeries) this.populateFieldOptions2();
 
          $component.setValues(values);
       }
