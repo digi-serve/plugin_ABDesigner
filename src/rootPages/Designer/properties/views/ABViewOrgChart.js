@@ -17,9 +17,12 @@ export default function (AB) {
          super(BASE_ID, {
             dataviewID: "",
             columnLabel: "",
-            columnValue: "",
-            multipleSeries: "",
-            columnValue2: "",
+            direction: "",
+            pan: "",
+            zoom: "",
+            height: "",
+            export: "",
+            exportFilename: "",
          });
 
          this.AB = AB;
@@ -43,10 +46,6 @@ export default function (AB) {
                on: {
                   onChange: () => {
                      this.onChange();
-                     // this.populateFieldOptions();
-
-                     // if ($$(ids.multipleSeries).getValue())
-                     //    this.populateFieldOptions2();
                   },
                },
             },
@@ -64,89 +63,16 @@ export default function (AB) {
                },
             },
             {
-               id: ids.columnValue,
-               name: "columnValue",
+               id: ids.direction,
+               name: "direction",
                view: "richselect",
-               label: L("Value Column"),
-               labelWidth: uiConfig.labelWidthLarge,
-               options: [],
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
-            },
-            {
-               id: ids.multipleSeries,
-               name: "multipleSeries",
-               view: "checkbox",
-               label: L("Multiple Series"),
-               labelWidth: uiConfig.labelWidthLarge,
-               value: 0,
-               on: {
-                  onChange: (newValue) => {
-                     // const $columnValue2 = $$(ids.columnValue2);
-
-                     // if (newValue) this.populateFieldOptions2();
-                     // else {
-                     //    $columnValue2.setValue("");
-                     //    $columnValue2.disable();
-                     // }
-
-                     this.onChange();
-                  },
-               },
-            },
-            {
-               id: ids.columnValue2,
-               name: "columnValue2",
-               view: "richselect",
-               label: L("Value Column 2"),
-               labelWidth: uiConfig.labelWidthLarge,
-               disabled: true,
-               options: [],
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
-            },
-            {
-               name: "isPercentage",
-               view: "checkbox",
-               labelRight: L("Percentage"),
-               labelWidth: uiConfig.labelWidthCheckbox,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
-            },
-            {
-               name: "showLabel",
-               view: "checkbox",
-               label: L("Display Label"),
-               labelWidth: uiConfig.labelWidthLarge,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
-            },
-            {
-               name: "labelPosition",
-               view: "richselect",
-               label: L("Label Position"),
+               label: L("Direction"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [
-                  {
-                     id: "left",
-                     value: L("Left"),
-                  },
-                  {
-                     id: "top",
-                     value: L("Top"),
-                  },
+                  { id: "Top to Bottom", value: "t2b" },
+                  { id: "Bottom to Top", value: "b2t" },
+                  { id: "Left to Right", value: "l2r" },
+                  { id: "Right to Left", value: "r2l" },
                ],
                on: {
                   onChange: () => {
@@ -155,9 +81,49 @@ export default function (AB) {
                },
             },
             {
-               name: "labelWidth",
+               id: ids.visibleLevel,
+               name: "visibleLevel",
                view: "counter",
-               label: L("Label Width"),
+               label: L("Visible Level"),
+               labelWidth: uiConfig.labelWidthLarge,
+               value: 0,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.pan,
+               name: "pan",
+               view: "checkbox",
+               label: L("Pan"),
+               labelWidth: uiConfig.labelWidthLarge,
+               value: 0,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.zoom,
+               name: "zoom",
+               view: "checkbox",
+               label: L("Zoom"),
+               labelWidth: uiConfig.labelWidthLarge,
+               value: 0,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.height,
+               view: "counter",
+               name: "height",
+               label: L("Height"),
                labelWidth: uiConfig.labelWidthLarge,
                on: {
                   onChange: () => {
@@ -166,14 +132,34 @@ export default function (AB) {
                },
             },
             {
-               view: "counter",
-               name: "height",
-               label: `${L("Height")}: `,
-               labelWidth: uiConfig.labelWidthLarge,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
+               view: "fieldset",
+               label: L("Export"),
+               body: {
+                  view: "layout",
+                  borderless: true,
+                  rows: [
+                     {
+                        id: ids.export,
+                        name: "export",
+                        view: "checkbox",
+                        label: L("Is Exportable"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                        value: 0,
+                        on: {
+                           onChange: () => {
+                              this.onChange();
+                           },
+                        },
+                     },
+                     {
+                        id: ids.exportFilename,
+                        view: "text",
+                        name: "exportFilename",
+                        label: L("File name"),
+                        placeholder: L("Enter file name"),
+                        labelWidth: uiConfig.labelWidthLarge,
+                     },
+                  ],
                },
             },
          ]);
