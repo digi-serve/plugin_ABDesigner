@@ -3,21 +3,23 @@
  * A Property manager for our ABViewChart definitions
  */
 
-import FABViewContainer from "./ABViewContainer";
+import FABView from "./ABView";
 
 export default function (AB) {
    const BASE_ID = "properties_abview_org_chart";
 
-   const ABViewContainer = FABViewContainer(AB);
+   const ABView = FABView(AB);
    const uiConfig = AB.Config.uiSettings();
-   const L = ABViewContainer.L();
+   const L = ABView.L();
 
-   class ABViewOrgChartProperty extends ABViewContainer {
+   class ABViewOrgChartProperty extends ABView {
       constructor() {
          super(BASE_ID, {
-            dataviewID: "",
-            columnLabel: "",
+            datacollectionID: "",
+            columnValue: "",
+            columnDescription: "",
             direction: "",
+            depth: "",
             pan: "",
             zoom: "",
             height: "",
@@ -37,23 +39,40 @@ export default function (AB) {
 
          return super.ui([
             {
-               id: ids.dataviewID,
-               name: "dataviewID",
+               id: ids.datacollectionID,
+               name: "datacollectionID",
                view: "richselect",
-               label: L("Chart Data"),
+               label: L("Data Collection"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [],
                on: {
-                  onChange: () => {
+                  onChange: (value) => {
+                     this.CurrentView.settings.datacollectionID = value;
+                     this.populateValueFieldOptions(value);
                      this.onChange();
                   },
                },
             },
             {
-               id: ids.columnLabel,
-               name: "columnLabel",
+               id: ids.columnValue,
+               name: "columnValue",
                view: "richselect",
-               label: L("Label Column"),
+               label: L("Value Column"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: {
+                  onChange: (value) => {
+                     this.CurrentView.settings.columnValue = value;
+                     this.populateDescriptionFieldOptions(value);
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.columnDescription,
+               name: "columnDescription",
+               view: "richselect",
+               label: L("Description Column"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [],
                on: {
@@ -69,10 +88,10 @@ export default function (AB) {
                label: L("Direction"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [
-                  { id: "Top to Bottom", value: "t2b" },
-                  { id: "Bottom to Top", value: "b2t" },
-                  { id: "Left to Right", value: "l2r" },
-                  { id: "Right to Left", value: "r2l" },
+                  { id: "t2b", value: L("Top to Bottom") },
+                  { id: "b2t", value: L("Bottom to Top") },
+                  { id: "l2r", value: L("Left to Right") },
+                  { id: "r2l", value: L("Right to Left") },
                ],
                on: {
                   onChange: () => {
@@ -81,10 +100,10 @@ export default function (AB) {
                },
             },
             {
-               id: ids.visibleLevel,
-               name: "visibleLevel",
+               id: ids.depth,
+               name: "depth",
                view: "counter",
-               label: L("Visible Level"),
+               label: L("Depth"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
                on: {
@@ -173,119 +192,6 @@ export default function (AB) {
          webix.extend($$(this.ids.component), webix.ProgressBar);
       }
 
-      // updateCharts() {
-      //    // UPDATE charts when parent properties are changed
-      //    this.CurrentView.refreshData();
-
-      //    // baseView.views().forEach((e) => {
-      //    //    e.parent.refreshData();
-      //    // });
-      // }
-
-      // populateDataview() {
-      //    // Pull data collections to options
-      //    // / NOTE: only include System Objects if the user has permission
-      //    const datacollectionFilter = this.AB.Account.isSystemDesigner()
-      //       ? (obj) => !obj.isSystemObject
-      //       : () => true;
-      //    const datacollections =
-      //       this.CurrentApplication.datacollectionsIncluded(
-      //          datacollectionFilter
-      //       );
-
-      //    // Set the objects you can choose from in the list
-      //    const $dataviewID = $$(this.ids.dataviewID);
-
-      //    $dataviewID.define(
-      //       "options",
-      //       datacollections.map((e) => {
-      //          return {
-      //             id: e.id,
-      //             value: e.label,
-      //          };
-      //       })
-      //    );
-      //    $dataviewID.refresh();
-      // }
-
-      // populateFieldOptions() {
-      //    const baseView = this.CurrentView;
-      //    const dc = baseView.datacollection;
-
-      //    if (!dc) return;
-
-      //    const obj = dc.datasource;
-
-      //    if (!obj) return;
-
-      //    const ids = this.ids;
-      //    const $columnLabel = $$(ids.columnLabel);
-      //    const $columnValue = $$(ids.columnValue);
-
-      //    $columnLabel.define(
-      //       "options",
-      //       obj.fields().map((e) => {
-      //          return {
-      //             id: e.id,
-      //             value: e.columnName,
-      //             key: e.key,
-      //          };
-      //       })
-      //    );
-      //    $columnLabel.refresh();
-      //    $columnValue.define(
-      //       "options",
-      //       obj
-      //          .fields(
-      //             (f) =>
-      //                f.key === "number" ||
-      //                f.key === "formula" ||
-      //                f.key === "calculate"
-      //          )
-      //          .map((e) => {
-      //             return {
-      //                id: e.id,
-      //                value: e.columnName,
-      //                key: e.key,
-      //             };
-      //          })
-      //    );
-      //    $columnValue.refresh();
-      // }
-
-      // populateFieldOptions2() {
-      //    const baseView = this.CurrentView;
-      //    const dc = baseView.datacollection;
-
-      //    if (!dc) return;
-
-      //    const obj = dc.datasource;
-
-      //    if (!obj) return;
-
-      //    const $columnValue2 = $$(this.ids.columnValue2);
-
-      //    $columnValue2.define(
-      //       "options",
-      //       obj
-      //          .fields(
-      //             (f) =>
-      //                f.key === "number" ||
-      //                f.key === "formula" ||
-      //                f.key === "calculate"
-      //          )
-      //          .map((e) => {
-      //             return {
-      //                id: e.id,
-      //                value: e.columnName,
-      //                key: e.key,
-      //             };
-      //          })
-      //    );
-      //    $columnValue2.enable();
-      //    $columnValue2.refresh();
-      // }
-
       populate(view) {
          super.populate(view);
 
@@ -297,12 +203,57 @@ export default function (AB) {
             Object.assign(defaultValues, view.settings)
          );
 
-         // this.populateDataview();
-         // this.populateFieldOptions();
-
-         // if (values.multipleSeries) this.populateFieldOptions2();
+         this.populateDatacollection(values.datacollectionId);
+         this.populateValueFieldOptions(values.columnValue);
+         this.populateDescriptionFieldOptions(values.columnDescription);
 
          $component.setValues(values);
+      }
+
+      populateDatacollection(datacollectionId) {
+         const $dataCollection = $$(this.ids.datacollectionID);
+
+         // Pull data collections to options
+         const dcOptions = this.CurrentView.application
+            .datacollectionsIncluded()
+            .map((d) => {
+               return { id: d.id, value: d.label };
+            });
+         $dataCollection.define("options", dcOptions);
+         $dataCollection.define("value", datacollectionId);
+         $dataCollection.refresh();
+      }
+
+      populateValueFieldOptions(fieldId) {
+         const $columnValue = $$(this.ids.columnValue);
+
+         const connectFieldOpts = this.CurrentView.connectFields.map((f) => {
+            return {
+               id: f.id,
+               value: f.label,
+            };
+         });
+         $columnValue.define("options", connectFieldOpts);
+         $columnValue.define("value", fieldId);
+         $columnValue.refresh();
+      }
+
+      populateDescriptionFieldOptions(fieldId) {
+         const valueField = this.CurrentView.valueField();
+         const $columnDescription = $$(this.ids.columnDescription);
+
+         const connectFieldOpts =
+            valueField?.datasourceLink
+               ?.fields?.((f) => f.key != "connectObject")
+               .map?.((f) => {
+                  return {
+                     id: f.id,
+                     value: f.label,
+                  };
+               }) ?? [];
+         $columnDescription.define("options", connectFieldOpts);
+         $columnDescription.define("value", fieldId);
+         $columnDescription.refresh();
       }
 
       defaultValues() {
