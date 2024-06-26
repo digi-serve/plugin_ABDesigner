@@ -72,6 +72,12 @@ export default function (AB) {
                         labelWidth: uiConfig.labelWidthLarge,
                         on: {
                            onChange: () => {
+                              if ($$(this.ids.datacollection).getValue()) {
+                                 $$(this.ids.docxFile).enable();
+                              } else {
+                                 $$(this.ids.docxFile).disable();
+                              }
+
                               this.onChange();
                            },
                         },
@@ -114,6 +120,15 @@ export default function (AB) {
                                  },
 
                                  onFileUploadError: (file, response) => {},
+                                 onViewShow: () => {
+                                    if (
+                                       $$(this.ids.datacollection).getValue()
+                                    ) {
+                                       $$(this.ids.docxFile).enable();
+                                    } else {
+                                       $$(this.ids.docxFile).disable();
+                                    }
+                                 },
                               },
                            },
                         ],
