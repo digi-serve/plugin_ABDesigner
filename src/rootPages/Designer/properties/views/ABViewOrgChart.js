@@ -16,10 +16,10 @@ export default function (AB) {
       constructor() {
          super(BASE_ID, {
             datacollectionID: "",
-            columnValue: "",
-            columnDescription: "",
+            fields: "",
             direction: "",
             depth: "",
+            color: "",
             pan: "",
             zoom: "",
             height: "",
@@ -48,38 +48,38 @@ export default function (AB) {
                on: {
                   onChange: (value) => {
                      this.CurrentView.settings.datacollectionID = value;
-                     this.populateValueFieldOptions(value);
+                     this.populateSubValueFieldOptions(
+                        this.CurrentView?.datacollection?.datasource
+                     );
                      this.onChange();
                   },
                },
             },
             {
-               id: ids.columnValue,
-               name: "columnValue",
-               view: "richselect",
-               label: L("Value Column"),
-               labelWidth: uiConfig.labelWidthLarge,
-               options: [],
-               on: {
-                  onChange: (value) => {
-                     this.CurrentView.settings.columnValue = value;
-                     this.populateDescriptionFieldOptions(value);
-                     this.onChange();
+               cols: [
+                  {
+                     view: "label",
+                     label: "Fields",
+                     width: uiConfig.labelWidthLarge,
                   },
-               },
-            },
-            {
-               id: ids.columnDescription,
-               name: "columnDescription",
-               view: "richselect",
-               label: L("Description Column"),
-               labelWidth: uiConfig.labelWidthLarge,
-               options: [],
-               on: {
-                  onChange: () => {
-                     this.onChange();
+                  {
+                     id: ids.fields,
+                     name: "fields",
+                     view: "tree",
+                     template:
+                        "{common.icon()} {common.checkbox()} <span>#value#</span>",
+                     select: false,
+                     height: 200,
+                     data: [],
+                     on: {
+                        onItemCheck: () => {
+                           const fieldValues = $$(this.ids.fields).getChecked();
+                           this.refreshValueFieldOptions(fieldValues);
+                           this.onChange();
+                        },
+                     },
                   },
-               },
+               ],
             },
             {
                id: ids.direction,
@@ -106,6 +106,18 @@ export default function (AB) {
                label: L("Depth"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.color,
+               name: "color",
+               view: "colorpicker",
+               label: L("Color"),
+               labelWidth: uiConfig.labelWidthLarge,
                on: {
                   onChange: () => {
                      this.onChange();
@@ -203,9 +215,14 @@ export default function (AB) {
             Object.assign(defaultValues, view.settings)
          );
 
+         const $fieldList = $$(ids.fields);
+         $fieldList.clearAll();
+
          this.populateDatacollection(values.datacollectionId);
-         this.populateValueFieldOptions(values.columnValue);
-         this.populateDescriptionFieldOptions(values.columnDescription);
+         // this.populateDescriptionFieldOptions(values.columnDescription);
+
+         const fieldValues = (view.settings?.fields ?? "").split(",");
+         this.refreshValueFieldOptions(fieldValues);
 
          $component.setValues(values);
       }
@@ -224,37 +241,72 @@ export default function (AB) {
          $dataCollection.refresh();
       }
 
-      populateValueFieldOptions(fieldId) {
-         const $columnValue = $$(this.ids.columnValue);
+      refreshValueFieldOptions(fieldValues = []) {
+         const ids = this.ids;
+         const view = this.CurrentView;
+         const $fieldList = $$(ids.fields);
 
-         const connectFieldOpts = this.CurrentView.connectFields.map((f) => {
-            return {
-               id: f.id,
-               value: f.label,
-            };
+         $fieldList.clearAll();
+
+         // Populate 1:M fields option of the root object
+         this.populateSubValueFieldOptions(view.datacollection?.datasource);
+
+         // Populate sub 1:M fields option of each fields
+         fieldValues.forEach((fId) => {
+            if (!fId) return;
+
+            const $fieldItem = $fieldList.getItem(fId);
+            if ($fieldItem) {
+               const abField = $fieldItem.field;
+               this.populateSubValueFieldOptions(abField.datasourceLink, fId);
+            }
          });
-         $columnValue.define("options", connectFieldOpts);
-         $columnValue.define("value", fieldId);
-         $columnValue.refresh();
+
+         // Set check items
+         $fieldList.blockEvent();
+         fieldValues.forEach((fId) => {
+            if ($fieldList.exists(fId)) $fieldList.checkItem(fId);
+         });
+         $fieldList.unblockEvent();
       }
 
-      populateDescriptionFieldOptions(fieldId) {
-         const valueField = this.CurrentView.valueField();
-         const $columnDescription = $$(this.ids.columnDescription);
+      populateSubValueFieldOptions(object, parentFieldId) {
+         const view = this.CurrentView;
+         const $fields = $$(this.ids.fields);
 
-         const connectFieldOpts =
-            valueField?.datasourceLink
-               ?.fields?.((f) => f.key != "connectObject")
-               .map?.((f) => {
-                  return {
-                     id: f.id,
-                     value: f.label,
-                  };
-               }) ?? [];
-         $columnDescription.define("options", connectFieldOpts);
-         $columnDescription.define("value", fieldId);
-         $columnDescription.refresh();
+         view.getValueFields(object).forEach((f, index) => {
+            if ($fields.exists(f.id)) return;
+            $fields.add(
+               {
+                  id: f.id,
+                  value: f.label,
+                  field: f,
+               },
+               index,
+               parentFieldId
+            );
+         });
+
+         $fields.openAll();
       }
+
+      // populateDescriptionFieldOptions(fieldId) {
+      //    const valueField = this.CurrentView.valueField();
+      //    const $columnDescription = $$(this.ids.columnDescription);
+
+      //    const connectFieldOpts =
+      //       valueField?.datasourceLink
+      //          ?.fields?.((f) => f.key != "connectObject")
+      //          .map?.((f) => {
+      //             return {
+      //                id: f.id,
+      //                value: f.label,
+      //             };
+      //          }) ?? [];
+      //    $columnDescription.define("options", connectFieldOpts);
+      //    $columnDescription.define("value", fieldId);
+      //    $columnDescription.refresh();
+      // }
 
       defaultValues() {
          const ViewClass = this.ViewClass();
@@ -284,6 +336,7 @@ export default function (AB) {
          );
 
          // Retrive the values of your properties from Webix and store them in the view
+         values.settings.fields = $$(ids.fields).getChecked().join(",");
 
          return values;
       }
