@@ -102,6 +102,7 @@ export default function (AB) {
             {
                id: ids.depth,
                name: "depth",
+               hidden: true, // NOTE: use choose Connect Fields option
                view: "counter",
                label: L("Depth"),
                labelWidth: uiConfig.labelWidthLarge,
@@ -125,6 +126,7 @@ export default function (AB) {
                },
             },
             {
+               hidden: true, // NOTE: does not support
                id: ids.pan,
                name: "pan",
                view: "checkbox",
@@ -138,6 +140,7 @@ export default function (AB) {
                },
             },
             {
+               hidden: true, // NOTE: does not support
                id: ids.zoom,
                name: "zoom",
                view: "checkbox",
@@ -163,6 +166,7 @@ export default function (AB) {
                },
             },
             {
+               hidden: true, // NOTE: does not support
                view: "fieldset",
                label: L("Export"),
                body: {
