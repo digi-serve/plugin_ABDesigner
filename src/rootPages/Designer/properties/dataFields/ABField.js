@@ -532,7 +532,7 @@ export default function (AB) {
          addValidation(settings) {
             const ids = this.ids;
             const Filter = new this.AB.Class.FilterComplex(
-               this.AB._App,
+               // this.AB._App,
                "field_validation_rules",
                this.AB
             );
