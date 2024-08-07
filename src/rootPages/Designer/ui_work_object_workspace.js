@@ -1033,13 +1033,13 @@ export default function (AB, ibase, init_settings) {
                                     // begin calling removeField for each main page in the app
                                     // this will kick off a chain of events that will have removeField called on
                                     // all pages, subpages, widgets and views.
-                                    page.removeField(field, (err) => {
+                                    page?.removeField?.(field, (err) => {
                                        if (err) {
                                           cb(err);
                                        } else {
                                           checkPages(list, cb);
                                        }
-                                    });
+                                    }) ?? cb();
                                  }
                               }
 

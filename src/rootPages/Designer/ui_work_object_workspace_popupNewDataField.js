@@ -468,6 +468,11 @@ export default function (AB, ibase) {
                         linkColumnName = `${this.CurrentObject.name}${rand}`;
                      }
 
+                     // Connect to self-object.
+                     if (field.object.id == field.datasourceLink.id) {
+                        linkColumnName = this.CurrentObject.label;
+                     }
+
                      linkCol = linkObject.fieldNew({
                         // id: OP.Util.uuid(),
 
