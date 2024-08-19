@@ -24,33 +24,6 @@ export default function (AB) {
       ui() {
          const ids = this.ids;
          return super.ui([
-            // {
-            //    view: "text",
-            //    id: ids.default,
-            //    name: "default",
-            //    labelWidth: uiConfig.labelWidthXLarge,
-            //    label: L("Default"),
-            //    placeholder: L("Enter default value"),
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
-            // {
-            //    view: "checkbox",
-            //    id: ids.supportMultilingual,
-            //    name: "supportMultilingual",
-            //    disallowEdit: true,
-            //    labelRight: L("Support multilingual"),
-            //    labelWidth: uiConfig.labelWidthCheckbox,
-            //    value: false,
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
             {
                cols: [
                   {
@@ -66,7 +39,7 @@ export default function (AB) {
                      value: 0,
                      on: {
                         onChange: (newv) => {
-                           this.checkboxDefaultValue(newv);
+                           this.checkboxDefaultValue(newv, ids.default);
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
@@ -78,6 +51,43 @@ export default function (AB) {
                      id: ids.default,
                      name: "default",
                      placeholder: L("Enter default value"),
+                     disabled: true,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            {
+               cols: [
+                  {
+                     view: "label",
+                     label: "Limit Length",
+                     align: "right",
+                     width: 100,
+                  },
+                  {
+                     id: ids.limitLengthCheckbox,
+                     view: "checkbox",
+                     width: 30,
+                     value: 0,
+                     on: {
+                        onChange: (newv) => {
+                           this.checkboxDefaultValue(newv, ids.limitLength);
+                        },
+                        onAfterRender: () => {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+                  {
+                     view: "text",
+                     id: ids.limitLength,
+                     name: "limitLength",
+                     placeholder: L("Enter limit length value"),
                      disabled: true,
                      labelWidth: uiConfig.labelWidthXLarge,
                      on: {
@@ -105,7 +115,16 @@ export default function (AB) {
          ]);
       }
 
-      checkboxDefaultValue(state) {
+      checkboxDefaultValue(state, id) {
+         if (state === 0) {
+            $$(id).disable();
+            $$(id).setValue("");
+         } else {
+            $$(id).enable();
+         }
+      }
+
+/*       checkboxDefaultValue(state) {
          if (state === 0) {
             $$(this.ids.default).disable();
             $$(this.ids.default).setValue("");
@@ -113,7 +132,7 @@ export default function (AB) {
             $$(this.ids.default).enable();
          }
       }
-
+ */
       /**
        * @method FieldClass()
        * Call our Parent's _FieldClass() helper with the proper key to return
