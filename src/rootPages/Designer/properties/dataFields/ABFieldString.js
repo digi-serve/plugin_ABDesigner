@@ -16,8 +16,9 @@ export default function (AB) {
          super(`${ibase}_string`, {
             default: "",
             supportMultilingual: "",
-
             defaultCheckbox: "",
+            limitLength: "",
+            limitLengthCheckbox: "",
          });
       }
 
@@ -85,6 +86,7 @@ export default function (AB) {
                   },
                   {
                      view: "text",
+                     type: "number",
                      id: ids.limitLength,
                      name: "limitLength",
                      placeholder: L("Enter limit length value"),
@@ -124,15 +126,6 @@ export default function (AB) {
          }
       }
 
-/*       checkboxDefaultValue(state) {
-         if (state === 0) {
-            $$(this.ids.default).disable();
-            $$(this.ids.default).setValue("");
-         } else {
-            $$(this.ids.default).enable();
-         }
-      }
- */
       /**
        * @method FieldClass()
        * Call our Parent's _FieldClass() helper with the proper key to return
@@ -146,13 +139,11 @@ export default function (AB) {
       populate(field) {
          const ids = this.ids;
          super.populate(field);
+     
+         $$(ids.defaultCheckbox).setValue(field.settings.default === "" ? 0 : 1);
+         $$(ids.limitLengthCheckbox).setValue(field.settings.limitLength === "" ? 0 : 1);
+     }
 
-         if (field.settings.default === "") {
-            $$(ids.defaultCheckbox).setValue(0);
-         } else {
-            $$(ids.defaultCheckbox).setValue(1);
-         }
-      }
    }
 
    return ABFieldStringProperty;
