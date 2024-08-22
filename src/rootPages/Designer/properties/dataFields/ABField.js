@@ -215,6 +215,7 @@ export default function (AB) {
                            on: {
                               onItemClick: () => {
                                  $$(ids.filterView).adjust();
+                                 this.populateValidationRules(true);
                               },
 
                               onAfterRender: function () {
@@ -532,61 +533,75 @@ export default function (AB) {
          addValidation(settings) {
             const ids = this.ids;
             const Filter = new this.AB.Class.FilterComplex(
-               this.AB._App,
-               "field_validation_rules",
+               `${this.AB.uuid()}_field_validation_rules`,
                this.AB
             );
 
-            $$(ids.filterComplex).addView({
+            Filter.ui.height = 220;
+
+            const newViewId = $$(ids.filterComplex).addView({
                view: "form",
                css: "abValidationForm",
                cols: [
                   {
                      rows: [
                         {
-                           view: "text",
-                           name: "invalidMessage",
-                           labelWidth: uiConfig.labelWidthLarge,
-                           value: settings?.invalidMessage
-                              ? settings.invalidMessage
-                              : "",
-                           label: L("Invalid Message"),
+                           cols: [
+                              {
+                                 view: "text",
+                                 name: "invalidMessage",
+                                 labelWidth: uiConfig.labelWidthLarge,
+                                 value: settings?.invalidMessage
+                                    ? settings.invalidMessage
+                                    : "",
+                                 label: L("Invalid Message"),
+                              },
+                              {
+                                 view: "button",
+                                 css: "webix_danger",
+                                 icon: "fa fa-trash",
+                                 type: "icon",
+                                 autowidth: true,
+                                 click: function () {
+                                    const $viewCond = this.getParentView()
+                                       .getParentView()
+                                       .getParentView();
+                                    $$(ids.filterComplex).removeView($viewCond);
+
+                                    // reset the validation rules UI
+                                    const filterViews = $$(
+                                       ids.filterComplex
+                                    ).queryView(
+                                       {
+                                          view: "form",
+                                          css: "abValidationForm",
+                                       },
+                                       "all"
+                                    );
+                                    $$(ids.addValidation).define(
+                                       "badge",
+                                       filterViews.length !== 0
+                                          ? filterViews.length
+                                          : null
+                                    );
+                                    $$(ids.addValidation).refresh();
+                                 },
+                                 on: {
+                                    onAfterRender: function () {
+                                       UIClass.CYPRESS_REF(this);
+                                    },
+                                 },
+                              },
+                           ],
                         },
                         Filter.ui,
                      ],
                   },
-                  {
-                     view: "button",
-                     css: "webix_danger",
-                     icon: "fa fa-trash",
-                     type: "icon",
-                     autowidth: true,
-                     click: function () {
-                        const $viewCond = this.getParentView();
-                        $$(ids.filterComplex).removeView($viewCond);
-
-                        // reset the validation rules UI
-                        const filterViews = $$(ids.filterComplex).queryView(
-                           {
-                              view: "form",
-                              css: "abValidationForm",
-                           },
-                           "all"
-                        );
-                        $$(ids.addValidation).define(
-                           "badge",
-                           filterViews.length !== 0 ? filterViews.length : null
-                        );
-                        $$(ids.addValidation).refresh();
-                     },
-                     on: {
-                        onAfterRender: function () {
-                           UIClass.CYPRESS_REF(this);
-                        },
-                     },
-                  },
                ],
             });
+
+            // NOTE: store FilterComplex to get value
+            $$(newViewId)._Filter = Filter;
 
             this.resetDefaultValidation();
 
@@ -907,8 +922,14 @@ export default function (AB) {
             $$(ids.required).setValue(field.settings.required);
             $$(ids.unique).setValue(field.settings.unique);
 
-            if (field.settings && field.settings.validationRules) {
-               let rules = field.settings.validationRules;
+            this.populateValidationRules();
+         }
+
+         populateValidationRules(ignoreRebuild = false) {
+            const ids = this.ids;
+            const field = this._CurrentField;
+            let rules = field?.settings?.validationRules;
+            if (rules) {
                if (typeof rules == "string") {
                   try {
                      rules = JSON.parse(rules);
@@ -921,14 +942,21 @@ export default function (AB) {
                      rules = [];
                   }
                }
-               (rules || []).forEach((settings) => {
-                  field.addValidation(ids, settings);
+            }
+
+            $$(ids.addValidation).define(
+               "badge",
+               rules?.length !== 0 ? rules.length : null
+            );
+            $$(ids.addValidation).refresh();
+
+            if (
+               !ignoreRebuild ||
+               $$(ids.filterComplex).getChildViews().length == 0
+            ) {
+               (rules ?? []).forEach((settings) => {
+                  this.addValidation(settings);
                });
-               $$(ids.addValidation).define(
-                  "badge",
-                  rules.length !== 0 ? rules.length : null
-               );
-               $$(ids.addValidation).refresh();
             }
          }
 
@@ -958,9 +986,11 @@ export default function (AB) {
                   "all"
                );
                forms.forEach((form) => {
-                  const rules = form
-                     .queryView({ view: "querybuilder" })
-                     .getValue();
+                  // const rules = form
+                  //    .queryView({ view: "querybuilder" })
+                  //    .getValue();
+                  const rules = form._Filter.getValue();
+
                   const invalidMessage = form
                      .queryView({ name: "invalidMessage" })
                      .getValue();

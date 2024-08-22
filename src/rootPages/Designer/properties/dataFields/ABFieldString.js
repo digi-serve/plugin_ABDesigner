@@ -17,8 +17,8 @@ export default function (AB) {
             default: "",
             supportMultilingual: "",
             defaultCheckbox: "",
-            limitLength: "",
-            limitLengthCheckbox: "",
+            maxLength: "",
+            maxLengthCheckbox: "",
          });
       }
 
@@ -66,18 +66,18 @@ export default function (AB) {
                cols: [
                   {
                      view: "label",
-                     label: "Limit Length",
+                     label: "Max Length",
                      align: "right",
                      width: 100,
                   },
                   {
-                     id: ids.limitLengthCheckbox,
+                     id: ids.maxLengthCheckbox,
                      view: "checkbox",
                      width: 30,
                      value: 0,
                      on: {
                         onChange: (newv) => {
-                           this.checkboxDefaultValue(newv, ids.limitLength);
+                           this.checkboxDefaultValue(newv, ids.maxLength);
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
@@ -87,9 +87,9 @@ export default function (AB) {
                   {
                      view: "text",
                      type: "number",
-                     id: ids.limitLength,
-                     name: "limitLength",
-                     placeholder: L("Enter limit length value"),
+                     id: ids.maxLength,
+                     name: "maxLength",
+                     placeholder: L("Enter Max Length value"),
                      disabled: true,
                      labelWidth: uiConfig.labelWidthXLarge,
                      on: {
@@ -141,7 +141,7 @@ export default function (AB) {
          super.populate(field);
      
          $$(ids.defaultCheckbox).setValue(field.settings.default === "" ? 0 : 1);
-         $$(ids.limitLengthCheckbox).setValue(field.settings.limitLength === "" ? 0 : 1);
+         $$(ids.maxLengthCheckbox).setValue(field.settings.maxLength === "" ? 0 : 1);
      }
 
    }
