@@ -16,41 +16,15 @@ export default function (AB) {
          super(`${ibase}_string`, {
             default: "",
             supportMultilingual: "",
-
             defaultCheckbox: "",
+            maxLength: "",
+            maxLengthCheckbox: "",
          });
       }
 
       ui() {
          const ids = this.ids;
          return super.ui([
-            // {
-            //    view: "text",
-            //    id: ids.default,
-            //    name: "default",
-            //    labelWidth: uiConfig.labelWidthXLarge,
-            //    label: L("Default"),
-            //    placeholder: L("Enter default value"),
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
-            // {
-            //    view: "checkbox",
-            //    id: ids.supportMultilingual,
-            //    name: "supportMultilingual",
-            //    disallowEdit: true,
-            //    labelRight: L("Support multilingual"),
-            //    labelWidth: uiConfig.labelWidthCheckbox,
-            //    value: false,
-            //    on: {
-            //       onAfterRender() {
-            //          AB.ClassUI.CYPRESS_REF(this);
-            //       },
-            //    },
-            // },
             {
                cols: [
                   {
@@ -66,7 +40,7 @@ export default function (AB) {
                      value: 0,
                      on: {
                         onChange: (newv) => {
-                           this.checkboxDefaultValue(newv);
+                           this.checkboxDefaultValue(newv, ids.default);
                         },
                         onAfterRender: () => {
                            AB.ClassUI.CYPRESS_REF(this);
@@ -78,6 +52,44 @@ export default function (AB) {
                      id: ids.default,
                      name: "default",
                      placeholder: L("Enter default value"),
+                     disabled: true,
+                     labelWidth: uiConfig.labelWidthXLarge,
+                     on: {
+                        onAfterRender() {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
+            {
+               cols: [
+                  {
+                     view: "label",
+                     label: "Max Length",
+                     align: "right",
+                     width: 100,
+                  },
+                  {
+                     id: ids.maxLengthCheckbox,
+                     view: "checkbox",
+                     width: 30,
+                     value: 0,
+                     on: {
+                        onChange: (newv) => {
+                           this.checkboxDefaultValue(newv, ids.maxLength);
+                        },
+                        onAfterRender: () => {
+                           AB.ClassUI.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+                  {
+                     view: "text",
+                     type: "number",
+                     id: ids.maxLength,
+                     name: "maxLength",
+                     placeholder: L("Enter Max Length value"),
                      disabled: true,
                      labelWidth: uiConfig.labelWidthXLarge,
                      on: {
@@ -105,12 +117,12 @@ export default function (AB) {
          ]);
       }
 
-      checkboxDefaultValue(state) {
+      checkboxDefaultValue(state, id) {
          if (state === 0) {
-            $$(this.ids.default).disable();
-            $$(this.ids.default).setValue("");
+            $$(id).disable();
+            $$(id).setValue("");
          } else {
-            $$(this.ids.default).enable();
+            $$(id).enable();
          }
       }
 
@@ -127,13 +139,11 @@ export default function (AB) {
       populate(field) {
          const ids = this.ids;
          super.populate(field);
+     
+         $$(ids.defaultCheckbox).setValue(field.settings.default === "" ? 0 : 1);
+         $$(ids.maxLengthCheckbox).setValue(field.settings.maxLength === "" ? 0 : 1);
+     }
 
-         if (field.settings.default === "") {
-            $$(ids.defaultCheckbox).setValue(0);
-         } else {
-            $$(ids.defaultCheckbox).setValue(1);
-         }
-      }
    }
 
    return ABFieldStringProperty;
