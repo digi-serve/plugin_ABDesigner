@@ -176,6 +176,14 @@ export default function (AB) {
                            id: "<=",
                            value: L("Less than or Equal to"),
                         },
+                        {
+                           id: "lessCurrentDate",
+                           value: L("Less than current date"),
+                        },
+                        {
+                           id: "lessEqualCurrentDate",
+                           value: L("Less than or Equal to current date"),
+                        },
                      ],
                      on: {
                         onChange: (newVal) => {
@@ -218,6 +226,12 @@ export default function (AB) {
                                     ids.validateStartDateContainerLabel
                                  ).refresh();
                                  $$(ids.validateStartDateContainer).show();
+                                 $$(ids.validateEndDateContainer).hide();
+                                 break;
+                              case "lessCurrentDate":
+                              case "lessEqualCurrentDate":
+                                 $$(ids.validateRange).hide();
+                                 $$(ids.validateStartDateContainer).hide();
                                  $$(ids.validateEndDateContainer).hide();
                                  break;
                            }
