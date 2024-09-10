@@ -16,6 +16,9 @@ export default function (AB) {
       constructor() {
          super(BASE_ID, {
             datacollectionID: "",
+            teamLink: "",
+            teamName: "",
+            topTeam: "",
             fields: "",
             direction: "",
             depth: "",
@@ -42,44 +45,47 @@ export default function (AB) {
                id: ids.datacollectionID,
                name: "datacollectionID",
                view: "richselect",
-               label: L("Data Collection"),
+               label: L("Team Data"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [],
                on: {
                   onChange: (value) => {
                      this.CurrentView.settings.datacollectionID = value;
-                     this.populateSubValueFieldOptions(
-                        this.CurrentView?.datacollection?.datasource
-                     );
+                     const obj = this.CurrentView?.datacollection?.datasource;
+                     this.populateTeamFieldOptions(obj);
                      this.onChange();
                   },
                },
             },
             {
-               cols: [
-                  {
-                     view: "label",
-                     label: "Fields",
-                     width: uiConfig.labelWidthLarge,
-                  },
-                  {
-                     id: ids.fields,
-                     name: "fields",
-                     view: "tree",
-                     template:
-                        "{common.icon()} {common.checkbox()} <span>#value#</span>",
-                     select: false,
-                     height: 200,
-                     data: [],
-                     on: {
-                        onItemCheck: () => {
-                           const fieldValues = $$(this.ids.fields).getChecked();
-                           this.refreshValueFieldOptions(fieldValues);
-                           this.onChange();
-                        },
-                     },
-                  },
-               ],
+               id: ids.teamLink,
+               view: "richselect",
+               label: L("Team Link"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: {
+                  onChange: () => this.onChange(),
+               },
+            },
+            {
+               id: ids.teamName,
+               view: "richselect",
+               label: L("Team Name"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: {
+                  onChange: () => this.onChange(),
+               },
+            },
+            {
+               id: ids.topTeam,
+               view: "richselect",
+               label: L("Top Team"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: {
+                  onChange: () => this.onChange(),
+               },
             },
             {
                id: ids.direction,
@@ -219,14 +225,16 @@ export default function (AB) {
             Object.assign(defaultValues, view.settings)
          );
 
-         const $fieldList = $$(ids.fields);
-         $fieldList.clearAll();
-
+         // const $fieldList = $$(ids.fields);
+         // $fieldList.clearAll();
          this.populateDatacollection(values.datacollectionId);
-         // this.populateDescriptionFieldOptions(values.columnDescription);
-
-         const fieldValues = (view.settings?.fields ?? "").split(",");
-         this.refreshValueFieldOptions(fieldValues);
+         const teamObj = this.CurrentView?.datacollection?.datasource;
+         if (teamObj) {
+            this.populateTeamFieldOptions(teamObj);
+            $$(this.ids.teamLink).setValue(values.teamLink);
+            $$(this.ids.teamName).setValue(values.teamName);
+            $$(this.ids.topTeam).setValue(values.topTeam);
+         }
 
          $component.setValues(values);
       }
@@ -274,24 +282,40 @@ export default function (AB) {
          $fieldList.unblockEvent();
       }
 
-      populateSubValueFieldOptions(object, parentFieldId) {
+      populateTeamFieldOptions(object) {
          const view = this.CurrentView;
-         const $fields = $$(this.ids.fields);
+         const linkFields = view.getValueFields(object).map((f) => {
+            return {
+               id: f.id,
+               value: f.label,
+               field: f,
+            };
+         });
+         $$(this.ids.teamLink).define("options", linkFields);
 
-         view.getValueFields(object).forEach((f, index) => {
-            if ($fields.exists(f.id)) return;
-            $fields.add(
-               {
+         const textFields = object
+            ?.fields((f) => f.key === "string")
+            .map((f) => {
+               return {
                   id: f.id,
                   value: f.label,
                   field: f,
-               },
-               index,
-               parentFieldId
-            );
-         });
+               };
+            });
+         $$(this.ids.teamName).define("options", textFields);
 
-         $fields.openAll();
+         const booleanFields = object
+            ?.fields((f) => f.key === "boolean")
+            .map((f) => {
+               return {
+                  id: f.id,
+                  value: f.label,
+                  field: f,
+               };
+            });
+         // Add an empty option as this is an optional setting.
+         booleanFields.unshift({ id: "", value: "", $empty: true });
+         $$(this.ids.topTeam).define("options", booleanFields);
       }
 
       // populateDescriptionFieldOptions(fieldId) {
@@ -332,15 +356,16 @@ export default function (AB) {
       values() {
          const values = super.values();
          const ids = this.ids;
-         const $component = $$(ids.component);
-
+         // values.settings = values.setttings ?? {};
          values.settings = Object.assign(
-            $component.getValues(),
+            $$(ids.component).getValues(),
             values.settings
          );
-
          // Retrive the values of your properties from Webix and store them in the view
-         values.settings.fields = $$(ids.fields).getChecked().join(",");
+         values.settings.teamLink = $$(ids.teamLink).getValue();
+         values.settings.teamName = $$(ids.teamName).getValue();
+         values.settings.topTeam = $$(ids.topTeam).getValue();
+         values.settings.dataCollectionId = $$(ids.datacollectionID).getValue();
 
          return values;
       }
@@ -351,7 +376,7 @@ export default function (AB) {
        * NOTE: Must be overwritten by the Child Class
        */
       ViewClass() {
-         return super._ViewClass("orgchart");
+         return super._ViewClass("orgchart_teams");
       }
    }
 
