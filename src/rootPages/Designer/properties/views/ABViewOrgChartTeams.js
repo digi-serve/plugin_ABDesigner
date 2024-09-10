@@ -22,6 +22,7 @@ export default function (AB) {
             fields: "",
             direction: "",
             depth: "",
+            draggable: "",
             color: "",
             pan: "",
             zoom: "",
@@ -85,6 +86,19 @@ export default function (AB) {
                options: [],
                on: {
                   onChange: () => this.onChange(),
+               },
+            },
+            {
+               id: ids.draggable,
+               name: "draggable",
+               view: "checkbox",
+               label: L("Drag & Drop"),
+               labelWidth: uiConfig.labelWidthLarge,
+               value: 0,
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
                },
             },
             {
