@@ -16,6 +16,8 @@ export default function (AB) {
       constructor() {
          super(BASE_ID, {
             datacollectionID: "",
+            teamInactive: "",
+            teamCanInactivate: "",
             teamLink: "",
             teamName: "",
             topTeam: "",
@@ -64,9 +66,7 @@ export default function (AB) {
                label: L("Team Link"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [],
-               on: {
-                  onChange: () => this.onChange(),
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                id: ids.teamName,
@@ -74,9 +74,7 @@ export default function (AB) {
                label: L("Team Name"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [],
-               on: {
-                  onChange: () => this.onChange(),
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                id: ids.topTeam,
@@ -84,9 +82,23 @@ export default function (AB) {
                label: L("Top Team"),
                labelWidth: uiConfig.labelWidthLarge,
                options: [],
-               on: {
-                  onChange: () => this.onChange(),
-               },
+               on: { onChange: () => this.onChange() },
+            },
+            {
+               id: ids.teamInactive,
+               view: "richselect",
+               label: L("Team Inactive"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: { onChange: () => this.onChange() },
+            },
+            {
+               id: ids.teamCanInactivate,
+               view: "richselect",
+               label: L("Can Inactivate"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: { onChange: () => this.onChange() },
             },
             {
                id: ids.draggable,
@@ -95,11 +107,7 @@ export default function (AB) {
                label: L("Drag & Drop"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                id: ids.direction,
@@ -113,11 +121,7 @@ export default function (AB) {
                   { id: "l2r", value: L("Left to Right") },
                   { id: "r2l", value: L("Right to Left") },
                ],
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                id: ids.depth,
@@ -127,11 +131,7 @@ export default function (AB) {
                label: L("Depth"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                id: ids.color,
@@ -139,11 +139,7 @@ export default function (AB) {
                view: "colorpicker",
                label: L("Color"),
                labelWidth: uiConfig.labelWidthLarge,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                hidden: true, // NOTE: does not support
@@ -153,11 +149,7 @@ export default function (AB) {
                label: L("Pan"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                hidden: true, // NOTE: does not support
@@ -167,11 +159,7 @@ export default function (AB) {
                label: L("Zoom"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                id: ids.height,
@@ -179,11 +167,7 @@ export default function (AB) {
                name: "height",
                label: L("Height"),
                labelWidth: uiConfig.labelWidthLarge,
-               on: {
-                  onChange: () => {
-                     this.onChange();
-                  },
-               },
+               on: { onChange: () => this.onChange() },
             },
             {
                hidden: true, // NOTE: does not support
@@ -330,6 +314,8 @@ export default function (AB) {
          // Add an empty option as this is an optional setting.
          booleanFields.unshift({ id: "", value: "", $empty: true });
          $$(this.ids.topTeam).define("options", booleanFields);
+         $$(this.ids.teamInactive).define("options", booleanFields);
+         $$(this.ids.teamCanInactivate).define("options", booleanFields);
       }
 
       // populateDescriptionFieldOptions(fieldId) {
@@ -379,6 +365,8 @@ export default function (AB) {
          values.settings.teamLink = $$(ids.teamLink).getValue();
          values.settings.teamName = $$(ids.teamName).getValue();
          values.settings.topTeam = $$(ids.topTeam).getValue();
+         values.settings.teamInactive = $$(ids.teamInactive).getValue();
+         values.settings.teamCanInactivate = $$(ids.teamCanInactivate).getValue();
          values.settings.dataCollectionId = $$(ids.datacollectionID).getValue();
 
          return values;
