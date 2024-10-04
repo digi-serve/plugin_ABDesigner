@@ -101,6 +101,7 @@ export default function (AB) {
 
       select(dc) {
          if (dc == null) DataCollectionWorkspace.clearWorkspace();
+         dc?.init();
          DataCollectionWorkspace.datacollectionLoad(dc);
          DataCollectionWorkspace.populateWorkspace(dc);
       }
