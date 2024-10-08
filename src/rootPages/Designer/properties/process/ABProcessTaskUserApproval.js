@@ -258,6 +258,14 @@ export default function (AB) {
 
          $name.setValue(element.label);
 
+         // get process data user-fields
+         const processDataFields =
+            element.process.processDataFields(element) || [];
+         let userProcessFieldData = processDataFields.filter(
+            (e) => e.field?.key == "user"
+         );
+         element.toUsers["userProcessFieldData"] = userProcessFieldData;
+
          if (element.who !== null) {
             $who.setValue(element.who);
             if (element.who === "0") {
