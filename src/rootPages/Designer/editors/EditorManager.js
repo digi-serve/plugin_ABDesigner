@@ -32,6 +32,7 @@ export default function (AB) {
       require("./views/ABViewLayout"),
       require("./views/ABViewMenu"),
       require("./views/ABViewOrgChart"),
+      require("./views/ABViewOrgChartTeams"),
       require("./views/ABViewPage"),
       require("./views/ABViewPDFImporter"),
       require("./views/ABViewPivot"),
