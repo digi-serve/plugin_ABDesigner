@@ -29,18 +29,143 @@ export default function (AB) {
             height: "",
             export: "",
             exportFilename: "",
+            groupByField: "",
+            contentField: "",
+            contentFieldFilter: "",
+            contentFieldFilterButton: "",
+            contentGroupByField: "",
+            contentDisplayedFields: "",
+            contentDisplayedFieldsAdd: "",
          });
-
          this.AB = AB;
+         const contentFieldFilter = (this.contentFieldFilter =
+            AB.filterComplexNew(this.ids.contentFieldFilter));
+         contentFieldFilter.on("save", () => {
+            if (
+               !contentFieldFilter.isConditionComplete(
+                  contentFieldFilter.getValue()
+               )
+            )
+               contentFieldFilter.setValue({ glue: "and", rules: [] });
+            this.onChange();
+         });
       }
 
       static get key() {
          return "orgchart_teams";
       }
 
+      _uiContentDisplayedField(fieldID = "", obj, atDisplay) {
+         const self = this;
+         const ids = self.ids;
+         const datasource = this.CurrentView.datacollection.datasource;
+         const datasourceID = datasource.id;
+         const parentObj = datasource.fieldByID(
+            $$(ids.contentField).getValue()
+         ).datasourceLink;
+         const parentObjID = parentObj.id;
+         const objID = obj?.id || parentObjID;
+         const $contentDisplayedFields = $$(ids.contentDisplayedFields);
+         const filterFields = (f) => {
+            const linkedObjID = f.datasourceLink?.id;
+            return linkedObjID !== datasourceID && linkedObjID !== parentObjID;
+         };
+         const mapFields = (f) => ({
+            id: f.id,
+            value: f.label,
+            field: f,
+         });
+         const getOnSelectChangeFn =
+            (currentObj, currentAtDisplay) => (newValue) => {
+               const field = currentObj.fieldByID(newValue);
+               if (field.key === "connectObject") {
+                  $contentDisplayedFields.addView(
+                     this._uiContentDisplayedField(
+                        "",
+                        field.datasourceLink,
+                        currentAtDisplay
+                     )
+                  );
+               }
+               this.populateContentDisplayedFields(
+                  $contentDisplayedFields.getValues()
+               );
+               this.onChange();
+            };
+         if (objID === parentObjID) {
+            const rootAtDisplay = Object.keys(
+               $contentDisplayedFields.elements
+            ).filter((key) => key.includes(objID)).length;
+            return {
+               cols: [
+                  {
+                     view: "richselect",
+                     name: `${rootAtDisplay}.${parentObjID}`,
+                     label: `${L("Display")} ${rootAtDisplay + 1}`,
+                     labelWidth: uiConfig.labelWidthMedium,
+                     options:
+                        parentObj.fields(filterFields).map(mapFields) || [],
+                     value: fieldID,
+                     on: {
+                        onChange: getOnSelectChangeFn(parentObj, rootAtDisplay),
+                     },
+                  },
+                  {
+                     view: "button",
+                     css: "webix_danger",
+                     type: "icon",
+                     icon: "wxi-close",
+                     width: uiConfig.buttonWidthExtraSmall,
+                     click() {
+                        self.deleteContentDisplayedField(
+                           this.getParentView().getChildViews()[0].config.id
+                        );
+                        self.onChange();
+                     },
+                  },
+               ],
+            };
+         }
+         return {
+            cols: [
+               {
+                  view: "richselect",
+                  name: `${atDisplay}.${objID}`,
+                  label: "->",
+                  labelWidth: uiConfig.labelWidthMedium,
+                  options: obj.fields(filterFields).map(mapFields) || [],
+                  value: fieldID,
+                  on: {
+                     onChange: getOnSelectChangeFn(obj, atDisplay),
+                  },
+               },
+               {
+                  view: "button",
+                  css: "webix_danger",
+                  type: "icon",
+                  icon: "wxi-close",
+                  width: uiConfig.buttonWidthExtraSmall,
+                  click() {
+                     self.deleteContentDisplayedField(
+                        this.getParentView().getChildViews()[0].config.id
+                     );
+                     self.onChange();
+                  },
+               },
+            ],
+         };
+      }
+
       ui() {
          const ids = this.ids;
-
+         const contentFieldFilter = this.contentFieldFilter;
+         contentFieldFilter.myPopup = webix.ui({
+            view: "popup",
+            height: 240,
+            width: 480,
+            hidden: true,
+            body: contentFieldFilter.ui,
+         });
          return super.ui([
             {
                id: ids.datacollectionID,
@@ -87,6 +212,139 @@ export default function (AB) {
                on: {
                   onChange: () => this.onChange(),
                },
+            },
+            {
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Content Field"),
+                     width: uiConfig.labelWidthLarge,
+                  },
+                  {
+                     id: ids.contentField,
+                     name: "contentField",
+                     view: "richselect",
+                     options: [],
+                     on: {
+                        onChange: (newValue) => {
+                           const $contentDisplayedFieldsAdd = $$(
+                              ids.contentDisplayedFieldsAdd
+                           );
+                           const $contentFieldFilterButton = $$(
+                              ids.contentFieldFilterButton
+                           );
+                           const $contentGroupByField = $$(
+                              ids.contentGroupByField
+                           );
+                           contentFieldFilter.init();
+                           contentFieldFilter.setValue({
+                              glue: "and",
+                              rules: [],
+                           });
+                           if (newValue != null && newValue !== "") {
+                              const contentObj =
+                                 this.CurrentView.datacollection.datasource.fieldByID(
+                                    newValue
+                                 ).datasourceLink;
+                              contentFieldFilter.fieldsLoad(
+                                 contentObj.fields()
+                              );
+                              $contentGroupByField.setValue("");
+                              $contentGroupByField.define("options", [
+                                 { id: "", value: "", $empty: true },
+                                 ...contentObj
+                                    .fields(
+                                       (f) =>
+                                          f.key === "list" &&
+                                          f.settings.isMultiple === 0
+                                    )
+                                    .map((f) => ({
+                                       id: f.id,
+                                       value: f.label,
+                                       field: f,
+                                    })),
+                              ]);
+                              $contentFieldFilterButton.enable();
+                              $contentDisplayedFieldsAdd.show();
+                              $contentGroupByField.show();
+                           } else {
+                              contentFieldFilter.fieldsLoad([]);
+                              $contentGroupByField.setValue("");
+                              $contentGroupByField.define("options", []);
+                              $contentFieldFilterButton.disable();
+                              $contentDisplayedFieldsAdd.hide();
+                              $contentGroupByField.hide();
+                           }
+                           this.populateContentDisplayedFields({});
+                           this.onChange();
+                        },
+                     },
+                  },
+                  {
+                     id: ids.contentFieldFilterButton,
+                     view: "button",
+                     type: "icon",
+                     icon: "fa fa-filter",
+                     css: "webix_primary",
+                     disabled: true,
+                     width: uiConfig.buttonWidthExtraSmall,
+                     click() {
+                        contentFieldFilter.popUp(this.$view, null, {
+                           pos: "top",
+                        });
+                     },
+                  },
+               ],
+            },
+            {
+               id: ids.contentGroupByField,
+               hidden: true,
+               view: "richselect",
+               label: L("Content Group By Field"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: {
+                  onChange: (newValue) => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.contentDisplayedFieldsAdd,
+               hidden: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Content Displayed Fields"),
+                  },
+                  {
+                     view: "button",
+                     type: "icon",
+                     icon: "fa fa-plus",
+                     css: "webix_primary",
+                     width: uiConfig.buttonWidthExtraSmall,
+                     click: () => {
+                        const $contentDisplayedFields = $$(
+                           ids.contentDisplayedFields
+                        );
+                        if (!$contentDisplayedFields.isVisible())
+                           $contentDisplayedFields.show();
+                        const values = $contentDisplayedFields.getValues();
+                        for (const key in values) {
+                        }
+                        Object.keys($contentDisplayedFields.elements);
+                        $contentDisplayedFields.addView(
+                           this._uiContentDisplayedField()
+                        );
+                     },
+                  },
+               ],
+            },
+            {
+               id: ids.contentDisplayedFields,
+               view: "form",
+               hidden: true,
+               elements: [],
             },
             {
                id: ids.draggable,
@@ -222,15 +480,44 @@ export default function (AB) {
 
       async init(AB) {
          this.AB = AB;
-
          await super.init(AB);
-
          webix.extend($$(this.ids.component), webix.ProgressBar);
+         this.contentFieldFilter.queriesLoad(
+            this.CurrentApplication?.queriesIncluded()
+         );
+      }
+
+      deleteContentDisplayedField(id) {
+         const ids = this.ids;
+         const $contentDisplayedFields = $$(ids.contentDisplayedFields);
+         const $elements = $contentDisplayedFields.elements;
+         const $richselect = $$(id);
+         const deletedElementKey = $richselect.config.name;
+         if (
+            deletedElementKey.includes(
+               this.CurrentView.datacollection.datasource.fieldByID(
+                  $$(ids.contentField).getValue()
+               ).datasourceLink.id
+            )
+         ) {
+            const deletedAtDisplay = deletedElementKey.split(".")[0];
+            for (const key in $elements) {
+               if (!key.includes(`${deletedAtDisplay}.`)) continue;
+               $contentDisplayedFields.removeView(
+                  $elements[key].getParentView().config.id
+               );
+            }
+         } else
+            $contentDisplayedFields.removeView(
+               $richselect.getParentView().config.id
+            );
+         this.populateContentDisplayedFields(
+            $contentDisplayedFields.getValues()
+         );
       }
 
       populate(view) {
          super.populate(view);
-
          const ids = this.ids;
          const $component = $$(ids.component);
          const defaultValues = this.defaultValues();
@@ -238,18 +525,22 @@ export default function (AB) {
             $component.getValues(),
             Object.assign(defaultValues, view.settings)
          );
-
          // const $fieldList = $$(ids.fields);
          // $fieldList.clearAll();
          this.populateDatacollection(values.datacollectionId);
          const teamObj = this.CurrentView?.datacollection?.datasource;
          if (teamObj) {
             this.populateTeamFieldOptions(teamObj);
-            $$(this.ids.teamLink).setValue(values.teamLink);
-            $$(this.ids.teamName).setValue(values.teamName);
-            $$(this.ids.topTeam).setValue(values.topTeam);
+            $$(ids.teamLink).setValue(values.teamLink);
+            $$(ids.teamName).setValue(values.teamName);
+            $$(ids.topTeam).setValue(values.topTeam);
+            $$(ids.contentField).setValue(values.contentField);
+            $$(ids.contentGroupByField).setValue(values.contentGroupByField);
+            this.contentFieldFilter.setValue(
+               JSON.parse(values.contentFieldFilter)
+            );
+            this.populateContentDisplayedFields(values.contentDisplayedFields);
          }
-
          $component.setValues(values);
       }
 
@@ -305,8 +596,8 @@ export default function (AB) {
                field: f,
             };
          });
-         $$(this.ids.teamLink).define("options", linkFields);
-
+         const ids = this.ids;
+         $$(ids.teamLink).define("options", linkFields);
          const textFields = object
             ?.fields((f) => f.key === "string")
             .map((f) => {
@@ -316,8 +607,7 @@ export default function (AB) {
                   field: f,
                };
             });
-         $$(this.ids.teamName).define("options", textFields);
-
+         $$(ids.teamName).define("options", textFields);
          const booleanFields = object
             ?.fields((f) => f.key === "boolean")
             .map((f) => {
@@ -327,9 +617,78 @@ export default function (AB) {
                   field: f,
                };
             });
+
          // Add an empty option as this is an optional setting.
          booleanFields.unshift({ id: "", value: "", $empty: true });
-         $$(this.ids.topTeam).define("options", booleanFields);
+         $$(ids.topTeam).define("options", booleanFields);
+         $$(ids.contentField).define("options", [
+            { id: "", value: "", $empty: true },
+            ...linkFields,
+         ]);
+      }
+
+      populateContentDisplayedFields(values) {
+         const ids = this.ids;
+         const $contentDisplayedFields = $$(ids.contentDisplayedFields);
+         const elements = $contentDisplayedFields.elements;
+         for (const key in elements)
+            $contentDisplayedFields.removeView(
+               elements[key].getParentView().config.id
+            );
+         const keys = Object.keys(values);
+         if (keys.length === 0) {
+            $contentDisplayedFields.hide();
+            return;
+         }
+         const obj = this.CurrentView.datacollection.datasource.fieldByID(
+            $$(ids.contentField).getValue()
+         ).datasourceLink;
+         const objID = obj.id;
+         const parentKeys = [];
+         const childKeys = [];
+         while (keys.length > 0) {
+            const key = keys.pop();
+            (key.includes(objID) && parentKeys.push(key)) ||
+               childKeys.push(key);
+         }
+         while (parentKeys.length > 0) {
+            const parentKey = parentKeys.pop();
+            const parentFieldID = values[parentKey] ?? "";
+            $contentDisplayedFields.addView(
+               this._uiContentDisplayedField(parentFieldID)
+            );
+            if (
+               parentFieldID === "" ||
+               obj.fieldByID(parentFieldID).key !== "connectObject"
+            )
+               continue;
+            const currentAtDisplay =
+               Object.keys($contentDisplayedFields.getValues()).filter(
+                  (currentKey) => currentKey.includes(objID)
+               ).length - 1;
+            while (
+               childKeys.findIndex((childKey) =>
+                  childKey.includes(`${parentKey.split(".")[0]}.`)
+               ) > -1
+            ) {
+               const childKey = childKeys.pop();
+               const childObj = this.AB.objectByID(childKey.split(".")[1]);
+               const childFieldID = values[childKey] ?? "";
+               $contentDisplayedFields.addView(
+                  this._uiContentDisplayedField(
+                     childFieldID,
+                     childObj,
+                     currentAtDisplay
+                  )
+               );
+               if (
+                  childFieldID === "" ||
+                  childObj.fieldByID(childFieldID).key !== "connectObject"
+               )
+                  break;
+            }
+         }
+         $contentDisplayedFields.show();
       }
 
       // populateDescriptionFieldOptions(fieldId) {
@@ -370,17 +729,23 @@ export default function (AB) {
       values() {
          const values = super.values();
          const ids = this.ids;
-         // values.settings = values.setttings ?? {};
-         values.settings = Object.assign(
+         const settings = (values.settings = Object.assign(
             $$(ids.component).getValues(),
             values.settings
-         );
+         ));
          // Retrive the values of your properties from Webix and store them in the view
-         values.settings.teamLink = $$(ids.teamLink).getValue();
-         values.settings.teamName = $$(ids.teamName).getValue();
-         values.settings.topTeam = $$(ids.topTeam).getValue();
-         values.settings.dataCollectionId = $$(ids.datacollectionID).getValue();
-
+         settings.teamLink = $$(ids.teamLink).getValue();
+         settings.teamName = $$(ids.teamName).getValue();
+         settings.topTeam = $$(ids.topTeam).getValue();
+         settings.dataCollectionId = $$(ids.datacollectionID).getValue();
+         settings.contentField = $$(ids.contentField).getValue();
+         settings.contentGroupByField = $$(ids.contentGroupByField).getValue();
+         settings.contentFieldFilter = JSON.stringify(
+            this.contentFieldFilter.getValue()
+         );
+         settings.contentDisplayedFields = $$(
+            ids.contentDisplayedFields
+         ).getValues();
          return values;
       }
 
