@@ -135,7 +135,7 @@ export default function (AB) {
             this.UI_Tables.setCredentials(creds);
             this.UI_Fields.setCredentials(creds);
             this.UI_FieldTest.setCredentials(creds);
-            // this.UI_Tables.loadTables();
+            this.UI_Connections.setCredentials(creds);
             this.UI_Tables.show();
          });
 
@@ -294,31 +294,6 @@ export default function (AB) {
 
          let allFields = this.UI_Fields.getValues();
 
-         // allConnectFields = allFields.concat(this.UI_Connections.getValues());
-         /*
-            linkCol = linkObject.fieldNew({
-                        // id: OP.Util.uuid(),
-
-                        key: field.key,
-
-                        columnName: linkColumnName,
-                        label: this.CurrentObject.label,
-
-                        settings: {
-                           showIcon: field.settings.showIcon,
-
-                           linkObject: field.object.id,
-                           linkType: field.settings.linkViaType,
-                           linkViaType: field.settings.linkType,
-                           isCustomFK: field.settings.isCustomFK,
-                           indexField: field.settings.indexField,
-                           indexField2: field.settings.indexField2,
-                           isSource: 0,
-                           width: width,
-                        },
-                     });
-         */
-
          // Pick out our special columns: pk, created_at, updated_at
          let pkField = allFields.find((f) => f.pk);
          if (!pkField) {
@@ -366,13 +341,79 @@ export default function (AB) {
                // values.fieldIDs.push(field.id);
             }
             // values.id = object.id;
-
-            this.emit("save", object.toObj());
-
-            this.ready();
          } catch (err) {
             console.error(err);
          }
+
+         let allConnectFields = this.UI_Connections.getValues();
+         for (var i = 0; i < allConnectFields.length; i++) {
+            let f = allConnectFields[i];
+            /* f = 
+                {
+                    "thisField": "_this_object_",
+                    "thatObject": "b7c7cca2-b919-4a90-b199-650a7a4693c1",
+                    "thatObjectField": "custrecord_whq_teams_strategy_strtgy_cod",
+                    "linkType": "many:one"
+                }
+            */
+
+            let linkObject = this.AB.objectByID(f.thatObject);
+            if (!linkObject) continue;
+
+            let linkType = f.linkType;
+            let parts = linkType.split(":");
+            let link = parts[0];
+            let linkVia = parts[1];
+
+            let colName = "";
+            if (f.thisField != "_this_object_") {
+               colName = f.thisField;
+            } else if (f.thatObjectField != "_that_object_") {
+               colName = f.thatObjectField;
+            }
+
+            let thisField = {
+               key: "connectObject",
+               columnName: f.thisField,
+               label: linkObject.label,
+               settings: {
+                  showIcon: "1",
+
+                  linkObject: linkObject.id,
+                  linkType: link,
+                  linkViaType: linkVia,
+                  isCustomFK: 0,
+                  indexField: "",
+                  indexField2: "",
+                  isSource: 0,
+                  width: 100,
+               },
+            };
+
+            let linkField = this.AB.cloneDeep(thisField);
+            linkField.columnName = f.thatObjectField;
+            linkField.label = object.label || object.name;
+            linkField.settings.linkObject = object.id;
+            linkField.settings.linkType = linkVia;
+            linkField.settings.linkViaType = link;
+
+            // create an initial LinkColumn
+            let fieldLink = linkObject.fieldNew(linkField);
+            await fieldLink.save(true); // should get an .id now
+
+            // make sure I can reference field => linkColumn
+            thisField.settings.linkColumn = fieldLink.id;
+            let field = object.fieldNew(thisField);
+            await field.save();
+
+            // now update reference linkColumn => field
+            fieldLink.settings.linkColumn = field.id;
+            await fieldLink.save();
+         }
+
+         this.emit("save", object.toObj());
+
+         this.ready();
       }
 
       /**

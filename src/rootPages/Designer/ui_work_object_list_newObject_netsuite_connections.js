@@ -18,7 +18,7 @@ export default function (AB) {
 
             form: "",
 
-            fieldSelector: "",
+            // fieldSelector: "",
             connections: "",
             displayConnections: "",
             displayNoConnections: "",
@@ -193,9 +193,11 @@ export default function (AB) {
 
          this.$form = $$(this.ids.form);
 
-         this.$fieldSelector = $$(this.ids.fieldSelector);
          AB.Webix.extend(this.$form, webix.ProgressBar);
-         AB.Webix.extend(this.$fieldSelector, webix.ProgressBar);
+
+         // this.$fieldSelector = $$(this.ids.fieldSelector);
+         // if (this.$fieldSelector)
+         //    AB.Webix.extend(this.$fieldSelector, webix.ProgressBar);
 
          // init() routines are always considered async so:
          return Promise.resolve();
@@ -243,68 +245,129 @@ export default function (AB) {
          const fieldKeys = ["string", "LongText", "number", "date", "boolean"];
 
          const linkTypes = ["one:one", "one:many", "many:one", "many:many"];
-         return {
-            cols: [
-               {
-                  rows: [
-                     {
-                        label: L("Field"),
-                        view: "label",
-                     },
-                     {
-                        placeholder: "Type",
-                        options: this.connectionList.map((conn) => {
-                           return {
-                              id: conn.column,
-                              value: conn.column,
-                           };
-                        }),
-                        view: "select",
-                        // value: type,
-                     },
-                  ],
-               },
-               {
-                  rows: [
-                     {
-                        placeholder: "Existing Netsuite Object",
-                        options: this.listNetsuiteObjects.map((nObj) => {
-                           return {
-                              id: nObj.id,
-                              value: nObj.label,
-                           };
-                        }),
-                        view: "select",
-                        // value: type,
-                     },
-                     {
-                        placeholder: "Link Column",
-                        options: [],
-                        view: "select",
-                        // value: type,
-                     },
-                     {
-                        placeholder: "Link Type",
-                        options: linkTypes.map((l) => {
-                           return {
-                              id: l,
-                              value: l,
-                           };
-                        }),
-                        view: "select",
-                        // value: type,
-                     },
-                  ],
-               },
 
+         // For the Base Object, let's include all fields that are clearly
+         // objects.
+         let fieldOptions = this.connectionList.map((conn) => {
+            return {
+               id: conn.column,
+               value: conn.column,
+            };
+         });
+         // we also need to include "_this_object_" reference so that
+         // we can make many:xxx connections (we don't store the value, the
+         // other object does)
+         fieldOptions.unshift({
+            id: "_this_object_",
+            value: L("This Object"),
+         });
+
+         return {
+            view: "form",
+            elements: [
                {
-                  icon: "wxi-trash",
-                  view: "icon",
-                  width: 38,
-                  click: function () {
-                     const $item = this.getParentView();
-                     $$(self.ids.fields).removeView($item);
-                  },
+                  cols: [
+                     {
+                        rows: [
+                           {
+                              label: L("Field"),
+                              view: "label",
+                           },
+                           {
+                              placeholder: "Type",
+                              options: fieldOptions,
+                              view: "select",
+                              // value: type,
+                              name: "thisField",
+                           },
+                        ],
+                     },
+                     {
+                        rows: [
+                           {
+                              placeholder: L("Existing Netsuite Object"),
+                              options: this.listNetsuiteObjects.map((nObj) => {
+                                 return {
+                                    id: nObj.id,
+                                    value: nObj.label,
+                                 };
+                              }),
+                              view: "select",
+                              name: "thatObject",
+                              // value: type,
+                              on: {
+                                 onChange: async function (
+                                    newVal,
+                                    oldVal,
+                                    config
+                                 ) {
+                                    let connObj = self.AB.objectByID(newVal);
+                                    if (connObj) {
+                                       let result = await self.AB.Network.get({
+                                          url: `/netsuite/table/${connObj.tableName}`,
+                                          params: {
+                                             credentials: JSON.stringify(
+                                                self.credentials
+                                             ),
+                                          },
+                                       });
+                                       let fields = result.filter(
+                                          (r) => r.type == "object"
+                                       );
+                                       let options = fields.map((f) => {
+                                          return {
+                                             id: f.column,
+                                             value: f.column,
+                                          };
+                                       });
+
+                                       // include a "_that_object_" incase this is a one:xxx
+                                       // connection.
+                                       options.unshift({
+                                          id: "_that_object_",
+                                          value: L("That Object"),
+                                       });
+                                       let $linkColumn =
+                                          this.getParentView().getChildViews()[1];
+
+                                       $linkColumn.define("options", options);
+                                       $linkColumn.refresh();
+                                    }
+                                 },
+                              },
+                           },
+                           {
+                              placeholder: "Link Column",
+                              options: [],
+                              view: "select",
+                              // value: type,
+                              name: "thatObjectField",
+                           },
+                           {
+                              placeholder: "Link Type",
+                              options: linkTypes.map((l) => {
+                                 return {
+                                    id: l,
+                                    value: l,
+                                 };
+                              }),
+                              view: "select",
+                              name: "linkType",
+                              // value: type,
+                           },
+                        ],
+                     },
+
+                     {
+                        icon: "wxi-trash",
+                        view: "icon",
+                        width: 38,
+                        click: function () {
+                           const $item = this.getParentView().getParentView();
+                           $$(self.ids.connections).removeView($item);
+                        },
+                     },
+                  ],
                },
             ],
          };
@@ -382,20 +445,30 @@ export default function (AB) {
       busy() {
          const $verifyButton = $$(this.ids.buttonVerify);
 
-         this.$fieldSelector.showProgress({ type: "icon" });
+         // this.$fieldSelector.showProgress({ type: "icon" });
          $verifyButton.disable();
       }
 
       ready() {
          const $verifyButton = $$(this.ids.buttonVerify);
 
-         this.$fieldSelector.hideProgress();
+         // this.$fieldSelector.hideProgress();
          $verifyButton.enable();
       }
 
-      // setCredentials(creds) {
-      //    this.credentials = creds;
-      // }
+      setCredentials(creds) {
+         this.credentials = creds;
+      }
+
+      getValues() {
+         let values = [];
+         $$(this.ids.connections)
+            .getChildViews()
+            .forEach(($row) => {
+               values.push($row.getValues());
+            });
+         return values;
+      }
 
       // verify() {
       //    this.emit("fields.ready", {

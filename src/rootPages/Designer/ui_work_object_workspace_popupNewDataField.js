@@ -420,7 +420,9 @@ export default function (AB, ibase) {
                      field.columnName === ""
                   ) {
                      this.AB.Webix.message({
-                        text: "The column name can't contain special characters.",
+                        text: L(
+                           "The column name can't contain special characters."
+                        ),
                         type: "error",
                      });
 
