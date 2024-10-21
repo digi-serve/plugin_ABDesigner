@@ -224,7 +224,7 @@ export default function (AB) {
 
          ModelUI.clearWorkspace();
          TestUI.clearWorkspace();
-         MonitorUI.clearWorkspace();
+         MonitorUI?.clearWorkspace?.();
       }
 
       /**
