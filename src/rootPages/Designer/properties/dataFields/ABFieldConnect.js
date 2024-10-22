@@ -31,6 +31,12 @@ export default function (AB) {
             indexField: "",
             indexField2: "",
 
+            netsuite_one: "",
+            netsuiteOneLabel: "",
+            netsuiteOneColumn: "",
+
+            netsuite_many: "",
+
             connectDataPopup: "",
          });
       }
@@ -237,6 +243,37 @@ export default function (AB) {
                   },
                },
             },
+            {
+               view: "layout",
+               id: ids.netsuite_one,
+               hidden: true,
+               cols: [
+                  {
+                     id: ids.netsuiteOneLabel,
+                     view: "label",
+                     label: L(" <b>[Select object]</b>'s field"),
+                     width: 300,
+                  },
+                  {
+                     id: ids.netsuiteOneColumn,
+                     name: "netsuiteOneColumn",
+                     disallowEdit: true,
+                     view: "richselect",
+                     // value: FC.defaultValues().linkViaType,
+                     // width: 200,
+                     fillspace: true,
+                     options: [],
+                     on: {
+                        // onChange: (newV, oldV) => {
+                        //    this.selectLinkViaType(newV, oldV);
+                        // },
+                        onAfterRender: function () {
+                           ABField.CYPRESS_REF(this);
+                        },
+                     },
+                  },
+               ],
+            },
          ]);
       }
 
@@ -295,6 +332,7 @@ export default function (AB) {
          $fieldLink2.refresh();
 
          this.updateCustomIndex();
+         this.checkNetsuiteObjects();
       }
 
       show() {
@@ -387,13 +425,19 @@ export default function (AB) {
          const options = [];
          // if an ABApplication is set then load in the related objects
          const application = this.CurrentApplication;
+
+         // if this is a Netsuite Object, just gather other Netsuite Objs
+         let objFilter = () => true;
+         if (this.CurrentObject.isNetsuite) {
+            objFilter = (o) => o.isNetsuite;
+         }
          if (application) {
-            application.objectsIncluded().forEach((o) => {
+            application.objectsIncluded(objFilter).forEach((o) => {
                options.push({ id: o.id, value: o.label });
             });
          } else {
             // else load in all the ABObjects
-            this.AB.objects().forEach((o) => {
+            this.AB.objects(objFilter).forEach((o) => {
                options.push({ id: o.id, value: o.label });
             });
          }
@@ -449,6 +493,7 @@ export default function (AB) {
          $field.refresh();
 
          this.updateCustomIndex();
+         this.checkNetsuiteObjects();
       }
 
       selectObjectTo(newValue, oldValue) {
@@ -474,6 +519,8 @@ export default function (AB) {
          $$(ids.link2).show();
 
          this.updateCustomIndex();
+
+         this.checkNetsuiteObjects();
       }
 
       updateCustomIndex() {
@@ -577,6 +624,62 @@ export default function (AB) {
          }
 
          this.checkCustomFK();
+      }
+
+      async checkNetsuiteObjects() {
+         let ids = this.ids;
+         if (!this.CurrentObject.isNetsuite) {
+            $$(ids.netsuite_one)?.hide();
+            $$(ids.netsuite_many)?.hide();
+            return;
+         }
+
+         let linkType = $$(ids.linkType).getValue();
+         let linkViaType = $$(ids.linkViaType).getValue();
+
+         if (linkType == "one") {
+            await this.updateNetsuiteOneUI(this.CurrentObject);
+            $$(ids.netsuite_one)?.show();
+            $$(ids.netsuite_many)?.hide();
+         } else if (linkViaType == "one") {
+            // fill label and Drop list with object in Droplist
+            let objID = $$(ids.linkObject).getValue();
+            let connObj = this.AB.objectByID(objID);
+            if (!connObj) return;
+            await this.updateNetsuiteOneUI(connObj);
+            $$(ids.netsuite_one)?.show();
+            $$(ids.netsuite_many)?.hide();
+         } else {
+            // this is many:many
+            $$(ids.netsuite_one)?.hide();
+            $$(ids.netsuite_many)?.show();
+         }
+      }
+
+      async updateNetsuiteOneUI(object) {
+         let ids = this.ids;
+
+         // fill label and Drop list with Current Object
+         $$(ids.netsuiteOneLabel).setValue(
+            L(" <b>{0}</b>'s field", [object.label])
+         );
+
+         let result = await this.AB.Network.get({
+            url: `/netsuite/table/${object.tableName}`,
+            params: {
+               credentials: JSON.stringify(object.credentials),
+            },
+         });
+         let fields = result.filter((r) => r.type == "object");
+         let options = fields.map((f) => {
+            return {
+               id: f.column,
+               value: f.column,
+            };
+         });
+
+         $$(ids.netsuiteOneColumn).define("options", options);
+         $$(ids.netsuiteOneColumn).refresh();
       }
    }
 
