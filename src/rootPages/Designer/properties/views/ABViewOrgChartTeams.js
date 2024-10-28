@@ -25,6 +25,7 @@ export default function (AB) {
             direction: "",
             depth: "",
             draggable: "",
+            dropContentToCreate: "",
             color: "",
             pan: "",
             zoom: "",
@@ -161,13 +162,6 @@ export default function (AB) {
       ui() {
          const ids = this.ids;
          const contentFieldFilter = this.contentFieldFilter;
-         contentFieldFilter.myPopup = webix.ui({
-            view: "popup",
-            height: 240,
-            width: 480,
-            hidden: true,
-            body: contentFieldFilter.ui,
-         });
          return super.ui([
             {
                id: ids.datacollectionID,
@@ -364,6 +358,25 @@ export default function (AB) {
                view: "checkbox",
                label: L("Drag & Drop"),
                labelWidth: uiConfig.labelWidthLarge,
+               value: 0,
+               on: {
+                  onChange: (newValue) => {
+                     const $dropContentToCreate = $$(ids.dropContentToCreate);
+                     if (newValue === 0) {
+                        $dropContentToCreate.setValue(0);
+                        $dropContentToCreate.hide();
+                     } else $dropContentToCreate.show();
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.dropContentToCreate,
+               name: "dropContentToCreateNew",
+               view: "checkbox",
+               label: L("Drop content to create"),
+               labelWidth: uiConfig.labelWidthLarge,
+               hidden: true,
                value: 0,
                on: { onChange: () => this.onChange() },
             },
