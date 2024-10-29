@@ -16,10 +16,12 @@ export default function (AB) {
       constructor() {
          super(BASE_ID, {
             datacollectionID: "",
+            strategyCode: "",
             teamInactive: "",
             teamCanInactivate: "",
             teamLink: "",
             teamName: "",
+            teamStrategy: "",
             topTeam: "",
             fields: "",
             direction: "",
@@ -39,6 +41,8 @@ export default function (AB) {
             contentGroupByField: "",
             contentDisplayedFields: "",
             contentDisplayedFieldsAdd: "",
+            strategyColorPopup: "",
+            strategyColorForm: "",
          });
          this.AB = AB;
          const contentFieldFilter = (this.contentFieldFilter =
@@ -353,6 +357,42 @@ export default function (AB) {
                elements: [],
             },
             {
+               id: ids.teamStrategy,
+               view: "richselect",
+               label: L("Strategy"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: {
+                  onChange: (value) => {
+                     this.populateStrategyOptions(value);
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               cols: [
+                  {
+                     id: ids.strategyCode,
+                     view: "richselect",
+                     label: L("Strategy Code"),
+                     labelWidth: uiConfig.labelWidthLarge,
+                     options: [],
+                     on: {
+                        onChange: () => {
+                           this.onChange();
+                           $$(this.ids.strategyColorPopup)?.close();
+                        },
+                     },
+                  },
+                  {
+                     view: "icon",
+                     icon: "fa fa-paint-brush",
+                     allign: "right",
+                     click: () => this.strategyColorPopup(),
+                  },
+               ],
+            },
+            {
                id: ids.draggable,
                name: "draggable",
                view: "checkbox",
@@ -372,7 +412,7 @@ export default function (AB) {
             },
             {
                id: ids.dropContentToCreate,
-               name: "dropContentToCreateNew",
+               name: "dropContentToCreate",
                view: "checkbox",
                label: L("Drop content to create"),
                labelWidth: uiConfig.labelWidthLarge,
@@ -528,17 +568,24 @@ export default function (AB) {
          const teamObj = this.CurrentView?.datacollection?.datasource;
          if (teamObj) {
             this.populateTeamFieldOptions(teamObj);
-            $$(ids.teamLink).setValue(values.teamLink);
-            $$(ids.teamName).setValue(values.teamName);
-            $$(ids.teamInactive).setValue(values.teamInactive);
-            $$(ids.teamCanInactivate).setValue(values.teamCanInactivate);
-            $$(ids.topTeam).setValue(values.topTeam);
-            $$(ids.contentField).setValue(values.contentField);
-            $$(ids.contentGroupByField).setValue(values.contentGroupByField);
+            [
+               "teamCanInactivate",
+               "teamInactive",
+               "teamLink",
+               "teamName",
+               "teamStrategy",
+               "topTeam",
+               "contentField",
+               "contentGroupByField",
+            ].forEach((f) => $$(ids[f]).setValue(values[f]));
             this.contentFieldFilter.setValue(
                JSON.parse(values.contentFieldFilter)
             );
             this.populateContentDisplayedFields(values.contentDisplayedFields);
+            if (values.teamStrategy) {
+               this.populateStrategyOptions(values.teamStrategy);
+               $$(ids.strategyCode).setValue(values.strategyCode);
+            }
          }
          $component.setValues(values);
       }
@@ -588,34 +635,25 @@ export default function (AB) {
 
       populateTeamFieldOptions(object) {
          const view = this.CurrentView;
-         const linkFields = view.getValueFields(object).map((f) => {
-            return {
-               id: f.id,
-               value: f.label,
-               field: f,
-            };
-         });
+         // const linkFields = view.getValueFields(object).map(fieldToOption);
          const ids = this.ids;
-         $$(ids.teamLink).define("options", linkFields);
+         const m2oFields = view.getValueFields(object).map(fieldToOption);
+         const o2mFields =
+            object.connectFields(
+               (f) => f.linkType() == "one" && f.linkViaType() == "many"
+            ) ?? [];
+         $$(ids.teamStrategy).define(
+            "options",
+            o2mFields.map(fieldToOption)
+         );
+         $$(ids.teamLink).define("options", m2oFields);
          const textFields = object
             ?.fields((f) => f.key === "string")
-            .map((f) => {
-               return {
-                  id: f.id,
-                  value: f.label,
-                  field: f,
-               };
-            });
+            .map(fieldToOption);
          $$(ids.teamName).define("options", textFields);
          const booleanFields = object
             ?.fields((f) => f.key === "boolean")
-            .map((f) => {
-               return {
-                  id: f.id,
-                  value: f.label,
-                  field: f,
-               };
-            });
+            .map(fieldToOption);
 
          // Add an empty option as this is an optional setting.
          booleanFields.unshift({ id: "", value: "", $empty: true });
@@ -624,7 +662,7 @@ export default function (AB) {
          $$(ids.teamCanInactivate).define("options", booleanFields);
          $$(ids.contentField).define("options", [
             { id: "", value: "", $empty: true },
-            ...linkFields,
+            ...m2oFields,
          ]);
       }
 
@@ -692,6 +730,61 @@ export default function (AB) {
          $contentDisplayedFields.show();
       }
 
+      populateStrategyOptions(fieldID) {
+         const strategyObj = this.AB.objectByID(
+            this.AB.definitionByID(fieldID).settings.linkObject
+         );
+         const listFields = strategyObj
+            .fields((f) => f.key === "list")
+            .map(fieldToOption);
+         $$(this.ids.strategyCode).define("options", listFields);
+      }
+
+      strategyColorPopup() {
+         const codeFieldID = $$(this.ids.strategyCode).getValue();
+         if (!codeFieldID) return;
+
+         let $popup = $$(this.ids.strategyColorPopup);
+
+         if (!$popup) {
+            const values = this.CurrentView.settings.strategyColors ?? {};
+            const strategyTypes = this.AB.definitionByID(
+               codeFieldID
+            ).settings.options.map((strategy) => {
+               return {
+                  view: "colorpicker",
+                  label: strategy.text,
+                  name: strategy.id,
+                  value: values[strategy.id] ?? "#111111",
+               };
+            });
+
+            $popup = this.AB.Webix.ui({
+               view: "window",
+               id: this.ids.strategyColorPopup,
+               close: true,
+               title: L("Set Colors"),
+               position: "center",
+               body: {
+                  view: "form",
+                  id: this.ids.strategyColorForm,
+                  elements: [
+                     ...strategyTypes,
+                     {
+                        view: "button",
+                        label: L("Apply"),
+                        click: () => {
+                           this.onChange();
+                           $$(this.ids.strategyColorPopup).hide();
+                        },
+                     },
+                  ],
+               },
+            });
+         }
+         $popup.show();
+      }
+
       // populateDescriptionFieldOptions(fieldId) {
       //    const valueField = this.CurrentView.valueField();
       //    const $columnDescription = $$(this.ids.columnDescription);
@@ -740,6 +833,8 @@ export default function (AB) {
          settings.topTeam = $$(ids.topTeam).getValue();
          settings.teamInactive = $$(ids.teamInactive).getValue();
          settings.teamCanInactivate = $$(ids.teamCanInactivate).getValue();
+         settings.teamStrategy = $$(ids.teamStrategy).getValue();
+         settings.strategyCode = $$(ids.strategyCode).getValue();
          settings.dataCollectionId = $$(ids.datacollectionID).getValue();
          settings.contentField = $$(ids.contentField).getValue();
          settings.contentGroupByField = $$(ids.contentGroupByField).getValue();
@@ -749,6 +844,8 @@ export default function (AB) {
          settings.contentDisplayedFields = $$(
             ids.contentDisplayedFields
          ).getValues();
+         const $colorForm = $$(ids.strategyColorForm);
+         settings.strategyColors = $colorForm?.getValues() ?? {};
          return values;
       }
 
@@ -763,4 +860,12 @@ export default function (AB) {
    }
 
    return ABViewOrgChartTeamsProperty;
+}
+
+function fieldToOption(f) {
+   return {
+      id: f.id,
+      value: f.label,
+      field: f,
+   };
 }
