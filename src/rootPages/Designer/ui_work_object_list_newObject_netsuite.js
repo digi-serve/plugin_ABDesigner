@@ -143,6 +143,10 @@ export default function (AB) {
             this.UI_Tables.disable();
          });
 
+         this.UI_Tables.on("tables", (tables) => {
+            this.UI_Connections.setAllTables(tables);
+         });
+
          this.UI_Tables.on("table.selected", (table) => {
             this.UI_Fields.enable();
             this.UI_Fields.loadFields(table);
@@ -365,16 +369,9 @@ export default function (AB) {
             let link = parts[0];
             let linkVia = parts[1];
 
-            let colName = "";
-            if (f.thisField != "_this_object_") {
-               colName = f.thisField;
-            } else if (f.thatObjectField != "_that_object_") {
-               colName = f.thatObjectField;
-            }
-
             let thisField = {
                key: "connectObject",
-               columnName: f.thisField,
+               // columnName: f.thisField,
                label: linkObject.label,
                settings: {
                   showIcon: "1",
@@ -391,11 +388,40 @@ export default function (AB) {
             };
 
             let linkField = this.AB.cloneDeep(thisField);
-            linkField.columnName = f.thatObjectField;
+            // linkField.columnName = f.thatObjectField;
             linkField.label = object.label || object.name;
             linkField.settings.linkObject = object.id;
             linkField.settings.linkType = linkVia;
             linkField.settings.linkViaType = link;
+
+            switch (linkType) {
+               case "one:one":
+                  if (f.whichSource == "_this_") {
+                     thisField.settings.isSource = 1;
+                  } else {
+                     linkField.settings.isSource = 1;
+                  }
+                  thisField.columnName = f.sourceField;
+                  linkField.columnName = f.sourceField;
+                  break;
+
+               case "one:many":
+               case "many:one":
+                  thisField.columnName = f.thatField;
+                  linkField.columnName = f.thatField;
+                  break;
+
+               case "many:many":
+                  thisField.settings.joinTable = f.joinTable;
+                  linkField.settings.joinTable = f.joinTable;
+
+                  thisField.settings.joinTableReference = f.thisObjReference;
+                  linkField.settings.joinTableReference = f.thatObjReference;
+
+                  thisField.settings.joinTablePK = f.joinTablePK;
+                  linkField.settings.joinTablePK = f.joinTablePK;
+                  break;
+            }
 
             // create an initial LinkColumn
             let fieldLink = linkObject.fieldNew(linkField);

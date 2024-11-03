@@ -44,7 +44,7 @@ export default function (AB) {
                view: "form",
                id: this.ids.form,
                width: 800,
-               height: 400,
+               height: 700,
                rules: {
                   // TODO:
                   // name: inputValidator.rules.validateObjectName
@@ -222,7 +222,8 @@ export default function (AB) {
          $table.clearAll();
          $table.parse(data);
 
-         console.error(data);
+         // console.error(data);
+         this.emit("tables", data);
       }
 
       _fieldItem(def) {

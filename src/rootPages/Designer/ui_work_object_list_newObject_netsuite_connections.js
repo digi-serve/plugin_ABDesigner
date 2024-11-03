@@ -29,6 +29,12 @@ export default function (AB) {
             tableName: "",
          });
 
+         this.allTables = [];
+         // [ { id, name }, ... ]
+         // A list of all the available tables. This is used for identifying the
+         // join tables in many:many connections.
+         // We get this list from the Tables interface tab.
+
          this.credentials = {};
          // {  CRED_KEY : CRED_VAL }
          // The entered credential references necessary to perform our Netsuite
@@ -245,6 +251,10 @@ export default function (AB) {
          const fieldKeys = ["string", "LongText", "number", "date", "boolean"];
 
          const linkTypes = ["one:one", "one:many", "many:one", "many:many"];
+         const linkOptions = linkTypes.map((l) => {
+            return { id: l, value: l };
+         });
+         linkOptions.unshift({ id: "_choose", value: L("choose link type") });
 
          // For the Base Object, let's include all fields that are clearly
          // objects.
@@ -254,14 +264,458 @@ export default function (AB) {
                value: conn.column,
             };
          });
-         // we also need to include "_this_object_" reference so that
-         // we can make many:xxx connections (we don't store the value, the
-         // other object does)
-         fieldOptions.unshift({
-            id: "_this_object_",
-            value: L("This Object"),
-         });
 
+         let thisObjectFields = fieldOptions;
+         let thatObjectFields = [];
+
+         let listOtherObjects = this.listNetsuiteObjects.map((nObj) => {
+            return {
+               id: nObj.id,
+               value: nObj.label,
+            };
+         });
+         listOtherObjects.unshift({ id: "_choose", value: L("Choose Object") });
+
+         return {
+            view: "form",
+            elements: [
+               {
+                  cols: [
+                     // object and type
+                     {
+                        rows: [
+                           {
+                              placeholder: L("Existing Netsuite Object"),
+                              options: listOtherObjects,
+                              view: "select",
+                              name: "thatObject",
+                              label: L("To:"),
+                              // value: type,
+                              on: {
+                                 onChange: async function (
+                                    newVal,
+                                    oldVal,
+                                    config
+                                 ) {
+                                    let connObj = self.AB.objectByID(newVal);
+                                    if (connObj) {
+                                       let result = await self.AB.Network.get({
+                                          url: `/netsuite/table/${connObj.tableName}`,
+                                          params: {
+                                             credentials: JSON.stringify(
+                                                self.credentials
+                                             ),
+                                          },
+                                       });
+                                       let fields = result.filter(
+                                          (r) => r.type == "object"
+                                       );
+                                       let options = fields.map((f) => {
+                                          return {
+                                             id: f.column,
+                                             value: f.column,
+                                          };
+                                       });
+
+                                       // include a "_that_object_" incase this is a one:xxx
+                                       // connection.
+                                       // options.unshift({
+                                       //    id: "_that_object_",
+                                       //    value: L("That Object"),
+                                       // });
+
+                                       thatObjectFields = options;
+                                       /*
+                                       let $linkColumn =
+                                          this.getParentView().getChildViews()[1];
+
+                                       $linkColumn.define("options", options);
+                                       $linkColumn.refresh();
+                                       */
+                                       let $rowsFieldsets = this.getParentView()
+                                          .getParentView()
+                                          .getChildViews()[1];
+
+                                       // update one:one ThatObject:
+                                       let whichOptions = $rowsFieldsets
+                                          .getChildViews()[0]
+                                          .getChildViews()[0]
+                                          .getChildViews()[1];
+                                       let newOptions = [
+                                          { id: "_choose", value: L("Choose") },
+                                          {
+                                             id: "_this_",
+                                             value: L("This Object"),
+                                          },
+                                       ];
+                                       newOptions.push({
+                                          id: connObj.id,
+                                          value: connObj.label,
+                                       });
+                                       whichOptions.define(
+                                          "options",
+                                          newOptions
+                                       );
+                                       whichOptions.refresh();
+                                    }
+                                 },
+                              },
+                           },
+                           {
+                              placeholder: "Link Type",
+                              options: linkOptions,
+                              view: "select",
+                              name: "linkType",
+                              label: L("link type"),
+                              on: {
+                                 onChange: async function (
+                                    newVal,
+                                    oldVal,
+                                    config
+                                 ) {
+                                    let $toObj =
+                                       this.getParentView().getChildViews()[0];
+                                    let $linkColumn =
+                                       this.getParentView().getChildViews()[1];
+
+                                    let objID = $toObj.getValue();
+                                    let Obj = self.AB.objectByID(objID);
+
+                                    let linkVal = $linkColumn.getValue();
+                                    let links = linkVal.split(":");
+                                    let messageA = self.message(
+                                       L("This object"),
+                                       links[0],
+                                       Obj.label
+                                    );
+
+                                    let messageB = self.message(
+                                       Obj.label,
+                                       links[1],
+                                       L("This object")
+                                    );
+
+                                    if (newVal == "_choose") {
+                                       messageA = messageB = "";
+                                    }
+
+                                    let $linkTextA =
+                                       this.getParentView().getChildViews()[2];
+                                    let $linkTextB =
+                                       this.getParentView().getChildViews()[3];
+
+                                    $linkTextA.define("label", messageA);
+                                    $linkTextA.refresh();
+
+                                    $linkTextB.define("label", messageB);
+                                    $linkTextB.refresh();
+
+                                    let $rowsFieldsets = this.getParentView()
+                                       .getParentView()
+                                       .getChildViews()[1];
+
+                                    let $thatFieldOptions;
+
+                                    switch (linkVal) {
+                                       case "one:one":
+                                          $rowsFieldsets
+                                             .getChildViews()[0]
+                                             .show();
+                                          break;
+
+                                       case "one:many":
+                                          // This Object's fields must be in field picker:
+                                          $thatFieldOptions = $rowsFieldsets
+                                             .getChildViews()[1]
+                                             .getChildViews()[0]
+                                             .getChildViews()[1];
+                                          $thatFieldOptions.define(
+                                             "options",
+                                             thisObjectFields
+                                          );
+                                          $thatFieldOptions.refresh();
+                                          $rowsFieldsets
+                                             .getChildViews()[1]
+                                             .show();
+                                          break;
+
+                                       case "many:one":
+                                          // This Object's fields must be in field picker:
+                                          $thatFieldOptions = $rowsFieldsets
+                                             .getChildViews()[1]
+                                             .getChildViews()[0]
+                                             .getChildViews()[1];
+                                          $thatFieldOptions.define(
+                                             "options",
+                                             thatObjectFields
+                                          );
+                                          $thatFieldOptions.refresh();
+                                          $rowsFieldsets
+                                             .getChildViews()[1]
+                                             .show();
+                                          break;
+
+                                       case "many:many":
+                                          $rowsFieldsets
+                                             .getChildViews()[2]
+                                             .show();
+                                          break;
+                                    }
+                                 },
+                              },
+                              // value: type,
+                           },
+                           {
+                              // this to that
+                              // id: ids.fieldLink2,
+                              view: "label",
+                              // width: 200,
+                           },
+                           {
+                              // that to this
+                              view: "label",
+                              // width: 200,
+                           },
+                        ],
+                     },
+                     {
+                        rows: [
+                           {
+                              view: "fieldset",
+                              label: L("one to one"),
+                              hidden: true,
+                              body: {
+                                 rows: [
+                                    {
+                                       view: "label",
+                                       label: L(
+                                          "which object holds the connection value?"
+                                       ),
+                                    },
+                                    {
+                                       view: "select",
+                                       options: [
+                                          {
+                                             id: "_choose",
+                                             value: L("Choose Object"),
+                                          },
+                                          {
+                                             id: "_this_",
+                                             value: L("This Object"),
+                                          },
+                                          {
+                                             id: "_that_",
+                                             value: L("That Object"),
+                                          },
+                                       ],
+                                       name: "whichSource",
+                                       on: {
+                                          onChange: async function (
+                                             newVal,
+                                             oldVal,
+                                             config
+                                          ) {
+                                             if (newVal == "_choose") return;
+
+                                             let $fieldPicker =
+                                                this.getParentView().getChildViews()[2];
+
+                                             if (newVal == "_this_") {
+                                                $fieldPicker.define(
+                                                   "options",
+                                                   thisObjectFields
+                                                );
+                                             } else {
+                                                $fieldPicker.define(
+                                                   "options",
+                                                   thatObjectFields
+                                                );
+                                             }
+                                             $fieldPicker.refresh();
+                                             $fieldPicker.show();
+                                          },
+                                       },
+                                    },
+                                    {
+                                       view: "select",
+                                       label: L("which field"),
+                                       name: "sourceField",
+                                       options: [],
+                                       hidden: true,
+                                    },
+                                 ],
+                              },
+                           },
+                           {
+                              view: "fieldset",
+                              label: L("one:X"),
+                              hidden: true,
+                              body: {
+                                 rows: [
+                                    {
+                                       view: "label",
+                                       label: L(
+                                          "which field defines the connection?"
+                                       ),
+                                    },
+                                    {
+                                       view: "select",
+                                       // label: L("which field"),
+                                       name: "thatField",
+                                       options: [],
+                                       // hidden: false,
+                                    },
+                                 ],
+                              },
+                           },
+                           {
+                              view: "fieldset",
+                              label: L("many:many"),
+                              hidden: true,
+                              body: {
+                                 rows: [
+                                    {
+                                       view: "label",
+                                       label: L(
+                                          "which table is the join table?"
+                                       ),
+                                    },
+                                    {
+                                       view: "combo",
+                                       name: "joinTable",
+                                       options: {
+                                          filter: (item, value) => {
+                                             return (
+                                                item.value
+                                                   .toLowerCase()
+                                                   .indexOf(
+                                                      value.toLowerCase()
+                                                   ) > -1
+                                             );
+                                          },
+                                          body: {
+                                             // template: "#value#",
+                                             data: this.allTables,
+                                          },
+                                       },
+                                       on: {
+                                          onChange: async function (
+                                             newVal,
+                                             oldVal,
+                                             config
+                                          ) {
+                                             let result =
+                                                await self.AB.Network.get({
+                                                   url: `/netsuite/table/${newVal}`,
+                                                   params: {
+                                                      credentials:
+                                                         JSON.stringify(
+                                                            self.credentials
+                                                         ),
+                                                   },
+                                                });
+                                             // let fields = result.filter(
+                                             //    (r) => r.type == "object"
+                                             // );
+                                             let options = result.map((f) => {
+                                                return {
+                                                   id: f.column,
+                                                   value: f.column,
+                                                };
+                                             });
+
+                                             let $thisObjRef =
+                                                this.getParentView().getChildViews()[2];
+                                             $thisObjRef.define(
+                                                "options",
+                                                options
+                                             );
+                                             $thisObjRef.refresh();
+                                             $thisObjRef.show();
+
+                                             let $thatObjRef =
+                                                this.getParentView().getChildViews()[3];
+                                             $thatObjRef.define(
+                                                "options",
+                                                options
+                                             );
+                                             $thatObjRef.refresh();
+                                             $thatObjRef.show();
+
+                                             let $objectPK =
+                                                this.getParentView().getChildViews()[4];
+                                             $objectPK.define(
+                                                "options",
+                                                options
+                                             );
+
+                                             let pkField = result.find(
+                                                (r) => r.title == "Internal ID"
+                                             );
+                                             if (pkField) {
+                                                $objectPK.setValue(
+                                                   pkField.column
+                                                );
+                                             }
+                                             $objectPK.refresh();
+                                             $objectPK.show();
+                                          },
+                                       },
+                                    },
+
+                                    {
+                                       view: "select",
+                                       label: L("This Object's reference"),
+                                       labelPosition: "top",
+                                       options: [],
+                                       name: "thisObjReference",
+                                       hidden: true,
+                                    },
+                                    {
+                                       view: "select",
+                                       label: L("That Object's reference"),
+                                       labelPosition: "top",
+                                       options: [],
+                                       name: "thatObjReference",
+                                       hidden: true,
+                                    },
+                                    {
+                                       view: "select",
+                                       label: L("Join Table Primary Key:"),
+                                       labelPosition: "top",
+                                       options: [],
+                                       name: "joinTablePK",
+                                       hidden: true,
+                                    },
+                                 ],
+                              },
+                           },
+                        ],
+                     },
+                     {
+                        // Delete Column
+                        rows: [
+                           {},
+                           {
+                              icon: "wxi-trash",
+                              view: "icon",
+                              width: 38,
+                              click: function () {
+                                 const $item = this.getParentView()
+                                    .getParentView()
+                                    .getParentView();
+                                 $$(self.ids.connections).removeView($item);
+                              },
+                           },
+                           {},
+                        ],
+                        // delete Row Icon
+                     },
+                  ],
+               },
+            ],
+         };
+         /*
          return {
             view: "form",
             elements: [
@@ -371,6 +825,7 @@ export default function (AB) {
                },
             ],
          };
+         */
       }
 
       _addConnection(key, type) {
@@ -381,6 +836,17 @@ export default function (AB) {
       _clearFieldItems() {
          const $connections = $$(this.ids.connections);
          AB.Webix.ui([], $connections);
+      }
+
+      message(a, link, b) {
+         let msg;
+         if (link == "many") {
+            msg = L("{0} has many {1} entities", [a, b]);
+         } else {
+            msg = L("{0} has one {1} entity", [a, b]);
+         }
+
+         return msg;
       }
 
       /**
@@ -458,6 +924,11 @@ export default function (AB) {
 
       setCredentials(creds) {
          this.credentials = creds;
+      }
+
+      setAllTables(tables) {
+         this.allTables = this.AB.cloneDeep(tables);
+         this.allTables.unshift({ id: "_choose", value: L("Choose") });
       }
 
       getValues() {
