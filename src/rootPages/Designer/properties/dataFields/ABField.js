@@ -928,7 +928,7 @@ export default function (AB) {
          populateValidationRules(ignoreRebuild = false) {
             const ids = this.ids;
             const field = this._CurrentField;
-            let rules = field?.settings?.validationRules;
+            let rules = field?.settings?.validationRules ?? [];
             if (rules) {
                if (typeof rules == "string") {
                   try {
@@ -946,7 +946,7 @@ export default function (AB) {
 
             $$(ids.addValidation).define(
                "badge",
-               rules?.length !== 0 ? rules.length : null
+               rules?.length !== 0 ? rules?.length : null
             );
             $$(ids.addValidation).refresh();
 
