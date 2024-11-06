@@ -420,6 +420,16 @@ export default function (AB) {
 
                   thisField.settings.joinTablePK = f.joinTablePK;
                   linkField.settings.joinTablePK = f.joinTablePK;
+
+                  if (f.joinActiveField != "_none_") {
+                     thisField.settings.joinActiveField = f.joinActiveField;
+                     thisField.settings.joinActiveValue = f.joinActiveValue;
+                     thisField.settings.joinInActiveValue = f.joinInActiveValue;
+
+                     linkField.settings.joinActiveField = f.joinActiveField;
+                     linkField.settings.joinActiveValue = f.joinActiveValue;
+                     linkField.settings.joinInActiveValue = f.joinInActiveValue;
+                  }
                   break;
             }
 

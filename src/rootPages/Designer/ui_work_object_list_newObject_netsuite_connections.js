@@ -659,6 +659,21 @@ export default function (AB) {
                                              }
                                              $objectPK.refresh();
                                              $objectPK.show();
+
+                                             let fOptions =
+                                                self.AB.cloneDeep(options);
+                                             fOptions.unshift({
+                                                id: "_none_",
+                                                value: "",
+                                             });
+                                             let $activeField =
+                                                this.getParentView().getChildViews()[5];
+                                             $activeField.define(
+                                                "options",
+                                                fOptions
+                                             );
+                                             $activeField.refresh();
+                                             $activeField.show();
                                           },
                                        },
                                     },
@@ -686,6 +701,47 @@ export default function (AB) {
                                        options: [],
                                        name: "joinTablePK",
                                        hidden: true,
+                                    },
+                                    {
+                                       view: "select",
+                                       label: L("Join Table isActive Field:"),
+                                       labelPosition: "top",
+                                       options: [],
+                                       name: "joinActiveField",
+                                       hidden: true,
+                                       on: {
+                                          onChange: async function (
+                                             newVal,
+                                             oldVal,
+                                             config
+                                          ) {
+                                             if (newVal != "_none_") {
+                                                // show the active/inactive value
+                                                let siblings =
+                                                   this.getParentView().getChildViews();
+                                                siblings[
+                                                   siblings.length - 2
+                                                ].show();
+                                                siblings[
+                                                   siblings.length - 1
+                                                ].show();
+                                             }
+                                          },
+                                       },
+                                    },
+                                    {
+                                       view: "text",
+                                       label: L("Active Value"),
+                                       name: "joinActiveValue",
+                                       hidden: true,
+                                       value: "",
+                                    },
+                                    {
+                                       view: "text",
+                                       label: L("InActive Value"),
+                                       name: "joinInActiveValue",
+                                       hidden: true,
+                                       value: "",
                                     },
                                  ],
                               },
