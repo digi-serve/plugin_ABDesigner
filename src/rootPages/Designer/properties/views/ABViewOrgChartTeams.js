@@ -35,12 +35,16 @@ export default function (AB) {
             export: "",
             exportFilename: "",
             groupByField: "",
+            showGroupTitle: "",
             contentField: "",
             contentFieldFilter: "",
             contentFieldFilterButton: "",
             contentGroupByField: "",
             contentDisplayedFields: "",
             contentDisplayedFieldsAdd: "",
+            showDataPanel: "",
+            dataPanelDCs: "",
+            dataPanelDCsAdd: "",
             strategyColorPopup: "",
             strategyColorForm: "",
          });
@@ -50,7 +54,7 @@ export default function (AB) {
          contentFieldFilter.on("save", () => {
             if (
                !contentFieldFilter.isConditionComplete(
-                  contentFieldFilter.getValue()
+                  contentFieldFilter.getValue(),
                )
             )
                contentFieldFilter.setValue({ glue: "and", rules: [] });
@@ -62,13 +66,94 @@ export default function (AB) {
          return "orgchart_teams";
       }
 
+      _uiDataPanelDC(labelValue = "", dcID = "") {
+         const self = this;
+         const ids = self.ids;
+         const $dataPanelDCs = $$(ids.dataPanelDCs);
+         const validOBJIDs = this.CurrentView.datacollection.datasource
+            .fieldByID($$(ids.contentField).getValue())
+            .datasourceLink.connectFields(
+               (connectField) => connectField.linkType() === "one",
+            )
+            .map((connectField) => connectField.datasourceLink.id);
+         const dcs = this.AB.datacollections(
+            (dc) => validOBJIDs.indexOf(dc.datasource.id) > -1,
+         );
+         const dcOptions = dcs.map((dc) => ({
+            id: dc.id,
+            value: dc.label,
+            dc,
+         }));
+         const getUILabel = (dcID, elementIndex) => ({
+            view: "text",
+            name: `${elementIndex}.${dcID}`,
+            // label: L("Name"),
+            // labelWidth: uiConfig.labelWidthMedium,
+            on: {
+               onChange: () => {
+                  this.onChange();
+               },
+               onViewShow() {
+                  this.setValue(labelValue);
+               },
+            },
+         });
+         return {
+            cols: [
+               {
+                  view: "richselect",
+                  label: `${L("Panel")} ${
+                     $dataPanelDCs.getChildViews().length + 1
+                  }`,
+                  labelWidth: uiConfig.labelWidthMedium,
+                  options: dcOptions,
+                  on: {
+                     onChange(newValue) {
+                        const $parentView = this.getParentView();
+                        const sameLevelViews = $parentView.getChildViews();
+                        if ($parentView.getChildViews().length === 3)
+                           $parentView.removeView(sameLevelViews[1].config.id);
+                        $parentView.addView(
+                           getUILabel(
+                              newValue,
+                              $dataPanelDCs
+                                 .getChildViews()
+                                 .findIndex(
+                                    ($dataPanelDCsChild) =>
+                                       $dataPanelDCsChild === $parentView,
+                                 ),
+                           ),
+                           1,
+                        );
+                     },
+                     onViewShow() {
+                        if (dcID == null || dcID === "") return;
+                        this.setValue(dcID);
+                     },
+                  },
+               },
+               {
+                  view: "button",
+                  css: "webix_danger",
+                  type: "icon",
+                  icon: "wxi-close",
+                  width: uiConfig.buttonWidthExtraSmall,
+                  click() {
+                     self.deleteDataPanelDC(this.getParentView().config.id);
+                     self.onChange();
+                  },
+               },
+            ],
+         };
+      }
+
       _uiContentDisplayedField(fieldID = "", obj, atDisplay) {
          const self = this;
          const ids = self.ids;
          const datasource = this.CurrentView.datacollection.datasource;
          const datasourceID = datasource.id;
          const parentObj = datasource.fieldByID(
-            $$(ids.contentField).getValue()
+            $$(ids.contentField).getValue(),
          ).datasourceLink;
          const parentObjID = parentObj.id;
          const objID = obj?.id || parentObjID;
@@ -90,18 +175,18 @@ export default function (AB) {
                      this._uiContentDisplayedField(
                         "",
                         field.datasourceLink,
-                        currentAtDisplay
-                     )
+                        currentAtDisplay,
+                     ),
                   );
                }
                this.populateContentDisplayedFields(
-                  $contentDisplayedFields.getValues()
+                  $contentDisplayedFields.getValues(),
                );
                this.onChange();
             };
          if (objID === parentObjID) {
             const rootAtDisplay = Object.keys(
-               $contentDisplayedFields.elements
+               $contentDisplayedFields.elements,
             ).filter((key) => key.includes(objID)).length;
             return {
                cols: [
@@ -125,7 +210,7 @@ export default function (AB) {
                      width: uiConfig.buttonWidthExtraSmall,
                      click() {
                         self.deleteContentDisplayedField(
-                           this.getParentView().getChildViews()[0].config.id
+                           this.getParentView().getChildViews()[0].config.id,
                         );
                         self.onChange();
                      },
@@ -154,7 +239,7 @@ export default function (AB) {
                   width: uiConfig.buttonWidthExtraSmall,
                   click() {
                      self.deleteContentDisplayedField(
-                        this.getParentView().getChildViews()[0].config.id
+                        this.getParentView().getChildViews()[0].config.id,
                      );
                      self.onChange();
                   },
@@ -238,14 +323,15 @@ export default function (AB) {
                      on: {
                         onChange: (newValue) => {
                            const $contentDisplayedFieldsAdd = $$(
-                              ids.contentDisplayedFieldsAdd
+                              ids.contentDisplayedFieldsAdd,
                            );
                            const $contentFieldFilterButton = $$(
-                              ids.contentFieldFilterButton
+                              ids.contentFieldFilterButton,
                            );
                            const $contentGroupByField = $$(
-                              ids.contentGroupByField
+                              ids.contentGroupByField,
                            );
+                           const $showGroupTitle = $$(ids.showGroupTitle);
                            contentFieldFilter.init();
                            contentFieldFilter.setValue({
                               glue: "and",
@@ -254,10 +340,10 @@ export default function (AB) {
                            if (newValue != null && newValue !== "") {
                               const contentObj =
                                  this.CurrentView.datacollection.datasource.fieldByID(
-                                    newValue
+                                    newValue,
                                  ).datasourceLink;
                               contentFieldFilter.fieldsLoad(
-                                 contentObj.fields()
+                                 contentObj.fields(),
                               );
                               $contentGroupByField.setValue("");
                               $contentGroupByField.define("options", [
@@ -266,7 +352,7 @@ export default function (AB) {
                                     .fields(
                                        (f) =>
                                           f.key === "list" &&
-                                          f.settings.isMultiple === 0
+                                          f.settings.isMultiple === 0,
                                     )
                                     .map((f) => ({
                                        id: f.id,
@@ -277,14 +363,17 @@ export default function (AB) {
                               $contentFieldFilterButton.enable();
                               $contentDisplayedFieldsAdd.show();
                               $contentGroupByField.show();
+                              $showGroupTitle.show();
                            } else {
                               contentFieldFilter.fieldsLoad([]);
-                              $contentGroupByField.setValue("");
                               $contentGroupByField.define("options", []);
                               $contentFieldFilterButton.disable();
                               $contentDisplayedFieldsAdd.hide();
                               $contentGroupByField.hide();
+                              $showGroupTitle.hide();
                            }
+                           $showGroupTitle.setValue(0);
+                           $contentGroupByField.setValue("");
                            this.populateContentDisplayedFields({});
                            this.onChange();
                         },
@@ -320,6 +409,20 @@ export default function (AB) {
                },
             },
             {
+               id: ids.showGroupTitle,
+               hidden: true,
+               name: "showGroupTitle",
+               view: "checkbox",
+               label: L("Show Group Title"),
+               labelWidth: uiConfig.labelWidthLarge,
+               value: 0,
+               on: {
+                  onChange: (newValue) => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
                id: ids.contentDisplayedFieldsAdd,
                hidden: true,
                cols: [
@@ -335,16 +438,12 @@ export default function (AB) {
                      width: uiConfig.buttonWidthExtraSmall,
                      click: () => {
                         const $contentDisplayedFields = $$(
-                           ids.contentDisplayedFields
+                           ids.contentDisplayedFields,
                         );
                         if (!$contentDisplayedFields.isVisible())
                            $contentDisplayedFields.show();
-                        const values = $contentDisplayedFields.getValues();
-                        for (const key in values) {
-                        }
-                        Object.keys($contentDisplayedFields.elements);
                         $contentDisplayedFields.addView(
-                           this._uiContentDisplayedField()
+                           this._uiContentDisplayedField(),
                         );
                      },
                   },
@@ -352,6 +451,51 @@ export default function (AB) {
             },
             {
                id: ids.contentDisplayedFields,
+               view: "form",
+               hidden: true,
+               elements: [],
+            },
+            {
+               id: ids.showDataPanel,
+               name: "showDataPanel",
+               view: "checkbox",
+               label: L("Show Data Panel"),
+               labelWidth: uiConfig.labelWidthLarge,
+               value: 0,
+               on: {
+                  onChange: (newValue) => {
+                     const $dataPanelDCsAdd = $$(ids.dataPanelDCsAdd);
+                     if (newValue === 1) $dataPanelDCsAdd.show();
+                     else $dataPanelDCsAdd.hide();
+                     this.populateDataPanelDCs({});
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.dataPanelDCsAdd,
+               hidden: true,
+               cols: [
+                  {
+                     view: "label",
+                     label: L("Data Panel DCs"),
+                  },
+                  {
+                     view: "button",
+                     type: "icon",
+                     icon: "fa fa-plus",
+                     css: "webix_primary",
+                     width: uiConfig.buttonWidthExtraSmall,
+                     click: () => {
+                        const $dataPanelDCs = $$(ids.dataPanelDCs);
+                        if (!$dataPanelDCs.isVisible()) $dataPanelDCs.show();
+                        $dataPanelDCs.addView(this._uiDataPanelDC());
+                     },
+                  },
+               ],
+            },
+            {
+               id: ids.dataPanelDCs,
                view: "form",
                hidden: true,
                elements: [],
@@ -520,7 +664,7 @@ export default function (AB) {
          await super.init(AB);
          webix.extend($$(this.ids.component), webix.ProgressBar);
          this.contentFieldFilter.queriesLoad(
-            this.CurrentApplication?.queriesIncluded()
+            this.CurrentApplication?.queriesIncluded(),
          );
       }
 
@@ -533,24 +677,30 @@ export default function (AB) {
          if (
             deletedElementKey.includes(
                this.CurrentView.datacollection.datasource.fieldByID(
-                  $$(ids.contentField).getValue()
-               ).datasourceLink.id
+                  $$(ids.contentField).getValue(),
+               ).datasourceLink.id,
             )
          ) {
             const deletedAtDisplay = deletedElementKey.split(".")[0];
             for (const key in $elements) {
                if (!key.includes(`${deletedAtDisplay}.`)) continue;
                $contentDisplayedFields.removeView(
-                  $elements[key].getParentView().config.id
+                  $elements[key].getParentView().config.id,
                );
             }
          } else
             $contentDisplayedFields.removeView(
-               $richselect.getParentView().config.id
+               $richselect.getParentView().config.id,
             );
          this.populateContentDisplayedFields(
-            $contentDisplayedFields.getValues()
+            $contentDisplayedFields.getValues(),
          );
+      }
+
+      deleteDataPanelDC(id) {
+         const $dataPanelDCs = $$(this.ids.dataPanelDCs);
+         $dataPanelDCs.removeView(id);
+         this.populateDataPanelDCs($dataPanelDCs.getValues());
       }
 
       populate(view) {
@@ -560,7 +710,7 @@ export default function (AB) {
          const defaultValues = this.defaultValues();
          const values = Object.assign(
             $component.getValues(),
-            Object.assign(defaultValues, view.settings)
+            Object.assign(defaultValues, view.settings),
          );
          // const $fieldList = $$(ids.fields);
          // $fieldList.clearAll();
@@ -577,11 +727,14 @@ export default function (AB) {
                "topTeam",
                "contentField",
                "contentGroupByField",
+               "showGroupTitle",
+               "showDataPanel",
             ].forEach((f) => $$(ids[f]).setValue(values[f]));
             this.contentFieldFilter.setValue(
-               JSON.parse(values.contentFieldFilter)
+               JSON.parse(values.contentFieldFilter),
             );
             this.populateContentDisplayedFields(values.contentDisplayedFields);
+            this.populateDataPanelDCs(values.dataPanelDCs);
             if (values.teamStrategy) {
                this.populateStrategyOptions(values.teamStrategy);
                $$(ids.strategyCode).setValue(values.strategyCode);
@@ -640,12 +793,9 @@ export default function (AB) {
          const m2oFields = view.getValueFields(object).map(fieldToOption);
          const o2mFields =
             object.connectFields(
-               (f) => f.linkType() == "one" && f.linkViaType() == "many"
+               (f) => f.linkType() == "one" && f.linkViaType() == "many",
             ) ?? [];
-         $$(ids.teamStrategy).define(
-            "options",
-            o2mFields.map(fieldToOption)
-         );
+         $$(ids.teamStrategy).define("options", o2mFields.map(fieldToOption));
          $$(ids.teamLink).define("options", m2oFields);
          const textFields = object
             ?.fields((f) => f.key === "string")
@@ -672,16 +822,21 @@ export default function (AB) {
          const elements = $contentDisplayedFields.elements;
          for (const key in elements)
             $contentDisplayedFields.removeView(
-               elements[key].getParentView().config.id
+               elements[key].getParentView().config.id,
             );
          const keys = Object.keys(values);
+         const obj = this.CurrentView.datacollection.datasource.fieldByID(
+            $$(ids.contentField).getValue(),
+         )?.datasourceLink;
          if (keys.length === 0) {
             $contentDisplayedFields.hide();
             return;
          }
-         const obj = this.CurrentView.datacollection.datasource.fieldByID(
-            $$(ids.contentField).getValue()
-         ).datasourceLink;
+         if (obj == null) {
+            $contentDisplayedFields.hide();
+            $$(ids.contentDisplayedFieldsAdd).hide();
+            return;
+         }
          const objID = obj.id;
          const parentKeys = [];
          const childKeys = [];
@@ -694,7 +849,7 @@ export default function (AB) {
             const parentKey = parentKeys.pop();
             const parentFieldID = values[parentKey] ?? "";
             $contentDisplayedFields.addView(
-               this._uiContentDisplayedField(parentFieldID)
+               this._uiContentDisplayedField(parentFieldID),
             );
             if (
                parentFieldID === "" ||
@@ -703,11 +858,11 @@ export default function (AB) {
                continue;
             const currentAtDisplay =
                Object.keys($contentDisplayedFields.getValues()).filter(
-                  (currentKey) => currentKey.includes(objID)
+                  (currentKey) => currentKey.includes(objID),
                ).length - 1;
             while (
                childKeys.findIndex((childKey) =>
-                  childKey.includes(`${parentKey.split(".")[0]}.`)
+                  childKey.includes(`${parentKey.split(".")[0]}.`),
                ) > -1
             ) {
                const childKey = childKeys.pop();
@@ -717,8 +872,8 @@ export default function (AB) {
                   this._uiContentDisplayedField(
                      childFieldID,
                      childObj,
-                     currentAtDisplay
-                  )
+                     currentAtDisplay,
+                  ),
                );
                if (
                   childFieldID === "" ||
@@ -730,9 +885,33 @@ export default function (AB) {
          $contentDisplayedFields.show();
       }
 
+      populateDataPanelDCs(values) {
+         const ids = this.ids;
+         const $dataPanelDCs = $$(ids.dataPanelDCs);
+         const dataPanelDCsChidren = $dataPanelDCs.getChildViews();
+         while (dataPanelDCsChidren.length > 0)
+            $dataPanelDCs.removeView(dataPanelDCsChidren[0].config.id);
+         $dataPanelDCs.hide();
+         const contentFieldValue = $$(ids.contentField).getValue();
+         const keys = Object.keys(values);
+         if (
+            contentFieldValue == null ||
+            contentFieldValue === "" ||
+            keys.length === 0
+         )
+            return;
+         while (keys.length > 0) {
+            const key = keys.shift();
+            $dataPanelDCs.addView(
+               this._uiDataPanelDC(values[key] ?? "", key.split(".")[1] ?? ""),
+            );
+         }
+         $dataPanelDCs.show();
+      }
+
       populateStrategyOptions(fieldID) {
          const strategyObj = this.AB.objectByID(
-            this.AB.definitionByID(fieldID).settings.linkObject
+            this.AB.definitionByID(fieldID).settings.linkObject,
          );
          const listFields = strategyObj
             .fields((f) => f.key === "list")
@@ -749,7 +928,7 @@ export default function (AB) {
          if (!$popup) {
             const values = this.CurrentView.settings.strategyColors ?? {};
             const strategyTypes = this.AB.definitionByID(
-               codeFieldID
+               codeFieldID,
             ).settings.options.map((strategy) => {
                return {
                   view: "colorpicker",
@@ -825,7 +1004,7 @@ export default function (AB) {
          const ids = this.ids;
          const settings = (values.settings = Object.assign(
             $$(ids.component).getValues(),
-            values.settings
+            values.settings,
          ));
          // Retrive the values of your properties from Webix and store them in the view
          settings.teamLink = $$(ids.teamLink).getValue();
@@ -839,11 +1018,12 @@ export default function (AB) {
          settings.contentField = $$(ids.contentField).getValue();
          settings.contentGroupByField = $$(ids.contentGroupByField).getValue();
          settings.contentFieldFilter = JSON.stringify(
-            this.contentFieldFilter.getValue()
+            this.contentFieldFilter.getValue(),
          );
          settings.contentDisplayedFields = $$(
-            ids.contentDisplayedFields
+            ids.contentDisplayedFields,
          ).getValues();
+         settings.dataPanelDCs = $$(ids.dataPanelDCs).getValues();
          const $colorForm = $$(ids.strategyColorForm);
          settings.strategyColors = $colorForm?.getValues() ?? {};
          return values;
