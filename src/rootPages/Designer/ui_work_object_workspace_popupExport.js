@@ -148,7 +148,19 @@ export default function (AB, ibase) {
 
                columns[f.columnName] = {
                   template: (rowData) => {
-                     return f.format(rowData);
+                     let result = f.format(rowData);
+
+                     // Convert null or empty string to 0
+                     if (
+                        !result?.length &&
+                        (f.key == "calculate" ||
+                           f.key == "formula" ||
+                           f.key == "number")
+                     ) {
+                        result = 0;
+                     }
+
+                     return result;
                   },
                };
             });

@@ -97,6 +97,12 @@ export default function (AB) {
             });
          }
 
+         onShow() {
+            if (this.CurrentView.views().some((v) => v.key === "text")) {
+               this.AB.custom["tinymce-editor"].init();
+            }
+         }
+
          detatch() {
             this.viewComponent?.detatch?.();
          }

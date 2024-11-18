@@ -45,6 +45,7 @@ export default function (AB) {
          }
 
          onShow() {
+            super.onShow();
             this.component?.onShow?.();
          }
       };

@@ -611,7 +611,7 @@ export default function (AB) {
                            });
 
                            this.FilterComponent = this.AB.filterComplexNew(
-                              this.base,
+                              `${this.base}_${columnID}`,
                               {
                                  height: 200,
                                  isSaveHidden: true,
