@@ -36,6 +36,7 @@ export default function (AB) {
             exportFilename: "",
             groupByField: "",
             showGroupTitle: "",
+            editContentFieldsToCreateNew: "",
             contentField: "",
             contentFieldFilter: "",
             contentFieldFilterButton: "",
@@ -162,11 +163,6 @@ export default function (AB) {
             const linkedObjID = f.datasourceLink?.id;
             return linkedObjID !== datasourceID && linkedObjID !== parentObjID;
          };
-         const mapFields = (f) => ({
-            id: f.id,
-            value: f.label,
-            field: f,
-         });
          const getOnSelectChangeFn =
             (currentObj, currentAtDisplay) => (newValue) => {
                const field = currentObj.fieldByID(newValue);
@@ -196,7 +192,7 @@ export default function (AB) {
                      label: `${L("Display")} ${rootAtDisplay + 1}`,
                      labelWidth: uiConfig.labelWidthMedium,
                      options:
-                        parentObj.fields(filterFields).map(mapFields) || [],
+                        parentObj.fields(filterFields).map(fieldToOption) || [],
                      value: fieldID,
                      on: {
                         onChange: getOnSelectChangeFn(parentObj, rootAtDisplay),
@@ -225,7 +221,7 @@ export default function (AB) {
                   name: `${atDisplay}.${objID}`,
                   label: "->",
                   labelWidth: uiConfig.labelWidthMedium,
-                  options: obj.fields(filterFields).map(mapFields) || [],
+                  options: obj.fields(filterFields).map(fieldToOption) || [],
                   value: fieldID,
                   on: {
                      onChange: getOnSelectChangeFn(obj, atDisplay),
@@ -322,6 +318,9 @@ export default function (AB) {
                      options: [],
                      on: {
                         onChange: (newValue) => {
+                           const $editContentFieldsToCreateNew = $$(
+                              ids.editContentFieldsToCreateNew,
+                           );
                            const $contentDisplayedFieldsAdd = $$(
                               ids.contentDisplayedFieldsAdd,
                            );
@@ -342,36 +341,45 @@ export default function (AB) {
                                  this.CurrentView.datacollection.datasource.fieldByID(
                                     newValue,
                                  ).datasourceLink;
-                              contentFieldFilter.fieldsLoad(
-                                 contentObj.fields(),
+                              const contentObjFields = contentObj.fields();
+                              $editContentFieldsToCreateNew.define(
+                                 "options",
+                                 // contentObjFields.map(fieldToOption),
+                                 contentObjFields.map((contentObjField) => ({
+                                    id: contentObjField.id,
+                                    value: contentObjField.label,
+                                 })),
                               );
-                              $contentGroupByField.setValue("");
+                              contentFieldFilter.fieldsLoad(contentObjFields);
                               $contentGroupByField.define("options", [
                                  { id: "", value: "", $empty: true },
-                                 ...contentObj
-                                    .fields(
+                                 ...contentObjFields
+                                    .filter(
                                        (f) =>
                                           f.key === "list" &&
                                           f.settings.isMultiple === 0,
                                     )
-                                    .map((f) => ({
-                                       id: f.id,
-                                       value: f.label,
-                                       field: f,
-                                    })),
+                                    .map(fieldToOption),
                               ]);
+                              $editContentFieldsToCreateNew.enable();
                               $contentFieldFilterButton.enable();
                               $contentDisplayedFieldsAdd.show();
                               $contentGroupByField.show();
                               $showGroupTitle.show();
                            } else {
+                              $editContentFieldsToCreateNew.define(
+                                 "options",
+                                 [],
+                              );
                               contentFieldFilter.fieldsLoad([]);
                               $contentGroupByField.define("options", []);
+                              $editContentFieldsToCreateNew.enable();
                               $contentFieldFilterButton.disable();
                               $contentDisplayedFieldsAdd.hide();
                               $contentGroupByField.hide();
                               $showGroupTitle.hide();
                            }
+                           $editContentFieldsToCreateNew.setValue([]);
                            $showGroupTitle.setValue(0);
                            $contentGroupByField.setValue("");
                            this.populateContentDisplayedFields({});
@@ -416,6 +424,20 @@ export default function (AB) {
                label: L("Show Group Title"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
+               on: {
+                  onChange: (newValue) => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.editContentFieldsToCreateNew,
+               view: "multicombo",
+               value: [],
+               options: [],
+               placeholder: L("Choose content fields to create new by editing"),
+               labelAlign: "left",
+               stringResult: false /* returns data as an array of [id] */,
                on: {
                   onChange: (newValue) => {
                      this.onChange();
@@ -727,6 +749,7 @@ export default function (AB) {
                "topTeam",
                "contentField",
                "contentGroupByField",
+               "editContentFieldsToCreateNew",
                "showGroupTitle",
                "showDataPanel",
             ].forEach((f) => $$(ids[f]).setValue(values[f]));
@@ -788,7 +811,6 @@ export default function (AB) {
 
       populateTeamFieldOptions(object) {
          const view = this.CurrentView;
-         // const linkFields = view.getValueFields(object).map(fieldToOption);
          const ids = this.ids;
          const m2oFields = view.getValueFields(object).map(fieldToOption);
          const o2mFields =
@@ -1017,6 +1039,9 @@ export default function (AB) {
          settings.dataCollectionId = $$(ids.datacollectionID).getValue();
          settings.contentField = $$(ids.contentField).getValue();
          settings.contentGroupByField = $$(ids.contentGroupByField).getValue();
+         settings.editContentFieldsToCreateNew = $$(
+            ids.editContentFieldsToCreateNew,
+         ).getValue();
          settings.contentFieldFilter = JSON.stringify(
             this.contentFieldFilter.getValue(),
          );
