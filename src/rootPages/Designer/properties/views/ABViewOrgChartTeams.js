@@ -431,18 +431,28 @@ export default function (AB) {
                },
             },
             {
-               id: ids.editContentFieldsToCreateNew,
-               view: "multicombo",
-               value: [],
-               options: [],
-               placeholder: L("Choose content fields to create new by editing"),
-               labelAlign: "left",
-               stringResult: false /* returns data as an array of [id] */,
-               on: {
-                  onChange: (newValue) => {
-                     this.onChange();
+               rows: [
+                  {
+                     view: "label",
+                     label: L("Create new by editing content fields"),
                   },
-               },
+                  {
+                     id: ids.editContentFieldsToCreateNew,
+                     view: "multicombo",
+                     value: [],
+                     options: [],
+                     placeholder: L(
+                        "Choose content fields to create new by editing",
+                     ),
+                     labelAlign: "left",
+                     stringResult: false /* returns data as an array of [id] */,
+                     on: {
+                        onChange: (newValue) => {
+                           this.onChange();
+                        },
+                     },
+                  },
+               ],
             },
             {
                id: ids.contentDisplayedFieldsAdd,
