@@ -421,6 +421,9 @@ export default function (AB) {
                   thisField.settings.joinTablePK = f.joinTablePK;
                   linkField.settings.joinTablePK = f.joinTablePK;
 
+                  thisField.settings.joinTableEntity = f.joinTableEntity;
+                  linkField.settings.joinTableEntity = f.joinTableEntity;
+
                   if (f.joinActiveField != "_none_") {
                      thisField.settings.joinActiveField = f.joinActiveField;
                      thisField.settings.joinActiveValue = f.joinActiveValue;

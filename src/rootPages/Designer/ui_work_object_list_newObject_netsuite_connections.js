@@ -158,33 +158,6 @@ export default function (AB) {
                                     },
                                  ],
                               },
-
-                              {
-                                 cols: [
-                                    { fillspace: true },
-                                    // {
-                                    //    view: "button",
-                                    //    id: this.ids.buttonCancel,
-                                    //    value: L("Cancel"),
-                                    //    css: "ab-cancel-button",
-                                    //    autowidth: true,
-                                    //    click: () => {
-                                    //       this.cancel();
-                                    //    },
-                                    // },
-                                    {
-                                       view: "button",
-                                       id: this.ids.buttonVerify,
-                                       css: "webix_primary",
-                                       value: L("Verify"),
-                                       autowidth: true,
-                                       type: "form",
-                                       click: () => {
-                                          return this.verify();
-                                       },
-                                    },
-                                 ],
-                              },
                            ],
                         },
                      ],
@@ -660,6 +633,32 @@ export default function (AB) {
                                              $objectPK.refresh();
                                              $objectPK.show();
 
+                                             let $entityField =
+                                                this.getParentView().getChildViews()[5];
+                                             $entityField.define(
+                                                "options",
+                                                options
+                                             );
+
+                                             let fieldEntity = result.find(
+                                                (r) => {
+                                                   if (!r.column) return false;
+
+                                                   return (
+                                                      r.column.indexOf(
+                                                         "entity"
+                                                      ) > -1
+                                                   );
+                                                }
+                                             );
+                                             if (fieldEntity) {
+                                                $entityField.setValue(
+                                                   fieldEntity.column
+                                                );
+                                             }
+                                             $entityField.refresh();
+                                             $entityField.show();
+
                                              let fOptions =
                                                 self.AB.cloneDeep(options);
                                              fOptions.unshift({
@@ -667,7 +666,7 @@ export default function (AB) {
                                                 value: "",
                                              });
                                              let $activeField =
-                                                this.getParentView().getChildViews()[5];
+                                                this.getParentView().getChildViews()[6];
                                              $activeField.define(
                                                 "options",
                                                 fOptions
@@ -700,6 +699,16 @@ export default function (AB) {
                                        labelPosition: "top",
                                        options: [],
                                        name: "joinTablePK",
+                                       hidden: true,
+                                    },
+                                    {
+                                       view: "select",
+                                       label: L(
+                                          "Which field holds the Entity:"
+                                       ),
+                                       labelPosition: "top",
+                                       options: [],
+                                       name: "joinTableEntity",
                                        hidden: true,
                                     },
                                     {
@@ -771,117 +780,6 @@ export default function (AB) {
                },
             ],
          };
-         /*
-         return {
-            view: "form",
-            elements: [
-               {
-                  cols: [
-                     {
-                        rows: [
-                           {
-                              label: L("Field"),
-                              view: "label",
-                           },
-                           {
-                              placeholder: "Type",
-                              options: fieldOptions,
-                              view: "select",
-                              // value: type,
-                              name: "thisField",
-                           },
-                        ],
-                     },
-                     {
-                        rows: [
-                           {
-                              placeholder: L("Existing Netsuite Object"),
-                              options: this.listNetsuiteObjects.map((nObj) => {
-                                 return {
-                                    id: nObj.id,
-                                    value: nObj.label,
-                                 };
-                              }),
-                              view: "select",
-                              name: "thatObject",
-                              // value: type,
-                              on: {
-                                 onChange: async function (
-                                    newVal,
-                                    oldVal,
-                                    config
-                                 ) {
-                                    let connObj = self.AB.objectByID(newVal);
-                                    if (connObj) {
-                                       let result = await self.AB.Network.get({
-                                          url: `/netsuite/table/${connObj.tableName}`,
-                                          params: {
-                                             credentials: JSON.stringify(
-                                                self.credentials
-                                             ),
-                                          },
-                                       });
-                                       let fields = result.filter(
-                                          (r) => r.type == "object"
-                                       );
-                                       let options = fields.map((f) => {
-                                          return {
-                                             id: f.column,
-                                             value: f.column,
-                                          };
-                                       });
-
-                                       // include a "_that_object_" incase this is a one:xxx
-                                       // connection.
-                                       options.unshift({
-                                          id: "_that_object_",
-                                          value: L("That Object"),
-                                       });
-                                       let $linkColumn =
-                                          this.getParentView().getChildViews()[1];
-
-                                       $linkColumn.define("options", options);
-                                       $linkColumn.refresh();
-                                    }
-                                 },
-                              },
-                           },
-                           {
-                              placeholder: "Link Column",
-                              options: [],
-                              view: "select",
-                              // value: type,
-                              name: "thatObjectField",
-                           },
-                           {
-                              placeholder: "Link Type",
-                              options: linkTypes.map((l) => {
-                                 return {
-                                    id: l,
-                                    value: l,
-                                 };
-                              }),
-                              view: "select",
-                              name: "linkType",
-                              // value: type,
-                           },
-                        ],
-                     },
-
-                     {
-                        icon: "wxi-trash",
-                        view: "icon",
-                        width: 38,
-                        click: function () {
-                           const $item = this.getParentView().getParentView();
-                           $$(self.ids.connections).removeView($item);
-                        },
-                     },
-                  ],
-               },
-            ],
-         };
-         */
       }
 
       _addConnection(key, type) {
