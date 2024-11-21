@@ -179,15 +179,18 @@ export default function (AB, ibase, init_settings) {
             this.callbackHeaderEditorMenu(action, field, node);
          });
 
-         if (!this.isReadOnly) {
-            this.PopupDefineLabelComponent = new FPopupDefineLabel(
-               AB,
-               `${base}_defineLabel`
-            );
-            this.PopupDefineLabelComponent.on("changed", () => {
-               this.callbackDefineLabel();
-            });
-         }
+         // NOTE: label information is only concerning how we display the info
+         // from this Object.  It doesn't impact the data. So we can go ahead
+         // and allow users to modify the Label data.
+         // if (!this.isReadOnly) {
+         this.PopupDefineLabelComponent = new FPopupDefineLabel(
+            AB,
+            `${base}_defineLabel`
+         );
+         this.PopupDefineLabelComponent.on("changed", () => {
+            this.callbackDefineLabel();
+         });
+         // }
 
          this.PopupFilterDataTableComponent = new FPopupFilterDataTable(
             AB,
@@ -437,7 +440,7 @@ export default function (AB, ibase, init_settings) {
                         icon: "fa fa-crosshairs",
                         css: "webix_transparent",
                         type: "icon",
-                        hidden: this.isReadOnly,
+                        // hidden: this.isReadOnly,
                         click: function () {
                            _logic.toolbarDefineLabel(this.$view);
                         },
@@ -707,9 +710,9 @@ export default function (AB, ibase, init_settings) {
 
          allInits.push(this.PopupHeaderEditMenu.init(AB));
 
-         if (!this.isReadOnly) {
-            allInits.push(this.PopupDefineLabelComponent.init(AB));
-         }
+         // if (!this.isReadOnly) {
+         allInits.push(this.PopupDefineLabelComponent.init(AB));
+         // }
 
          allInits.push(this.PopupFilterDataTableComponent.init(AB));
          this.PopupFilterDataTableComponent.on("save", (...params) => {
@@ -1391,8 +1394,8 @@ export default function (AB, ibase, init_settings) {
 
          if (!this.isReadOnly) {
             this.PopupNewDataFieldComponent.objectLoad(object);
-            this.PopupDefineLabelComponent.objectLoad(object);
          }
+         this.PopupDefineLabelComponent.objectLoad(object);
          this.PopupFilterDataTableComponent.objectLoad(object);
          this.PopupFrozenColumnsComponent.objectLoad(object);
 
@@ -1782,7 +1785,7 @@ export default function (AB, ibase, init_settings) {
          const ids = this.ids;
          const $buttonAddField = $$(ids.buttonAddField),
             $spaceAddField = $$(ids.spaceAddField),
-            $buttonLabel = $$(ids.buttonLabel),
+            // $buttonLabel = $$(ids.buttonLabel),
             $spaceLabel = $$(ids.spaceLabel),
             $buttonImport = $$(ids.buttonImport),
             $spaceImport = $$(ids.spaceImport),
@@ -1792,7 +1795,7 @@ export default function (AB, ibase, init_settings) {
          if (this._isReadOnly) {
             $buttonAddField?.hide();
             $spaceAddField?.hide();
-            $buttonLabel?.hide();
+            // $buttonLabel?.hide();
             $spaceLabel?.hide();
             $buttonImport?.hide();
             $spaceImport?.hide();
@@ -1801,7 +1804,7 @@ export default function (AB, ibase, init_settings) {
          } else {
             $buttonAddField?.show();
             $spaceAddField?.show();
-            $buttonLabel?.show();
+            // $buttonLabel?.show();
             $spaceLabel?.show();
             $buttonImport?.show();
             $spaceImport?.show();

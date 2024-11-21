@@ -476,24 +476,33 @@ export default function (AB) {
             const $userList = $componentView.rows[0].rows[0];
             $userList.id = ids.value; // set new value id
 
-            const _originOnShow = $userList.suggest.on.onShow;
-            $userList.suggest.on.onShow = async () => {
-               await _originOnShow();
+            $userList.options = $userList.options || [];
+            $userList.options.unshift({
+               id: "ab-current-user",
+               value: L("[Current User]"),
+            });
 
-               const $userOpts = $$(ids.value);
-               if (!$userOpts) return true;
+            // const _originOnShow = $userList.suggest.on.onShow;
+            // $userList.suggest.on.onShow = async () => {
+            //    await _originOnShow();
 
-               const data = $userOpts.getList().find({}) ?? [];
-               data.unshift({
-                  id: "ab-current-user",
-                  value: `[${L("Current User")}]`,
-               });
+            //    const $userOpts = $$(ids.value);
+            //    if (!$userOpts) return true;
 
-               $userOpts.blockEvent();
-               $userOpts.getList().clearAll();
-               $userOpts.getList().define("data", data);
-               $userOpts.unblockEvent();
-            };
+            //    const selectedVal = $userOpts.getValue();
+
+            //    const data = $userOpts.getList().find({}) ?? [];
+            //    data.unshift({
+            //       id: "ab-current-user",
+            //       value: `[${L("Current User")}]`,
+            //    });
+
+            //    $userOpts.blockEvent();
+            //    $userOpts.getList().clearAll();
+            //    $userOpts.getList().define("data", data);
+            //    $userOpts.setValue(selectedVal);
+            //    $userOpts.unblockEvent();
+            // };
 
             field.on("option.data", () => {
                $userList.suggest.on.onShow();
@@ -856,7 +865,12 @@ export default function (AB) {
                      // set value to custom field
                      const rowData = {};
                      rowData[field.columnName] = data.value;
-                     field.setValue($$(ids.value), rowData);
+                     // select the 'ab-current-user' option, no need to convert it to the current user value.
+                     if (rowData[field.columnName] == "ab-current-user") {
+                        $$(ids.value).setValue(rowData[field.columnName]);
+                     } else {
+                        field.setValue($$(ids.value), rowData);
+                     }
                   }, 50);
                }
             }
@@ -912,13 +926,23 @@ export default function (AB) {
                getValueFn();
             } else {
                // check if set current date to Date/DateTime fields:
-               if (field.key == "date" || field.key == "datetime") {
-                  const $currentDate = $$(ids.currentDate);
-                  data.value = $currentDate.getValue()
-                     ? "ab-current-date"
-                     : field.getValue($valueField, {});
-               } else {
-                  data.value = field.getValue($valueField, {});
+               switch (field.key) {
+                  case "date":
+                  case "datetime":
+                     data.value = $$(ids.currentDate).getValue()
+                        ? "ab-current-date"
+                        : field.getValue($valueField, {});
+                     break;
+                  case "user":
+                     // If the option sets "ab-current-user", then no need to pull data from ABField
+                     if ($valueField.getValue() == "ab-current-user") {
+                        data.value = "ab-current-user";
+                        break;
+                     }
+                  // fallsthrough
+                  default:
+                     data.value = field.getValue($valueField, {});
+                     break;
                }
 
                data.op = "set"; // possible to create other types of operations.
