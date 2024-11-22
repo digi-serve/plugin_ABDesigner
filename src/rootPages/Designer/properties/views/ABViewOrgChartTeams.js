@@ -43,6 +43,8 @@ export default function (AB) {
             contentGroupByField: "",
             contentDisplayedFields: "",
             contentDisplayedFieldsAdd: "",
+            contentDisplayedFieldFilters: "",
+            contentDisplayedFieldFiltersSet: "",
             showDataPanel: "",
             dataPanelDCs: "",
             dataPanelDCsAdd: "",
@@ -159,6 +161,9 @@ export default function (AB) {
          const parentObjID = parentObj.id;
          const objID = obj?.id || parentObjID;
          const $contentDisplayedFields = $$(ids.contentDisplayedFields);
+         const $contentDisplayedFieldFilters = $$(
+            ids.contentDisplayedFieldFilters,
+         );
          const filterFields = (f) => {
             const linkedObjID = f.datasourceLink?.id;
             return linkedObjID !== datasourceID && linkedObjID !== parentObjID;
@@ -177,6 +182,7 @@ export default function (AB) {
                }
                this.populateContentDisplayedFields(
                   $contentDisplayedFields.getValues(),
+                  $contentDisplayedFieldFilters.getValues(),
                );
                this.onChange();
             };
@@ -488,6 +494,21 @@ export default function (AB) {
                elements: [],
             },
             {
+               id: ids.contentDisplayedFieldFiltersSet,
+               hidden: false,
+               rows: [
+                  {
+                     view: "label",
+                     label: L("Set content displayed filters by field"),
+                  },
+                  {
+                     id: ids.contentDisplayedFieldFilters,
+                     view: "form",
+                     elements: [],
+                  },
+               ],
+            },
+            {
                id: ids.showDataPanel,
                name: "showDataPanel",
                view: "checkbox",
@@ -766,7 +787,10 @@ export default function (AB) {
             this.contentFieldFilter.setValue(
                JSON.parse(values.contentFieldFilter),
             );
-            this.populateContentDisplayedFields(values.contentDisplayedFields);
+            this.populateContentDisplayedFields(
+               values.contentDisplayedFields,
+               values.contentDisplayedFieldFilters,
+            );
             this.populateDataPanelDCs(values.dataPanelDCs);
             if (values.teamStrategy) {
                this.populateStrategyOptions(values.teamStrategy);
@@ -848,30 +872,99 @@ export default function (AB) {
          ]);
       }
 
-      populateContentDisplayedFields(values) {
+      populateContentDisplayedFields(values = {}, filters = {}) {
+         const self = this;
          const ids = this.ids;
          const $contentDisplayedFields = $$(ids.contentDisplayedFields);
-         const elements = $contentDisplayedFields.elements;
-         for (const key in elements)
+         const contentDisplayedFieldsElements =
+            $contentDisplayedFields.elements;
+         for (const key in contentDisplayedFieldsElements)
             $contentDisplayedFields.removeView(
-               elements[key].getParentView().config.id,
+               contentDisplayedFieldsElements[key].getParentView().config.id,
             );
+         const $contentDisplayedFieldFilters = $$(
+            ids.contentDisplayedFieldFilters,
+         );
+         const contentDisplayedFieldFiltersElements =
+            $contentDisplayedFieldFilters.elements;
+         const $contentDisplayedFieldFiltersSet = $$(
+            ids.contentDisplayedFieldFiltersSet,
+         );
+         for (const key in contentDisplayedFieldFiltersElements)
+            $contentDisplayedFieldFilters.removeView(
+               contentDisplayedFieldFiltersElements[key].getParentView().config
+                  .id,
+            );
+         $contentDisplayedFieldFiltersSet.hide();
          const keys = Object.keys(values);
-         const obj = this.CurrentView.datacollection.datasource.fieldByID(
-            $$(ids.contentField).getValue(),
-         )?.datasourceLink;
          if (keys.length === 0) {
             $contentDisplayedFields.hide();
             return;
          }
+         const obj = this.CurrentView.datacollection.datasource.fieldByID(
+            $$(ids.contentField).getValue(),
+         )?.datasourceLink;
          if (obj == null) {
             $contentDisplayedFields.hide();
             $$(ids.contentDisplayedFieldsAdd).hide();
             return;
          }
+         const filterKeys = Object.keys(filters);
          const objID = obj.id;
          const parentKeys = [];
          const childKeys = [];
+         const createOptionsView = (key, field) => {
+            const filterPrefix = `${key}.${field.id}`;
+            const filterValue = parseInt(
+               filterKeys
+                  .find((filterKey) => filterKey.indexOf(filterPrefix) > -1)
+                  ?.split(".")[3],
+            );
+            $contentDisplayedFieldFilters.addView({
+               cols: [
+                  {
+                     view: "checkbox",
+                     label: field.label,
+                     labelWidth: uiConfig.labelWidthMedium,
+                     value: isNaN(filterValue) ? 0 : filterValue,
+                     on: {
+                        onChange: (newValue, oldValue) => {
+                           const oldFilters =
+                              $contentDisplayedFieldFilters.getValues();
+                           const oldFilterEntries = Object.entries(oldFilters);
+                           const newFilters = {};
+                           const oldFilterKey = `${filterPrefix}.${oldValue}`;
+                           for (const [key, value] of oldFilterEntries)
+                              if (key === oldFilterKey)
+                                 newFilters[`${filterPrefix}.${newValue}`] = "";
+                              else newFilters[key] = value;
+                           this.populateContentDisplayedFields(
+                              $contentDisplayedFields.getValues(),
+                              newFilters,
+                           );
+                           this.onChange();
+                        },
+                        onViewShow() {
+                           const checkboxValue = this.getValue();
+                           const filterKey = `${filterPrefix}.${checkboxValue}`;
+                           this.getParentView().addView({
+                              view: "text",
+                              placeholder: L("Add the new field label."),
+                              name: filterKey,
+                              value: filters[filterKey],
+                              disabled: checkboxValue === 1 ? false : true,
+                              on: {
+                                 onChange: () => {
+                                    self.onChange();
+                                 },
+                              },
+                           });
+                        },
+                     },
+                  },
+               ],
+            });
+         };
          while (keys.length > 0) {
             const key = keys.pop();
             (key.includes(objID) && parentKeys.push(key)) ||
@@ -883,11 +976,16 @@ export default function (AB) {
             $contentDisplayedFields.addView(
                this._uiContentDisplayedField(parentFieldID),
             );
-            if (
-               parentFieldID === "" ||
-               obj.fieldByID(parentFieldID).key !== "connectObject"
-            )
-               continue;
+            const parentField = obj.fieldByID(parentFieldID);
+            if (parentField == null) continue;
+            switch (parentField.key) {
+               case "connectObject":
+               case "user":
+                  break;
+               default:
+                  createOptionsView(parentKey, parentField);
+                  continue;
+            }
             const currentAtDisplay =
                Object.keys($contentDisplayedFields.getValues()).filter(
                   (currentKey) => currentKey.includes(objID),
@@ -907,14 +1005,20 @@ export default function (AB) {
                      currentAtDisplay,
                   ),
                );
-               if (
-                  childFieldID === "" ||
-                  childObj.fieldByID(childFieldID).key !== "connectObject"
-               )
-                  break;
+               const childField = childObj.fieldByID(childFieldID);
+               if (childField == null) continue;
+               switch (childField.key) {
+                  case "connectObject":
+                  case "user":
+                     break;
+                  default:
+                     createOptionsView(parentKey, childField);
+                     continue;
+               }
             }
          }
          $contentDisplayedFields.show();
+         $contentDisplayedFieldFiltersSet.show();
       }
 
       populateDataPanelDCs(values) {
@@ -1057,6 +1161,9 @@ export default function (AB) {
          );
          settings.contentDisplayedFields = $$(
             ids.contentDisplayedFields,
+         ).getValues();
+         settings.contentDisplayedFieldFilters = $$(
+            ids.contentDisplayedFieldFilters,
          ).getValues();
          settings.dataPanelDCs = $$(ids.dataPanelDCs).getValues();
          const $colorForm = $$(ids.strategyColorForm);
