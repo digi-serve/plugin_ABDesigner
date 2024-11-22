@@ -55,7 +55,7 @@ export default function (AB) {
          contentFieldFilter.on("save", () => {
             if (
                !contentFieldFilter.isConditionComplete(
-                  contentFieldFilter.getValue(),
+                  contentFieldFilter.getValue()
                )
             )
                contentFieldFilter.setValue({ glue: "and", rules: [] });
@@ -74,11 +74,11 @@ export default function (AB) {
          const validOBJIDs = this.CurrentView.datacollection.datasource
             .fieldByID($$(ids.contentField).getValue())
             .datasourceLink.connectFields(
-               (connectField) => connectField.linkType() === "one",
+               (connectField) => connectField.linkType() === "one"
             )
             .map((connectField) => connectField.datasourceLink.id);
          const dcs = this.AB.datacollections(
-            (dc) => validOBJIDs.indexOf(dc.datasource.id) > -1,
+            (dc) => validOBJIDs.indexOf(dc.datasource.id) > -1
          );
          const dcOptions = dcs.map((dc) => ({
             id: dc.id,
@@ -121,10 +121,10 @@ export default function (AB) {
                                  .getChildViews()
                                  .findIndex(
                                     ($dataPanelDCsChild) =>
-                                       $dataPanelDCsChild === $parentView,
-                                 ),
+                                       $dataPanelDCsChild === $parentView
+                                 )
                            ),
-                           1,
+                           1
                         );
                      },
                      onViewShow() {
@@ -154,7 +154,7 @@ export default function (AB) {
          const datasource = this.CurrentView.datacollection.datasource;
          const datasourceID = datasource.id;
          const parentObj = datasource.fieldByID(
-            $$(ids.contentField).getValue(),
+            $$(ids.contentField).getValue()
          ).datasourceLink;
          const parentObjID = parentObj.id;
          const objID = obj?.id || parentObjID;
@@ -171,18 +171,18 @@ export default function (AB) {
                      this._uiContentDisplayedField(
                         "",
                         field.datasourceLink,
-                        currentAtDisplay,
-                     ),
+                        currentAtDisplay
+                     )
                   );
                }
                this.populateContentDisplayedFields(
-                  $contentDisplayedFields.getValues(),
+                  $contentDisplayedFields.getValues()
                );
                this.onChange();
             };
          if (objID === parentObjID) {
             const rootAtDisplay = Object.keys(
-               $contentDisplayedFields.elements,
+               $contentDisplayedFields.elements
             ).filter((key) => key.includes(objID)).length;
             return {
                cols: [
@@ -206,7 +206,7 @@ export default function (AB) {
                      width: uiConfig.buttonWidthExtraSmall,
                      click() {
                         self.deleteContentDisplayedField(
-                           this.getParentView().getChildViews()[0].config.id,
+                           this.getParentView().getChildViews()[0].config.id
                         );
                         self.onChange();
                      },
@@ -235,7 +235,7 @@ export default function (AB) {
                   width: uiConfig.buttonWidthExtraSmall,
                   click() {
                      self.deleteContentDisplayedField(
-                        this.getParentView().getChildViews()[0].config.id,
+                        this.getParentView().getChildViews()[0].config.id
                      );
                      self.onChange();
                   },
@@ -319,16 +319,16 @@ export default function (AB) {
                      on: {
                         onChange: (newValue) => {
                            const $editContentFieldsToCreateNew = $$(
-                              ids.editContentFieldsToCreateNew,
+                              ids.editContentFieldsToCreateNew
                            );
                            const $contentDisplayedFieldsAdd = $$(
-                              ids.contentDisplayedFieldsAdd,
+                              ids.contentDisplayedFieldsAdd
                            );
                            const $contentFieldFilterButton = $$(
-                              ids.contentFieldFilterButton,
+                              ids.contentFieldFilterButton
                            );
                            const $contentGroupByField = $$(
-                              ids.contentGroupByField,
+                              ids.contentGroupByField
                            );
                            const $showGroupTitle = $$(ids.showGroupTitle);
                            contentFieldFilter.init();
@@ -339,25 +339,20 @@ export default function (AB) {
                            if (newValue != null && newValue !== "") {
                               const contentObj =
                                  this.CurrentView.datacollection.datasource.fieldByID(
-                                    newValue,
+                                    newValue
                                  ).datasourceLink;
                               const contentObjFields = contentObj.fields();
                               $editContentFieldsToCreateNew.define(
                                  "options",
-                                 // contentObjFields.map(fieldToOption),
-                                 contentObjFields.map((contentObjField) => ({
-                                    id: contentObjField.id,
-                                    value: contentObjField.label,
-                                 })),
+                                 contentObjFields.map(fieldToOption)
                               );
                               contentFieldFilter.fieldsLoad(contentObjFields);
                               $contentGroupByField.define("options", [
                                  { id: "", value: "", $empty: true },
                                  ...contentObjFields
                                     .filter(
-                                       (f) =>
-                                          f.key === "list" &&
-                                          f.settings.isMultiple === 0,
+                                       (f) => f.key === "connectObject" //&&
+                                       // f.settings.isMultiple === 0
                                     )
                                     .map(fieldToOption),
                               ]);
@@ -369,7 +364,7 @@ export default function (AB) {
                            } else {
                               $editContentFieldsToCreateNew.define(
                                  "options",
-                                 [],
+                                 []
                               );
                               contentFieldFilter.fieldsLoad([]);
                               $contentGroupByField.define("options", []);
@@ -411,7 +406,7 @@ export default function (AB) {
                labelWidth: uiConfig.labelWidthLarge,
                options: [],
                on: {
-                  onChange: (newValue) => {
+                  onChange: (/*newValue*/) => {
                      this.onChange();
                   },
                },
@@ -425,7 +420,7 @@ export default function (AB) {
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
                on: {
-                  onChange: (newValue) => {
+                  onChange: (/*newValue*/) => {
                      this.onChange();
                   },
                },
@@ -439,7 +434,7 @@ export default function (AB) {
                labelAlign: "left",
                stringResult: false /* returns data as an array of [id] */,
                on: {
-                  onChange: (newValue) => {
+                  onChange: (/*newValue*/) => {
                      this.onChange();
                   },
                },
@@ -460,12 +455,12 @@ export default function (AB) {
                      width: uiConfig.buttonWidthExtraSmall,
                      click: () => {
                         const $contentDisplayedFields = $$(
-                           ids.contentDisplayedFields,
+                           ids.contentDisplayedFields
                         );
                         if (!$contentDisplayedFields.isVisible())
                            $contentDisplayedFields.show();
                         $contentDisplayedFields.addView(
-                           this._uiContentDisplayedField(),
+                           this._uiContentDisplayedField()
                         );
                      },
                   },
@@ -686,7 +681,7 @@ export default function (AB) {
          await super.init(AB);
          webix.extend($$(this.ids.component), webix.ProgressBar);
          this.contentFieldFilter.queriesLoad(
-            this.CurrentApplication?.queriesIncluded(),
+            this.CurrentApplication?.queriesIncluded()
          );
       }
 
@@ -699,23 +694,23 @@ export default function (AB) {
          if (
             deletedElementKey.includes(
                this.CurrentView.datacollection.datasource.fieldByID(
-                  $$(ids.contentField).getValue(),
-               ).datasourceLink.id,
+                  $$(ids.contentField).getValue()
+               ).datasourceLink.id
             )
          ) {
             const deletedAtDisplay = deletedElementKey.split(".")[0];
             for (const key in $elements) {
                if (!key.includes(`${deletedAtDisplay}.`)) continue;
                $contentDisplayedFields.removeView(
-                  $elements[key].getParentView().config.id,
+                  $elements[key].getParentView().config.id
                );
             }
          } else
             $contentDisplayedFields.removeView(
-               $richselect.getParentView().config.id,
+               $richselect.getParentView().config.id
             );
          this.populateContentDisplayedFields(
-            $contentDisplayedFields.getValues(),
+            $contentDisplayedFields.getValues()
          );
       }
 
@@ -732,7 +727,7 @@ export default function (AB) {
          const defaultValues = this.defaultValues();
          const values = Object.assign(
             $component.getValues(),
-            Object.assign(defaultValues, view.settings),
+            Object.assign(defaultValues, view.settings)
          );
          // const $fieldList = $$(ids.fields);
          // $fieldList.clearAll();
@@ -754,7 +749,7 @@ export default function (AB) {
                "showDataPanel",
             ].forEach((f) => $$(ids[f]).setValue(values[f]));
             this.contentFieldFilter.setValue(
-               JSON.parse(values.contentFieldFilter),
+               JSON.parse(values.contentFieldFilter)
             );
             this.populateContentDisplayedFields(values.contentDisplayedFields);
             this.populateDataPanelDCs(values.dataPanelDCs);
@@ -815,7 +810,7 @@ export default function (AB) {
          const m2oFields = view.getValueFields(object).map(fieldToOption);
          const o2mFields =
             object.connectFields(
-               (f) => f.linkType() == "one" && f.linkViaType() == "many",
+               (f) => f.linkType() == "one" && f.linkViaType() == "many"
             ) ?? [];
          $$(ids.teamStrategy).define("options", o2mFields.map(fieldToOption));
          $$(ids.teamLink).define("options", m2oFields);
@@ -844,11 +839,11 @@ export default function (AB) {
          const elements = $contentDisplayedFields.elements;
          for (const key in elements)
             $contentDisplayedFields.removeView(
-               elements[key].getParentView().config.id,
+               elements[key].getParentView().config.id
             );
          const keys = Object.keys(values);
          const obj = this.CurrentView.datacollection.datasource.fieldByID(
-            $$(ids.contentField).getValue(),
+            $$(ids.contentField).getValue()
          )?.datasourceLink;
          if (keys.length === 0) {
             $contentDisplayedFields.hide();
@@ -871,7 +866,7 @@ export default function (AB) {
             const parentKey = parentKeys.pop();
             const parentFieldID = values[parentKey] ?? "";
             $contentDisplayedFields.addView(
-               this._uiContentDisplayedField(parentFieldID),
+               this._uiContentDisplayedField(parentFieldID)
             );
             if (
                parentFieldID === "" ||
@@ -880,11 +875,11 @@ export default function (AB) {
                continue;
             const currentAtDisplay =
                Object.keys($contentDisplayedFields.getValues()).filter(
-                  (currentKey) => currentKey.includes(objID),
+                  (currentKey) => currentKey.includes(objID)
                ).length - 1;
             while (
                childKeys.findIndex((childKey) =>
-                  childKey.includes(`${parentKey.split(".")[0]}.`),
+                  childKey.includes(`${parentKey.split(".")[0]}.`)
                ) > -1
             ) {
                const childKey = childKeys.pop();
@@ -894,8 +889,8 @@ export default function (AB) {
                   this._uiContentDisplayedField(
                      childFieldID,
                      childObj,
-                     currentAtDisplay,
-                  ),
+                     currentAtDisplay
+                  )
                );
                if (
                   childFieldID === "" ||
@@ -925,7 +920,7 @@ export default function (AB) {
          while (keys.length > 0) {
             const key = keys.shift();
             $dataPanelDCs.addView(
-               this._uiDataPanelDC(values[key] ?? "", key.split(".")[1] ?? ""),
+               this._uiDataPanelDC(values[key] ?? "", key.split(".")[1] ?? "")
             );
          }
          $dataPanelDCs.show();
@@ -933,15 +928,15 @@ export default function (AB) {
 
       populateStrategyOptions(fieldID) {
          const strategyObj = this.AB.objectByID(
-            this.AB.definitionByID(fieldID).settings.linkObject,
+            this.AB.definitionByID(fieldID).settings.linkObject
          );
          const listFields = strategyObj
-            .fields((f) => f.key === "list")
+            .fields((f) => f.key === "connectObject")
             .map(fieldToOption);
          $$(this.ids.strategyCode).define("options", listFields);
       }
 
-      strategyColorPopup() {
+      async strategyColorPopup() {
          const codeFieldID = $$(this.ids.strategyCode).getValue();
          if (!codeFieldID) return;
 
@@ -949,12 +944,13 @@ export default function (AB) {
 
          if (!$popup) {
             const values = this.CurrentView.settings.strategyColors ?? {};
-            const strategyTypes = this.AB.definitionByID(
-               codeFieldID,
-            ).settings.options.map((strategy) => {
+            const link =
+               this.AB.definitionByID(codeFieldID).settings.linkObject;
+            const strategies = await this.AB.objectByID(link).model().findAll();
+            const strategyTypes = strategies.data.map((strategy) => {
                return {
                   view: "colorpicker",
-                  label: strategy.text,
+                  label: strategy.name,
                   name: strategy.id,
                   value: values[strategy.id] ?? "#111111",
                };
@@ -1026,7 +1022,7 @@ export default function (AB) {
          const ids = this.ids;
          const settings = (values.settings = Object.assign(
             $$(ids.component).getValues(),
-            values.settings,
+            values.settings
          ));
          // Retrive the values of your properties from Webix and store them in the view
          settings.teamLink = $$(ids.teamLink).getValue();
@@ -1040,13 +1036,13 @@ export default function (AB) {
          settings.contentField = $$(ids.contentField).getValue();
          settings.contentGroupByField = $$(ids.contentGroupByField).getValue();
          settings.editContentFieldsToCreateNew = $$(
-            ids.editContentFieldsToCreateNew,
+            ids.editContentFieldsToCreateNew
          ).getValue();
          settings.contentFieldFilter = JSON.stringify(
-            this.contentFieldFilter.getValue(),
+            this.contentFieldFilter.getValue()
          );
          settings.contentDisplayedFields = $$(
-            ids.contentDisplayedFields,
+            ids.contentDisplayedFields
          ).getValues();
          settings.dataPanelDCs = $$(ids.dataPanelDCs).getValues();
          const $colorForm = $$(ids.strategyColorForm);
