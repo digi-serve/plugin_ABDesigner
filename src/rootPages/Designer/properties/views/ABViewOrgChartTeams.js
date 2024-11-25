@@ -980,8 +980,12 @@ export default function (AB) {
                            const newTypes = {};
                            const oldTypePrefix = `${optionPrefix}.${oldValue}`;
                            for (const [key, value] of oldTypeEntries)
-                              if (key.indexOf(oldTypePrefix) > -1) 
-                                 newTypes[`${optionPrefix}.${newValue}.${key.split(".")[4]}`] = "";
+                              if (key.indexOf(oldTypePrefix) > -1)
+                                 newTypes[
+                                    `${optionPrefix}.${newValue}.${
+                                       key.split(".")[4]
+                                    }`
+                                 ] = "";
                               else newTypes[key] = value;
                            this.populateContentDisplayedFields(
                               $contentDisplayedFields.getValues(),
@@ -998,7 +1002,8 @@ export default function (AB) {
                               value: typeSelectedValue,
                               on: {
                                  onChange: (newValue, oldValue) => {
-                                    const currentTypeSwitchValue = this.getValue();
+                                    const currentTypeSwitchValue =
+                                       this.getValue();
                                     const typePrefix = `${optionPrefix}.${currentTypeSwitchValue}`;
                                     const key = `${typePrefix}.${newValue}`;
                                     switch (newValue) {
@@ -1006,20 +1011,27 @@ export default function (AB) {
                                           $parentView.addView({
                                              view: "textarea",
                                              name: key,
-                                             placeholder: L("Image base 64 data."),
-                                             value: types[`${typePrefix}.${oldValue}`] ?? "",
+                                             placeholder: L(
+                                                "Image base 64 data."
+                                             ),
+                                             value:
+                                                types[
+                                                   `${typePrefix}.${oldValue}`
+                                                ] ?? "",
                                              on: {
                                                 onChange: () => {
                                                    self.onChange();
                                                 },
                                              },
-                                          })
+                                          });
                                           break;
                                        default:
                                           $parentView.addView({
                                              view: "text",
                                              name: key,
-                                             placeholder: L("No data need to fill up."),
+                                             placeholder: L(
+                                                "No data need to fill up."
+                                             ),
                                              disabled: true,
                                              value: "",
                                           });
@@ -1097,14 +1109,17 @@ export default function (AB) {
                            this.onChange();
                         },
                         onViewShow() {
-                           const filterKey = `${optionPrefix}.${this.getValue()}`;
+                           const currentFilterCheckboxValue = this.getValue();
+                           const filterKey = `${optionPrefix}.${currentFilterCheckboxValue}`;
                            this.getParentView().addView({
                               view: "text",
                               placeholder: L("Add the new field label."),
                               name: filterKey,
-                              value: filters[filterKey],
+                              value: filters[filterKey] || fieldLabel,
                               disabled:
-                                 filterCheckboxValue === 1 ? false : true,
+                                 currentFilterCheckboxValue === 1
+                                    ? false
+                                    : true,
                               on: {
                                  onChange: () => {
                                     self.onChange();
