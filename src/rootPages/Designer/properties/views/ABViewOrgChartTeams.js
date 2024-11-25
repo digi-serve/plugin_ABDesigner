@@ -45,6 +45,8 @@ export default function (AB) {
             contentDisplayedFieldsAdd: "",
             contentDisplayedFieldFilters: "",
             contentDisplayedFieldFiltersSet: "",
+            contentDisplayedFieldTypes: "",
+            contentDisplayedFieldTypesSet: "",
             showDataPanel: "",
             dataPanelDCs: "",
             dataPanelDCsAdd: "",
@@ -161,6 +163,7 @@ export default function (AB) {
          const parentObjID = parentObj.id;
          const objID = obj?.id || parentObjID;
          const $contentDisplayedFields = $$(ids.contentDisplayedFields);
+         const $contentDisplayedFieldTypes = $$(ids.contentDisplayedFieldTypes);
          const $contentDisplayedFieldFilters = $$(
             ids.contentDisplayedFieldFilters
          );
@@ -182,6 +185,7 @@ export default function (AB) {
                }
                this.populateContentDisplayedFields(
                   $contentDisplayedFields.getValues(),
+                  $contentDisplayedFieldTypes.getValues(),
                   $contentDisplayedFieldFilters.getValues()
                );
                this.onChange();
@@ -350,7 +354,11 @@ export default function (AB) {
                               const contentObjFields = contentObj.fields();
                               $editContentFieldsToCreateNew.define(
                                  "options",
-                                 contentObjFields.map(fieldToOption)
+                                 // contentObjFields.map(fieldToOption)
+                                 contentObjFields.map((contentObjField) => ({
+                                    id: contentObjField.id,
+                                    value: contentObjField.label,
+                                 }))
                               );
                               contentFieldFilter.fieldsLoad(contentObjFields);
                               $contentGroupByField.define("options", [
@@ -383,7 +391,7 @@ export default function (AB) {
                            $editContentFieldsToCreateNew.setValue([]);
                            $showGroupTitle.setValue(0);
                            $contentGroupByField.setValue("");
-                           this.populateContentDisplayedFields({});
+                           this.populateContentDisplayedFields();
                            this.onChange();
                         },
                      },
@@ -489,8 +497,25 @@ export default function (AB) {
                elements: [],
             },
             {
+               id: ids.contentDisplayedFieldTypesSet,
+               hidden: true,
+               rows: [
+                  {
+                     view: "label",
+                     label: L(
+                        "Set content active displays and displayed types"
+                     ),
+                  },
+                  {
+                     id: ids.contentDisplayedFieldTypes,
+                     view: "form",
+                     elements: [],
+                  },
+               ],
+            },
+            {
                id: ids.contentDisplayedFieldFiltersSet,
-               hidden: false,
+               hidden: true,
                rows: [
                   {
                      view: "label",
@@ -784,6 +809,7 @@ export default function (AB) {
             );
             this.populateContentDisplayedFields(
                values.contentDisplayedFields,
+               values.contentDisplayedFieldTypes,
                values.contentDisplayedFieldFilters
             );
             this.populateDataPanelDCs(values.dataPanelDCs);
@@ -867,7 +893,7 @@ export default function (AB) {
          ]);
       }
 
-      populateContentDisplayedFields(values = {}, filters = {}) {
+      populateContentDisplayedFields(values = {}, types = {}, filters = {}) {
          const self = this;
          const ids = this.ids;
          const $contentDisplayedFields = $$(ids.contentDisplayedFields);
@@ -876,6 +902,16 @@ export default function (AB) {
          for (const key in contentDisplayedFieldsElements)
             $contentDisplayedFields.removeView(
                contentDisplayedFieldsElements[key].getParentView().config.id
+            );
+         const $contentDisplayedFieldTypes = $$(ids.contentDisplayedFieldTypes);
+         const contentDisplayedFieldTypesElements =
+            $contentDisplayedFieldTypes.elements;
+         const $contentDisplayedFieldTypesSet = $$(
+            ids.contentDisplayedFieldTypesSet
+         );
+         for (const key in contentDisplayedFieldTypesElements)
+            $contentDisplayedFieldTypes.removeView(
+               contentDisplayedFieldTypesElements[key].getParentView().config.id
             );
          const $contentDisplayedFieldFilters = $$(
             ids.contentDisplayedFieldFilters
@@ -890,6 +926,7 @@ export default function (AB) {
                contentDisplayedFieldFiltersElements[key].getParentView().config
                   .id
             );
+         $contentDisplayedFieldTypesSet.hide();
          $contentDisplayedFieldFiltersSet.hide();
          const keys = Object.keys(values);
          if (keys.length === 0) {
@@ -904,50 +941,170 @@ export default function (AB) {
             $$(ids.contentDisplayedFieldsAdd).hide();
             return;
          }
+         const typeKeys = Object.keys(types);
          const filterKeys = Object.keys(filters);
          const objID = obj.id;
          const parentKeys = [];
          const childKeys = [];
          const createOptionsView = (key, field) => {
-            const filterPrefix = `${key}.${field.id}`;
-            const filterValue = parseInt(
+            const optionPrefix = `${key}.${field.id}`;
+            const fieldLabel = field.label;
+            const typeKeyIndex = typeKeys.findIndex(
+               (typeKey) => typeKey.indexOf(optionPrefix) > -1
+            );
+            const typeKeyParts =
+               typeKeys
+                  .find((typeKey) => typeKey.indexOf(optionPrefix) > -1)
+                  ?.split(".") || [];
+            const typeSwitchValue = parseInt(typeKeyParts[3]);
+            const isTypeKeyIndexFound = typeKeyIndex > -1;
+            const typeSelectedValue =
+               (isTypeKeyIndexFound && typeKeyParts[4]) || "text";
+            const typeOptions = [
+               { id: "icon", value: "Icon" },
+               { id: "image", value: "Image" },
+               { id: "text", value: "Text" },
+            ];
+            $contentDisplayedFieldTypes.addView({
+               cols: [
+                  {
+                     view: "switch",
+                     label: fieldLabel,
+                     labelWidth: uiConfig.labelWidthMedium,
+                     value: isNaN(typeSwitchValue) ? 1 : typeSwitchValue,
+                     on: {
+                        onChange: (newValue, oldValue) => {
+                           const oldTypes =
+                              $contentDisplayedFieldTypes.getValues();
+                           const oldTypeEntries = Object.entries(oldTypes);
+                           const newTypes = {};
+                           const oldTypePrefix = `${optionPrefix}.${oldValue}`;
+                           for (const [key, value] of oldTypeEntries)
+                              if (key.indexOf(oldTypePrefix) > -1) 
+                                 newTypes[`${optionPrefix}.${newValue}.${key.split(".")[4]}`] = "";
+                              else newTypes[key] = value;
+                           this.populateContentDisplayedFields(
+                              $contentDisplayedFields.getValues(),
+                              newTypes,
+                              $contentDisplayedFieldFilters.getValues()
+                           );
+                           this.onChange();
+                        },
+                        onViewShow() {
+                           const $parentView = this.getParentView();
+                           $parentView.addView({
+                              view: "richselect",
+                              options: typeOptions,
+                              value: typeSelectedValue,
+                              on: {
+                                 onChange: (newValue, oldValue) => {
+                                    const currentTypeSwitchValue = this.getValue();
+                                    const typePrefix = `${optionPrefix}.${currentTypeSwitchValue}`;
+                                    const key = `${typePrefix}.${newValue}`;
+                                    switch (newValue) {
+                                       case "image":
+                                          $parentView.addView({
+                                             view: "textarea",
+                                             name: key,
+                                             placeholder: L("Image base 64 data."),
+                                             value: types[`${typePrefix}.${oldValue}`] ?? "",
+                                             on: {
+                                                onChange: () => {
+                                                   self.onChange();
+                                                },
+                                             },
+                                          })
+                                          break;
+                                       default:
+                                          $parentView.addView({
+                                             view: "text",
+                                             name: key,
+                                             placeholder: L("No data need to fill up."),
+                                             disabled: true,
+                                             value: "",
+                                          });
+                                          break;
+                                    }
+                                    self.populateContentDisplayedFields(
+                                       $contentDisplayedFields.getValues(),
+                                       $contentDisplayedFieldTypes.getValues(),
+                                       $contentDisplayedFieldFilters.getValues()
+                                    );
+                                    self.onChange();
+                                 },
+                              },
+                           });
+                           const key = `${optionPrefix}.${this.getValue()}.${typeSelectedValue}`;
+                           switch (typeSelectedValue) {
+                              case "image":
+                                 $parentView.addView({
+                                    view: "textarea",
+                                    name: key,
+                                    placeholder: L("Image base 64 data."),
+                                    value: types[key] ?? "",
+                                    on: {
+                                       onChange: () => {
+                                          self.onChange();
+                                       },
+                                    },
+                                 });
+                                 break;
+                              default:
+                                 $parentView.addView({
+                                    view: "text",
+                                    name: key,
+                                    placeholder: L("No data need to fill up."),
+                                    disabled: true,
+                                    value: "",
+                                 });
+                                 break;
+                           }
+                        },
+                     },
+                  },
+               ],
+            });
+            const filterCheckboxValue = parseInt(
                filterKeys
-                  .find((filterKey) => filterKey.indexOf(filterPrefix) > -1)
+                  .find((filterKey) => filterKey.indexOf(optionPrefix) > -1)
                   ?.split(".")[3]
             );
             $contentDisplayedFieldFilters.addView({
                cols: [
                   {
                      view: "checkbox",
-                     label: field.label,
+                     label: fieldLabel,
                      labelWidth: uiConfig.labelWidthMedium,
-                     value: isNaN(filterValue) ? 0 : filterValue,
+                     value: isNaN(filterCheckboxValue)
+                        ? 0
+                        : filterCheckboxValue,
                      on: {
                         onChange: (newValue, oldValue) => {
                            const oldFilters =
                               $contentDisplayedFieldFilters.getValues();
                            const oldFilterEntries = Object.entries(oldFilters);
                            const newFilters = {};
-                           const oldFilterKey = `${filterPrefix}.${oldValue}`;
+                           const oldFilterKey = `${optionPrefix}.${oldValue}`;
                            for (const [key, value] of oldFilterEntries)
                               if (key === oldFilterKey)
-                                 newFilters[`${filterPrefix}.${newValue}`] = "";
+                                 newFilters[`${optionPrefix}.${newValue}`] = "";
                               else newFilters[key] = value;
                            this.populateContentDisplayedFields(
                               $contentDisplayedFields.getValues(),
+                              $contentDisplayedFieldTypes.getValues(),
                               newFilters
                            );
                            this.onChange();
                         },
                         onViewShow() {
-                           const checkboxValue = this.getValue();
-                           const filterKey = `${filterPrefix}.${checkboxValue}`;
+                           const filterKey = `${optionPrefix}.${this.getValue()}`;
                            this.getParentView().addView({
                               view: "text",
                               placeholder: L("Add the new field label."),
                               name: filterKey,
                               value: filters[filterKey],
-                              disabled: checkboxValue === 1 ? false : true,
+                              disabled:
+                                 filterCheckboxValue === 1 ? false : true,
                               on: {
                                  onChange: () => {
                                     self.onChange();
@@ -1013,6 +1170,7 @@ export default function (AB) {
             }
          }
          $contentDisplayedFields.show();
+         $contentDisplayedFieldTypesSet.show();
          $contentDisplayedFieldFiltersSet.show();
       }
 
@@ -1157,6 +1315,9 @@ export default function (AB) {
          );
          settings.contentDisplayedFields = $$(
             ids.contentDisplayedFields
+         ).getValues();
+         settings.contentDisplayedFieldTypes = $$(
+            ids.contentDisplayedFieldTypes
          ).getValues();
          settings.contentDisplayedFieldFilters = $$(
             ids.contentDisplayedFieldFilters
