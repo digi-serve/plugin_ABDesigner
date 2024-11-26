@@ -1161,7 +1161,7 @@ export default function (AB) {
                      view: "text",
                      name: optionPrefix,
                      disabled: true,
-                     value: mappingDataValue || {},
+                     value: mappingDataValue || JSON.stringify({}),
                   },
                ],
             });
