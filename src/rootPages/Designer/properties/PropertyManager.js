@@ -79,6 +79,7 @@ export default function (AB) {
          require("./views/ABViewCSVExporter"),
          require("./views/ABViewCSVImporter"),
          require("./views/ABViewDataFilter"),
+         require("./views/ABViewDataSelect"),
          require("./views/ABViewDataview"),
          require("./views/ABViewDetail"),
          require("./views/ABViewDetailCheckbox"),
