@@ -1269,7 +1269,7 @@ export default function (AB) {
                   case "user":
                      break;
                   default:
-                     createOptionsView(parentKey, childField);
+                     createOptionsView(childKey, childField);
                      continue;
                }
             }
