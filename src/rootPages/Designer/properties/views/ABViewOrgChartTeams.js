@@ -47,6 +47,8 @@ export default function (AB) {
             contentDisplayedFieldFiltersSet: "",
             contentDisplayedFieldTypes: "",
             contentDisplayedFieldTypesSet: "",
+            contentDisplayedFieldMappingData: "",
+            contentDisplayedFieldMappingDataSet: "",
             showDataPanel: "",
             dataPanelDCs: "",
             dataPanelDCsAdd: "",
@@ -164,6 +166,9 @@ export default function (AB) {
          const objID = obj?.id || parentObjID;
          const $contentDisplayedFields = $$(ids.contentDisplayedFields);
          const $contentDisplayedFieldTypes = $$(ids.contentDisplayedFieldTypes);
+         const $contentDisplayedFieldMappingData = $$(
+            ids.contentDisplayedFieldMappingData
+         );
          const $contentDisplayedFieldFilters = $$(
             ids.contentDisplayedFieldFilters
          );
@@ -186,6 +191,7 @@ export default function (AB) {
                this.populateContentDisplayedFields(
                   $contentDisplayedFields.getValues(),
                   $contentDisplayedFieldTypes.getValues(),
+                  $contentDisplayedFieldMappingData.getValues(),
                   $contentDisplayedFieldFilters.getValues()
                );
                this.onChange();
@@ -514,6 +520,21 @@ export default function (AB) {
                ],
             },
             {
+               id: ids.contentDisplayedFieldMappingDataSet,
+               hidden: true,
+               rows: [
+                  {
+                     view: "label",
+                     label: L("Set content mapping displayed data"),
+                  },
+                  {
+                     id: ids.contentDisplayedFieldMappingData,
+                     view: "form",
+                     elements: [],
+                  },
+               ],
+            },
+            {
                id: ids.contentDisplayedFieldFiltersSet,
                hidden: true,
                rows: [
@@ -810,6 +831,7 @@ export default function (AB) {
             this.populateContentDisplayedFields(
                values.contentDisplayedFields,
                values.contentDisplayedFieldTypes,
+               values.contentDisplayedFieldMappingData,
                values.contentDisplayedFieldFilters
             );
             this.populateDataPanelDCs(values.dataPanelDCs);
@@ -865,6 +887,7 @@ export default function (AB) {
       }
 
       populateTeamFieldOptions(object) {
+         const webix = this.AB.Webix;
          const view = this.CurrentView;
          const ids = this.ids;
          const m2oFields = view.getValueFields(object).map(fieldToOption);
@@ -893,8 +916,14 @@ export default function (AB) {
          ]);
       }
 
-      populateContentDisplayedFields(values = {}, types = {}, filters = {}) {
+      populateContentDisplayedFields(
+         values = {},
+         types = {},
+         mappingDataValues = {},
+         filters = {}
+      ) {
          const self = this;
+         const webix = this.AB.Webix;
          const ids = this.ids;
          const $contentDisplayedFields = $$(ids.contentDisplayedFields);
          const contentDisplayedFieldsElements =
@@ -913,9 +942,22 @@ export default function (AB) {
             $contentDisplayedFieldTypes.removeView(
                contentDisplayedFieldTypesElements[key].getParentView().config.id
             );
+         const $contentDisplayedFieldMappingData = $$(
+            ids.contentDisplayedFieldMappingData
+         );
+         const contentDisplayedFieldMappingDataElements =
+            $contentDisplayedFieldMappingData.elements;
+         const $contentDisplayedFieldMappingDataSet = $$(
+            ids.contentDisplayedFieldMappingDataSet
+         );
          const $contentDisplayedFieldFilters = $$(
             ids.contentDisplayedFieldFilters
          );
+         for (const key in contentDisplayedFieldMappingDataElements)
+            $contentDisplayedFieldMappingData.removeView(
+               contentDisplayedFieldMappingDataElements[key].getParentView()
+                  .config.id
+            );
          const contentDisplayedFieldFiltersElements =
             $contentDisplayedFieldFilters.elements;
          const $contentDisplayedFieldFiltersSet = $$(
@@ -927,6 +969,7 @@ export default function (AB) {
                   .id
             );
          $contentDisplayedFieldTypesSet.hide();
+         $contentDisplayedFieldMappingDataSet.hide();
          $contentDisplayedFieldFiltersSet.hide();
          const keys = Object.keys(values);
          if (keys.length === 0) {
@@ -960,11 +1003,6 @@ export default function (AB) {
             const isTypeKeyIndexFound = typeKeyIndex > -1;
             const typeSelectedValue =
                (isTypeKeyIndexFound && typeKeyParts[4]) || "text";
-            const typeOptions = [
-               { id: "icon", value: "Icon" },
-               { id: "image", value: "Image" },
-               { id: "text", value: "Text" },
-            ];
             $contentDisplayedFieldTypes.addView({
                cols: [
                   {
@@ -990,89 +1028,140 @@ export default function (AB) {
                            this.populateContentDisplayedFields(
                               $contentDisplayedFields.getValues(),
                               newTypes,
+                              $contentDisplayedFieldMappingData.getValues(),
                               $contentDisplayedFieldFilters.getValues()
                            );
                            this.onChange();
                         },
                         onViewShow() {
-                           const $parentView = this.getParentView();
-                           $parentView.addView({
+                           this.getParentView().addView({
                               view: "richselect",
-                              options: typeOptions,
+                              options: [
+                                 { id: "icon", value: "Icon" },
+                                 { id: "image", value: "Image" },
+                                 { id: "text", value: "Text" },
+                              ],
+                              name: `${optionPrefix}.${this.getValue()}`,
                               value: typeSelectedValue,
                               on: {
-                                 onChange: (newValue, oldValue) => {
-                                    const currentTypeSwitchValue =
-                                       this.getValue();
-                                    const typePrefix = `${optionPrefix}.${currentTypeSwitchValue}`;
-                                    const key = `${typePrefix}.${newValue}`;
-                                    switch (newValue) {
-                                       case "image":
-                                          $parentView.addView({
-                                             view: "textarea",
-                                             name: key,
-                                             placeholder: L(
-                                                "Image base 64 data."
-                                             ),
-                                             value:
-                                                types[
-                                                   `${typePrefix}.${oldValue}`
-                                                ] ?? "",
-                                             on: {
-                                                onChange: () => {
-                                                   self.onChange();
-                                                },
-                                             },
-                                          });
-                                          break;
-                                       default:
-                                          $parentView.addView({
-                                             view: "text",
-                                             name: key,
-                                             placeholder: L(
-                                                "No data need to fill up."
-                                             ),
-                                             disabled: true,
-                                             value: "",
-                                          });
-                                          break;
-                                    }
-                                    self.populateContentDisplayedFields(
-                                       $contentDisplayedFields.getValues(),
-                                       $contentDisplayedFieldTypes.getValues(),
-                                       $contentDisplayedFieldFilters.getValues()
-                                    );
+                                 onChange: () => {
                                     self.onChange();
                                  },
                               },
                            });
-                           const key = `${optionPrefix}.${this.getValue()}.${typeSelectedValue}`;
-                           switch (typeSelectedValue) {
-                              case "image":
-                                 $parentView.addView({
-                                    view: "textarea",
-                                    name: key,
-                                    placeholder: L("Image base 64 data."),
-                                    value: types[key] ?? "",
-                                    on: {
-                                       onChange: () => {
-                                          self.onChange();
-                                       },
-                                    },
-                                 });
-                                 break;
-                              default:
-                                 $parentView.addView({
-                                    view: "text",
-                                    name: key,
-                                    placeholder: L("No data need to fill up."),
-                                    disabled: true,
-                                    value: "",
-                                 });
-                                 break;
-                           }
                         },
                      },
+                  },
+               ],
+            });
+            const mappingDataValue = mappingDataValues[optionPrefix];
+            $contentDisplayedFieldMappingData.addView({
+               cols: [
+                  {
+                     view: "label",
+                     label: fieldLabel,
+                     width: uiConfig.labelWidthMedium,
+                  },
+                  {
+                     view: "button",
+                     label: "Set",
+                     width: uiConfig.buttonWidthExtraSmall,
+                     click: () => {
+                        const getValueViewUI = (key = "", value = "") => ({
+                           cols: [
+                              { view: "text", value: key },
+                              {
+                                 view: "label",
+                                 label: L("to"),
+                                 align: "center",
+                                 width: uiConfig.labelWidthSmall,
+                              },
+                              { view: "text", value },
+                              {
+                                 view: "button",
+                                 css: "webix_danger",
+                                 type: "icon",
+                                 icon: "wxi-close",
+                                 width: uiConfig.buttonWidthExtraSmall,
+                                 click() {
+                                    const $childView = this.getParentView();
+                                    $childView
+                                       .getParentView()
+                                       .removeView($childView.config.id);
+                                 },
+                              },
+                           ],
+                        });
+                        const $popup = webix.ui({
+                           view: "window",
+                           close: true,
+                           title: L("Map Data"),
+                           position: "center",
+                           body: {
+                              view: "form",
+                              elements: [
+                                 {
+                                    view: "button",
+                                    label: L("Add a value"),
+                                    click() {
+                                       this.getParentView()
+                                          .getChildViews()[1]
+                                          .addView(getValueViewUI());
+                                    },
+                                 },
+                                 {
+                                    rows: [],
+                                 },
+                                 {
+                                    view: "button",
+                                    label: L("Apply"),
+                                    click() {
+                                       const $valueView =
+                                          this.getParentView().getChildViews()[1];
+                                       const mapingValues = {};
+                                       const valueChildViews =
+                                          $valueView.getChildViews();
+                                       for (const $valueChildView of valueChildViews) {
+                                          const valueChildViewElements =
+                                             $valueChildView.getChildViews();
+                                          mapingValues[
+                                             valueChildViewElements[0].getValue()
+                                          ] =
+                                             valueChildViewElements[2].getValue();
+                                       }
+                                       $contentDisplayedFieldMappingData.elements[
+                                          optionPrefix
+                                       ]?.setValue(JSON.stringify(mapingValues));
+                                       $popup.hide();
+                                       self.onChange();
+                                    },
+                                 },
+                              ],
+                           },
+                           on: {
+                              onHide() {
+                                 this.destructor();
+                              },
+                           },
+                        });
+                        try {
+                           const $valueView = $popup
+                              .getChildViews()[1]
+                              .getChildViews()[1];
+                           const mappingDataObj = JSON.parse(
+                              mappingDataValue
+                           );
+                           for (const key in mappingDataObj)
+                              $valueView.addView(getValueViewUI(key, mappingDataObj[key]));
+                        } catch {}
+                        $popup.show();
+                     },
+                  },
+                  {
+                     view: "text",
+                     name: optionPrefix,
+                     disabled: true,
+                     value: mappingDataValue || {},
                   },
                ],
             });
@@ -1104,6 +1193,7 @@ export default function (AB) {
                            this.populateContentDisplayedFields(
                               $contentDisplayedFields.getValues(),
                               $contentDisplayedFieldTypes.getValues(),
+                              $contentDisplayedFieldMappingData.getValues(),
                               newFilters
                            );
                            this.onChange();
@@ -1186,6 +1276,7 @@ export default function (AB) {
          }
          $contentDisplayedFields.show();
          $contentDisplayedFieldTypesSet.show();
+         $contentDisplayedFieldMappingDataSet.show();
          $contentDisplayedFieldFiltersSet.show();
       }
 
@@ -1333,6 +1424,9 @@ export default function (AB) {
          ).getValues();
          settings.contentDisplayedFieldTypes = $$(
             ids.contentDisplayedFieldTypes
+         ).getValues();
+         settings.contentDisplayedFieldMappingData = $$(
+            ids.contentDisplayedFieldMappingData
          ).getValues();
          settings.contentDisplayedFieldFilters = $$(
             ids.contentDisplayedFieldFilters
