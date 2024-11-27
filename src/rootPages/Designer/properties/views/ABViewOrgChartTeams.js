@@ -28,7 +28,6 @@ export default function (AB) {
             depth: "",
             draggable: "",
             dropContentToCreate: "",
-            color: "",
             pan: "",
             zoom: "",
             height: "",
@@ -54,6 +53,7 @@ export default function (AB) {
             dataPanelDCsAdd: "",
             strategyColorPopup: "",
             strategyColorForm: "",
+            entityDatacollection: "",
          });
          this.AB = AB;
          const contentFieldFilter = (this.contentFieldFilter =
@@ -673,6 +673,17 @@ export default function (AB) {
                on: { onChange: () => this.onChange() },
             },
             {
+               id: ids.entityDatacollection,
+               name: "entityDatacollection",
+               view: "richselect",
+               label: L("Entity"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: {
+                  onChange: () => this.onChange(),
+               },
+            },
+            {
                id: ids.depth,
                name: "depth",
                hidden: true, // NOTE: use choose Connect Fields option
@@ -680,14 +691,6 @@ export default function (AB) {
                label: L("Depth"),
                labelWidth: uiConfig.labelWidthLarge,
                value: 0,
-               on: { onChange: () => this.onChange() },
-            },
-            {
-               id: ids.color,
-               name: "color",
-               view: "colorpicker",
-               label: L("Color"),
-               labelWidth: uiConfig.labelWidthLarge,
                on: { onChange: () => this.onChange() },
             },
             {
@@ -855,6 +858,8 @@ export default function (AB) {
          $dataCollection.define("options", dcOptions);
          $dataCollection.define("value", datacollectionId);
          $dataCollection.refresh();
+         $$(this.ids.entityDatacollection).define("options", dcOptions);
+         $$(this.ids.entityDatacollection).refresh();
       }
 
       refreshValueFieldOptions(fieldValues = []) {
