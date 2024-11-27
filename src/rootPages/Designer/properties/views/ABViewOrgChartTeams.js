@@ -1044,6 +1044,7 @@ export default function (AB) {
                               options: [
                                  { id: "icon", value: "Icon" },
                                  { id: "image", value: "Image" },
+                                 { id: "svg", value: "SVG" },
                                  { id: "text", value: "Text" },
                               ],
                               name: `${optionPrefix}.${this.getValue()}`,
@@ -1074,14 +1075,34 @@ export default function (AB) {
                      click: () => {
                         const getValueViewUI = (key = "", value = "") => ({
                            cols: [
-                              { view: "text", value: key },
+                              {
+                                 view: "text",
+                                 placeholder: L("The value need to map."),
+                                 value: key,
+                              },
                               {
                                  view: "label",
                                  label: L("to"),
                                  align: "center",
                                  width: uiConfig.labelWidthSmall,
                               },
-                              { view: "text", value },
+                              {
+                                 view: "text",
+                                 placeholder: (() => {
+                                    switch (value) {
+                                       case "icon":
+                                          return L("Icon class text.");
+                                       case "image":
+                                       case "svg":
+                                          return L(
+                                             "Base64 image url (ex. data:image/png;base64,AAABBBCCC)."
+                                          );
+                                       default:
+                                          return L("New text.");
+                                    }
+                                 })(),
+                                 value,
+                              },
                               {
                                  view: "button",
                                  css: "webix_danger",
@@ -1136,7 +1157,9 @@ export default function (AB) {
                                        }
                                        $contentDisplayedFieldMappingData.elements[
                                           optionPrefix
-                                       ]?.setValue(JSON.stringify(mapingValues));
+                                       ]?.setValue(
+                                          JSON.stringify(mapingValues)
+                                       );
                                        $popup.hide();
                                        self.onChange();
                                     },
@@ -1153,11 +1176,11 @@ export default function (AB) {
                            const $valueView = $popup
                               .getChildViews()[1]
                               .getChildViews()[1];
-                           const mappingDataObj = JSON.parse(
-                              mappingDataValue
-                           );
+                           const mappingDataObj = JSON.parse(mappingDataValue);
                            for (const key in mappingDataObj)
-                              $valueView.addView(getValueViewUI(key, mappingDataObj[key]));
+                              $valueView.addView(
+                                 getValueViewUI(key, mappingDataObj[key])
+                              );
                         } catch {}
                         $popup.show();
                      },
