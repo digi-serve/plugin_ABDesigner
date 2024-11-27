@@ -1000,14 +1000,11 @@ export default function (AB) {
             const typeKeyIndex = typeKeys.findIndex(
                (typeKey) => typeKey.indexOf(optionPrefix) > -1
             );
-            const typeKeyParts =
+            const typeSwitchValue = parseInt(
                typeKeys
                   .find((typeKey) => typeKey.indexOf(optionPrefix) > -1)
-                  ?.split(".") || [];
-            const typeSwitchValue = parseInt(typeKeyParts[3]);
-            const isTypeKeyIndexFound = typeKeyIndex > -1;
-            const typeSelectedValue =
-               (isTypeKeyIndexFound && typeKeyParts[4]) || "text";
+                  ?.split(".")[3]
+            );
             $contentDisplayedFieldTypes.addView({
                cols: [
                   {
@@ -1025,10 +1022,8 @@ export default function (AB) {
                            for (const [key, value] of oldTypeEntries)
                               if (key.indexOf(oldTypePrefix) > -1)
                                  newTypes[
-                                    `${optionPrefix}.${newValue}.${
-                                       key.split(".")[4]
-                                    }`
-                                 ] = "";
+                                    `${optionPrefix}.${newValue}`
+                                 ] = value;
                               else newTypes[key] = value;
                            this.populateContentDisplayedFields(
                               $contentDisplayedFields.getValues(),
@@ -1048,7 +1043,10 @@ export default function (AB) {
                                  { id: "text", value: "Text" },
                               ],
                               name: `${optionPrefix}.${this.getValue()}`,
-                              value: typeSelectedValue,
+                              value:
+                                 (typeKeyIndex > -1 &&
+                                    types[typeKeys[typeKeyIndex]]) ||
+                                 "text",
                               on: {
                                  onChange: () => {
                                     self.onChange();
