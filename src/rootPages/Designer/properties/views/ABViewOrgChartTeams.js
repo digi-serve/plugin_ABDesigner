@@ -1021,9 +1021,8 @@ export default function (AB) {
                            const oldTypePrefix = `${optionPrefix}.${oldValue}`;
                            for (const [key, value] of oldTypeEntries)
                               if (key.indexOf(oldTypePrefix) > -1)
-                                 newTypes[
-                                    `${optionPrefix}.${newValue}`
-                                 ] = value;
+                                 newTypes[`${optionPrefix}.${newValue}`] =
+                                    value;
                               else newTypes[key] = value;
                            this.populateContentDisplayedFields(
                               $contentDisplayedFields.getValues(),
@@ -1093,7 +1092,7 @@ export default function (AB) {
                                        case "image":
                                        case "svg":
                                           return L(
-                                             "Base64 image url (ex. data:image/png;base64,AAABBBCCC)."
+                                             "Image url or Base64 (ex. data:image/png;base64,AAABBBCCC) url."
                                           );
                                        default:
                                           return L("New text.");
