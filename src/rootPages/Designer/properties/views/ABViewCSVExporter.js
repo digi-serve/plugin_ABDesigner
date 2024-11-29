@@ -21,6 +21,7 @@ export default function (AB) {
             filename: "",
             width: "",
             buttonFilter: "",
+            fields: "",
          });
 
          this.AB = AB;
@@ -132,6 +133,28 @@ export default function (AB) {
                   ],
                },
             },
+            {
+               view: "fieldset",
+               label: L("Fields:"),
+               labelWidth: uiConfig.labelWidthLarge,
+               body: {
+                  view: "list",
+                  id: ids.fields,
+                  autoheight: true,
+                  select: false,
+                  template: (item) => {
+                     return `<span style="min-width: 18px; display: inline-block;"><i class="fa ${
+                        item.isHidden ? "fa-square-o" : "fa-check-square-o"
+                     } ab-visible-field-icon"></i>&nbsp;</span> ${item.label}`;
+                  },
+                  on: {
+                     onItemClick: (id, e, node) => {
+                        this.toggleField(id, e, node);
+                        this.onChange();
+                     },
+                  },
+               },
+            },
          ]);
       }
 
@@ -187,6 +210,8 @@ export default function (AB) {
          this.populateFilter();
 
          this.populateBadgeNumber();
+
+         this.populateFields();
       }
 
       populateDatacollections() {
@@ -232,9 +257,42 @@ export default function (AB) {
          this.propertyFilter.setValue(view.settings.where);
       }
 
+      populateFields() {
+         const ids = this.ids;
+         const $fields = $$(ids.fields);
+         const view = this.CurrentView;
+         const hiddenFieldIds = view.settings.hiddenFieldIds ?? [];
+         const fields = view?.datacollection?.datasource?.fields();
+
+         $fields.clearAll();
+         if (!fields?.length) return;
+
+         $fields.parse(
+            fields.map((f) => {
+               return {
+                  id: f.id,
+                  label: f.label,
+                  isHidden: hiddenFieldIds.indexOf(f.id) >= 0,
+               };
+            })
+         );
+         $fields.refresh();
+      }
+
       showFilterPopup() {
          const $buttonFilter = $$(this.ids.buttonFilter);
          this.propertyFilter.popUp($buttonFilter?.$view);
+      }
+
+      toggleField(fieldId) {
+         const ids = this.ids;
+         const $fields = $$(ids.fields);
+
+         const fieldItem = $fields.getItem(fieldId);
+         $fields.updateItem(fieldId, {
+            isHidden: !fieldItem.isHidden,
+         });
+         $fields.refresh();
       }
 
       /**
@@ -266,6 +324,10 @@ export default function (AB) {
          values.settings.width =
             $$(ids.width).getValue() ??
             ABViewCSVExporterPropertyComponentDefaults.width;
+
+         values.settings.hiddenFieldIds = $$(ids.fields)
+            .find({ isHidden: true })
+            .map((item) => item.id);
 
          return values;
       }
