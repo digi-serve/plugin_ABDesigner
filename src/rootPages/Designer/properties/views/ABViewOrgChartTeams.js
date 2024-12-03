@@ -38,6 +38,8 @@ export default function (AB) {
             editContentFieldsToCreateNew: "",
             contentField: "",
             contentFieldFilter: "",
+            contentFieldDateStart: "",
+            contentFieldDateEnd: "",
             contentFieldFilterButton: "",
             contentGroupByField: "",
             contentDisplayedFields: "",
@@ -346,6 +348,12 @@ export default function (AB) {
                            const $contentGroupByField = $$(
                               ids.contentGroupByField
                            );
+                           const $contentFieldDateStart = $$(
+                              ids.contentFieldDateStart
+                           );
+                           const $contentFieldDateEnd = $$(
+                              ids.contentFieldDateEnd
+                           );
                            const $showGroupTitle = $$(ids.showGroupTitle);
                            contentFieldFilter.init();
                            contentFieldFilter.setValue({
@@ -358,6 +366,19 @@ export default function (AB) {
                                     newValue
                                  ).datasourceLink;
                               const contentObjFields = contentObj.fields();
+                              const contentDateFiels = contentObjFields.filter(
+                                 (field) =>
+                                    field.key === "date" ||
+                                    field.key === "datetime"
+                              );
+                              $contentFieldDateStart.define(
+                                 "options",
+                                 contentDateFiels.map(fieldToOption)
+                              );
+                              $contentFieldDateEnd.define(
+                                 "options",
+                                 contentDateFiels.map(fieldToOption)
+                              );
                               $editContentFieldsToCreateNew.define(
                                  "options",
                                  // contentObjFields.map(fieldToOption)
@@ -379,6 +400,8 @@ export default function (AB) {
                               $editContentFieldsToCreateNew.enable();
                               $contentFieldFilterButton.enable();
                               $contentDisplayedFieldsAdd.show();
+                              $contentFieldDateStart.show();
+                              $contentFieldDateEnd.show();
                               $contentGroupByField.show();
                               $showGroupTitle.show();
                            } else {
@@ -391,6 +414,8 @@ export default function (AB) {
                               $editContentFieldsToCreateNew.enable();
                               $contentFieldFilterButton.disable();
                               $contentDisplayedFieldsAdd.hide();
+                              $contentFieldDateStart.hide();
+                              $contentFieldDateEnd.hide();
                               $contentGroupByField.hide();
                               $showGroupTitle.hide();
                            }
@@ -417,6 +442,32 @@ export default function (AB) {
                      },
                   },
                ],
+            },
+            {
+               id: ids.contentFieldDateStart,
+               name: "contentFieldDateStart",
+               label: L("Date Start"),
+               labelWidth: uiConfig.labelWidthLarge,
+               view: "richselect",
+               options: [],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
+            },
+            {
+               id: ids.contentFieldDateEnd,
+               name: "contentFieldDateEnd",
+               label: L("Date End"),
+               labelWidth: uiConfig.labelWidthLarge,
+               view: "richselect",
+               options: [],
+               on: {
+                  onChange: () => {
+                     this.onChange();
+                  },
+               },
             },
             {
                id: ids.contentGroupByField,
@@ -892,7 +943,6 @@ export default function (AB) {
       }
 
       populateTeamFieldOptions(object) {
-         const webix = this.AB.Webix;
          const view = this.CurrentView;
          const ids = this.ids;
          const m2oFields = view.getValueFields(object).map(fieldToOption);
@@ -1456,6 +1506,10 @@ export default function (AB) {
          settings.contentDisplayedFieldFilters = $$(
             ids.contentDisplayedFieldFilters
          ).getValues();
+         settings.contentFieldDateStart = $$(
+            ids.contentFieldDateStart
+         ).getValue();
+         settings.contentFieldDateEnd = $$(ids.contentFieldDateEnd).getValue();
          settings.dataPanelDCs = $$(ids.dataPanelDCs).getValues();
          const $colorForm = $$(ids.strategyColorForm);
          settings.strategyColors = $colorForm?.getValues() ?? {};
