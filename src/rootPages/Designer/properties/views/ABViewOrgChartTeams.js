@@ -36,6 +36,7 @@ export default function (AB) {
             groupByField: "",
             showGroupTitle: "",
             editContentFieldsToCreateNew: "",
+            setEditableContentFields: "",
             contentField: "",
             contentFieldFilter: "",
             contentFieldDateStart: "",
@@ -339,6 +340,9 @@ export default function (AB) {
                            const $editContentFieldsToCreateNew = $$(
                               ids.editContentFieldsToCreateNew
                            );
+                           const $setEditableContentFields = $$(
+                              ids.setEditableContentFields
+                           );
                            const $contentDisplayedFieldsAdd = $$(
                               ids.contentDisplayedFieldsAdd
                            );
@@ -379,13 +383,19 @@ export default function (AB) {
                                  "options",
                                  contentDateFiels.map(fieldToOption)
                               );
-                              $editContentFieldsToCreateNew.define(
-                                 "options",
-                                 // contentObjFields.map(fieldToOption)
+                              const contentObjMappedFields =
+                                 // contentObjFields.map(fieldToOption) *** (Guy) this makes my chrome browser crash (Only multi-selection) it is because { field: f } ***
                                  contentObjFields.map((contentObjField) => ({
                                     id: contentObjField.id,
                                     value: contentObjField.label,
-                                 }))
+                                 }));
+                              $editContentFieldsToCreateNew.define(
+                                 "options",
+                                 contentObjMappedFields
+                              );
+                              $setEditableContentFields.define(
+                                 "options",
+                                 contentObjMappedFields
                               );
                               contentFieldFilter.fieldsLoad(contentObjFields);
                               $contentGroupByField.define("options", [
@@ -500,7 +510,9 @@ export default function (AB) {
                rows: [
                   {
                      view: "label",
-                     label: L("Create new by editing content fields"),
+                     label: L(
+                        "Force the creation of a new row of data by editing the content fields"
+                     ),
                   },
                   {
                      id: ids.editContentFieldsToCreateNew,
@@ -508,12 +520,30 @@ export default function (AB) {
                      value: [],
                      options: [],
                      placeholder: L(
-                        "Choose content fields to create new by editing"
+                        "Choose the content fields to create a new entry through editing"
                      ),
                      labelAlign: "left",
                      stringResult: false /* returns data as an array of [id] */,
                      on: {
-                        onChange: (newValue) => {
+                        onChange: () => {
+                           this.onChange();
+                        },
+                     },
+                  },
+                  {
+                     view: "label",
+                     label: L("Set the editable content fields"),
+                  },
+                  {
+                     id: ids.setEditableContentFields,
+                     view: "multicombo",
+                     value: [],
+                     options: [],
+                     placeholder: L("Choose the editable content fields"),
+                     labelAlign: "left",
+                     stringResult: false /* returns data as an array of [id] */,
+                     on: {
+                        onChange: () => {
                            this.onChange();
                         },
                      },
@@ -876,6 +906,7 @@ export default function (AB) {
                "contentField",
                "contentGroupByField",
                "editContentFieldsToCreateNew",
+               "setEditableContentFields",
                "showGroupTitle",
                "showDataPanel",
             ].forEach((f) => $$(ids[f]).setValue(values[f]));
@@ -1490,6 +1521,9 @@ export default function (AB) {
          settings.contentGroupByField = $$(ids.contentGroupByField).getValue();
          settings.editContentFieldsToCreateNew = $$(
             ids.editContentFieldsToCreateNew
+         ).getValue();
+         settings.setEditableContentFields = $$(
+            ids.setEditableContentFields
          ).getValue();
          settings.contentFieldFilter = JSON.stringify(
             this.contentFieldFilter.getValue()
