@@ -79,7 +79,7 @@ export default function (AB) {
                                        label: L("Data Key"),
                                        placeholder: "data.example",
                                        bottomLabel: L(
-                                          "* JSON key containing the relevant data from the resonse object. Can be left blank to use the root level data."
+                                          "* JSON key containing the relevant data from the response object. Can be left blank to use the root level data."
                                        ),
                                        suggest: [],
                                        on: {
@@ -261,12 +261,12 @@ export default function (AB) {
 
       _addFieldItem(key, type) {
          const uiItem = this._fieldItem(key, type);
-         $$(this.ids.fields).addView(uiItem);
+         $$(this.ids.connections).addView(uiItem);
       }
 
       _clearFieldItems() {
-         const $fields = $$(this.ids.fields);
-         AB.Webix.ui([], $fields);
+         const $connections = $$(this.ids.connections);
+         AB.Webix.ui([], $connections);
       }
 
       _populateDataKeys() {

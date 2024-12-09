@@ -410,6 +410,12 @@ export default function (AB, ibase) {
 
                let linkCol;
 
+               if (this.CurrentObject.isNetsuite) {
+                  if (vals.settings?.netsuiteOneColumn) {
+                     vals.columnName = vals.settings.netsuiteOneColumn;
+                  }
+               }
+
                // if this is an ADD operation, (_editField will be undefined)
                if (!this._editField) {
                   // get a new instance of a field:
@@ -420,7 +426,9 @@ export default function (AB, ibase) {
                      field.columnName === ""
                   ) {
                      this.AB.Webix.message({
-                        text: "The column name can't contain special characters.",
+                        text: L(
+                           "The column name can't contain special characters."
+                        ),
                         type: "error",
                      });
 
@@ -577,7 +585,10 @@ export default function (AB, ibase) {
                         await field.save();
 
                         // when add new link fields, then run create migrate fields here
-                        if (!this._editField) {
+                        if (
+                           !this._editField &&
+                           !this.CurrentObject.isNetsuite
+                        ) {
                            await field.migrateCreate();
                            await linkCol.migrateCreate();
                         }
