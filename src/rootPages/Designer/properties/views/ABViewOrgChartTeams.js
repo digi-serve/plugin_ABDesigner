@@ -17,6 +17,7 @@ export default function (AB) {
          super(BASE_ID, {
             datacollectionID: "",
             strategyCode: "",
+            subStrategy: "",
             teamInactive: "",
             teamCanInactivate: "",
             teamLink: "",
@@ -712,6 +713,14 @@ export default function (AB) {
                ],
             },
             {
+               id: ids.subStrategy,
+               view: "richselect",
+               label: L("Sub Strategy"),
+               labelWidth: uiConfig.labelWidthLarge,
+               options: [],
+               on: { onChange: () => this.onChange() },
+            },
+            {
                id: ids.draggable,
                name: "draggable",
                view: "checkbox",
@@ -923,6 +932,7 @@ export default function (AB) {
             if (values.teamStrategy) {
                this.populateStrategyOptions(values.teamStrategy);
                $$(ids.strategyCode).setValue(values.strategyCode);
+               $$(ids.subStrategy).setValue(values.subStrategy);
             }
          }
          $component.setValues(values);
@@ -1418,6 +1428,7 @@ export default function (AB) {
             .fields((f) => f.key === "connectObject")
             .map(fieldToOption);
          $$(this.ids.strategyCode).define("options", listFields);
+         $$(this.ids.subStrategy).define("options", listFields);
       }
 
       async strategyColorPopup() {
@@ -1515,6 +1526,7 @@ export default function (AB) {
          settings.teamInactive = $$(ids.teamInactive).getValue();
          settings.teamCanInactivate = $$(ids.teamCanInactivate).getValue();
          settings.teamStrategy = $$(ids.teamStrategy).getValue();
+         settings.subStrategy = $$(ids.subStrategy).getValue();
          settings.strategyCode = $$(ids.strategyCode).getValue();
          settings.dataCollectionId = $$(ids.datacollectionID).getValue();
          settings.contentField = $$(ids.contentField).getValue();
