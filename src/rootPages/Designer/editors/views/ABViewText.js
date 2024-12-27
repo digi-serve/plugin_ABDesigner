@@ -73,6 +73,11 @@ export default function (AB) {
             // in our editor, we provide accessLv = 2
          }
 
+         async viewLoad(view) {
+            await this.AB.custom["tinymce-editor"].init();
+            super.viewLoad(view);
+         }
+
          onChange() {
             const ids = this.ids;
             const baseView = this.view;

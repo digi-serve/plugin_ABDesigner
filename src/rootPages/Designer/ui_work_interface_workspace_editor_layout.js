@@ -124,7 +124,7 @@ export default function (AB) {
        * our interface with the details for this View.
        * @param {ABView} view  current view instance.
        */
-      viewLoad(view) {
+      async viewLoad(view) {
          // remove the current Editor if it exists.
          this.currentEditor?.detatch?.();
 
@@ -233,7 +233,7 @@ export default function (AB) {
             }
 
             editorComponent = new newEditor(view); // view.editorComponent(this.AB._App, "preview");
-            editorComponent.viewLoad(view);
+            await editorComponent.viewLoad(view);
             $$(ids.editAreaContainer).define({ width: 0 });
             $$(ids.editArea).define({ height: 0 });
             webix.html.removeCss(
