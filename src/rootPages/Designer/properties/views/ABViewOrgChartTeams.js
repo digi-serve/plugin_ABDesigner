@@ -1448,6 +1448,12 @@ export default function (AB) {
                   label: strategy.name,
                   name: strategy.id,
                   value: values[strategy.id] ?? "#111111",
+                  suggest: {
+                     type: "colorselect",
+                     body: {
+                        button: true,
+                     },
+                  },
                };
             });
 
@@ -1558,7 +1564,8 @@ export default function (AB) {
          settings.contentFieldDateEnd = $$(ids.contentFieldDateEnd).getValue();
          settings.dataPanelDCs = $$(ids.dataPanelDCs).getValues();
          const $colorForm = $$(ids.strategyColorForm);
-         settings.strategyColors = $colorForm?.getValues() ?? {};
+         settings.strategyColors =
+            $colorForm?.getValues() ?? settings.strategyColors;
          return values;
       }
 
