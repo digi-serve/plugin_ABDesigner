@@ -451,7 +451,11 @@ export default function (AB) {
          if (!field) return;
 
          const fieldComponent = field.formComponent(),
-            abView = fieldComponent.newInstance(this.Rule.CurrentApplication);
+            abView = fieldComponent.newInstance(
+               this.Rule.CurrentApplication.isWebApp
+                  ? this.Rule.CurrentApplication
+                  : null
+            );
          // let formFieldComponent = abView.component(this.AB._App);
          let formFieldComponent = abView.component();
          let $componentView, $inputView;

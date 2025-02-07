@@ -685,15 +685,15 @@ export default function (AB) {
                            yPosition
                         );
                         // @TODO: filter out unknown mobile-view
+                        if (!newFieldView) return;
                         if (newFieldView.defaults.key == "mobile-view") return;
-                        if (newFieldView) {
-                           newFieldView.once("destroyed", () =>
-                              this.populate(currView)
-                           );
 
-                           // // Call save API
-                           saveTasks.push(newFieldView.save());
-                        }
+                        newFieldView.once("destroyed", () =>
+                           this.populate(currView)
+                        );
+
+                        // // Call save API
+                        saveTasks.push(newFieldView.save());
 
                         // update item to UI list
                         f.selected = 1;
