@@ -143,6 +143,7 @@ export default function (AB) {
          require("./mobile/ABMobileViewFormTextbox"),
          require("./mobile/ABMobileViewLabel"),
          require("./mobile/ABMobileViewList"),
+         require("./mobile/ABMobileViewTimeline"),
       ].forEach((V) => {
          MobileViews.push(V.default(AB));
       });
