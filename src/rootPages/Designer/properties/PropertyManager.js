@@ -4,6 +4,7 @@
  * An Interface for managing all the various Property Editors we support.
  *
  */
+import ABView from "./views/ABView";
 
 var PropertyMgr = null;
 
@@ -119,6 +120,10 @@ export default function (AB) {
          require("./views/ABViewText"),
       ].forEach((V) => {
          Views.push(V.default(AB));
+      });
+
+      AB.plugins().forEach((p) => {
+         if (p.viewProperty) Views.push(p.viewProperty(AB, ABView));
       });
 
       var MobileViews = [];
