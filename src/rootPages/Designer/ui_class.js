@@ -150,6 +150,36 @@ export default function (AB) {
          }
 
          /**
+          * @method datacollectionsIncluded()
+          * return a list of datacollections that are included in the current
+          * application.
+          * @return [{id, value, icon}]
+          *         id: {string} the ABDataCollection.id
+          *         value: {string} the label of the ABDataCollection
+          *         icon: {string} the icon to display
+          */
+         datacollectionsIncluded() {
+            return this.CurrentApplication?.datacollectionsIncluded()
+               .filter((dc) => {
+                  const obj = dc.datasource;
+                  return (
+                     dc.sourceType == "object" &&
+                     !obj?.isImported &&
+                     !obj?.isReadOnly
+                  );
+               })
+               .map((d) => {
+                  let entry = { id: d.id, value: d.label };
+                  if (d.sourceType == "query") {
+                     entry.icon = "fa fa-filter";
+                  } else {
+                     entry.icon = "fa fa-database";
+                  }
+                  return entry;
+               });
+         }
+
+         /**
           * @method uniqueIDs()
           * add a unique identifier to each of our this.ids to ensure they are
           * unique.  Useful for components that are repeated, like items in a list.

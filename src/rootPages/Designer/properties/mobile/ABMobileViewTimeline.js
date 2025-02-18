@@ -158,7 +158,7 @@ export default function (AB) {
          this.AB = AB;
 
          LabelTemplate.init(AB);
-         LabelTemplate.on("save", (labelTemplate) => {
+         LabelTemplate.on("save", (/*labelTemplate*/) => {
             this.onChange();
          });
 
