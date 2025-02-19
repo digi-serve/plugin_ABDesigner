@@ -4,6 +4,8 @@
  * An Interface for managing all the various Component Editors we support.
  *
  */
+import _ABViewDefault from "./views/_ABViewDefault";
+
 export default function (AB) {
    const Editors = [];
    // {array}
@@ -21,6 +23,7 @@ export default function (AB) {
       require("./views/ABViewContainer"),
       require("./views/ABViewCSVExporter"),
       require("./views/ABViewCSVImporter"),
+      require("./views/ABViewDataSelect"),
       require("./views/ABViewDataview"),
       require("./views/ABViewDetail"),
       require("./views/ABViewDocxBuilder"),
@@ -42,6 +45,11 @@ export default function (AB) {
       const Klass = E.default(AB);
 
       Editors.push(Klass);
+   });
+
+   // Load editors from plugins
+   AB.plugins().forEach((p) => {
+      if (p.editor) Editors.push(p.editor(AB, _ABViewDefault));
    });
 
    return {

@@ -4,6 +4,7 @@
  * An Interface for managing all the various Property Editors we support.
  *
  */
+import ABView from "./views/ABView";
 
 var PropertyMgr = null;
 
@@ -79,6 +80,7 @@ export default function (AB) {
          require("./views/ABViewCSVExporter"),
          require("./views/ABViewCSVImporter"),
          require("./views/ABViewDataFilter"),
+         require("./views/ABViewDataSelect"),
          require("./views/ABViewDataview"),
          require("./views/ABViewDetail"),
          require("./views/ABViewDetailCheckbox"),
@@ -121,6 +123,10 @@ export default function (AB) {
          Views.push(V.default(AB));
       });
 
+      AB.plugins().forEach((p) => {
+         if (p.viewProperty) Views.push(p.viewProperty(AB, ABView));
+      });
+
       var MobileViews = [];
       // {array}
       // All the ABMobileViewXXX Property Interfaces Available.
@@ -143,6 +149,7 @@ export default function (AB) {
          require("./mobile/ABMobileViewFormTextbox"),
          require("./mobile/ABMobileViewLabel"),
          require("./mobile/ABMobileViewList"),
+         require("./mobile/ABMobileViewTimeline"),
       ].forEach((V) => {
          MobileViews.push(V.default(AB));
       });
