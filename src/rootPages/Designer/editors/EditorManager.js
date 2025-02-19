@@ -6,7 +6,7 @@
  */
 import _ABViewDefault from "./views/_ABViewDefault";
 
-export default function (AB) {
+export default function(AB) {
    const Editors = [];
    // {array}
    // All the ABField Component Inerfaces available.
@@ -34,7 +34,6 @@ export default function (AB) {
       require("./views/ABViewLabel"),
       require("./views/ABViewLayout"),
       require("./views/ABViewMenu"),
-      require("./views/ABViewOrgChart"),
       require("./views/ABViewPage"),
       require("./views/ABViewPDFImporter"),
       require("./views/ABViewPivot"),
@@ -59,7 +58,7 @@ export default function (AB) {
        *        A filter for limiting which editor you want.
        * @return [{ClassUI(Editor1)}, {ClassUI(Editor2)}, ...]
        */
-      editors: function (f = () => true) {
+      editors: function(f = () => true) {
          return Editors.filter(f);
       },
    };
