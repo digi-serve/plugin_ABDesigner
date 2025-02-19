@@ -130,6 +130,7 @@ export default function(AB) {
       // All the ABMobileViewXXX Property Interfaces Available.
       [
          require("./mobile/ABMobilePage"),
+         require("./mobile/ABMobileViewCustom"),
          require("./mobile/ABMobileViewForm"),
          require("./mobile/ABMobileViewFormButton"),
          require("./mobile/ABMobileViewFormCheckbox"),
