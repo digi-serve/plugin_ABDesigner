@@ -6,6 +6,8 @@
  */
 import UI_Class from "./ui_class";
 
+const INSTANCES_IN_PAGE = 20;
+
 export default function (AB) {
    const ibase = "ui_work_process_workspace_monitor";
    const UIClass = UI_Class(AB);
@@ -77,19 +79,15 @@ export default function (AB) {
                                  ],
                                  on: {
                                     onValueSuggest: () => {
-                                       const filter = $$("instanceFilter")
+                                       this.filter = $$("instanceFilter")
                                           .config.value.split(",")
                                           .filter((s) => s !== "");
-                                       const instances = this.instances.filter(
-                                          (i) => filter.indexOf(i.status) == -1
-                                       );
-                                       $$(ids.taskList).clearAll();
-                                       $$(ids.taskList).parse(instances);
                                        $$("filterIcon").config.badge =
-                                          filter.length == 0
-                                             ? ""
-                                             : filter.length;
+                                          this.filter.length != 0
+                                             ? this.filter.length
+                                             : "";
                                        $$("filterIcon").refresh();
+                                       this.loadInstances();
                                     },
                                  },
                               },
@@ -101,6 +99,8 @@ export default function (AB) {
                         id: ids.taskList,
                         select: true,
                         navigation: true,
+                        dynamic: true,
+                        datafetch: INSTANCES_IN_PAGE,
                         item: {
                            height: 74,
                            template: (instance) => {
@@ -282,23 +282,66 @@ export default function (AB) {
 
       async processLoad(process) {
          super.processLoad(process);
+         this.loadInstances();
+      }
+
+      /**
+       * load process instances into the list
+       * @param {boolean} [clear=true] whether or not to clear the list
+       */
+      async loadInstances(clear = true) {
+         // Define a custom webix proxy which allows us to dynamically load data
+         const proxy = {
+            $proxy: true,
+            load: (...a) => this.fetchInstances(...a),
+         };
+         const self = this;
+         const cb = function () {
+            const id = this.getFirstId();
+            this.select(id);
+            self.showInstance(id);
+         };
+         $$(this.ids.taskList).load(proxy, "json", cb, clear);
+      }
+
+      /**
+       * fetch instances from the server, follows webix proxy api
+       * (see https://docs.webix.com/desktop__server_proxy.html#creatingcustomproxyobjects)
+       * @param {object} view
+       * @param {object} params
+       * @return {Promise<object>} response from server with data and paging
+       */
+      async fetchInstances(v, params) {
          const processIdField = "d5afbc83-17dd-4b38-bded-1bf3f4594135";
-         const where = {};
-         where[processIdField] = process.id;
-         // Need to findAll without limit and sort client side, because server
-         // cannot currently sort based on the updated_at columns. Later we
-         // might want to add way to do this server side.
-         const res = await this.model.findAll({ where });
-         this.instances = res.data.sort((a, b) => {
-            return new Date(b.updated_at) - new Date(a.updated_at);
-         });
-         const $taskList = $$(this.ids.taskList);
-         $taskList.clearAll();
-         $taskList.parse(this.instances);
-         if (this.instances[0]) {
-            this.showInstance(this.instances[0].id);
-            $taskList.select(this.instances[0].id);
+         const where = {
+            glue: "and",
+            rules: [
+               {
+                  key: processIdField,
+                  rule: "equals",
+                  value: this.CurrentProcessID,
+               },
+            ],
+         };
+         // generate the rules for our filters
+         if (this.filter?.length > 0) {
+            const statusField = "b957a75d-65aa-427c-a813-63211658649a";
+            this.filter.forEach((status) =>
+               where.rules.push({
+                  key: statusField,
+                  rule: "not_equal",
+                  value: status,
+               })
+            );
+            where[statusField] = {};
          }
+         const res = await this.model.findAll({
+            where,
+            sort: [{ key: "updated_at", dir: "DESC" }],
+            limit: params?.count ?? INSTANCES_IN_PAGE,
+            offset: params?.start ?? 0,
+         });
+         return res;
       }
 
       showInstance(itemId) {
@@ -455,6 +498,7 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
       }
+      busy() {}
    }
 
    return new UI_Work_Process_Workspace_Monitor();
