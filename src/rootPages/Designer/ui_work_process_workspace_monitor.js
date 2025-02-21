@@ -297,6 +297,7 @@ export default function (AB) {
          };
          const self = this;
          const cb = function () {
+            // select the first record by default
             const id = this.getFirstId();
             this.select(id);
             self.showInstance(id);
@@ -333,7 +334,6 @@ export default function (AB) {
                   value: status,
                })
             );
-            where[statusField] = {};
          }
          const res = await this.model.findAll({
             where,
@@ -498,7 +498,6 @@ export default function (AB) {
       show() {
          $$(this.ids.component).show();
       }
-      busy() {}
    }
 
    return new UI_Work_Process_Workspace_Monitor();
