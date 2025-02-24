@@ -405,7 +405,8 @@ export default function (AB) {
          $repeatColumn.define("value", element.repeatColumn);
          $repeatColumn.refresh();
 
-         if (element.isRepeat) $repeatLayout.show();
+         // if (element.isRepeat)
+         if (element.process?.key == "SubProcess") $repeatLayout.show();
 
          this.refreshFieldValues();
          this.setFieldValues();
