@@ -216,6 +216,7 @@ export default function (AB) {
             settings.object = "";
          }
 
+         this.refreshFilter();
          settings.where = this.rowFilter.getValue();
 
          $$(ids.component).setValues(settings);
