@@ -37,8 +37,7 @@ export default function (AB) {
       }
 
       ui(element = {}) {
-         // const obj = element.toUsers || {};
-         const obj = element ?? {};
+         const obj = element.toUsers ?? element;
          const baseUI = super.ui(obj);
          const filterConditions = obj.filterConditions || {
             glue: "and",
@@ -48,7 +47,8 @@ export default function (AB) {
             element.process?.processDataFields(element)?.map((e) => e.field) ||
             [];
 
-         this.filterComponent.fieldsLoad(fields);
+         // not all elements have a field so filter out null
+         this.filterComponent.fieldsLoad(fields.filter((f) => f));
          this.filterComponent.setValue(filterConditions);
 
          const __UserFields =

@@ -111,7 +111,7 @@ export default function (AB) {
             webix.ui(
                {
                   id: ids.toUsers,
-                  rows: [this.toUsers.ui(element ?? {})],
+                  rows: [this.toUsers.ui(element)],
                   paddingY: 10,
                },
                $toUsers
