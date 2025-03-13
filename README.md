@@ -24,3 +24,4 @@ Anything between those 2 lines will be used as release notes when creating a ver
  - The version will be updated in `package.json`
  - A new tag and release will be created on GitHub
  - A Workflow in `AppBuilder Service Web` will be triggered to build a new Image.
+     rm the old generated ABDesigner.js

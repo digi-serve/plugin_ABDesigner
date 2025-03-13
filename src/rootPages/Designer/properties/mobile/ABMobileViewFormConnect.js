@@ -5,15 +5,15 @@
 
 import FABMobileViewFormItem from "./ABMobileViewFormItem";
 import ABPopupSort from "../../ui_work_object_workspace_popupSortFields";
-// import ABViewPropertyAddPage from "./viewProperties/ABViewPropertyAddPage";
-// import ABViewPropertyEditPage from "./viewProperties/ABViewPropertyEditPage";
+import ABViewPropertyAddPage from "../views/viewProperties/ABViewPropertyAddPage";
+import ABViewPropertyEditPage from "../views/viewProperties/ABViewPropertyEditPage";
 
 export default function (AB) {
    const BASE_ID = "properties_abmobileview_connect";
 
    const ABMobileViewFormItem = FABMobileViewFormItem(AB);
-   // const ABAddPage = ABViewPropertyAddPage(AB, BASE_ID);
-   // const ABEditPage = ABViewPropertyEditPage(AB, BASE_ID);
+   const ABAddPage = ABViewPropertyAddPage(AB, BASE_ID);
+   const ABEditPage = ABViewPropertyEditPage(AB, BASE_ID);
    const L = ABMobileViewFormItem.L();
 
    let FilterComponent = null;
@@ -55,8 +55,8 @@ export default function (AB) {
          const uiConfig = this.AB.UISettings.config();
 
          return super.ui([
-            // this.addPageProperty.ui(),
-            // this.editPageProperty.ui(),
+            this.addPageProperty.ui(),
+            this.editPageProperty.ui(),
 
             /*  Do we Allow Popup dimensions?  
                 Or do they always take up the whole screen?
@@ -190,19 +190,19 @@ export default function (AB) {
 
          FilterComponent.init();
          // when we make a change in the popups we want to make sure we save the new workspace to the properties to do so just fire an onChange event
-         // FilterComponent.on("change", (val) => {
-         //    this.onChange();
-         // });
+         FilterComponent.on("change", (val) => {
+            this.onChange();
+         });
 
          SortComponent.init(AB);
 
-         // this.addPageProperty.on("change", () => {
-         //    this.onChange();
-         // });
+         this.addPageProperty.on("change", () => {
+            this.onChange();
+         });
 
-         // this.editPageProperty.on("change", () => {
-         //    this.onChange();
-         // });
+         this.editPageProperty.on("change", () => {
+            this.onChange();
+         });
       }
 
       populate(view) {
@@ -303,12 +303,12 @@ export default function (AB) {
          });
 
          // Set the options of the possible edit forms
-         // this.addPageProperty.setSettings(view, {
-         //    formView: view.settings.formView,
-         // });
-         // this.editPageProperty.setSettings(view, {
-         //    editForm: view.settings.editForm,
-         // });
+         this.addPageProperty.setSettings(view, {
+            formView: view.settings.formView,
+         });
+         this.editPageProperty.setSettings(view, {
+            editForm: view.settings.editForm,
+         });
          $$(ids.filterConnectedValue).define("options", filterConnectedOptions);
          $$(ids.filterConnectedValue).setValue(
             view.settings.filterConnectedValue
@@ -479,17 +479,17 @@ export default function (AB) {
          return values;
       }
 
-      // get addPageProperty() {
-      //    if (!this._addPage) this._addPage = new ABAddPage();
+      get addPageProperty() {
+         if (!this._addPage) this._addPage = new ABAddPage();
 
-      //    return this._addPage;
-      // }
+         return this._addPage;
+      }
 
-      // get editPageProperty() {
-      //    if (!this._editPage) this._editPage = new ABEditPage();
+      get editPageProperty() {
+         if (!this._editPage) this._editPage = new ABEditPage();
 
-      //    return this._editPage;
-      // }
+         return this._editPage;
+      }
 
       showFilterPopup($view) {
          FilterComponent.popUp($view, null, { pos: "top" });

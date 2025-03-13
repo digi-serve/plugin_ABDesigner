@@ -4,14 +4,16 @@
  */
 
 import FABMobileViewFormItem from "./ABMobileViewFormItem";
+import FABMobileViewFormConnect from "./ABMobileViewFormConnect";
 
 export default function (AB) {
    const BASE_ID = "properties_abmobileview_form_select_multiple";
 
    const ABMobileViewFormItem = FABMobileViewFormItem(AB);
-   const L = ABMobileViewFormItem.L();
+   const ABMobileViewFormConnect = FABMobileViewFormConnect(AB);
+   const L = ABMobileViewFormConnect.L();
 
-   class ABMobileViewFormSelectMultipleProperty extends ABMobileViewFormItem {
+   class ABMobileViewFormSelectMultipleProperty extends ABMobileViewFormConnect {
       constructor() {
          super(BASE_ID, {
             // Put our ids here
@@ -42,6 +44,10 @@ export default function (AB) {
                   {
                      id: "checkbox",
                      value: L("Checkboxes"),
+                  },
+                  {
+                     id: "image",
+                     value: L("Images"),
                   },
                ],
                on: {
