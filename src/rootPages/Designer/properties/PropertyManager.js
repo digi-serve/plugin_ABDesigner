@@ -8,7 +8,7 @@ import ABView from "./views/ABView";
 
 var PropertyMgr = null;
 
-export default function(AB) {
+export default function (AB) {
    if (!PropertyMgr) {
       var Fields = [];
       // {array}
@@ -161,19 +161,19 @@ export default function(AB) {
           *        A filter for limiting which fields you want.
           * @return [{ClassUI(Field1)}, {ClassUI(Field2)}, ...]
           */
-         fields: function(f = () => true) {
+         fields: function (f = () => true) {
             return Fields.filter(f);
          },
 
-         processElements: function(f = () => true) {
+         processElements: function (f = () => true) {
             return Processes.filter(f);
          },
 
-         views: function(v = () => true) {
+         views: function (v = () => true) {
             return Views.filter(v);
          },
 
-         mobileViews: function(v = () => true) {
+         mobileViews: function (v = () => true) {
             return MobileViews.filter(v);
          },
       };
