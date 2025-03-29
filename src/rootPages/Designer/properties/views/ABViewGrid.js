@@ -752,6 +752,14 @@ export default function (AB) {
          vals.settings.isSortable = $$(ids.isSortable).getValue();
          vals.settings.isExportable = $$(ids.isExportable).getValue();
 
+         let showToolbar = false;
+         ["massUpdate", "isSortable", "isExportable"].forEach((key) => {
+            if (vals.settings[key]) {
+               showToolbar = true;
+            }
+         });
+         vals.settings.showToolbar = showToolbar ? 1 : 0;
+
          vals.settings.height = $$(ids.height).getValue();
          vals.settings.hideHeader = $$(ids.hideHeader).getValue();
          vals.settings.labelAsField = $$(ids.labelAsField).getValue();

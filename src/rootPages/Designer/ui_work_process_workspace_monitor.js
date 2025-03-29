@@ -358,6 +358,13 @@ export default function (AB) {
             return;
          }
          const item = $$(ids.taskList).getItem(itemId);
+         if (!Array.isArray(item.log)) {
+            if (item.log === "") {
+               item.log = [];
+            } else {
+               item.log = (item.log || "").split(",");
+            }
+         }
          const logs = item.log.map((log, index) => {
             return { id: index, value: log };
          });
