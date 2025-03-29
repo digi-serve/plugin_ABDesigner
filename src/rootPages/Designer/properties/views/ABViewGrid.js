@@ -758,11 +758,7 @@ export default function (AB) {
                showToolbar = true;
             }
          });
-         if (showToolbar) {
-            vals.settings.showToolbar = 1;
-         } else {
-            vals.settings.showToolbar = 0;
-         }
+         vals.settings.showToolbar = showToolbar ? 1 : 0;
 
          vals.settings.height = $$(ids.height).getValue();
          vals.settings.hideHeader = $$(ids.hideHeader).getValue();
