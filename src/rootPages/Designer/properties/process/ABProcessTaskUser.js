@@ -56,6 +56,13 @@ export default function (AB) {
                            this.switchTo("External");
                         },
                      },
+                     {
+                        view: "button",
+                        label: L("Form Task"),
+                        click: () => {
+                           this.switchTo("Form");
+                        },
+                     },
                   ],
                },
             ],
