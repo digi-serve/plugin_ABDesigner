@@ -72,8 +72,12 @@ export default function (AB) {
             })
             .filter((f) => f);
 
-         const myOutgoingConnections = element.process.connectionsOutgoing(
-            element.diagramID
+         const myOutgoingConnections = (
+            element.process?.connectionsOutgoing?.(element.diagramID) ?? []
+         ).filter(
+            // Prevent duplicates
+            (conn, pos, self) =>
+               self.findIndex((item) => item.id === conn.id) === pos
          );
 
          this.__dfLookup = {};
