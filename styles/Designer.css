@@ -265,3 +265,9 @@
 .webix_tree_leaves {
    display: block !important;
 }
+
+.monospace > div > textarea,
+.monospace > div > div > .webix_text_highlight_value {
+   word-break: break-all;
+   font-family: monospace;
+}
