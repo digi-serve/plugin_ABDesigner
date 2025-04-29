@@ -164,6 +164,7 @@ export default function (AB) {
          myOutgoingConnections.forEach((conn) => {
             const condition = this.conditions[conn.id] || {};
             const DF = this.__dfLookup[conn.id];
+            if (DF == null) return;
 
             // NOTE: keep the DF.fieldsLoad() AFTER the ui is built.
             DF.fieldsLoad(abFields);
