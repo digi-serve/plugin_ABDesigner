@@ -88,6 +88,7 @@ export default function (AB) {
             const connectedElement = element.process.elementForDiagramID(
                conn.to
             );
+            if (connectedElement == null) return;
 
             let DF;
             if (!this.__dfLookup[conn.id]) {
