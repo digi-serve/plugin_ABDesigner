@@ -193,9 +193,8 @@ export default function (AB) {
             this._element.process.connectionsOutgoing(this._element.diagramID);
          myOutgoingConnections.forEach((conn) => {
             obj.conditions[conn.id] = {};
-            obj.conditions[conn.id].label = $$(
-               `${ids.component}_${conn.id}_label`
-            ).getValue();
+            obj.conditions[conn.id].label =
+               $$(`${ids.component}_${conn.id}_label`)?.getValue() ?? "";
             if (this.__dfLookup && this.__dfLookup[conn.id]) {
                const DF = this.__dfLookup[conn.id];
                obj.conditions[conn.id].filterValue = DF.getValue();
