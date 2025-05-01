@@ -72,8 +72,12 @@ export default function (AB) {
             })
             .filter((f) => f);
 
-         const myOutgoingConnections = element.process.connectionsOutgoing(
-            element.diagramID
+         const myOutgoingConnections = (
+            element.process?.connectionsOutgoing?.(element.diagramID) ?? []
+         ).filter(
+            // Prevent duplicates
+            (conn, pos, self) =>
+               self.findIndex((item) => item.id === conn.id) === pos
          );
 
          this.__dfLookup = {};
@@ -84,6 +88,7 @@ export default function (AB) {
             const connectedElement = element.process.elementForDiagramID(
                conn.to
             );
+            if (connectedElement == null) return;
 
             let DF;
             if (!this.__dfLookup[conn.id]) {
@@ -159,6 +164,7 @@ export default function (AB) {
          myOutgoingConnections.forEach((conn) => {
             const condition = this.conditions[conn.id] || {};
             const DF = this.__dfLookup[conn.id];
+            if (DF == null) return;
 
             // NOTE: keep the DF.fieldsLoad() AFTER the ui is built.
             DF.fieldsLoad(abFields);
@@ -187,9 +193,8 @@ export default function (AB) {
             this._element.process.connectionsOutgoing(this._element.diagramID);
          myOutgoingConnections.forEach((conn) => {
             obj.conditions[conn.id] = {};
-            obj.conditions[conn.id].label = $$(
-               `${ids.component}_${conn.id}_label`
-            ).getValue();
+            obj.conditions[conn.id].label =
+               $$(`${ids.component}_${conn.id}_label`)?.getValue() ?? "";
             if (this.__dfLookup && this.__dfLookup[conn.id]) {
                const DF = this.__dfLookup[conn.id];
                obj.conditions[conn.id].filterValue = DF.getValue();
