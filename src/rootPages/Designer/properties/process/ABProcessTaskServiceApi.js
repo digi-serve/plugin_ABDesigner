@@ -18,12 +18,14 @@ export default function(AB) {
          super("properties_process_service_api", {
             form: "",
             headers: "",
+            secrets: "",
             suggest: "",
          });
 
          this.element = null;
          // A webix datacollection - used to load process data into our mention suggest
          this.suggestData = new AB.Webix.DataCollection({});
+         this.templateRgx = /<%= (.+?) %>/g;
       }
 
       static get key() {
@@ -32,6 +34,13 @@ export default function(AB) {
 
       ui() {
          const ids = this.ids;
+         this.AB.Webix.ui({
+            id: ids.suggest,
+            view: "mentionsuggest",
+            symbol: "<",
+            template: "%= #value# %>",
+            data: this.suggestData,
+         });
          return {
             rows: [
                {
@@ -47,9 +56,12 @@ export default function(AB) {
                         label: L("Name"),
                      },
                      {
-                        view: "text",
+                        view: "texthighlight",
                         name: "url",
                         label: L("Url"),
+                        highlight: (t) => this.highlight(t),
+                        suggest: this.ids.suggest,
+                        css: "monospace",
                      },
                      {
                         view: "combo",
@@ -83,58 +95,26 @@ export default function(AB) {
                         type: "textarea",
                         placeholder: "use ${...} to add process data",
                         css: "monospace",
-                        highlight: (text) => {
-                           text = text.replaceAll(
-                              " ",
-                              `<span style="color:#d5d5d5">·</span>`
-                           );
-                           text = text.replace(/\${([^}]*)}/g, (m, c) => {
-                              const data = this.suggestData.find(
-                                 { key: c },
-                                 true
-                              );
-                              const centerPad = (str, target, pad, right) => {
-                                 if (str.length === target) return str;
-                                 if (right)
-                                    return centerPad(
-                                       `${str}${pad}`,
-                                       target,
-                                       pad
-                                    );
-                                 else
-                                    return centerPad(
-                                       `${pad}${str}`,
-                                       target,
-                                       pad,
-                                       true
-                                    );
-                              };
-                              if (data) {
-                                 // We save the key in the text, but display the
-                                 // label. Need to keep the length the same or
-                                 // the cursor get's messed up.
-                                 const { key, value } = data;
-                                 const diff = key.length - value.length;
-                                 let val = data.value;
-                                 if (diff > 0) {
-                                    val = centerPad(val, key.length, "─", true);
-                                 } else if (diff < 0) {
-                                    val = `...${val.slice(diff + 3)}`;
-                                 }
-                                 return `<span style="color:#4CAF51;font-weight:bold;background:#c4edc6;">\${${val}}</span>`;
-                              }
-                              return `<span style="background:#fff3e5;color:#FF8C00;font-weight:bold;">${m}</span>`;
-                           });
-                           return text;
-                        },
-                        suggest: {
-                           id: ids.suggest,
-                           view: "mentionsuggest",
-                           symbol: "$",
-                           template: "{#key#}",
-                           data: this.suggestData,
-                        },
+                        highlight: (t) => this.highlight(t),
+                        suggest: this.ids.suggest,
                      },
+                     {
+                        cols: [
+                           {
+                              view: "label",
+                              label: L("Secrets"),
+                              autowidth: true,
+                           },
+                           {
+                              view: "icon",
+                              icon: "fa fa-plus",
+                              width: 50,
+                              on: { onItemClick: () => this.addSecret() },
+                           },
+                           {},
+                        ],
+                     },
+                     { id: ids.secrets, rows: [] },
                      {
                         view: "switch",
                         name: "responseJson",
@@ -150,29 +130,41 @@ export default function(AB) {
       }
 
       populate(element) {
-         const { name, url, method, body, responseJson } = element;
-         $$(this.ids.form).setValues({ name, url, method, body, responseJson });
-         element.headers?.forEach?.((header) => {
-            this.addHeader(header);
-         });
+         // Reset our suggest data
+         this.suggestData.clearAll();
+         this.suggestData.parse(
+            element.storedSecrets?.map((s) => ({
+               value: `Secret: ${s}`,
+               key: `Secret: ${s}`,
+            }))
+         );
          const processData = element.process.processDataFields(element) ?? [];
          this.suggestData.parse(
             processData
                .filter((i) => !!i)
                .map?.((i) => ({ value: i.label, key: i.key }))
          );
+         let { name, url, method, body, responseJson } = element;
+         // These might have process value placeholders, display the label
+         // instead of ids
+         body = this.convertIDToLabel(body);
+         url = this.convertIDToLabel(url);
+
+         $$(this.ids.form).setValues({ name, url, method, body, responseJson });
+
+         element.headers?.forEach?.((header) => {
+            header.value = this.convertIDToLabel(header.value);
+            this.addHeader(header);
+         });
+         element.storedSecrets?.forEach?.((secret) => this.addSecret(secret));
       }
 
       values() {
          const values = {};
          let form = {};
-         try {
-            form = $$(this.ids.form).getValues();
-         } catch (e) {
-            console.log("caught", e);
-         }
+         form = $$(this.ids.form).getValues();
          Object.keys(form).forEach((key) => {
-            key.includes("headers")
+            key.includes("headers") || key.includes("secrets")
                ? nestValue(key, form[key], values)
                : (values[key] = form[key]);
          });
@@ -184,9 +176,36 @@ export default function(AB) {
             );
             values.headers = headers;
          }
+         // These might contain process value placeholders, convert the label to
+         // actuall ids before saving
+         values.body = this.convertLabelToID(values.body);
+         values.url = this.convertLabelToID(values.url);
+         values.headers?.forEach(
+            (h) => (h.value = this.convertLabelToID(h.value))
+         );
+         // Convert secrets to an array
+         if (values.secrets) {
+            const secrets = [];
+            Object.keys(values.secrets).forEach((secret) =>
+               secrets.push(values.secrets[secret])
+            );
+            values.secrets = secrets;
+         }
+         if (this.deleteSecrets) {
+            values.deleteSecrets = this.deleteSecrets;
+            delete this.deleteSecrets;
+         }
+         console.log("VALUES", values);
+
          return values;
       }
 
+      /**
+       * Add fields to the form for a header
+       * @param {object} [header={}]
+       * @param {string} [header.key]
+       * @param {string} [header.value]
+       */
       addHeader(header = {}) {
          const uid = AB.Webix.uid(); //this is unique to the page
          const row = {
@@ -199,11 +218,14 @@ export default function(AB) {
                   value: header.key,
                },
                {
-                  view: "text",
+                  view: "texthighlight",
                   name: `headers.${uid}.value`,
                   placeholder: "value",
                   value: header.value,
                   gravity: 2,
+                  highlight: (t) => this.highlight(t),
+                  suggest: this.ids.suggest,
+                  css: "monospace",
                },
                {
                   view: "icon",
@@ -216,6 +238,102 @@ export default function(AB) {
             ],
          };
          $$(this.ids.headers).addView(row);
+      }
+
+      /**
+       * Add fields to the form for a secret
+       * @param {string} secret name of an existing secret
+       */
+      addSecret(secret) {
+         const alreadySaved = !!secret;
+         // If the secret is already saved in the db we only allow deleting.
+         // We also don't need it in the from values.
+         const uid = secret ?? AB.Webix.uid(); //this is unique to the page
+         const row = {
+            id: uid,
+            cols: [
+               {
+                  view: "text",
+                  name: alreadySaved ? undefined : `secrets.${uid}.name`,
+                  placeholder: "Name",
+                  disabled: alreadySaved,
+                  value: secret,
+               },
+               {
+                  view: "text",
+                  type: "password",
+                  name: alreadySaved ? undefined : `secrets.${uid}.value`,
+                  placeholder: "Value",
+                  disabled: alreadySaved,
+                  // We don't actually get the existing secret values so we'll
+                  // just mock a value.
+                  value: alreadySaved ? ".........." : undefined,
+                  gravity: 2,
+               },
+               {
+                  view: "icon",
+                  icon: "wxi-trash",
+                  width: "50",
+                  on: {
+                     onItemClick: () => {
+                        $$(this.ids.secret).removeView(uid);
+                        if (alreadySaved) {
+                           this.deleteSecrets = this.deleteSecrets ?? [];
+                           this.deleteSecrets.push(secret);
+                        }
+                     },
+                  },
+               },
+            ],
+         };
+         $$(this.ids.secrets).addView(row);
+      }
+
+      /**
+       * Highlight function webix texthighlight elements. Highlights secret and
+       * process data in the text.
+       */
+      highlight(text) {
+         // text = text.replaceAll(" ", `<span style="color:#d5d5d5">·</span>`);
+         text = text.replace(this.templateRgx, (match, value) => {
+            const data = this.suggestData.find({ value }, true);
+            let color = "#FF8C00"; //Not matched - highlight orange
+            let background = "#FFE0B2";
+            if (data) {
+               if (/^Secret:/.test(value)) {
+                  color = "#008C8C"; // Matches secret - highlight cyan
+                  background = "#A0D7D7";
+               } else {
+                  color = "#388E3C"; // Matches process value - highlight green
+                  background = "#C4EDC6";
+               }
+            }
+            return `<span style="background:${background};color:${color};font-weight:bold;">${match}</span>`;
+         });
+         return text;
+      }
+
+      /**
+       * Replace process value labels with ids. Used before saving templates.
+       */
+      convertLabelToID(template) {
+         return template.replace(this.templateRgx, (match, value) => {
+            const data = this.suggestData.find({ value }, true);
+            if (!data) return match;
+            return `<%= ${data.key} %>`;
+         });
+      }
+
+      /**
+       * Replace process value ids with labels. Used before displaying
+       * templates.
+       */
+      convertIDToLabel(template) {
+         return template.replace(this.templateRgx, (match, key) => {
+            const data = this.suggestData.find({ key }, true);
+            if (!data) return match;
+            return `<%= ${data.value} %>`;
+         });
       }
    }
 
