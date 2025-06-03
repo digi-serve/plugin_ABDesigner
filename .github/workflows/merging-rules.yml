@@ -7,5 +7,7 @@ on:
 jobs:
    e2e-tests:
       uses: ./.github/workflows/e2e-test.yml
+      with:
+         app_id: ${{ vars.GS_DEV_APP_ID }}
       secrets:
-         TOKEN: ${{ secrets.PAT }}
+         TOKEN: ${{ secrets.GD_DEV_APP_PK }}

@@ -5,8 +5,13 @@ on:
          ref:
             type: string
             default: ${{ github.ref }}
+         app_id:
+            description: GitHub App ID for Auth (or client ID)
+            type: string
+            required: true
       secrets:
-         TOKEN:
+         app_secret:
+            description: GitHub App client secret for Auth
             required: true
    
 jobs:
@@ -25,16 +30,23 @@ jobs:
                - branch: master
                  webpack: update
       steps:
-         - uses: actions/checkout@v3
+         - uses: actions/checkout@v4
            with:
               path: plugins/plugin_ABDesigner
               ref: ${{ inputs.ref }}
+         - name: Generate a token
+           id: generate-token
+           uses: actions/create-github-app-token@v2
+           with:
+              app-id: ${{ inputs.app_id }}
+              private-key: ${{ secrets.app_secret }}
+              repositories: ab_service_web
 
-         - uses: actions/checkout@v3
+         - uses: actions/checkout@v4
            with:
               path: web
               repository: digi-serve/ab_service_web
-              token: ${{ secrets.TOKEN }}
+              token: ${{ steps.generate-token.outputs.token }}
               ref: ${{ matrix.branch }}
 
          - run: npm i
@@ -52,7 +64,7 @@ jobs:
               repository: digi-serve/ab_service_web
               
          - name: Check out kitchen-sink tests
-           uses: actions/checkout@v2
+           uses: actions/checkout@v4
            with:
               repository: digi-serve/kitchensink_app
               path: ab/test/e2e/cypress/e2e/kitchensink_app
@@ -63,13 +75,13 @@ jobs:
            run: pm2 start ./logs.js -- --toFile logs/ABServices.log
            working-directory: ./ab
 
-         - name: Wait for AB
-           # Skipping the wait step. Cypress has a bit of wait time built in.
-           if: false
-           uses: ifaxity/wait-on-action@v1.1.0
-           with:
-              resource: http://localhost:8080
-              timeout: 300000
+         # Skipping the wait step. Cypress has a bit of wait time built in.
+         # - name: Wait for AB
+           # if: false
+           # uses: ifaxity/wait-on-action@v1.1.0
+           # with:
+              # resource: http://localhost:8080
+              # timeout: 300000
 
          - name: Run Cypress Tests
            run: npm run test:e2e:ab-designer -- --browser chrome
