@@ -20,7 +20,7 @@ jobs:
     with:
       app_id: ${{ vars.GS_DEV_APP_ID }}
     secrets:
-      TOKEN: ${{ secrets.GD_DEV_APP_PK }}
+      TOKEN: ${{ secrets.GS_DEV_APP_PK }}
   call-bump-version:
     name: Version
     # Only run if tests pass 
