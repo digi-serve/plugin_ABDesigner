@@ -261,12 +261,13 @@ export default function (AB) {
 
       _addFieldItem(key, type) {
          const uiItem = this._fieldItem(key, type);
-         $$(this.ids.connections).addView(uiItem);
+         $$(this.ids.fields).addView(uiItem);
       }
 
       _clearFieldItems() {
-         const $connections = $$(this.ids.connections);
-         AB.Webix.ui([], $connections);
+         const $fields = $$(this.ids.connections);
+         if (!$fields) return;
+         AB.Webix.ui([], $fields);
       }
 
       _populateDataKeys() {

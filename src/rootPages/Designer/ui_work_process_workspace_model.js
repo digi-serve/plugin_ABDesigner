@@ -882,7 +882,7 @@ export default function (AB) {
          Object.keys(values).forEach((k) => {
             objVals[k] = values[k];
          });
-         if (!thisObj.name) objVals.name = values.label;
+         if (!objVals.name) objVals.name = values.label;
          thisObj.fromValues(objVals);
          thisObj.warningsEval(); // resets the warnings
 
