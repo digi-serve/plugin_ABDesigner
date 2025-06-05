@@ -132,11 +132,17 @@ export default function (AB) {
          let ids = this.ids;
 
          // clear edit area
-         $$(ids.editArea)
-            .getChildViews()
-            .forEach((childView) => {
-               $$(ids.editArea)?.removeView(childView);
-            });
+         $$(ids.editArea).define("rows", []);
+         $$(ids.editArea).define("cols", []);
+         $$(ids.editArea).reconstruct();
+         // let removeViews = $$(ids.editArea).getChildViews();
+         // while (removeViews.length > 0) {
+         //    let childView = removeViews.shift();
+         //    $$(ids.editArea)?.removeView(childView);
+         // }
+         // // removeViews.forEach((childView) => {
+         // //    $$(ids.editArea)?.removeView(childView);
+         // // });
 
          // load the component's editor in our editArea
          var editorComponent;
