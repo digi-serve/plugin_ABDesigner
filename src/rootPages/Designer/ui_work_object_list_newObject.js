@@ -44,6 +44,16 @@ export default function (AB) {
          this.ApiTab = UIApiObject(AB);
          this.ImportTab = UIImportObject(AB);
          this.NetsuiteTab = UINetsuiteObject(AB);
+
+         // Find any Plugin Properties for Objects:
+         this._plugins = {};
+         this.AB.ClassManager.allObjectProperties().forEach((plugin) => {
+            this._plugins[plugin.getPluginKey()] = new plugin(
+               null,
+               {},
+               this.AB
+            );
+         });
          /*
          this.ExternalTab = new ABImportExternal(AB);
          */
@@ -51,7 +61,7 @@ export default function (AB) {
 
       ui() {
          // Our webix UI definition:
-         return {
+         let myUI = {
             view: "window",
             id: this.ids.component,
             // width: 400,
@@ -117,6 +127,16 @@ export default function (AB) {
                },
             },
          };
+
+         // load any Plugin Properties for Objects:
+         Object.keys(this._plugins).forEach((key) => {
+            var plugin = this._plugins[key];
+            if (plugin.ui) {
+               myUI.body.cells.push(plugin.ui());
+            }
+         });
+
+         return myUI;
       }
 
       async init(AB) {
@@ -145,6 +165,18 @@ export default function (AB) {
             });
          });
 
+         // load any Plugin Properties for Objects:
+         Object.keys(this._plugins).forEach((key) => {
+            var plugin = this._plugins[key];
+            allInits.push(plugin.init(AB));
+            plugin.on("cancel", () => {
+               this.emit("cancel");
+            });
+            plugin.on("save", (values) => {
+               this.save(values, k);
+            });
+         });
+
          // ImportTab doesn't save, but "imported"
          this.ImportTab.on("imported", (obj) => {
             this.done(obj);
@@ -167,6 +199,11 @@ export default function (AB) {
          this.ApiTab.applicationLoad(application);
          this.ImportTab.applicationLoad(application);
          this.NetsuiteTab.applicationLoad(application);
+
+         Object.keys(this._plugins).forEach((key) => {
+            let plugin = this._plugins[key];
+            plugin.applicationLoad(application);
+         });
       }
 
       /**
@@ -293,6 +330,15 @@ export default function (AB) {
                break;
             case this.NetsuiteTab?.ids.form:
                this.NetsuiteTab?.onShow?.(this.CurrentApplicationID);
+               break;
+
+            default:
+               Object.keys(this._plugins).forEach((key) => {
+                  let plugin = this._plugins[key];
+                  if (plugin.ids.form == tabId) {
+                     plugin.onShow?.(this.CurrentApplicationID);
+                  }
+               });
                break;
          }
       }
