@@ -120,7 +120,7 @@ export default function (AB) {
                      value: `ENV:${k}`,
                      labelWidth: 230,
                      on: {
-                        onChange: (nV, oV) => {
+                        onChange: (nV /*, oV*/) => {
                            this.envVerify(k, nV);
                         },
                      },
@@ -238,7 +238,6 @@ export default function (AB) {
        */
       show() {
          $$(this.ids.component)?.show();
-         console.log("SHOW, Baby!  SHOW!");
       }
 
       busy() {

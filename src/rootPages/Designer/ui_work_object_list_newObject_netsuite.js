@@ -178,7 +178,7 @@ export default function (AB) {
 
          // "save.successful" is triggered by the ui_work_object_list_newObject
          // if the values we provided were successfully saved.
-         this.on("save.successful", async (obj) => {
+         this.on("save.successful", async (/* obj */) => {
             this.onSuccess();
 
             // try {
