@@ -16,6 +16,7 @@ export default function(AB) {
    class UIProcessServiceApi extends UIClass {
       constructor() {
          super("properties_process_service_api", {
+            body: "",
             form: "",
             headers: "",
             secrets: "",
@@ -26,6 +27,7 @@ export default function(AB) {
          // A webix datacollection - used to load process data into our mention suggest
          this.suggestData = new AB.Webix.DataCollection({});
          this.templateRgx = /<%= (.+?) %>/g;
+         this.hint = L("Use <%= ... %> to add process data / secrets");
       }
 
       static get key() {
@@ -61,6 +63,7 @@ export default function(AB) {
                         label: L("Url"),
                         highlight: (t) => this.highlight(t),
                         suggest: this.ids.suggest,
+                        placeholder: this.hint,
                         css: "monospace",
                      },
                      {
@@ -68,6 +71,13 @@ export default function(AB) {
                         name: "method",
                         label: L("Method"),
                         options: ["GET", "POST", "PUT", "DELETE"],
+                        on: {
+                           onChange: (val) => {
+                              val == "GET"
+                                 ? $$(ids.body).disable()
+                                 : $$(ids.body).enable();
+                           },
+                        },
                      },
                      {
                         cols: [
@@ -89,11 +99,12 @@ export default function(AB) {
                      {
                         view: "texthighlight",
                         name: "body",
+                        id: ids.body,
                         height: 200,
                         label: L("Request Body"),
                         labelPosition: "top",
                         type: "textarea",
-                        placeholder: "use ${...} to add process data",
+                        placeholder: this.hint,
                         css: "monospace",
                         highlight: (t) => this.highlight(t),
                         suggest: this.ids.suggest,
@@ -115,6 +126,9 @@ export default function(AB) {
                         ],
                      },
                      { id: ids.secrets, rows: [] },
+                     /**
+                      * TODO: Allow the response to be decoded and saved for
+                      * future process tasks
                      {
                         view: "switch",
                         name: "responseJson",
@@ -123,6 +137,7 @@ export default function(AB) {
                         onLabel: L("JSON"),
                         offLabel: L("Text"),
                      },
+                     */
                   ],
                },
             ],
@@ -214,13 +229,13 @@ export default function(AB) {
                {
                   view: "text",
                   name: `headers.${uid}.key`,
-                  placeholder: "header",
+                  placeholder: L("header"),
                   value: header.key,
                },
                {
                   view: "texthighlight",
                   name: `headers.${uid}.value`,
-                  placeholder: "value",
+                  placeholder: `${L("value")} (${this.hint})`,
                   value: header.value,
                   gravity: 2,
                   highlight: (t) => this.highlight(t),
@@ -247,17 +262,41 @@ export default function(AB) {
       addSecret(secret) {
          const alreadySaved = !!secret;
          // If the secret is already saved in the db we only allow deleting.
-         // We also don't need it in the from values.
+         // Since secrets aren't saved in the definition, we don't need to send
+         // existing secrets to the server. New one will get encrypted and saved
          const uid = secret ?? AB.Webix.uid(); //this is unique to the page
+         const self = this;
          const row = {
             id: uid,
             cols: [
                {
                   view: "text",
                   name: alreadySaved ? undefined : `secrets.${uid}.name`,
-                  placeholder: "Name",
+                  placeholder: L("Name"),
                   disabled: alreadySaved,
                   value: secret,
+                  invalidMessage: L("Secret names must be unique!"),
+                  validate: (val) => {
+                     // Check that the secret name is unique
+                     const opts = this.suggestData.find({
+                        key: `Secret: ${val}`,
+                     });
+                     return opts.length === 1;
+                  },
+                  on: {
+                     onChange: function(n, o) {
+                        if (n == o) return;
+                        // Add the secret to the suggest data
+                        const suggest = {
+                           id: uid,
+                           key: `Secret: ${n}`,
+                           value: `Secret: ${n}`,
+                        };
+                        if (o == "") self.suggestData.parse(suggest);
+                        else self.suggestData.updateItem(uid, suggest);
+                        this.validate();
+                     },
+                  },
                },
                {
                   view: "text",
@@ -265,8 +304,8 @@ export default function(AB) {
                   name: alreadySaved ? undefined : `secrets.${uid}.value`,
                   placeholder: "Value",
                   disabled: alreadySaved,
-                  // We don't actually get the existing secret values so we'll
-                  // just mock a value.
+                  // We don't actually get the existing secret values back
+                  // so we'll just mock a value.
                   value: alreadySaved ? ".........." : undefined,
                   gravity: 2,
                },
@@ -290,7 +329,7 @@ export default function(AB) {
       }
 
       /**
-       * Highlight function webix texthighlight elements. Highlights secret and
+       * Highlight function for webix texthighlight elements. Highlights secret and
        * process data in the text.
        */
       highlight(text) {
@@ -317,6 +356,7 @@ export default function(AB) {
        * Replace process value labels with ids. Used before saving templates.
        */
       convertLabelToID(template) {
+         if (!template) return;
          return template.replace(this.templateRgx, (match, value) => {
             const data = this.suggestData.find({ value }, true);
             if (!data) return match;
@@ -329,6 +369,7 @@ export default function(AB) {
        * templates.
        */
       convertIDToLabel(template) {
+         if (!template) return;
          return template.replace(this.templateRgx, (match, key) => {
             const data = this.suggestData.find({ key }, true);
             if (!data) return match;
