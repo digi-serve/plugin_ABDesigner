@@ -75,6 +75,11 @@ export default function (AB) {
                      },
                      {
                         view: "button",
+                        label: L("Api Request"),
+                        click: () => this.switchTo("Api"),
+                     },
+                     {
+                        view: "button",
                         label: L("Query Task"),
                         click: () => {
                            this.switchTo("TaskServiceQuery");
